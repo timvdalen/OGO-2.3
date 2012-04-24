@@ -1,0 +1,17 @@
+# LaTeX #
+*.aux
+*.log
+*.pdf
+*.toc
+
+# Backups #
+*.bak
+
+# Implementation #
+/Deliverable2/Implementation/xTremeRobotGames/nbproject/private/
+/Deliverable2/Implementation/xTremeRobotGames/build/
+*.class
+
+# MAC OS #
+.DS_Store
+._*
