@@ -14,6 +14,7 @@
 	#include <netinet/in.h>
 	#include <fcntl.h>
 	#include <string.h>
+	#include <errno.h>
 	#define SOCKET int
 #endif
 
@@ -36,9 +37,9 @@ int main(int argc, char *argv[])
 		fcntl(sock_in, F_SETFL, x | O_NONBLOCK);
 	#endif
 	
-	const char mode = 1;
-	setsockopt(sock_out, SOL_SOCKET, SO_BROADCAST, &mode, sizeof (mode));
-	
+	int mode = 1;
+	setsockopt(sock_out, SOL_SOCKET, SO_BROADCAST, &mode, sizeof (int));
+
 	sockaddr_in sa_in = {0};
 	sa_in.sin_family = AF_INET;
 	sa_in.sin_port = htons(1337);
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
 		gets(buffer);
 		if (*buffer)
 			sendto(sock_out, buffer, strlen(buffer) + 1, 0, (sockaddr *) &sa_out, sizeof(sockaddr_in));
-		
+			//printf(">>>>>%d<<<<<<", errno);		
 		int ret = 1;
 		while (ret != -1)
 		{
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 			socklen_t sa_rcv_len = sizeof (sockaddr_in);
 			ret = recvfrom(sock_in, buffer, sizeof (buffer), 0, (sockaddr *) &sa_rcv, &sa_rcv_len);
 			printf("%s\n", buffer);
-			sleep(10);
+			//sleep(10);
 		}
 	}
 	
