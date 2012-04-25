@@ -5,7 +5,7 @@
 #ifdef WIN32
 	#include <windows.h>
 	WSADATA wsa = {0};
-	#define socketlen_t int
+	#define socklen_t int
 	#define sleep Sleep
 #else
 	#include <sys/socket.h>
@@ -59,10 +59,10 @@ int main(int argc, char *argv[])
 			sendto(sock_out, buffer, strlen(buffer) + 1, 0, (sockaddr *) &sa_out, sizeof(sockaddr_in));
 		
 		int ret = 1;
-		while (ret != SOCKET_ERROR)
+		while (ret != -1)
 		{
 			sockaddr_in sa_rcv = {0};
-			socketlen_t sa_rcv_len = sizeof (sockaddr_in);
+			socklen_t sa_rcv_len = sizeof (sockaddr_in);
 			ret = recvfrom(sock_in, buffer, sizeof (buffer), 0, (sockaddr *) &sa_rcv, &sa_rcv_len);
 			printf("%s\n", buffer);
 			sleep(10);
