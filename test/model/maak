@@ -1,0 +1,3 @@
+#!/bin/bash
+g++ -c -g -I/usr/include -o test.o test.cpp
+g++  -o test test.o  -L/usr/X11R6/lib -lX11 -lXmu -lXi    -L/usr/lib -L/usr/local/lib -lm -lpthread -lglut -lGL -lGLU -lGLEW -l3ds
