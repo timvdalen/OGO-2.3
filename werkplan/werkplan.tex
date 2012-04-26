@@ -1,0 +1,91 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx,listings,float}
+%\usepackage[firstpage]{draftwatermark}
+%\SetWatermarkLightness{0.5}
+%\SetWatermarkScale{4}
+\setcounter{tocdepth}{2}
+\usepackage[dutch]{babel}
+
+\begin{document}
+	\input{title}
+	
+	\tableofcontents
+	\newpage
+
+	\section{Kritieke punten}
+    We beginnen met het geven van een zeer globaal werkplan, waarin alleen de weken en belangrijkste taken worden gegeven. Hierbij worden kritieke punten al zo vroeg mogelijk geïdentificeerd. De voornaamste problemen tijdens dit project zijn:
+    \begin{enumerate}
+    \item[(a)] Het grootste probleem voor het maken van het programma is het netwerk aspect. Hierbij identificeren we twee mogelijke obstakels. Ten eerste moet het mogelijk zijn om elkaar te kunnen vinden over het netwerk. Dit is zeker geen triviale taak. Ten tweede geldt dat gedurende het spel alle machines op gelijke voet staan. Er mag dus geen server worden gebruikt, wat het ontwerp van het spel moeilijker maakt.
+    \item[(b)] Een ander groot gevaar is complexiteit. Bij het ontwikkelen van een spel kan men al snel uit enthousiasme hoge verwachtingen en hoge eisen stellen. Deze overmaat aan eisen kan later te veel werk blijken.
+    \item[(c)] Een laatste hindernis is het gedistribueerde aspect met name in conflictsituaties. Een goed voorbeeld hiervan is als twee spelers op hetzelfde moment voedsel proberen te pakken. Als hier geen rekening mee wordt gehouden, kan dit leiden tot een inconsistente toestand. Zo zou het kunnen gebeuren dat beide spelers \'e\'en voedsel object verkrijgen.
+    \end{enumerate}
+
+    In ons werkplan proberen we al vroeg mogelijk om met deze kritieke punten rekening te houden. Aangezien we (a) als het voornaamste probleem beschouwen, zullen we in week 1 ons al oriënteren op het probleem. We zullen vooral kijken naar de mogelijkheden voor broadcast. Probleem (b) pakken we aan door te beginnen met een kleine hoeveelheid aan eisen voor het spel. Later kan het spel dan worden uitgebreid. In verband met probleem (c) is het slim om al snel te beginnen met het ontwerp van het communicatieprotocol. Er wordt pas begonnen aan dit aspect van het programma zodra het communicatieprotocol is voltooid. Na het voltooien van het communicatieprotocol zal dit uitgebreid worden getest.
+
+    \section{De taken}
+    Nu we de mogelijke problemen hebben bekeken, zijn we klaar om een lijst met taken op te stellen met afkortingen. De genoemde taken staan ruwweg in chronologische volgorde:
+    \begin{enumerate}
+    \item[-] Brainstormen over spelidee (BS).
+    \item[-] Oriëntatie op netwerk aspect door het maken van eenvoudig chat programm (ON).
+    \item[-] Maken werkplan met taakverdeling (MW).
+    \item[-] Maken spelspecificatie (MS).
+    \item[-] Maken alternatieven en motivering van spelkeuze (MA).
+    \item[-] Beschrijving onderdelen en onderlinge samenhang (BO).
+    \item[-] Ontwerpen communicatieprotocol (OC).
+    \item[-] Maken onderliggende netwerkcommunicatie (MN).
+    \item[-] Communicatieprotocol testen (CT).
+    \item[-] Maken klassendiagram (MK).
+    \item[-] Maken taakverdeling voor implementatie (MT).
+    \item[-] Implementatie spel (IS).
+    \item[-] Bijwerken gebruikershandleiding, validatie aannames en motivering implementatie (BG).
+    \item[-] Afronden verslag (AV).
+    \item[-] Maken eindpresentatie (ME).
+    \item[-] Eindpresentatie (EP).
+    \end{enumerate}
+    
+    \section{Het werkplan}
+    Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs). 
+    
+    We hebben besloten om drie belangrijke zaken samen te doen. Ten eerste is het natuurlijk erg logisch dat het brainstormen samen gebeurt. Hierdoor weten we allemaal in welke richting het spel zal gaan, wat bij alle volgende stappen van belang zal zijn. Ten tweede wordt het communicatieprotocol samen ontworpen. Dit heeft tot doel zodat iedereen het communicatieprotocol goed snapt, zodat iedereen hiermee overweg kan met de implementatie. Ten derde wordt het testen van het communicatieprotocol samen gedaan. De voornaamste reden hiervoor is vanwege de grote diversiteit aan operating systemen in onze groep, wat eventueel problemen kan geven bij de implementatie. We zijn nu klaar om het volledige werkplan te geven, we gebruiken hierbij de eerder gegeven afkortingen. De deadlines staan op een aparte regel en zijn schuin gedrukt:
+    
+    \begin{figure}[H]
+        \begin{tabular}{| l | l | l | l | l | l | l |}
+        \hline
+        Week & Carl & Ferry & Kay & Luca & Peter & Tim \\ \hline
+        Week 1 24-04-2012 & BS & BS & BS & BS & BS & BS \\ \hline
+        Week 1 25-04-2012 & ON & ON & ON & ON & MW & ON \\ \hline
+        Week 1 26-04-2012 & ON & ON & ON & ON & MW & ON \\ \hline
+        Week 2 01-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 2 02-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 2 03-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 2 04-05-2012 & \multicolumn{6}{|c|}{\emph{Deadline oriëntatiefase}} \\ \hline
+        Week 3 08-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 3 09-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 3 10-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 4 15-05-2012 & OC & OC & OC & OC & OC & OC \\ \hline
+        Week 4 16-05-2012 & OC & OC & OC & OC & OC & OC \\ \hline
+        Week 4 16-05-2012 & \multicolumn{6}{|c|}{\emph{Deadline specificatiefase}} \\ \hline
+        Week 5 22-05-2012 & BO & MN & MK & MK & BO & MN \\ \hline
+        Week 5 23-05-2012 & BO & MN & MK & MK & BO & MN \\ \hline
+        Week 5 24-05-2012 & BO & MN & MK & MT & BO & MN \\ \hline
+        Week 6 30-05-2012 & BO & MN & MK & MT & BO & MN \\ \hline
+        Week 6 31-05-2012 & CT & CT & CT & CT & CT & CT \\ \hline
+        Week 6 01-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline ontwerpfase}} \\ \hline
+        Week 7 05-06-2012 & IS & IS & IS & IS & IS & IS \\ \hline
+        Week 7 06-06-2012 & IS & IS & IS & IS & IS & IS \\ \hline
+        Week 7 07-06-2012 & IS & IS & IS & IS & IS & IS \\ \hline
+        Week 8 12-06-2012 & BG & IS & IS & IS & IS & BG \\ \hline
+        Week 8 13-06-2012 & BG & IS & IS & IS & IS & BG \\ \hline
+        Week 8 14-06-2012 & BG & IS & IS & IS & IS & BG \\ \hline
+        Week 8 14-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline implementatiefase eerste versie}} \\ \hline
+        Week 9 19-06-2012 & AV & AV & ME & AV & AV & ME \\ \hline
+        Week 9 20-06-2012 & AV & AV & ME & AV & AV & ME \\ \hline
+        Week 9 21-06-2012 & EP & EP & EP & EP & EP & EP \\ \hline
+        Week 9 22-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline verslag}} \\ \hline
+        \end{tabular}
+        \caption{Gedetailleerde taakverdeling per dag}
+        \label{tab:planning}
+    \end{figure}
+
+    Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de scene en het maken van het spel. Een gedetailleerde beschrijving voor de taakverdeling wordt pas in week 6 gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
+\end{document} 
