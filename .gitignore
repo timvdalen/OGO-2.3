@@ -27,6 +27,7 @@
 *.ps
 *.snm
 *.synctex.gz
+*.synctex
 *.toc
 *.vrb
 *.xdy
@@ -174,3 +175,6 @@ packages/
 .*.sw[a-z]
 *.un~
 Session.vim
+
+# Model #
+*.3ds
