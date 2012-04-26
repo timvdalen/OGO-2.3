@@ -1,28 +1,19 @@
 /*
- * Games list module
+ * Network module
  * 
- * Date: 26-04-12 12:33
+ * Date: 26-04-12 12:29
  *
- * Description: Maintains a list of active servers and possible create one
+ * Description: Maintains a list of players in the selected game
  *
  */
 
-#ifndef _GAMES_H
-#define _GAMES_H
-
-namespace Games {
+#ifndef _NET_H
+#define _NET_H
 
 //------------------------------------------------------------------------------
 
-struct Game
-{
-	char ip[4];
-};
-
 //------------------------------------------------------------------------------
 
-} // namespace Games
-
-#endif // _GAMES_H
+#endif // _NET_H
 
 //------------------------------------------------------------------------------
