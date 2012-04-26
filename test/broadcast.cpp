@@ -32,13 +32,16 @@ int main(int argc, char *argv[])
 	#ifdef WIN32
 		u_long x = 1;
 		ioctlsocket(sock_in, FIONBIO, &x);
+		const char mode = 1;
+		setsockopt(sock_out, SOL_SOCKET, SO_BROADCAST, &mode, sizeof (mode));
 	#else
 		int x = fcntl(sock_in, F_GETFL, 0);
 		fcntl(sock_in, F_SETFL, x | O_NONBLOCK);
+		int mode = 1;
+		setsockopt(sock_out, SOL_SOCKET, SO_BROADCAST, &mode, sizeof (int));
 	#endif
 	
-	int mode = 1;
-	setsockopt(sock_out, SOL_SOCKET, SO_BROADCAST, &mode, sizeof (int));
+	
 
 	sockaddr_in sa_in = {0};
 	sa_in.sin_family = AF_INET;
