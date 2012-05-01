@@ -1,1 +1,2 @@
-Beschrijving alternatieven en motivering keuze, specificatiefase
+Beschrijving alternatieven en motivering keuze.
+Voor de specificatiefase.
