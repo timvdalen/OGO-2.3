@@ -9,12 +9,24 @@
  *
  */
 
+#include <stdio.h>
 #include <stdlib.h>
+
+#include "net.h"
 
 //------------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
+	
+	Net::Initialize();
+	
+	Net::Address test("www.example.com");
+	
+	printf("%x\n", test.debug());
+	
+	puts("Press any key...");
+	getchar();
 	return (EXIT_SUCCESS);
 }
 
