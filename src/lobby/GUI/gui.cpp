@@ -24,16 +24,25 @@ class mainFrame: public wxFrame{
 
 class gameLobby: public wxFrame{
 	public:
-		gameLobby(const wxString& title, const wxPoint& pos, const wxSize& size);	
+		gameLobby(const wxString& title, const wxPoint& pos, const wxSize& size);
+		void OnSendClick(wxCommandEvent& event);
+
+		DECLARE_EVENT_TABLE()
 };
 
 enum{
 	ID_LISTBOX,
 	ID_JOIN,
 	ID_CREATE,
+	ID_SEND,
+	ID_TXTSEND,
 };
 
 BEGIN_EVENT_TABLE(mainFrame, wxFrame)
+END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE(gameLobby, wxFrame)
+	//EVT_TEXT_ENTER(ID_SEND, gameLobby::OnSendClick)
 END_EVENT_TABLE()
 
 IMPLEMENT_APP(LobbyGUI)
@@ -100,7 +109,12 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 	wxPanel *panelLeft = new wxPanel(mainPanel, wxID_ANY, wxPoint(0, 0), wxSize(599, 300));
 	
 	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + selected, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
-	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, -1, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 200), wxTE_MULTILINE | wxTE_READONLY);
+	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, -1, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
+	wxStaticText *playerName = new wxStaticText(panelLeft, wxID_ANY, _("Player 2:"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
+	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER); //TODO: generate and catch ENTER
+	wxButton *btnSend = new wxButton(panelLeft, ID_SEND, _("Send"), wxPoint(490, 260));
+	Connect(ID_SEND, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobby::OnSendClick));
+	Connect(ID_TXTSEND, wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(gameLobby::OnSendClick));
 
 	wxStaticLine *slMain = new wxStaticLine(mainPanel, wxID_ANY, wxPoint(599, 10), wxSize(1, 280), wxLI_VERTICAL);
 	
@@ -131,4 +145,8 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 
 	wxStaticLine *slRight = new wxStaticLine(panelRight, wxID_ANY, wxPoint(5, 100), wxSize(290, 1), wxLI_HORIZONTAL); 
 	wxPanel *panelRightBottom = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 101), wxSize(299, 299));
+}
+
+void gameLobby::OnSendClick(wxCommandEvent& WXUNUSED(event)){
+	wxMessageBox(_("Sending: "), _("A"), wxOK);
 }
