@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "net.h"
 
@@ -21,12 +22,35 @@ int main(int argc, char *argv[])
 	
 	Net::Initialize();
 	
-	Net::Address test("www.example.com");
+	Net::UDPSocket sock;
+	sock.broadcast();
+	sock.setNonBlocking();
+	sock.bind(1337);
 	
-	printf("%x\n", test.debug());
+	char buffer[1024];
+	for (;;)
+	{
+		printf("#> ");
+		gets(buffer);
+		if (*buffer)
+		{
+			if (!stricmp(buffer, "exit")) break;
+			sock.shout(1337, buffer, strlen(buffer) + 1);
+		}
+				
+		int ret = 1;
+		while (ret != -1)
+		{
+			Net::Address remote;
+			ret = sock.recvfrom(remote, buffer, sizeof (buffer));
+			printf("%s\n", buffer);
+		}
+	}
 	
-	puts("Press any key...");
-	getchar();
+	Net::Terminate();
+	
+	//puts("Press any key...");
+	//getchar();
 	return (EXIT_SUCCESS);
 }
 
