@@ -11,23 +11,25 @@
 }
 
 \newcommand{\BS}{BrnStrm}
-\newcommand{\ON}{Orientatie}
+\newcommand{\ON}{Ori\"entatie}
 \newcommand{\MW}{Werkplan}
 \newcommand{\MS}{SpelSpec}
 \newcommand{\MA}{Spelkeus}
-\newcommand{\BO}{Deel Omschr.}
-\newcommand{\OC}{Comm.Prot.}
-\newcommand{\MN}{NtwrkComm}
-\newcommand{\CT}{Comm.Testen}
+\newcommand{\BO}{Deel. Docu.}
+\newcommand{\OC}{Protocol}
+\newcommand{\MN}{Impl.Proto.}
+\newcommand{\CT}{Proto Test}
 \newcommand{\MK}{Klas.diagr.}
 \newcommand{\MT}{Taakverdel.}
-\newcommand{\IS}{Impl.}
+\newcommand{\IS}{Implement}
 \newcommand{\BG}{Handl.}
-\newcommand{\AV}{Afrond.Versl.}
+\newcommand{\AV}{Eind Docu}
 \newcommand{\ME}{Mkn.prsnt.}
-\newcommand{\EP}{Prsntrn}
+\newcommand{\EP}{Presenteren}
 
 \usepackage[dutch]{babel}
+\newenvironment{widepar}%
+  {\setlength{\leftskip}{-\marginparsep}\addtolength{\leftskip}{-\marginparwidth}}{\par}
 
 \begin{document}
 	\input{title}
@@ -51,7 +53,7 @@
     \item[-] Brainstormen over spelidee (\emph{\BS}).
     \item[-] Ori\"entatie op netwerk aspect door het maken van eenvoudig chat programma (\emph{\ON}).
     \item[-] Maken werkplan met taakverdeling (\emph{\MW}).
-    \item[-] Maken spelspecificatie (\emph{\MS}).
+    \item[-] Maken spelspecificatie en gebruikershandleiding (\emph{\MS}).
     \item[-] Maken alternatieven en motivering van spelkeuze (\emph{\MA}).
     \item[-] Beschrijving onderdelen en onderlinge samenhang (\emph{\BO}).
     \item[-] Ontwerpen communicatieprotocol (\emph{\OC}).
@@ -65,18 +67,14 @@
     \item[-] Maken eindpresentatie (\emph{\ME}).
     \item[-] Eindpresentatie (\emph{\EP}).
     \end{enumerate}
-    
+
     \section{Het werkplan}
-    Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs). 
-    
+    Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs).
+
     We hebben besloten om drie belangrijke zaken samen te doen. Ten eerste is het natuurlijk erg logisch dat het brainstormen samen gebeurt. Hierdoor weten we allemaal in welke richting het spel zal gaan, wat bij alle volgende stappen van belang zal zijn. Ten tweede wordt het communicatieprotocol samen ontworpen. Dit heeft tot doel zodat iedereen het communicatieprotocol goed snapt, zodat iedereen hiermee overweg kan met de implementatie. Ten derde wordt het testen van het communicatieprotocol samen gedaan. De voornaamste reden hiervoor is vanwege de grote diversiteit aan operating systemen in onze groep, wat eventueel problemen kan geven bij de implementatie. We zijn nu klaar om het volledige werkplan te geven, we gebruiken hierbij de eerder gegeven afkortingen. De deadlines staan op een aparte regel en zijn schuin gedrukt:
-
-
-    Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de scene en het maken van het spel. Een gedetailleerde beschrijving voor de taakverdeling wordt pas in week 6 gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
-    \appendix
-    \section{Gedetailleerde uitwerking}
         \begin{figure}[H]
-        \scriptsize
+        \small
+        \centering
         \begin{tabular}{| l | l | l | l | l | l | l |}
         \hline
         Week & Carl & Ferry & Kay & Luca & Peter & Tim \\ \hline
@@ -114,4 +112,6 @@
         \caption{Gedetailleerde taakverdeling per dag}
         \label{tab:planning}
     \end{figure}
-\end{document} 
+    
+    Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de scene en het maken van het spel. Een gedetailleerde beschrijving voor de taakverdeling wordt pas in week 6 gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
+\end{document}
