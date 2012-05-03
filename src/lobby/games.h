@@ -10,13 +10,43 @@
 #ifndef _GAMES_H
 #define _GAMES_H
 
-namespace Games {
+#include <time.h>
+#include <string>
+
+#include "common.h"
+#include "net.h"
+
+//! Lobby module
+namespace Lobby {
 
 //------------------------------------------------------------------------------
 
 struct Game
 {
-	char ip[4];
+	std::string name;        //!< Game name
+	unsigned int numPlayers; //!< Number of players currently on the game
+	time_t ttl;              //!< Time to live. Time before game is removed form the list.
+};
+
+//------------------------------------------------------------------------------
+
+class GameList
+{
+	public:
+	typedef std::map<Net::Address,Game> List; //!< Maps ip address to games.
+	
+	//! List with received servers.
+	List list;
+	
+	//! Creates a gamelist that listens for games on the specified port.
+	GameList(unsigned int port);
+	~GameList();
+	
+	//! Update the game list. \return whether the list has changed
+	bool refresh();
+	
+	private:
+	Net::UDPSocket *sock;
 };
 
 //------------------------------------------------------------------------------

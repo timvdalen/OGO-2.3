@@ -104,6 +104,18 @@ bool Address::name(char *str, size_t len)
 
 //------------------------------------------------------------------------------
 
+bool Address::operator <(const Address &addr) const
+{
+	sockaddr_in *a = (sockaddr_in *) this;
+	sockaddr_in *b = (sockaddr_in *) &addr;
+	if (a->sin_addr == b->sin_addr)
+		return a->sin_port < b->sin_port;
+	else
+		return a->sin_addr < b->sin_addr;
+}
+
+//------------------------------------------------------------------------------
+
 bool Socket::setBlocking()
 {
 	#ifdef WIN32
