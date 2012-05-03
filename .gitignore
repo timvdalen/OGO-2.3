@@ -179,3 +179,6 @@ Session.vim
 
 # Model #
 *.3ds
+
+# Doxy gen #
+doc/*
