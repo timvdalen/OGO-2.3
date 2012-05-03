@@ -97,6 +97,13 @@ Address::~Address()
 
 //------------------------------------------------------------------------------
 
+bool Address::name(char *str, size_t len)
+{
+	return getnameinfo((sockaddr *) data, length, str, len, 0, 0, 0);
+}
+
+//------------------------------------------------------------------------------
+
 bool Socket::setBlocking()
 {
 	#ifdef WIN32

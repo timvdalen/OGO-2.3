@@ -38,6 +38,9 @@ struct Address
 	//! Cleans up the address
 	~Address();
 	
+	//! Gets a textual representation of an address
+	bool name(char *str, size_t len);
+	
 	friend struct UDPSocket;
 	friend struct TCPSocket;
 	
