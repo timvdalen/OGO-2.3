@@ -35,7 +35,9 @@ enum{
 	ID_JOIN,
 	ID_CREATE,
 	ID_SEND,
+	ID_CHAT,
 	ID_TXTSEND,
+	ID_READY,
 };
 
 BEGIN_EVENT_TABLE(mainFrame, wxFrame)
@@ -109,7 +111,7 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 	wxPanel *panelLeft = new wxPanel(mainPanel, wxID_ANY, wxPoint(0, 0), wxSize(599, 300));
 	
 	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + selected, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
-	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, -1, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
+	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, ID_CHAT, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
 	wxStaticText *playerName = new wxStaticText(panelLeft, wxID_ANY, _("Player 2:"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
 	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER); //TODO: generate and catch ENTER
 	wxButton *btnSend = new wxButton(panelLeft, ID_SEND, _("Send"), wxPoint(490, 260));
@@ -144,9 +146,20 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 	*/
 
 	wxStaticLine *slRight = new wxStaticLine(panelRight, wxID_ANY, wxPoint(5, 100), wxSize(290, 1), wxLI_HORIZONTAL); 
+	
 	wxPanel *panelRightBottom = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 101), wxSize(299, 299));
+	wxString readyTxt;
+	if(joining){
+		readyTxt = _("Ready");
+	}else{
+		readyTxt = _("Start");
+	}
+	wxButton *btnReady = new wxButton(panelRightBottom, ID_READY, readyTxt, wxPoint(5, 5), wxSize(289, 40));
 }
 
 void gameLobby::OnSendClick(wxCommandEvent& WXUNUSED(event)){
-	wxMessageBox(_("Sending: "), _("A"), wxOK);
+	wxTextCtrl *textInput = (wxTextCtrl*) this->FindWindowById(ID_TXTSEND);
+	wxTextCtrl *textChat = (wxTextCtrl*) this->FindWindowById(ID_CHAT);
+	textChat->AppendText(_("\nPlayer 2: ") + textInput->GetValue());
+	textInput->ChangeValue(_(""));
 }
