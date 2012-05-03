@@ -181,4 +181,4 @@ Session.vim
 *.3ds
 
 # Doxy gen #
-documentation/Doxygen/*
+doc/*
