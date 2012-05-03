@@ -43,9 +43,7 @@ int main(int argc, char *argv[])
 		{
 			Net::Address remote;
 			ret = sock.recvfrom(remote, buffer, sizeof (buffer));
-			char name[128];
-			remote.name(name, sizeof (name));
-			printf("<%s> %s\n", name, buffer);
+			printf("%s\n", buffer);
 		}
 	}
 	
