@@ -1,27 +1,9 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage{graphicx,listings,float}
-\usepackage{a4wide}
 %\usepackage[firstpage]{draftwatermark}
 %\SetWatermarkLightness{0.5}
 %\SetWatermarkScale{4}
 \setcounter{tocdepth}{2}
-\newcommand{\BS}{BrnStrm}
-\newcommand{\ON}{Orientatie}
-\newcommand{\MW}{Werkplan}
-\newcommand{\MS}{SpelSpec}
-\newcommand{\MA}{Spelkeus}
-\newcommand{\BO}{Deel Omschr.}
-\newcommand{\OC}{Comm.Prot.}
-\newcommand{\MN}{NtwrkComm}
-\newcommand{\CT}{Comm.Testen}
-\newcommand{\MK}{Klas.diagr.}
-\newcommand{\MT}{Taakverdel.}
-\newcommand{\IS}{Impl.}
-\newcommand{\BG}{Handl.}
-\newcommand{\AV}{Afrond.Versl.}
-\newcommand{\ME}{Mkn.prsnt.}
-\newcommand{\EP}{Prsntrn}
-
 \usepackage[dutch]{babel}
 
 \begin{document}
@@ -43,70 +25,67 @@
     \section{De taken}
     Nu we de mogelijke problemen hebben bekeken, zijn we klaar om een lijst met taken op te stellen met afkortingen. De genoemde taken staan ruwweg in chronologische volgorde:
     \begin{enumerate}
-    \item[-] Brainstormen over spelidee (\emph{\BS}).
-    \item[-] Ori\"entatie op netwerk aspect door het maken van eenvoudig chat programma (\emph{\ON}).
-    \item[-] Maken werkplan met taakverdeling (\emph{\MW}).
-    \item[-] Maken spelspecificatie (\emph{\MS}).
-    \item[-] Maken alternatieven en motivering van spelkeuze (\emph{\MA}).
-    \item[-] Beschrijving onderdelen en onderlinge samenhang (\emph{\BO}).
-    \item[-] Ontwerpen communicatieprotocol (\emph{\OC}).
-    \item[-] Maken onderliggende netwerkcommunicatie (\emph{\MN}).
-    \item[-] Communicatieprotocol testen (\emph{\CT}).
-    \item[-] Maken klassendiagram (\emph{\MK}).
-    \item[-] Maken taakverdeling voor implementatie (\emph{\MT}).
-    \item[-] Implementatie spel (\emph{\IS}).
-    \item[-] Bijwerken gebruikershandleiding, validatie aannames en motivering implementatie (\emph{\BG}).
-    \item[-] Afronden verslag (\emph{\AV}).
-    \item[-] Maken eindpresentatie (\emph{\ME}).
-    \item[-] Eindpresentatie (\emph{\EP}).
+    \item[-] Brainstormen over spelidee (BS).
+    \item[-] Oriëntatie op netwerk aspect door het maken van eenvoudig chat programm (ON).
+    \item[-] Maken werkplan met taakverdeling (MW).
+    \item[-] Maken spelspecificatie (MS).
+    \item[-] Maken alternatieven en motivering van spelkeuze (MA).
+    \item[-] Beschrijving onderdelen en onderlinge samenhang (BO).
+    \item[-] Ontwerpen communicatieprotocol (OC).
+    \item[-] Maken onderliggende netwerkcommunicatie (MN).
+    \item[-] Communicatieprotocol testen (CT).
+    \item[-] Maken klassendiagram (MK).
+    \item[-] Maken taakverdeling voor implementatie (MT).
+    \item[-] Implementatie spel (IS).
+    \item[-] Bijwerken gebruikershandleiding, validatie aannames en motivering implementatie (BG).
+    \item[-] Afronden verslag (AV).
+    \item[-] Maken eindpresentatie (ME).
+    \item[-] Eindpresentatie (EP).
     \end{enumerate}
     
     \section{Het werkplan}
     Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs). 
     
     We hebben besloten om drie belangrijke zaken samen te doen. Ten eerste is het natuurlijk erg logisch dat het brainstormen samen gebeurt. Hierdoor weten we allemaal in welke richting het spel zal gaan, wat bij alle volgende stappen van belang zal zijn. Ten tweede wordt het communicatieprotocol samen ontworpen. Dit heeft tot doel zodat iedereen het communicatieprotocol goed snapt, zodat iedereen hiermee overweg kan met de implementatie. Ten derde wordt het testen van het communicatieprotocol samen gedaan. De voornaamste reden hiervoor is vanwege de grote diversiteit aan operating systemen in onze groep, wat eventueel problemen kan geven bij de implementatie. We zijn nu klaar om het volledige werkplan te geven, we gebruiken hierbij de eerder gegeven afkortingen. De deadlines staan op een aparte regel en zijn schuin gedrukt:
-
-
-    Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de scene en het maken van het spel. Een gedetailleerde beschrijving voor de taakverdeling wordt pas in week 6 gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
-    \appendix
-    \section{Gedetailleerde uitwerking}
-        \begin{figure}[H]
-        \scriptsize
+    
+    \begin{figure}[H]
         \begin{tabular}{| l | l | l | l | l | l | l |}
         \hline
         Week & Carl & Ferry & Kay & Luca & Peter & Tim \\ \hline
-        Week 1 24-04-2012 & \BS & \BS & \BS & \BS & \BS & \BS \\ \hline
-        Week 1 25-04-2012 & \ON & \ON & \ON & \ON & \MW & \ON \\ \hline
-        Week 1 26-04-2012 & \ON & \ON & \ON & \ON & \MW & \ON \\ \hline
-        Week 2 01-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
-        Week 2 02-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
-        Week 2 03-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 1 24-04-2012 & BS & BS & BS & BS & BS & BS \\ \hline
+        Week 1 25-04-2012 & ON & ON & ON & ON & MW & ON \\ \hline
+        Week 1 26-04-2012 & ON & ON & ON & ON & MW & ON \\ \hline
+        Week 2 01-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 2 02-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 2 03-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
         Week 2 04-05-2012 & \multicolumn{6}{|c|}{\emph{Deadline ori\"entatiefase}} \\ \hline
-        Week 3 08-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
-        Week 3 09-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
-        Week 3 10-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
-        Week 4 15-05-2012 & \OC & \OC & \OC & \OC & \OC & \OC \\ \hline
-        Week 4 16-05-2012 & \OC & \OC & \OC & \OC & \OC & \OC \\ \hline
+        Week 3 08-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 3 09-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 3 10-05-2012 & MS & MA & MA & MS & MA & MS \\ \hline
+        Week 4 15-05-2012 & OC & OC & OC & OC & OC & OC \\ \hline
+        Week 4 16-05-2012 & OC & OC & OC & OC & OC & OC \\ \hline
         Week 4 16-05-2012 & \multicolumn{6}{|c|}{\emph{Deadline specificatiefase}} \\ \hline
-        Week 5 22-05-2012 & \BO & \MN & \MK & \MK & \BO & \MN \\ \hline
-        Week 5 23-05-2012 & \BO & \MN & \MK & \MK & \BO & \MN \\ \hline
-        Week 5 24-05-2012 & \BO & \MN & \MK & \MT & \BO & \MN \\ \hline
-        Week 6 30-05-2012 & \BO & \MN & \MK & \MT & \BO & \MN \\ \hline
-        Week 6 31-05-2012 & \CT & \CT & \CT & \CT & \CT & \CT \\ \hline
+        Week 5 22-05-2012 & BO & MN & MK & MK & BO & MN \\ \hline
+        Week 5 23-05-2012 & BO & MN & MK & MK & BO & MN \\ \hline
+        Week 5 24-05-2012 & BO & MN & MK & MT & BO & MN \\ \hline
+        Week 6 30-05-2012 & BO & MN & MK & MT & BO & MN \\ \hline
+        Week 6 31-05-2012 & CT & CT & CT & CT & CT & CT \\ \hline
         Week 6 01-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline ontwerpfase}} \\ \hline
-        Week 7 05-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
-        Week 7 06-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
-        Week 7 07-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
-        Week 8 12-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
-        Week 8 13-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
-        Week 8 14-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
+        Week 7 05-06-2012 & IS & IS & IS & IS & IS & IS \\ \hline
+        Week 7 06-06-2012 & IS & IS & IS & IS & IS & IS \\ \hline
+        Week 7 07-06-2012 & IS & IS & IS & IS & IS & IS \\ \hline
+        Week 8 12-06-2012 & BG & IS & IS & IS & IS & BG \\ \hline
+        Week 8 13-06-2012 & BG & IS & IS & IS & IS & BG \\ \hline
+        Week 8 14-06-2012 & BG & IS & IS & IS & IS & BG \\ \hline
         Week 8 14-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline implementatiefase eerste versie}} \\ \hline
-        Week 9 19-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
-        Week 9 20-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
-        Week 9 21-06-2012 & \EP & \EP & \EP & \EP & \EP & \EP \\ \hline
+        Week 9 19-06-2012 & AV & AV & ME & AV & AV & ME \\ \hline
+        Week 9 20-06-2012 & AV & AV & ME & AV & AV & ME \\ \hline
+        Week 9 21-06-2012 & EP & EP & EP & EP & EP & EP \\ \hline
         Week 9 22-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline verslag}} \\ \hline
         \end{tabular}
         \caption{Gedetailleerde taakverdeling per dag}
         \label{tab:planning}
     \end{figure}
+
+    Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de scene en het maken van het spel. Een gedetailleerde beschrijving voor de taakverdeling wordt pas in week 6 gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
 \end{document} 
