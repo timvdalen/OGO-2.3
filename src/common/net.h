@@ -41,6 +41,8 @@ struct Address
 	friend struct UDPSocket;
 	friend struct TCPSocket;
 	
+	bool operator <(const Address &) const;
+	
 	private:
 	size_t length;
 	void *data;
