@@ -1,12 +1,15 @@
 CPP      = g++
 CXXFLAGS = `wx-config --cxxflags`
 LIBS     = `wx-config --libs`
-LIBSS	 = `wx-config --static=yes --libs`
 OBJ      = gui.o
 BIN      = lobby
 RM	 = rm
 
 .phony: all
+
+ifdef SystemRoot
+	LIBS = `wx-config --static=yes --libs` -static
+endif
 
 all: $(BIN)
 
@@ -18,6 +21,3 @@ gui.o: gui.cpp
 
 $(BIN): $(OBJ)
 	$(CPP) $(OBJ) -o lobby $(LIBS)
-
-static: $(OBJ)
-	$(CPP) $(OBJ) -o lobby $(LIBSS) -static
