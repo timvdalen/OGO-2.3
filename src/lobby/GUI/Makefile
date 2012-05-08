@@ -2,8 +2,8 @@ CPP      = g++
 CXXFLAGS = `wx-config --cxxflags`
 LIBS     = `wx-config --libs`
 OBJ      = gui.o
-BIN      = lobby
-RM	 = rm
+BIN      = ../../bin/lobby
+RM	 = rm -f
 
 .phony: all
 
@@ -20,4 +20,4 @@ gui.o: gui.cpp
 	$(CPP) -c gui.cpp -o gui.o $(CXXFLAGS)
 
 $(BIN): $(OBJ)
-	$(CPP) $(OBJ) -o lobby $(LIBS)
+	$(CPP) $(OBJ) -o $(BIN) $(LIBS)
