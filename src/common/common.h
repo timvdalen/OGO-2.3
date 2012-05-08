@@ -9,12 +9,12 @@
 
 //------------------------------------------------------------------------------
 
-#ifndef LOBBY_POLLSPEED
-#define LOBBY_POLLSPEED 5
+#ifndef LOBBY_BC_INTERVAL
+#define LOBBY_BC_INTERVAL 5
 #endif
 
-#ifndef LOBBY_TIMEOUT
-#define LOBBY_TIMEOUT 10
+#ifndef LOBBY_BC_TIMEOUT
+#define LOBBY_BC_TIMEOUT 10
 #endif
 
 //------------------------------------------------------------------------------

@@ -10,11 +10,10 @@
 #ifndef _GAMES_H
 #define _GAMES_H
 
-#include <time.h>
 #include <string>
 
-#include "common.h"
 #include "net.h"
+#include "common.h"
 
 //! Lobby module
 namespace Lobby {
@@ -33,20 +32,19 @@ struct Game
 class GameList
 {
 	public:
-	typedef std::map<Net::Address,Game> List; //!< Maps ip address to games.
 	
-	//! List with received servers.
-	List list;
+	void (*onJoin) (Net::Address server);
+	void (*onChange) (Net::Address server);
+	void (*onPart) (Net::Address server);
 	
 	//! Creates a gamelist that listens for games on the specified port.
 	GameList(unsigned int port);
 	~GameList();
 	
-	//! Update the game list. \return whether the list has changed
-	bool refresh();
+	bool valid();
 	
 	private:
-	Net::UDPSocket *sock;
+	void *data;
 };
 
 //------------------------------------------------------------------------------
