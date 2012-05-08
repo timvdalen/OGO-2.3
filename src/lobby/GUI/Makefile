@@ -7,7 +7,7 @@ RM	 = rm
 
 .phony: all
 
-ifdef SystemRoot
+ifdef SYSTEMROOT
 	LIBS = `wx-config --static=yes --libs` -static
 endif
 
