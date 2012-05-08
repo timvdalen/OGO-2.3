@@ -1,1 +1,0 @@
-g++ gui.cpp -o lobby.exe `wx-config --cxxflags` `wx-config --static=yes --libs` -static
