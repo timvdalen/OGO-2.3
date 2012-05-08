@@ -2,7 +2,7 @@ CPP      = g++
 CXXFLAGS = `wx-config --cxxflags`
 LIBS     = `wx-config --libs`
 OBJ      = gui.o
-BIN      = ../../bin/lobby
+BIN      = ../../../bin/lobby
 RM	 = rm -f
 
 .phony: all
