@@ -10,6 +10,8 @@
 #ifndef _NET_H
 #define _NET_H
 
+#include <string>
+
 #ifdef WIN32
 	#define ssize_t unsigned long int
 #endif
@@ -108,6 +110,20 @@ struct TCPSocket : public Socket
 	//! Receives a message from the remote host.
 	ssize_t recv(char *data, size_t length);
 };
+
+//------------------------------------------------------------------------------
+
+struct TCPStringSocket : public TCPSocket
+{
+	TCPStringSocket();
+	~TCPStringSocket();
+	
+	bool send(const std::string &msg);
+	std::string recv();
+	
+	public:
+		std::string buffer;	
+}
 
 //------------------------------------------------------------------------------
 

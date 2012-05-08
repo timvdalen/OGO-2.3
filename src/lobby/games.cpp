@@ -16,6 +16,8 @@
 static void *GameList_thread(void *arg);
 
 namespace Lobby {
+	
+//------------------------------------------------------------------------------
 
 struct GameListData
 {
@@ -38,7 +40,6 @@ GameList::GameList(unsigned int port)
 	
 	gdata->sock = new UDPSocket();
 	gdata->sock->setNonBlocking();
-	gdata->sock->broadcast();
 	if (!gdata->sock->bind(port))
 	{
 		delete gdata;
@@ -68,8 +69,13 @@ GameList::~GameList()
 	{
 		GameListData *gdata = (GameListData *) data;
 		
+		pthread_cancel(gdata->thread, 0);
+		
 		void *status;
 		pthread_join(gdata->thread, &status);
+		
+		delete gdata;
+		gdata = 0;
 	}
 }
 
@@ -89,6 +95,8 @@ static void *GameList_thread(void *arg)
 	
 	for (;;)
 	{
+		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+		
 		// Process incoming server notifications
 		for (;;)
 		{
@@ -100,6 +108,18 @@ static void *GameList_thread(void *arg)
 			game.numPlayers = *buffer;
 			game.name = std::string(buffer + 1);
 			game.ttl = now + LOBBY_TIMEOUT;
+			
+			if (data->list.count(remote))
+			{
+				if (onJoin)
+					onJoin(remote, game);
+			}
+			else if (data->list[remote].numPlayers != game.numPlayers)
+			{
+				if (onChange)
+					onChange(remote, game.numPlayers);
+			}
+			
 			data->list[remote] = game;
 		}
 		
@@ -108,11 +128,15 @@ static void *GameList_thread(void *arg)
 		{
 			if (it->ttl < now)
 			{
+				if (onPart)
+					onPart(remote);
 				list.erase(it);
 			}
 		}
 		
-		sleep(10);
+		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+		
+		sleep(LOBBY_POLL_INTERVAL);
 	}
 	
 	pthread_exit(0);

@@ -17,4 +17,8 @@
 #define LOBBY_BC_TIMEOUT 10
 #endif
 
+#ifndef LOBBY_POLL_INTERVAL
+#define LOBBY_POLL_INTERVAL 1000
+#endif
+
 //------------------------------------------------------------------------------

@@ -31,16 +31,28 @@ struct Player
 class GameLobby
 {
 	public:
-	typedef std::vector<Player>List;
+	void (*onConnect) (std::string gameName);
+	void (*onJoin)    (Net::Address player, std::string name);
+	void (*onPart)    (Net::Address player);
+	void (*onChat)    (Net::Address player, std::string line);
+	void (*onReady)   (Net::Address player, bool ready);
+	void (*onClose)   ();
+	void (*onStart)   ();
 	
-	List list;
-	std::string name;
+	bool chat(const std::string &line);
+	bool ready(bool ready);
+	
+	bool valid() { return !!data; }
+	
+	private:
+	void *data;
 };
 
 //------------------------------------------------------------------------------
 
 class ClientLobby : public GameLobby
 {
+	public:
 	ClientLobby(std::string playerName, const Net::Address &server);
 	~ClientLobby();
 };
@@ -49,8 +61,11 @@ class ClientLobby : public GameLobby
 
 class ServerLobby : public GameLobby
 {
-	ServerLobby(std::string gameName, unsigned int port);
+	public:
+	ServerLobby(std::string gameName, std::string playerName, unsigned int port);
 	~ServerLobby();
+	
+	void start();
 };
 
 //------------------------------------------------------------------------------

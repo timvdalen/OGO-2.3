@@ -276,6 +276,58 @@ ssize_t TCPSocket::recv(char *data_out, size_t length)
 
 //------------------------------------------------------------------------------
 
+TCPStringSocket::TCPStringSocket() : TCPSocket(), buffer("")
+{
+}
+
+//------------------------------------------------------------------------------
+
+TCPStringSocket::~TCPStringSocket()
+{
+}
+
+//------------------------------------------------------------------------------
+	
+bool TCPStringSocket::send(const std::string &input)
+{
+	std::string msg = input;
+	msg += "\n";
+	size_t len = msg.length();
+	return (send(msg.c_str(), len) == len);
+}
+
+//------------------------------------------------------------------------------
+
+std::string TCPStringSocket::recv()
+{
+	std::string msg;
+	size_t pos = buffer.find("\n");
+	if (pos != std::string::npos)
+	{
+		msg = buffer.substr(0, pos);
+		buffer.erase(0, pos + 1);
+		return msg;
+	}
+	
+	char buf[1024];
+	while ((pos = recv(buf, sizeof (buf))) != -1)
+	{
+		buffer += std::string(buf, pos);
+		
+		size_t pos = buffer.find("\n");
+		if (pos != std::string::npos)
+		{
+			msg = buffer.substr(0, pos);
+			buffer.erase(0, pos + 1);
+			return msg;
+		}
+	}
+	
+	return "";
+}
+
+//------------------------------------------------------------------------------
+
 } // namespace Net
 
 //------------------------------------------------------------------------------
