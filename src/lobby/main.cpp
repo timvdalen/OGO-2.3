@@ -14,43 +14,60 @@
 #include <string.h>
 
 #include "net.h"
+#include "protocol.h"
 
 //------------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
 	
+	/*{
 	Net::Initialize();
 	
-	Net::UDPSocket sock;
-	sock.broadcast();
-	sock.setNonBlocking();
-	sock.bind(1337);
-	
 	char buffer[1024];
-	for (;;)
+	size_t length;
+	
+	Protocol::TextSocket server;
+	server.listen(72);
+	
+	puts("Listening...");
+	
+	Net::Address remote;
+	Protocol::TextSocket client = server.accept(remote);
+	
+	remote.name(buffer, sizeof (buffer));
+	printf("Client connected: %s\n", buffer);
+	
+	std::string msg;
+	while (client.valid())
 	{
-		printf("#> ");
-		gets(buffer);
-		if (*buffer)
+		msg = client.recv();
+		
+		if (msg.empty())
+			continue;
+		
+		if (msg == "exit")
+			client.close();
+		else
 		{
-			if (!stricmp(buffer, "exit")) break;
-			sock.shout(1337, buffer, strlen(buffer) + 1);
-		}
-				
-		int ret = 1;
-		while (ret != -1)
-		{
-			Net::Address remote;
-			ret = sock.recvfrom(remote, buffer, sizeof (buffer));
-			printf("%s\n", buffer);
+			client.send(msg);
+			printf("> %s\n", msg.c_str());
 		}
 	}
 	
 	Net::Terminate();
+	}*/
 	
-	//puts("Press any key...");
-	//getchar();
+	Protocol::Message msg;
+	msg.add("TEST");
+	msg.add(4.5);
+	msg.add(1337L);
+	std::string str = msg;
+	
+	printf("%s", std::string(msg).c_str());
+	
+	puts("Press any key...");
+	getchar();
 	return (EXIT_SUCCESS);
 }
 
