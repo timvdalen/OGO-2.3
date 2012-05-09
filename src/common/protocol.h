@@ -11,6 +11,7 @@
 #define _PROTOCOL_H
 
 #include <string>
+#include <vector>
 
 #include "net.h"
 
@@ -21,8 +22,7 @@ namespace Protocol {
 
 struct TextSocket : public Net::TCPSocket
 {
-	TextSocket();
-	~TextSocket();
+	TextSocket() : TCPSocket(), buffer() {}
 	
 	TextSocket accept(Net::Address &remote);
 	
@@ -30,7 +30,48 @@ struct TextSocket : public Net::TCPSocket
 	std::string recv();
 	
 	private:
-		std::string buffer;	
+	std::string buffer;	
+};
+
+//------------------------------------------------------------------------------
+
+struct Argument
+{
+	Argument(const std::string &S) : str(S) {}
+	Argument(const char *S) : str(S) {}
+	Argument(int);
+	Argument(long);
+	Argument(double);
+	
+	operator std::string() const;
+	operator long() const;
+	operator double() const;
+	
+	std::string str;
+};
+
+//------------------------------------------------------------------------------
+
+struct Message
+{
+	Message() {}
+	Message(const std::string &);
+	
+	operator std::string() const;
+	void add(const Argument &arg) { args.push_back(arg); }
+	const Argument &operator[](size_t index) { return args[index]; }
+	
+	std::vector<Argument> args;
+};
+
+//------------------------------------------------------------------------------
+
+struct MsgSocket : public TextSocket
+{
+	MsgSocket accept(Net::Address &remote);
+	
+	bool send(const Message &msg);
+	Message recv();
 };
 
 //------------------------------------------------------------------------------
