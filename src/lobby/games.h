@@ -32,9 +32,9 @@ struct Game
 class GameList
 {
 	public:
-	void (*onJoin) (Net::Address server, Game game);
+	void (*onJoin)   (Net::Address server, Game game);
 	void (*onChange) (Net::Address server, unsigned int numPlayers);
-	void (*onPart) (Net::Address server);
+	void (*onPart)   (Net::Address server);
 	
 	//! Creates a gamelist that listens for games on the specified port.
 	GameList(unsigned int port);
@@ -44,6 +44,7 @@ class GameList
 	
 	private:
 	void *data;
+	static void *listen(void *arg);
 };
 
 //------------------------------------------------------------------------------

@@ -3,18 +3,12 @@
  * 
  * Date: 26-04-12 12:29
  *
- * Description: Maintains a list of players in the selected game
+ * Description: Abstraction for internet communication
  *
  */
 
 #ifndef _NET_H
 #define _NET_H
-
-#include <string>
-
-#ifdef WIN32
-	#define ssize_t unsigned long int
-#endif
 
 //! Network module
 namespace Net {
@@ -40,6 +34,9 @@ struct Address
 	//! Cleans up the address
 	~Address();
 	
+	//! Gets a textual representation of an address
+	bool name(char *str, size_t len);
+
 	friend struct UDPSocket;
 	friend struct TCPSocket;
 	
@@ -55,11 +52,11 @@ struct Address
 //! Basic internet socket.
 struct Socket
 {
-	//Address local;
-	//Address remote;
-	
 	bool setBlocking();    //!< Makes operations on this socket block. (default)
 	bool setNonBlocking(); //!< Makes operations on this socket not block.
+	
+	void close();
+	bool valid() { return !!data; }
 	
 	protected:
 	void *data;
@@ -81,11 +78,11 @@ struct UDPSocket : public Socket
 	bool broadcast();
 	
 	//! Sends a message to a remote host.
-	ssize_t sendto(const Address &remote, const char *data, size_t length);
+	bool sendto(const Address &remote, const char *data, size_t &length);
 	//! Send a message to all remote hosts in the subnet.
-	ssize_t shout(unsigned int port, const char *data, size_t length);
+	bool shout(unsigned int port, const char *data, size_t &length);
 	//! Receives a message (from the local bound address). \sa broadcast
-	ssize_t recvfrom(Address &remote, char *data, size_t length);
+	bool recvfrom(Address &remote, char *data, size_t &length);
 };
 
 //------------------------------------------------------------------------------
@@ -106,24 +103,10 @@ struct TCPSocket : public Socket
 	TCPSocket accept(Address &remote);
 	
 	//! Sends a message to the remote host.
-	ssize_t send(const char *data, size_t length);
+	bool send(const char *data, size_t &length);
 	//! Receives a message from the remote host.
-	ssize_t recv(char *data, size_t length);
+	bool recv(char *data, size_t &length);
 };
-
-//------------------------------------------------------------------------------
-
-struct TCPStringSocket : public TCPSocket
-{
-	TCPStringSocket();
-	~TCPStringSocket();
-	
-	bool send(const std::string &msg);
-	std::string recv();
-	
-	public:
-		std::string buffer;	
-}
 
 //------------------------------------------------------------------------------
 

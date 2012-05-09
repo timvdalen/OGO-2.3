@@ -16,7 +16,7 @@ static void *ServerLobby_broadcast(void *arg);
 
 struct GameLobbyData
 {
-	Net::TCPStringSocket sock;
+	//Net::TCPStringSocket sock;
 	pthread_t thread;
 };
 

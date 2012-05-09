@@ -8,9 +8,9 @@
 	#define _WIN32_WINNT 0x0501 
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
+	#define ssize_t unsigned long int
 #else
 	#define SOCKET int
-	#define closesocket close
 #endif
 
 #include "net.h"
@@ -52,14 +52,14 @@ Address::Address() : data(new sockaddr_in), length(sizeof (sockaddr_in))
 Address::Address(unsigned long address, unsigned port)
 	 : data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
-	if (data)
-	{
-		memset(data, 0, length);
-		sockaddr_in *addr = (sockaddr_in *)data;
-		addr->sin_family = AF_INET;
-		addr->sin_port = htons(port);
-		addr->sin_addr.s_addr = htonl(address);
-	}
+	if (!data)
+		return;
+	
+	memset(data, 0, length);
+	sockaddr_in *addr = (sockaddr_in *)data;
+	addr->sin_family = AF_INET;
+	addr->sin_port = htons(port);
+	addr->sin_addr.s_addr = htonl(address);
 }
 
 //------------------------------------------------------------------------------
@@ -67,24 +67,24 @@ Address::Address(unsigned long address, unsigned port)
 Address::Address(const char *address, unsigned int port)
 	 : data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
-	if (data)
+	if (!data)
+		return;
+	
+	memset(data, 0, length);
+	
+	addrinfo *result;
+	if (getaddrinfo(address, NULL, NULL, &result))
+		return;
+	
+	if (result && (result->ai_family == AF_INET))
 	{
-		memset(data, 0, length);
+		memcpy(data, result->ai_addr, result->ai_addrlen);
 		
-		addrinfo *result;
-		if (getaddrinfo(address, NULL, NULL, &result))
-			return;
-		
-		if (result && (result->ai_family == AF_INET))
-		{
-			memcpy(data, result->ai_addr, result->ai_addrlen);
-			
-			if (port)
-				((sockaddr_in *) data)->sin_port = htons(port);
-		}
-		
-		freeaddrinfo(result);
+		if (port)
+			((sockaddr_in *) data)->sin_port = htons(port);
 	}
+	
+	freeaddrinfo(result);
 }
 
 //------------------------------------------------------------------------------
@@ -108,10 +108,10 @@ bool Address::operator <(const Address &addr) const
 {
 	sockaddr_in *a = (sockaddr_in *) this;
 	sockaddr_in *b = (sockaddr_in *) &addr;
-	if (a->sin_addr == b->sin_addr)
+	if (a->sin_addr.s_addr == b->sin_addr.s_addr)
 		return a->sin_port < b->sin_port;
 	else
-		return a->sin_addr < b->sin_addr;
+		return a->sin_addr.s_addr < b->sin_addr.s_addr;
 }
 
 //------------------------------------------------------------------------------
@@ -142,6 +142,22 @@ bool Socket::setNonBlocking()
 
 //------------------------------------------------------------------------------
 
+void Socket::close()
+{
+	if (!data)
+		return;
+	
+	#ifdef WIN32
+		closesocket((SOCKET) data);
+	#else
+		close((SOCKET) data);
+	#endif
+	
+	data = 0;
+}
+
+//------------------------------------------------------------------------------
+
 UDPSocket::UDPSocket()
 {
 	data = (void *)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -151,8 +167,7 @@ UDPSocket::UDPSocket()
 
 UDPSocket::~UDPSocket()
 {
-	if (data)
-		closesocket((SOCKET) data);
+	close();
 }
 
 //------------------------------------------------------------------------------
@@ -187,27 +202,43 @@ bool UDPSocket::broadcast()
 
 //------------------------------------------------------------------------------
 
-ssize_t UDPSocket::sendto(const Address &address, const char *data_in, size_t length)
+bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &length)
 {
-	return ::sendto((SOCKET) data, data_in, length, 0,
+	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
 		(sockaddr *) address.data, address.length);
+	if (ret == length)
+		return true;
+	
+	length = ret;
+	return false;
 }
 
 //------------------------------------------------------------------------------
 
-ssize_t UDPSocket::shout(unsigned int port, const char *data_in, size_t length)
+bool UDPSocket::shout(unsigned int port, const char *data_in, size_t &length)
 {
 	Address address(INADDR_BROADCAST, port);
-	return ::sendto((SOCKET) data, data_in, length, 0,
+	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
 		(sockaddr *) address.data, address.length);
+	if (ret == length)
+		return true;
+	
+	length = ret;
+	return false;
 }
 
 //------------------------------------------------------------------------------
 
-ssize_t UDPSocket::recvfrom(Address &address, char *data_out, size_t length)
+bool UDPSocket::recvfrom(Address &address, char *data_out, size_t &length)
 {
-	return ::recvfrom((SOCKET) data, data_out, length, 0,
+	ssize_t ret = ::recvfrom((SOCKET) data, data_out, length, 0,
 		(sockaddr *) address.data, (int *) &address.length);
+	if (ret >= 0)
+	{
+		length = ret;
+		return true;
+	}
+	return false;
 }
 
 //------------------------------------------------------------------------------
@@ -221,8 +252,7 @@ TCPSocket::TCPSocket()
 
 TCPSocket::~TCPSocket()
 {
-	if (data)
-		closesocket((SOCKET) data);
+	close();
 }
 
 //------------------------------------------------------------------------------
@@ -262,68 +292,27 @@ TCPSocket TCPSocket::accept(Address &address)
 
 //------------------------------------------------------------------------------
 
-ssize_t TCPSocket::send(const char *data_in, size_t length)
+bool TCPSocket::send(const char *data_in, size_t &length)
 {
-	return ::send((SOCKET) data, data_in, length, 0);
-}
-
-//------------------------------------------------------------------------------
-
-ssize_t TCPSocket::recv(char *data_out, size_t length)
-{
-	return ::recv((SOCKET) data, data_out, length, 0);
-}
-
-//------------------------------------------------------------------------------
-
-TCPStringSocket::TCPStringSocket() : TCPSocket(), buffer("")
-{
-}
-
-//------------------------------------------------------------------------------
-
-TCPStringSocket::~TCPStringSocket()
-{
-}
-
-//------------------------------------------------------------------------------
+	ssize_t ret = ::send((SOCKET) data, data_in, length, 0);
+	if (ret == length)
+		return true;
 	
-bool TCPStringSocket::send(const std::string &input)
-{
-	std::string msg = input;
-	msg += "\n";
-	size_t len = msg.length();
-	return (send(msg.c_str(), len) == len);
+	length = ret;
+	return false;
 }
 
 //------------------------------------------------------------------------------
 
-std::string TCPStringSocket::recv()
+bool TCPSocket::recv(char *data_out, size_t &length)
 {
-	std::string msg;
-	size_t pos = buffer.find("\n");
-	if (pos != std::string::npos)
+	ssize_t ret = ::recv((SOCKET) data, data_out, length, 0);
+	if (ret >= 0)
 	{
-		msg = buffer.substr(0, pos);
-		buffer.erase(0, pos + 1);
-		return msg;
+		length = ret;
+		return true;
 	}
-	
-	char buf[1024];
-	while ((pos = recv(buf, sizeof (buf))) != -1)
-	{
-		buffer += std::string(buf, pos);
-		
-		size_t pos = buffer.find("\n");
-		if (pos != std::string::npos)
-		{
-			msg = buffer.substr(0, pos);
-			buffer.erase(0, pos + 1);
-			return msg;
-		}
-	}
-	
-	return "";
+	return false;
 }
 
 //------------------------------------------------------------------------------

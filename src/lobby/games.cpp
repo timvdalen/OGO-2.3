@@ -33,17 +33,17 @@ struct GameListData
 GameList::GameList(unsigned int port)
 {
 	data = (void *) new GameListData;
-	GameListData *gdata = (GameListData *) data;
-	
-	if (!gdata)
+	if (!data)
 		return;
 	
-	gdata->sock = new UDPSocket();
-	gdata->sock->setNonBlocking();
-	if (!gdata->sock->bind(port))
+	GameListData *p = (GameListData *)data;
+	
+	p->sock = new Net::UDPSocket();
+	p->sock->setNonBlocking();
+	if (!p->sock->bind(port))
 	{
-		delete gdata;
-		gdata = 0;
+		delete p;
+		p = 0;
 		return;
 	}
 	
@@ -51,10 +51,10 @@ GameList::GameList(unsigned int port)
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	
-	if (pthread_create(&gdata->thread, &attr, GameList_thread, (void *) this))
+	if (pthread_create(p->thread, &attr, listen, (void *) this))
 	{
-		delete gdata;
-		gdata = 0;
+		delete p;
+		p = 0;
 		return;
 	}
 	
@@ -65,28 +65,28 @@ GameList::GameList(unsigned int port)
 
 GameList::~GameList()
 {
-	if (data)
-	{
-		GameListData *gdata = (GameListData *) data;
-		
-		pthread_cancel(gdata->thread, 0);
-		
-		void *status;
-		pthread_join(gdata->thread, &status);
-		
-		delete gdata;
-		gdata = 0;
-	}
+	if (!data)
+		return;
+	
+	GameListData *p = (GameListData *) data;
+	
+	pthread_cancel(*p->thread);
+	
+	void *status;
+	pthread_join(*p->thread, &status);
+	
+	delete p;
+	p = 0;
 }
 
 //------------------------------------------------------------------------------
 
-static void *GameList_thread(void *arg)
+void *GameList::listen(void *arg)
 {
 	GameList *gamelist = (GameList *)arg;
-	GameListData *data = (GameListData *)gamelist->data;
+	GameListData *p = (GameListData *) gamelist->data;
 	
-	if (!data)
+	if (!gamelist)
 		pthread_exit(0);
 	
 	time_t now = time(0);
@@ -101,36 +101,37 @@ static void *GameList_thread(void *arg)
 		for (;;)
 		{
 			Net::Address remote;
-			if ((ret = sock.recvfrom(remote, buffer, sizeof (buffer)) == -1)
+			size_t length;
+			if ((ret = p->sock->recvfrom(remote, buffer, length = sizeof (buffer))) == -1)
 				break;
 			
 			Game game;
 			game.numPlayers = *buffer;
 			game.name = std::string(buffer + 1);
-			game.ttl = now + LOBBY_TIMEOUT;
+			game.ttl = now + LOBBY_BC_TIMEOUT;
 			
-			if (data->list.count(remote))
+			if (p->list.count(remote))
 			{
-				if (onJoin)
-					onJoin(remote, game);
+				if (gamelist->onJoin)
+					gamelist->onJoin(remote, game);
 			}
-			else if (data->list[remote].numPlayers != game.numPlayers)
+			else if (p->list[remote].numPlayers != game.numPlayers)
 			{
-				if (onChange)
-					onChange(remote, game.numPlayers);
+				if (gamelist->onChange)
+					gamelist->onChange(remote, game.numPlayers);
 			}
 			
-			data->list[remote] = game;
+			p->list[remote] = game;
 		}
 		
 		// Remove servers that had a timeout
-		for (List::iterator it = game->list.begin(); it != game->list.end() ++it)
+		for (GameListData::List::iterator it = p->list.begin(); it != p->list.end(); ++it)
 		{
-			if (it->ttl < now)
+			if (it->second.ttl < now)
 			{
-				if (onPart)
-					onPart(remote);
-				list.erase(it);
+				if (gamelist->onPart)
+					gamelist->onPart(it->first);
+				p->list.erase(it);
 			}
 		}
 		
