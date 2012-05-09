@@ -44,8 +44,26 @@
 #ifndef _BASE_H
 #define _BASE_H
 
-#include "common.h"
 #include <math.h>
+
+#define TYPE_ASSERT(type, assertion) \
+	typedef int TA_type_ ## type[(assertion)*2 - 1]
+
+typedef signed char byte;
+typedef signed short int word;
+typedef signed long int dword;
+typedef unsigned char ubyte;
+typedef unsigned short int uword;
+typedef unsigned long int udword;
+
+TYPE_ASSERT(byte,   sizeof(byte)   == 1);
+TYPE_ASSERT(ubyte,  sizeof(ubyte)  == 1);
+TYPE_ASSERT(word,   sizeof(word)   == 2);
+TYPE_ASSERT(uword,  sizeof(uword)  == 2);
+TYPE_ASSERT(dword,  sizeof(dword)  == 4);
+TYPE_ASSERT(udword, sizeof(udword) == 4);
+
+#define FCLAMP(x) ((x) > 1.0 ? 1.0 : ((x) < 0.0 ? 0.0 : (x)))
 
 #define BASE_ALIAS(x,y) namespace Alias { typedef x<double> y ## d; \
                                           typedef x<float>  y ## f; \

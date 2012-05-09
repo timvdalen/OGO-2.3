@@ -14,7 +14,6 @@
 
 #include <set>
 
-#include "common.h"
 #include "base.h"
 
 namespace Core {
