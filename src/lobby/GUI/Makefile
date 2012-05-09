@@ -1,7 +1,8 @@
 CPP      = g++
 CXXFLAGS = `wx-config --cxxflags`
-LIBS     = `wx-config --libs`
+LIBS     = `wx-config --libs` 
 OBJ      = gui.o
+CFOBJ	 = ../../common/ConfigFile.o
 BIN      = ../../../bin/lobby
 RM	 = rm -f
 
@@ -14,10 +15,13 @@ endif
 all: $(BIN)
 
 clean:
-	$(RM) $(OBJ) $(BIN)
+	$(RM) $(OBJ) $(CFOBJ) $(BIN)
 
 gui.o: gui.cpp
 	$(CPP) -c gui.cpp -o gui.o $(CXXFLAGS)
 
-$(BIN): $(OBJ)
-	$(CPP) $(OBJ) -o $(BIN) $(LIBS)
+ConfigFile.o: ../../common/ConfigFile.cpp
+	$(CPP) -c ../../common/ConfigFile.cpp -o $(CFOBJ)
+
+$(BIN): $(OBJ) ConfigFile.o
+	$(CPP) $(OBJ) $(CFOBJ) -o $(BIN) $(LIBS)

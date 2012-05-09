@@ -1,10 +1,15 @@
 #include <wx/wx.h>
 #include <wx/statline.h>
+#include <string>
+#include "../../common/ConfigFile.h"
 
 /* Globals */
 //TODO: This is very ugly, need a way to pass messages between frames.
 wxString selected;
 bool joining;
+wxString playerName;
+int playnum;
+wxCheckBox *playlist[6];
 
 class LobbyGUI: public wxApp{
 	    virtual bool OnInit();
@@ -14,7 +19,7 @@ class mainFrame: public wxFrame{
 		wxListBox *listbox;
 
 	public:
-	    	mainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+		mainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 
 		void OnJoinClick(wxCommandEvent& event);
 		void OnCreateClick(wxCommandEvent& event);
@@ -26,6 +31,7 @@ class gameLobby: public wxFrame{
 	public:
 		gameLobby(const wxString& title, const wxPoint& pos, const wxSize& size);
 		void OnSendClick(wxCommandEvent& event);
+		void OnReadyClick(wxCommandEvent& event);
 
 		DECLARE_EVENT_TABLE()
 };
@@ -50,6 +56,12 @@ END_EVENT_TABLE()
 IMPLEMENT_APP(LobbyGUI)
 
 bool LobbyGUI::OnInit(){
+	ConfigFile config("game.conf");
+	string pname;
+	config.readInto(pname, "playername");
+	wxString pnamet(pname.c_str(), wxConvUTF8);
+	playerName = pnamet;
+
 	mainFrame *frame = new mainFrame( _("name T.B.D. Lobby"), wxPoint(49, 50), wxSize(320, 200) );
 	frame->Show(true);
 	SetTopWindow(frame);
@@ -112,8 +124,8 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 	
 	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + selected, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
 	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, ID_CHAT, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
-	wxStaticText *playerName = new wxStaticText(panelLeft, wxID_ANY, _("Player 2:"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
-	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER); //TODO: generate and catch ENTER
+	wxStaticText *txtPlayerName = new wxStaticText(panelLeft, wxID_ANY, playerName + _(":"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
+	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER);
 	wxButton *btnSend = new wxButton(panelLeft, ID_SEND, _("Send"), wxPoint(490, 260));
 	Connect(ID_SEND, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobby::OnSendClick));
 	Connect(ID_TXTSEND, wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(gameLobby::OnSendClick));
@@ -122,32 +134,28 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 	
 	wxPanel *panelRight = new wxPanel(mainPanel, wxID_ANY, wxPoint(601, 0), wxSize(299, 300));
 
-	wxPanel *panelRightTop = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 0), wxSize(299, 99));
-	wxCheckBox *chkOne = new wxCheckBox(panelRightTop, wxID_ANY, _("Player 1"), wxPoint(10, 5));
-	wxCheckBox *chkTwo = new wxCheckBox(panelRightTop, wxID_ANY, _("Player 2"), wxPoint(10, 20));
-	wxCheckBox *chkThree = new wxCheckBox(panelRightTop, wxID_ANY, _("Player 3"), wxPoint(10, 35));
-	wxCheckBox *chkFour = new wxCheckBox(panelRightTop, wxID_ANY, _("Player 4"), wxPoint(10, 50));
-	wxCheckBox *chkFive = new wxCheckBox(panelRightTop, wxID_ANY, _("Player 5"), wxPoint(10, 65));
-	wxCheckBox *chkSix = new wxCheckBox(panelRightTop, wxID_ANY, _("Player 6"), wxPoint(10, 80));
-	
-	chkOne->SetValue(true);
-	chkThree->SetValue(true);
-	chkFive->SetValue(true);
+	wxPanel *panelRightTop = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 0), wxSize(299, 129));
 
-	/* Disable the checkboxes
-	 * This also causes the text to get disabled, so I'm leaving this out for now
-	 * A solution would be to draw the player names and checkboxes separate
-	chkOne->Enable(false);
-	chkTwo->Enable(false);
-	chkThree->Enable(false);
-	chkFour->Enable(false);
-	chkFive->Enable(false);
-	chkSix->Enable(false);
-	*/
+	playnum = 3;
 
-	wxStaticLine *slRight = new wxStaticLine(panelRight, wxID_ANY, wxPoint(5, 100), wxSize(290, 1), wxLI_HORIZONTAL); 
+	for(int i=0; i < 6; i++){
+		wxCheckBox *chk = new wxCheckBox(panelRightTop, wxID_ANY, _(""), wxPoint(10, (15*i)));
+		chk->Enable(false);
+		playlist[i] = chk;
+
+		if(i == playnum){
+			if(!joining){
+				chk->SetValue(true);
+			}
+			wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, playerName, wxPoint(30, 5+(15*i)));
+		}else{
+			wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, wxString::Format(_("Player %i"), (i+1)), wxPoint(30, 5+(15*i)));
+		}
+	}
+
+	wxStaticLine *slRight = new wxStaticLine(panelRight, wxID_ANY, wxPoint(5, 130), wxSize(290, 1), wxLI_HORIZONTAL); 
 	
-	wxPanel *panelRightBottom = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 101), wxSize(299, 299));
+	wxPanel *panelRightBottom = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 131), wxSize(299, 279));
 	wxString readyTxt;
 	if(joining){
 		readyTxt = _("Ready");
@@ -155,11 +163,25 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 		readyTxt = _("Start");
 	}
 	wxButton *btnReady = new wxButton(panelRightBottom, ID_READY, readyTxt, wxPoint(5, 5), wxSize(289, 40));
+	if(!joining){
+		btnReady->Enable(false);
+	}
+
+	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobby::OnReadyClick));
 }
 
 void gameLobby::OnSendClick(wxCommandEvent& WXUNUSED(event)){
 	wxTextCtrl *textInput = (wxTextCtrl*) this->FindWindowById(ID_TXTSEND);
 	wxTextCtrl *textChat = (wxTextCtrl*) this->FindWindowById(ID_CHAT);
-	textChat->AppendText(_("\nPlayer 2: ") + textInput->GetValue());
+	textChat->AppendText(_("\n") + playerName + _(": ") + textInput->GetValue());
 	textInput->ChangeValue(_(""));
+}
+
+void gameLobby::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
+	if(joining){
+		wxCheckBox *chk = playlist[playnum];
+		chk->SetValue(!chk->GetValue());
+	}else{
+		wxMessageBox(_("Starting game"), _("Starting game"), wxOK);
+	}
 }
