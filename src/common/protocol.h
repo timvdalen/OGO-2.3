@@ -35,6 +35,31 @@ struct TextSocket : public Net::TCPSocket
 
 //------------------------------------------------------------------------------
 
+struct Message;
+struct Argument;
+
+struct MsgSocket : public TextSocket
+{
+	MsgSocket accept(Net::Address &remote);
+	
+	bool send(const Message &msg);
+	Message recv();
+};
+
+//------------------------------------------------------------------------------
+
+struct Message : public std::vector<Argument>
+{
+	Message() {}
+	Message(const std::string &);
+	
+	operator std::string() const;
+	
+	static Message eof;
+};
+
+//------------------------------------------------------------------------------
+
 struct Argument
 {
 	Argument(const std::string &S) : str(S) {}
@@ -44,34 +69,11 @@ struct Argument
 	Argument(double);
 	
 	operator std::string() const;
+	operator int() const;
 	operator long() const;
 	operator double() const;
 	
 	std::string str;
-};
-
-//------------------------------------------------------------------------------
-
-struct Message
-{
-	Message() {}
-	Message(const std::string &);
-	
-	operator std::string() const;
-	void add(const Argument &arg) { args.push_back(arg); }
-	const Argument &operator[](size_t index) { return args[index]; }
-	
-	std::vector<Argument> args;
-};
-
-//------------------------------------------------------------------------------
-
-struct MsgSocket : public TextSocket
-{
-	MsgSocket accept(Net::Address &remote);
-	
-	bool send(const Message &msg);
-	Message recv();
 };
 
 //------------------------------------------------------------------------------

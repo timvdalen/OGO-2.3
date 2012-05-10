@@ -15,6 +15,25 @@
 
 #include "net.h"
 #include "protocol.h"
+#include "games.h"
+#include "lobby.h"
+
+//------------------------------------------------------------------------------
+
+void Join(Net::Address server, Lobby::Game game)
+{
+	printf("Joined: %s %d\n", game.name.c_str(), game.numPlayers);
+}
+
+void Change(Net::Address server, Lobby::Game game)
+{
+	printf("Changed: %s %d\n", game.name.c_str(), game.numPlayers);
+}
+
+void Part(Net::Address server)
+{
+	printf("Parted\n");
+}
 
 //------------------------------------------------------------------------------
 
@@ -58,13 +77,31 @@ int main(int argc, char *argv[])
 	Net::Terminate();
 	}*/
 	
-	Protocol::Message msg;
-	msg.add("TEST");
-	msg.add(4.5);
-	msg.add(1337L);
-	std::string str = msg;
+	{
+	Net::Initialize();
 	
-	printf("%s", std::string(msg).c_str());
+	int choice;
+	printf("1) server\n2) client\n >");
+	scanf("%d", &choice);
+	
+	if (choice == 2)
+	{
+		Lobby::GameList gamelist(LOBBY_PORT);
+		
+		while (gamelist.valid());
+	}
+	else if (choice == 1)
+	{
+		printf(" name>");
+		char *name;
+		gets(name);
+		Lobby::ServerLobby lobby(std::string(name), "unknown", LOBBY_PORT);
+		
+		while (lobby.valid());
+	}
+	
+	Net::Terminate();
+	}
 	
 	puts("Press any key...");
 	getchar();

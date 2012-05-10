@@ -9,6 +9,8 @@
 
 //------------------------------------------------------------------------------
 
+#define VERSION "v0.0.0"
+
 #ifndef LOBBY_BC_INTERVAL
 #define LOBBY_BC_INTERVAL 5
 #endif
@@ -17,8 +19,8 @@
 #define LOBBY_BC_TIMEOUT 10
 #endif
 
-#ifndef LOBBY_POLL_INTERVAL
-#define LOBBY_POLL_INTERVAL 1000
+#ifndef LOBBY_PORT
+#define LOBBY_PORT 1337
 #endif
 
 //------------------------------------------------------------------------------

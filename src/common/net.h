@@ -10,6 +10,8 @@
 #ifndef _NET_H
 #define _NET_H
 
+#include <vector>
+
 //! Network module
 namespace Net {
 
@@ -27,6 +29,8 @@ struct Address
 {
 	//! Creates an empty address
 	Address();
+	//! Copy constructor
+	Address(const Address &);
 	//! Creates an address from raw types
 	Address(unsigned long address, unsigned port = 0);
 	//! Creates an addres from a string
@@ -57,6 +61,12 @@ struct Socket
 	
 	void close();
 	bool valid() { return !!data; }
+	
+	typedef std::vector<Socket *> List;
+	
+	static bool select(Socket::List &read,
+	                   Socket::List &write,
+				       Socket::List &error, long timeout);
 	
 	protected:
 	void *data;

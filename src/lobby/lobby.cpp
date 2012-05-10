@@ -6,17 +6,16 @@
 
 #include <map>
 
+#include "protocol.h"
 #include "lobby.h"
 
-static void *ClientLobby_thread(void *arg);
-static void *ServerLobby_thread(void *arg);
-static void *ServerLobby_broadcast(void *arg);
+namespace Lobby {
 
 //------------------------------------------------------------------------------
 
 struct GameLobbyData
 {
-	//Net::TCPStringSocket sock;
+	Protocol::MsgSocket *sock;
 	pthread_t thread;
 };
 
@@ -24,17 +23,19 @@ struct GameLobbyData
 
 struct ServerPlayer : public Player
 {
-	Net::TCPStringSocket sock;
+	Protocol::MsgSocket *sock;
 };
 
 //------------------------------------------------------------------------------
 
 struct ServerLobbyData : public GameLobbyData
 {
+	Net::UDPSocket *bcsock;
 	typedef std::map<Net::Address,ServerPlayer> List;
+	unsigned int port;
 	List list;
 	std::string gameName;
-	pthread_t broadcaster;
+	pthread_t thread2;
 };
 
 //------------------------------------------------------------------------------
@@ -42,15 +43,17 @@ struct ServerLobbyData : public GameLobbyData
 ClientLobby::ClientLobby(std::string playerName, const Net::Address &server)
 {
 	data = (void *) new GameLobbyData;
-	GameLobbyData *lobby = (GameLobbyData *)data;
-	
-	if (!lobby)
+	if (!data)
 		return;
 	
-	if (!lobby->sock->connect(server))
+	GameLobbyData *p = (GameLobbyData *)data;
+	
+	p->sock = new Protocol::MsgSocket();
+	if (!p->sock->connect(server))
 	{
-		delete lobby;
-		lobby = 0;
+		delete p->sock;
+		delete p;
+		p = 0;
 		return;
 	}
 	
@@ -58,10 +61,11 @@ ClientLobby::ClientLobby(std::string playerName, const Net::Address &server)
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	
-	if (pthread_create(&lobby->thread, &attr, ClientLobby_thread, (void *) this))
+	if (pthread_create(&p->thread, &attr, listen, (void *) this))
 	{
-		delete lobby;
-		lobby = 0;
+		delete p->sock;
+		delete p;
+		p = 0;
 		return;
 	}
 	
@@ -77,93 +81,175 @@ ClientLobby::~ClientLobby()
 	
 	GameLobbyData *lobby = (GameLobbyData *) data;
 	
-	pthread_cancel(lobby->thread, 0);
+	pthread_cancel(lobby->thread);
 	
 	void *status;
 	pthread_join(lobby->thread, &status);
 	
+	delete lobby->sock;
 	delete lobby;
 	lobby = 0;
 }
 
 //------------------------------------------------------------------------------
 
-bool ClientLobby::chat(const std::string &line)
+bool GameLobby::chat(const std::string &line)
 {
 	if (!data)
 		return false;
 	
 	GameLobbyData *lobby = (GameLobbyData *) data;
 	
-	std::string msg = "M";
-	return lobby->sock->send(msg + line);
+	Protocol::Message msg;
+	msg.push_back("SAY");
+	msg.push_back(line);
+	return lobby->sock->send(msg);
 }
 
 //------------------------------------------------------------------------------
 
-bool ClientLobby::ready(bool ready)
+bool GameLobby::ready(bool ready)
 {
 	if (!data)
 		return false;
 	
 	GameLobbyData *lobby = (GameLobbyData *) data;
 	
-	std::string msg = "R";
-	return lobby->sock->send(msg + (ready ? '1' : '0'));
+	Protocol::Message msg;
+	msg.push_back(ready ? "READY" : "BUSY");
+	return lobby->sock->send(msg);
 }
 
 //------------------------------------------------------------------------------
 
-static void *ClientLobby_thread(void *arg)
+void *ClientLobby::listen(void *arg)
 {
-	ClientLobby *clientlobby = (ClientLobby *)arg;
-	ClientLobbyData *lobby = (ClientLobbyData *)clientlobby->data;
-	
-	if (!lobby)
-		pthread_exit(0);
-	
-	buffer
-	for (;;)
-	{
-		std::string msg = lobby->sock->recv();
-		switch (msg[0])
-		{
-			case 'M':
-				if (onChat)
-					onChat();
-				break;
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
 
 ServerLobby::ServerLobby(std::string gameName, std::string playerName, unsigned int port)
 {
+	data = (void *) new ServerLobbyData;
+	if (!data)
+		return;
+	
+	ServerLobbyData *p = (ServerLobbyData *)data;
+	
+	p->port = port;
+	p->gameName = gameName;
+	
+	p->sock = new Protocol::MsgSocket();
+	if (!p->sock->listen(port))
+	{
+		delete p->sock;
+		delete p;
+		p = 0;
+		return;
+	}
+	
+	p->bcsock = new Net::UDPSocket();
+	p->bcsock->setNonBlocking();
+	p->bcsock->broadcast();
+	if (!p->bcsock->bind(port))
+	{
+		delete p->sock;
+		delete p->bcsock;
+		delete p;
+		p = 0;
+		return;
+	}
+	
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+	if (pthread_create(&p->thread, &attr, listen, (void *) this))
+	{
+		delete p->sock;
+		delete p->bcsock;
+		delete p;
+		p = 0;
+		return;
+	}
+	
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+	if (pthread_create(&p->thread2, &attr, broadcast, (void *) this))
+	{
+		delete p->sock;
+		delete p->bcsock;
+		delete p;
+		p = 0;
+		return;
+	}
+	
+	pthread_attr_destroy(&attr);
 }
 
 //------------------------------------------------------------------------------
 
 ServerLobby::~ServerLobby()
 {
+	if (!data)
+		return;
+	
+	ServerLobbyData *lobby = (ServerLobbyData *) data;
+	
+	pthread_cancel(lobby->thread);
+	pthread_cancel(lobby->thread2);
+	
+	void *status;
+	pthread_join(lobby->thread, &status);
+	pthread_join(lobby->thread2, &status);
+	
+	delete lobby->sock;
+	delete lobby->bcsock;
+	delete lobby;
+	lobby = 0;
 }
 
 //------------------------------------------------------------------------------
 
-ServerLobby::start()
+bool ServerLobby::start()
 {
 }
 
 //------------------------------------------------------------------------------
 
-static void *ServerLobby_thread(void *arg)
+void *ServerLobby::listen(void *arg)
 {
 }
 
 //------------------------------------------------------------------------------
 
-static void *ServerLobby_broadcast(void *arg)
+void *ServerLobby::broadcast(void *arg)
 {
+	ServerLobby *lobby = (ServerLobby *)arg;
+	ServerLobbyData *p = (ServerLobbyData *) lobby->data;
+	
+	if (!lobby)
+		pthread_exit(0);
+	
+	for (;;)
+	{
+		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+		Protocol::Message msg;
+		msg.push_back("GOTO");
+		msg.push_back(VERSION);
+		msg.push_back((long) p->list.size());
+		msg.push_back(p->gameName);
+		std::string str = msg;
+		size_t length;
+		p->bcsock->shout(p->port, str.c_str(), length = str.length());
+		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+		
+		sleep(LOBBY_BC_INTERVAL * 1000);
+	}
+	
+	pthread_exit(0);
 }
+
+//------------------------------------------------------------------------------
+
+} // namespace Lobby
 
 //------------------------------------------------------------------------------

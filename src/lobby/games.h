@@ -24,7 +24,6 @@ struct Game
 {
 	std::string name;        //!< Game name
 	unsigned int numPlayers; //!< Number of players currently on the game
-	time_t ttl;              //!< Time to live. Time before game is removed form the list.
 };
 
 //------------------------------------------------------------------------------
@@ -33,7 +32,7 @@ class GameList
 {
 	public:
 	void (*onJoin)   (Net::Address server, Game game);
-	void (*onChange) (Net::Address server, unsigned int numPlayers);
+	void (*onChange) (Net::Address server, Game game);
 	void (*onPart)   (Net::Address server);
 	
 	//! Creates a gamelist that listens for games on the specified port.
@@ -49,7 +48,7 @@ class GameList
 
 //------------------------------------------------------------------------------
 
-} // namespace Games
+} // namespace Lobby
 
 #endif // _GAMES_H
 

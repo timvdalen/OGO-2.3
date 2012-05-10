@@ -8,7 +8,7 @@
 	#define _WIN32_WINNT 0x0501 
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
-	#define ssize_t unsigned long int
+	#define ssize_t signed long int
 #else
 	#define SOCKET int
 #endif
@@ -45,6 +45,14 @@ Address::Address() : data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
 	if (data)
 		memset(data, 0, length);
+}
+
+//------------------------------------------------------------------------------
+
+Address::Address(const Address &address)
+	: data(new sockaddr_in), length(address.length)
+{
+	memcpy(data, address.data, length);
 }
 
 //------------------------------------------------------------------------------
@@ -154,6 +162,88 @@ void Socket::close()
 	#endif
 	
 	data = 0;
+}
+
+//------------------------------------------------------------------------------
+
+bool Socket::select(Socket::List &read, Socket::List &write,
+	Socket::List &error, long timeout)
+{
+	int maxfd = 0;
+	
+	timeval tv;
+	tv.tv_sec = timeout;
+	tv.tv_usec = 0;
+	
+	fd_set rfds, wfds, efds;
+	
+	if (!read.empty())
+	{
+		FD_ZERO(&rfds);
+		for (List::iterator it = read.begin(); it != read.end(); ++it)
+		{
+			SOCKET fd = (SOCKET) (*it)->data;
+			FD_SET(fd, &rfds);
+			maxfd = maxfd < fd ? fd : maxfd;
+		}
+	}
+	
+	if (!write.empty())
+	{
+		FD_ZERO(&wfds);
+		for (List::iterator it = write.begin(); it != write.end(); ++it)
+		{
+			SOCKET fd = (SOCKET) (*it)->data;
+			FD_SET(fd, &wfds);
+			maxfd = maxfd < fd ? fd : maxfd;
+		}
+	}
+	
+	if (!error.empty())
+	{
+		FD_ZERO(&efds);
+		for (List::iterator it = error.begin(); it != error.end(); ++it)
+		{
+			SOCKET fd = (SOCKET) (*it)->data;
+			FD_SET(fd, &efds);
+			maxfd = (maxfd < fd ? fd : maxfd);
+		}
+	}
+	
+	int ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
+	                              write.empty() ? NULL : &wfds,
+					              error.empty() ? NULL : &efds,
+					              timeout ? &tv : NULL);
+	return true;
+	if (ret == -1)
+		return false;
+	
+	List list;
+	if (!read.empty())
+	{
+		for (List::iterator it = read.begin(); it != read.end(); ++it)
+			if (FD_ISSET((SOCKET) (*it)->data, &rfds))
+				list.push_back(*it);
+		read = list;
+	}
+	
+	if (!write.empty())
+	{
+		for (List::iterator it = write.begin(); it != write.end(); ++it)
+			if (!FD_ISSET((SOCKET) (*it)->data, &wfds))
+				list.push_back(*it);
+		write = list;
+	}
+	
+	if (!error.empty())
+	{
+		for (List::iterator it = error.begin(); it != error.end(); ++it)
+			if (!FD_ISSET((SOCKET) (*it)->data, &efds))
+				list.push_back(*it);
+		error = list;
+	}
+	
+	return true;
 }
 
 //------------------------------------------------------------------------------

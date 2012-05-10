@@ -55,7 +55,7 @@ std::string TextSocket::recv()
 		}
 	}
 	
-	return (" ");
+	return ("\r\n");
 }
 
 //------------------------------------------------------------------------------
@@ -94,6 +94,13 @@ Argument::operator std::string() const
 
 //------------------------------------------------------------------------------
 
+Argument::operator int() const
+{
+	return atoi(str.c_str());
+}
+
+//------------------------------------------------------------------------------
+
 Argument::operator long() const
 {
 	return atol(str.c_str());
@@ -111,22 +118,25 @@ Argument::operator double() const
 Message::Message(const std::string &msg)
 {
 	size_t begin = 0;
-	for (size_t pos = 0; pos != std::string::npos; pos = msg.find(" ", pos))
+	for (size_t pos = msg.find(" ", 0);
+	     pos != std::string::npos;
+		 pos = msg.find(" ", pos))
 	{
-		++pos;
+		push_back(msg.substr(begin, pos - begin));
+		begin = ++pos;
 		
 		if (msg[pos] == ':')
 		{
-			++pos;
-			args.push_back(msg.substr(pos));
-			return;
+			++begin;
+			break;
 		}
-		
-		args.push_back(msg.substr(begin, pos - begin - 2));
-		begin = pos;
 	}
-	args.push_back(msg.substr(begin));
+	push_back(msg.substr(begin));
 }
+
+//------------------------------------------------------------------------------
+
+Message Message::eof = Message("\r\n");
 
 //------------------------------------------------------------------------------
 
@@ -134,10 +144,10 @@ Message::operator std::string() const
 {
 	std::string str;
 	
-	std::vector<Argument>::const_iterator it;
-	for (it = args.begin(); it != args.end(); ++it)
+	Message::const_iterator it;
+	for (it = begin(); it != end(); ++it)
 	{
-		if ((it + 1) == args.end())
+		if ((it + 1) == end())
 			str += std::string(":") + it->str;
 		else
 			str += it->str + std::string(" ");
@@ -150,18 +160,25 @@ Message::operator std::string() const
 
 MsgSocket MsgSocket::accept(Net::Address &remote)
 {
+	TCPSocket sock = TCPSocket::accept(remote);
+	MsgSocket msgsock;
+	memcpy(&msgsock, &sock, sizeof (sock));
+	memset(&sock, 0, sizeof (sock));
+	return (msgsock);
 }
 
 //------------------------------------------------------------------------------
 
 bool MsgSocket::send(const Message &msg)
 {
+	return TextSocket::send(msg);
 }
 
 //------------------------------------------------------------------------------
 
 Message MsgSocket::recv()
 {
+	return Message(TextSocket::recv());
 }
 
 //------------------------------------------------------------------------------
