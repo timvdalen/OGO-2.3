@@ -294,6 +294,10 @@ bool UDPSocket::broadcast()
 
 bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &length)
 {
+	#ifdef NETDEBUG
+		printf("%03X> %s\n", data, data_in);
+	#endif
+	
 	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
@@ -307,6 +311,10 @@ bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &leng
 
 bool UDPSocket::shout(unsigned int port, const char *data_in, size_t &length)
 {
+	#ifdef NETDEBUG
+		printf("%03X>> %s\n", data, data_in);
+	#endif
+	
 	Address address(INADDR_BROADCAST, port);
 	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
 		(sockaddr *) address.data, address.length);
@@ -325,6 +333,10 @@ bool UDPSocket::recvfrom(Address &address, char *data_out, size_t &length)
 		(sockaddr *) address.data, (int *) &address.length);
 	if (ret >= 0)
 	{
+		#ifdef NETDEBUG
+			printf("%03X< %s\n", data, data_out);
+		#endif
+		
 		length = ret;
 		return true;
 	}
@@ -384,6 +396,10 @@ TCPSocket TCPSocket::accept(Address &address)
 
 bool TCPSocket::send(const char *data_in, size_t &length)
 {
+	#ifdef NETDEBUG
+		printf("%03X> %s\n", data, data_in);
+	#endif
+	
 	ssize_t ret = ::send((SOCKET) data, data_in, length, 0);
 	if (ret == length)
 		return true;
@@ -399,6 +415,9 @@ bool TCPSocket::recv(char *data_out, size_t &length)
 	ssize_t ret = ::recv((SOCKET) data, data_out, length, 0);
 	if (ret >= 0)
 	{
+		#ifdef NETDEBUG
+			printf("%03X< %s\n", data, data_out);
+		#endif
 		length = ret;
 		return true;
 	}

@@ -12,11 +12,11 @@
 #define VERSION "v0.0.0"
 
 #ifndef LOBBY_BC_INTERVAL
-#define LOBBY_BC_INTERVAL 5
+#define LOBBY_BC_INTERVAL 1
 #endif
 
 #ifndef LOBBY_BC_TIMEOUT
-#define LOBBY_BC_TIMEOUT 10
+#define LOBBY_BC_TIMEOUT 3
 #endif
 
 #ifndef LOBBY_PORT

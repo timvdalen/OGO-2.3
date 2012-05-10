@@ -92,8 +92,9 @@ int main(int argc, char *argv[])
 	}
 	else if (choice == 1)
 	{
+		fflush(stdin);
 		printf(" name>");
-		char *name;
+		char name[256];
 		gets(name);
 		Lobby::ServerLobby lobby(std::string(name), "unknown", LOBBY_PORT);
 		

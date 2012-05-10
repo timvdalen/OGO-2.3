@@ -59,11 +59,15 @@ struct Socket
 	bool setBlocking();    //!< Makes operations on this socket block. (default)
 	bool setNonBlocking(); //!< Makes operations on this socket not block.
 	
-	void close();
+	void close(); //!< Closes the socket. This will invalidate the instance.
+	//! Returns the validity of the socket.
 	bool valid() { return !!data; }
 	
+	//! Socket list
 	typedef std::vector<Socket *> List;
 	
+	//! Checks a list of sockets for change.
+	//! Note: The lists will reflect the changed sockets afterwards.
 	static bool select(Socket::List &read,
 	                   Socket::List &write,
 				       Socket::List &error, long timeout);

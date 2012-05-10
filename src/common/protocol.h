@@ -20,6 +20,7 @@ namespace Protocol {
 
 //------------------------------------------------------------------------------
 
+//! TCP 
 struct TextSocket : public Net::TCPSocket
 {
 	TextSocket() : TCPSocket(), buffer() {}

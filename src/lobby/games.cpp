@@ -50,7 +50,7 @@ GameList::GameList(unsigned int port)
 	{
 		delete p->sock;
 		delete p;
-		p = 0;
+		data = 0;
 		return;
 	}
 	
@@ -62,7 +62,7 @@ GameList::GameList(unsigned int port)
 	{
 		delete p->sock;
 		delete p;
-		p = 0;
+		data = 0;
 		return;
 	}
 	
@@ -85,7 +85,7 @@ GameList::~GameList()
 	
 	delete p->sock;
 	delete p;
-	p = 0;
+	data = 0;
 }
 
 //------------------------------------------------------------------------------

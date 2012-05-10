@@ -144,7 +144,7 @@ ServerLobby::ServerLobby(std::string gameName, std::string playerName, unsigned 
 	{
 		delete p->sock;
 		delete p;
-		p = 0;
+		data = 0;
 		return;
 	}
 	
@@ -156,7 +156,7 @@ ServerLobby::ServerLobby(std::string gameName, std::string playerName, unsigned 
 		delete p->sock;
 		delete p->bcsock;
 		delete p;
-		p = 0;
+		data = 0;
 		return;
 	}
 	
@@ -168,7 +168,7 @@ ServerLobby::ServerLobby(std::string gameName, std::string playerName, unsigned 
 		delete p->sock;
 		delete p->bcsock;
 		delete p;
-		p = 0;
+		data = 0;
 		return;
 	}
 	
@@ -178,7 +178,7 @@ ServerLobby::ServerLobby(std::string gameName, std::string playerName, unsigned 
 		delete p->sock;
 		delete p->bcsock;
 		delete p;
-		p = 0;
+		data = 0;
 		return;
 	}
 	
@@ -204,7 +204,7 @@ ServerLobby::~ServerLobby()
 	delete lobby->sock;
 	delete lobby->bcsock;
 	delete lobby;
-	lobby = 0;
+	data = 0;
 }
 
 //------------------------------------------------------------------------------
