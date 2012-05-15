@@ -2,20 +2,12 @@
  * Protocol module -- see header file
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "protocol.h"
 
 namespace Protocol {
-
-//------------------------------------------------------------------------------
-
-TextSocket TextSocket::accept(Net::Address &remote)
-{
-	TCPSocket sock = TCPSocket::accept(remote);
-	TextSocket textsock;
-	memcpy(&textsock, &sock, sizeof (sock));
-	memset(&sock, 0, sizeof (sock));
-	return (textsock);
-}
 
 //------------------------------------------------------------------------------
 	
@@ -24,13 +16,16 @@ bool TextSocket::send(const std::string &input)
 	std::string msg = input;
 	msg += "\r\n";
 	size_t len = msg.length();
-	return (TCPSocket::send(msg.c_str(), len) == len);
+	return (TCPSocket::send(msg.c_str(), len));
 }
 
 //------------------------------------------------------------------------------
 
 std::string TextSocket::recv()
 {
+	if (!valid())
+		return ("\r\n\r\n");
+	
 	std::string msg;
 	size_t pos = buffer.find("\r\n");
 	if (pos != std::string::npos)
@@ -43,6 +38,14 @@ std::string TextSocket::recv()
 	char buf[1024];
 	while (TCPSocket::recv(buf, pos = sizeof (buf)))
 	{
+		if (!pos)
+		{
+			close();
+			msg = buffer;
+			buffer.clear();
+			return msg;
+		}
+		
 		buf[pos] = 0;
 		buffer += buf;
 		
@@ -55,7 +58,7 @@ std::string TextSocket::recv()
 		}
 	}
 	
-	return ("\r\n");
+	return ("\r\n"); // Would block or Socket error (check valid)
 }
 
 //------------------------------------------------------------------------------
@@ -136,7 +139,17 @@ Message::Message(const std::string &msg)
 
 //------------------------------------------------------------------------------
 
-Message Message::eof = Message("\r\n");
+bool Message::eof() const
+{
+	return ((size() < 1) || (std::string) (*this)[0] == "\r\n\r\n");
+}
+
+//------------------------------------------------------------------------------
+
+bool Message::empty() const
+{
+	return (eof() || (std::string) (*this)[0] == "\r\n");
+}
 
 //------------------------------------------------------------------------------
 
@@ -154,17 +167,6 @@ Message::operator std::string() const
 	}
 	
 	return (str);
-}
-
-//------------------------------------------------------------------------------
-
-MsgSocket MsgSocket::accept(Net::Address &remote)
-{
-	TCPSocket sock = TCPSocket::accept(remote);
-	MsgSocket msgsock;
-	memcpy(&msgsock, &sock, sizeof (sock));
-	memset(&sock, 0, sizeof (sock));
-	return (msgsock);
 }
 
 //------------------------------------------------------------------------------

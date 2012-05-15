@@ -20,7 +20,11 @@
 #endif
 
 #ifndef LOBBY_PORT
-#define LOBBY_PORT 1337
+#define LOBBY_PORT 9035
+#endif
+
+#ifndef GAME_PORT
+#define GAME_PORT 9070
 #endif
 
 //------------------------------------------------------------------------------

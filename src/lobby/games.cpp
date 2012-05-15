@@ -14,6 +14,8 @@
 #define sleep Sleep
 #endif
 
+#define CALL(x) if (x) x
+
 namespace Lobby {
 	
 //------------------------------------------------------------------------------
@@ -36,7 +38,7 @@ struct GameListData
 
 //------------------------------------------------------------------------------
 
-GameList::GameList(unsigned int port)
+GameList::GameList(unsigned int port) : onJoin(0), onChange(0), onPart(0)
 {
 	data = (void *) new GameListData;
 	if (!data)
@@ -93,32 +95,39 @@ GameList::~GameList()
 void *GameList::listen(void *arg)
 {
 	GameList *gamelist = (GameList *)arg;
-	GameListData *p = (GameListData *) gamelist->data;
-	
 	if (!gamelist)
 		pthread_exit(0);
 	
+	GameListData *p = (GameListData *) gamelist->data;
+	
+	Net::Socket::List read, write, error;
 	for (;;)
 	{
+		
+		// Process server timeouts
 		time_t now = time(NULL);
 		time_t min = 0;
-		
 		GameListData::List::iterator it;
+		
 		for (it = p->list.begin(); it != p->list.end(); ++it)
 		{
 			time_t ttl = it->second.ttl;
 			
-			if ((ttl <= now) && gamelist->onPart)
-				gamelist->onPart(it->first);
+			if (ttl <= now)
+			{
+				CALL(gamelist->onPart)(it->first);
+				p->list.erase(it--);
+			}
 			else if ((!min) || (ttl < min))
 				min = ttl;
 		}
 		
-		Net::Socket::List read, write, error;
+		// Wait for timeouts or incomming broadcasts
+		read.clear(), write.clear(), error.clear();
 		read.push_back(p->sock);
+		Net::Socket::select(read, write, error, min - now);
 		
-		Net::Socket::select(read, write, error, min);
-		
+		// Process broadcasts
 		if (!read.empty())
 		{
 			Net::Address remote;
@@ -136,14 +145,17 @@ void *GameList::listen(void *arg)
 				GameData game;
 				game.numPlayers = (int) msg[2];
 				game.name = (std::string) msg[3];
-				game.ttl = now + LOBBY_BC_TIMEOUT;
+				game.ttl = time(NULL) + LOBBY_BC_TIMEOUT;
 				
-				if (!p->list.count(remote) && gamelist->onJoin)
-					gamelist->onJoin(remote, game);
-				else if (((p->list[remote].name != game.name)
-				     || (p->list[remote].numPlayers != game.numPlayers))
-				     && gamelist->onChange)
-					gamelist->onChange(remote, game);
+				if (!p->list.count(remote))
+				{
+					CALL(gamelist->onJoin)(remote, game);
+				}
+				else if ((p->list[remote].numPlayers != game.numPlayers)
+				     || (p->list[remote].name != game.name))
+				{
+					CALL(gamelist->onChange)(remote, game);
+				}
 				
 				p->list[remote] = game;
 			}
@@ -151,6 +163,7 @@ void *GameList::listen(void *arg)
 	}
 	
 	pthread_exit(0);
+	return (NULL);
 }
 
 //------------------------------------------------------------------------------
