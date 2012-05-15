@@ -78,7 +78,7 @@ De speler kan schieten door op de muis te drukken. Door de muis naar boven te be
 Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duidelijk uit de gebruikersomgeving wordt. Immers, het vizier wordt niet op hetzelfde punt als het wapen op het scherm afgebeeld. Aangezien, het vizier eenvoudiger is om mee te richtens dan het wapen, wordt bij het schieten een laserstraal afgevuurd vanuit het wapen naar het punt waar de vizier op gericht staat. Dit is te zien in figuur \ref{fig:COL}.
  
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{Graphics/Collision.eps}
+\includegraphics[width=0.9\textwidth]{Graphics/Collision.eps}
 \caption{Een voorbeeld van het schieten van het wapen, de blauwe lijn is niet zichtbaar tijdens het spelen}
 \label{fig:COL}
 \end{figure}
@@ -87,13 +87,13 @@ Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duide
 Een probleem hierbij, is dat een object in het pad van het wapen naar het punt, dat de vizier aanwijst, blokkeert. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
 \FloatBarrier
 \begin{figure}[h]
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}{0.45\textwidth}
 \centering
 \includegraphics[width=\textwidth]{Graphics/Collision2.eps}
 \caption{De laser komt altijd aan op het punt aangewezen door het vizier}
 \label{fig:COL2}
 \end{subfigure}
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}{0.45\textwidth}
 \centering
 \includegraphics[width=\textwidth]{Graphics/Collision3.eps}
 \caption{De laser stopt zodra hij een ander object raakt}
