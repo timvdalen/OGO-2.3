@@ -10,8 +10,8 @@
 #include "protocol.h"
 #include "games.h"
 
-#ifdef WIN32
-#define sleep Sleep
+#if (defined WIN32 || defined _MSC_VER)
+	#define sleep Sleep
 #endif
 
 #define CALL(x) if (x) x

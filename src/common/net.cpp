@@ -5,6 +5,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+	#ifndef WIN32
+		#define WIN32 1
+	#endif
+#endif
+
 #ifdef WIN32
 	#define _WIN32_WINNT 0x0501 
 	#include <winsock2.h>
