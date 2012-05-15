@@ -21,12 +21,17 @@ void Object::render()
 {
 	preRender();
 	
-	// Nothing to render, but will render its children next
+	draw();
 	
 	postRender();
 }
 
 //------------------------------------------------------------------------------
+
+void Object::draw(){
+	// Nothing to render, but will render its children next
+}
+
 
 void Object::postRender()
 {
