@@ -169,6 +169,7 @@ bool Address::operator <(const Address &addr) const
 Address &Address::operator =(const Address &addr)
 {
 	memcpy(data, addr.data, length);
+	return *this;
 }
 
 //------------------------------------------------------------------------------

@@ -10,6 +10,10 @@
 #include "protocol.h"
 #include "lobby.h"
 
+#if (defined WIN32 || defined _MSC_VER)
+	#define sleep Sleep
+#endif
+
 #define CALL(x) if (x) x
 
 namespace Lobby {
