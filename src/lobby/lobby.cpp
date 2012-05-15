@@ -2,6 +2,11 @@
  * Lobby module -- see header file
  */
 
+#if (defined WIN32 || defined _MSC_VER)
+	#define WIN32_LEAN_AND_MEAN 1
+	#include <windows.h>
+#endif
+
 #include <stdio.h>
 #include <pthread.h>
 
