@@ -5,6 +5,9 @@
 #if (defined WIN32 || defined _MSC_VER)
 	#define WIN32_LEAN_AND_MEAN 1
 	#include <windows.h>
+	#define sleep Sleep
+#else
+	#include <unistd.h>
 #endif
 
 #include <stdio.h>
@@ -14,10 +17,6 @@
 
 #include "protocol.h"
 #include "lobby.h"
-
-#if (defined WIN32 || defined _MSC_VER)
-	#define sleep Sleep
-#endif
 
 #define CALL(x) if (x) x
 
@@ -416,6 +415,7 @@ bool ServerLobby::chat(const string &line)
 
 bool ServerLobby::start()
 {
+	return true;
 }
 
 //------------------------------------------------------------------------------

@@ -17,58 +17,93 @@ Op het terrein zijn twee commandocentra geplaatst, voor beide teams een commando
 \end{figure}
 
 \subsection{Spelers}
-Een speler behoort tot een van beide teams, spelers van een bepaald team zijn te identificeren door kleuren. De speler ziet de wereld vanuit de positie van zijn robot. Men kan de kijkrichting aanpassen, zodat deze elke willekeurige richting kan zijn. Als de kijkrichting verder naar links of rechts wordt gedraaid, draait de robot mee. Wanneer de kijkrichting hoger of lager wordt, draait de robot niet mee. De speler heeft een lasergeweer waarmee hij op andere spelers en torens kan schieten om deze te vernietigen. Als een speler schiet, dan wordt geschoten in de huidige kijkrichting van de robot. Dit wordt verder gespecificeerd in de sectie \emph{User Interface}. Bij het begin van het spel heeft de robot nog een volledig harnas. Zodra de speler wordt geraakt, wordt de conditie van het harnas slechter. Het is echter niet mogelijk dat een speler het harnas van een andere speler uit hetzelfde team beschadigt.
+Een speler behoort tot \'e\'en van beide teams, spelers van een bepaald team zijn te identificeren door kleuren. De speler ziet de wereld vanuit de positie van zijn robot. Men kan de kijkrichting aanpassen, zodat deze elke willekeurige richting kan zijn. Als de kijkrichting verder naar links of rechts wordt gedraaid, draait de robot mee. Wanneer de kijkrichting hoger of lager wordt, draait de robot niet mee, het geweer zou wel mee kunnen draaien in de kijkrichting. Dit is optioneel. De speler heeft een lasergeweer waarmee hij op andere spelers en torens kan schieten om deze te vernietigen. Als een speler schiet, dan wordt geschoten in de huidige kijkrichting van de robot. Dit wordt verder gespecificeerd in de sectie \ref{sec:UI}: \emph{Gebruikersomgeving}. Bij het begin van het spel heeft de robot nog een volledig harnas. Zodra de speler wordt geraakt, wordt de conditie van het harnas slechter. Het is echter niet mogelijk dat een speler het harnas van een andere speler uit hetzelfde team beschadigt.
 \FloatBarrier
-Een speler gaat dood als zijn harnas kapot is. In dat geval zal hij na een bepaalde hoeveelheid tijd terugkeren bij het commandocentrum met een volledig harnas. De conditie van het harnas kan op geen enkele andere dan de hierboven beschreven manieren veranderen. Ook kan een speler gebouwen bouwen, hiervoor gebruikt hij goud uit de kas van het team. De spelers kunnen op het grondvlak bewegen met een vaste snelheid in elke richting. De enige voorwaarde hierbij is dat de spelers op de kaart blijven en niet door een gebouw lopen. Het is dus wel mogelijk dat spelers door elkaar heen kunnen lopen. Het is gewenst dat de speler kan wisselen naar een derde persoon perspectief. In een derde persoon perspectief wordt de scene bekeken vanaf een punt vlak achter de speler.
+Een speler gaat dood als zijn harnas kapot is. In dat geval zal hij na een bepaalde hoeveelheid tijd terugkeren bij het commandocentrum met een volledig harnas. De conditie van het harnas kan op geen enkele andere dan de hierboven beschreven manieren veranderen. Ook kan een speler gebouwen bouwen, hiervoor gebruikt hij goud uit de kas van het team. De spelers kunnen op het grondvlak bewegen met een vaste snelheid in elke richting. De enige voorwaarde hierbij is dat de spelers op de kaart blijven en niet door een gebouw lopen. Het is dus wel mogelijk dat spelers door elkaar heen kunnen lopen. De speler kijkt vanuit een derde persoon perspectief. In een derde persoon perspectief wordt de sc\`ene bekeken vanaf een punt vlak achter de speler.
 Het is eventueel mogelijk om dit verder uit te breiden, zodat de speler kan wisselen van derde persoon perspectief naar eerste persoon perspectief.
 
 \subsection{Gebouwen}
-Er zijn drie soorten gebouwen: torens (gebouwen die op spelers en andere gebouwen in hun bereik kunnen schieten), mijnen (gebouwen die over een delfplaats kunnen worden gebouwd om de inkomsten van het team te vergroten) en een commandocentrum (het belangrijkste gebouw voor het team, als dit gebouw kapot is, heeft het bijbehorende team verloren). Alle gebouwen behoren tot een van beide teams, deze gebouwen kunnen weer ge\"identificeerd worden door de kleur van het gebouw.
+Er zijn drie soorten gebouwen: torens, mijnen en commandocentra. Torens schieten op spelers en andere gebouwen in hun bereik. Mijnen kunnen over delfplaatsen worden gebouwd met het doel de inkomsten van een team te vergroten. In principe levert elke mijn een vaste hoeveelheid goud voor de gezamenlijke kas op. Deze hoeveelheid wordt periodiek toegevoegd aan de kas.
+
+Uit sommige delfplaatsen kan maar een bepaalde hoeveelheid goud worden gehaald, daarna is de delfplaats op. Dan zal de mijn over die delfplaats geen verdere bijdrage meer leveren voor de gezamenlijke kas. We staan echter ook delfplaatsen toe die een onbeperkte hoeveelheid goud bevatten. Standaard levert elke mijn hetzelfde bedrag op met dezelfde periode, maar dit kan later nog worden aangepast.
+
+Een commandocentrum is het belangrijkste gebouw voor het team. Als dit gebouw kapot is, heeft het bijbehorende team verloren. Gebouwen kunnen door spelers worden beschoten, waardoor deze worden beschadigd. Gebouwen kunnen op geen enkele mogelijke manier hersteld worden. Optioneel zou men mechanismen in het spel kunnen toevoegen om deze gebouwen te herstellen. Alle gebouwen behoren tot \'e\'en van beide teams, deze gebouwen kunnen weer ge\"identificeerd worden door de kleur van het gebouw.
 
 \subsection{Verzamelbare voorwerpen}
-Er is maar \'e\'en verzamelbaar voorwerp: een muntje. \'E\'en of meerdere muntjes worden achtergelaten door spelers die dood gaan en torens die worden vernietigd. Een muntje heeft een bepaalde waarde in goud. De waarde van de muntjes zijn proportioneel aan de gezamenlijke kas van het team waarvan de speler is doodgegaan. Als een toren is vernietigd, dan is de waarde van de muntjes proportioneel aan de kosten van de toren. De waarde van de muntjes moet echter altijd kleiner zijn dan de kosten van de toren. Gedurende een spel moeten deze proporties vast zijn.
+Er is maar \'e\'en verzamelbaar voorwerp: een muntje. E\'en of meerdere muntjes worden achtergelaten door spelers die dood gaan en torens die worden vernietigd. Een muntje heeft een bepaalde waarde in goud. De waarde van de muntjes zijn proportioneel aan de gezamenlijke kas van het team waarvan de speler is doodgegaan. Als een toren is vernietigd, dan is de waarde van de muntjes proportioneel aan de kosten van de toren. De waarde van de muntjes moet echter altijd kleiner zijn dan de kosten van de toren. Gedurende een spel moeten deze proporties vast zijn.
 
 Als een speler doodgaat, wordt bovendien nog de waarde van de muntjes afgetrokken van de gezamenlijke kas van die speler. Een muntje kan vervolgens opgepakt worden door alle spelers. Het muntje is dus het voedsel element in ons spel. De waarde van het muntje zal dan toegevoegd worden aan de kas van het bijbehorende team.
 
 \subsection{Initialisatie}
 De spelers kunnen zelf kiezen bij welk team ze gaan, onder de voorwaarde dat elk team minstens \'e\'en speler heeft. Bij de start van het spel staan alle spelers bij het commandocentrum. Zoals al eerder gezegd, hebben alle spelers dan nog een volledig harnas. Bovendien heeft elk team een zekere positieve hoeveelheid goud in de gezamenlijke kas, die voor beide teams natuurlijk gelijk moet zijn. Er kunnen minstens twee mijnen gebouwd worden met deze hoeveelheid goud.
+\FloatBarrier
 
-\section{User Interface}
-De volgende componenten worden weergegeven in de User Interface tijdens het spel:
+\section{Gebruikersomgeving}
+\label{sec:UI}
+
+Via de gebruikersomgeving kan de speler de interactie met het 3D-model aangaan. De volgende componenten worden weergegeven in de User Interface tijdens het spel:
 \begin{itemize}
 \item De hoeveelheid goud van het team.
 \item De sterkte van het harnas.
-\item Het mikpunt van de speler. 
+\item Het vizier van de speler.
 \end{itemize}
 
-De hoeveelheid goud van het team wordt weergegeven met behulp van een getal voor een speciaal symbool linksboven: een goudstaaf. De sterkte van het harnas geven wij ook linksboven weer: de sterkte van het harnas wordt gerepresenteerd met een statusbalk. Hoe voller de balk is, hoe sterker het harnas is. We eisen dat dit verband recht evenredig is. Hierbij representeert een volle balk dat de speler nog een volledig harnas heeft. Als de balk leeg is, gaat de speler dood. 
+De hoeveelheid goud van het team wordt weergegeven met behulp van een getal na een speciaal symbool linksboven: een goudstaaf. De sterkte van het harnas geven wij ook linksboven weer: de sterkte van het harnas wordt gerepresenteerd met een statusbalk. Hoe voller de balk is, hoe sterker het harnas is. We eisen dat dit verband recht evenredig is. Hierbij representeert een volle balk dat de speler nog een volledig harnas heeft. Als de balk leeg is, gaat de speler dood.
 
-We plaatsen het mikpunt van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit mikpunt getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in het sectie $\emph{Optioneel}$, wordt ook aangegeven in deze figuur:
-\begin{figure}[h]
-\includegraphics[width=\textwidth]{Graphics/UI.eps}
-\caption{De User Interface tijdens het spel}
-\end{figure}
-
-De besturing van de robot kan met de wasd-toetsencombinatie of door gebruik te maken van de pijltjes-toetsen. Hiervoor geven we de volgende tabel:
+We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in het sectie \ref{sec:OPT}: \emph{Optioneel}, wordt ook aangegeven in figuur \ref{fig:UI}.
 \begin{figure}[H]
+\includegraphics[width=\textwidth]{Graphics/UI.eps}
+\caption{De gebruikersomgeving tijdens het spel}
+\label{fig:UI}
+\end{figure}
+De besturing van de robot kan met de \textsc{wasd}-toetsencombinatie of door gebruik te maken van de pijltjes-toetsen. Hiervoor geven we de volgende tabel:
+\begin{table}[H]
         \small
         \centering
         \begin{tabular}{| l | l |}
         \hline
         Knop & Reactie \\ \hline
-        w of $\uparrow$ & De robot beweegt, indien mogelijk, vooruit naar de huidige kijkrichting toe \\ \hline
-        a of $\leftarrow$ & De robot draait naar links \\ \hline
-        s of $\downarrow$ & De robot beweegt, indien mogelijk, achteruit van de huidige kijkrichting af \\ \hline
-        d of $\rightarrow$ & De robot draait naar rechts \\ \hline
+        \textsc{w} of $\uparrow$ & De robot beweegt, indien mogelijk, vooruit naar de huidige kijkrichting toe \\ \hline
+        \textsc{a} of $\leftarrow$ & De robot draait naar links \\ \hline
+        \textsc{s} of $\downarrow$ & De robot beweegt, indien mogelijk, achteruit van de huidige kijkrichting af \\ \hline
+        \textsc{d} of $\rightarrow$ & De robot draait naar rechts \\ \hline
         \end{tabular}
         \caption{Knoppen met bijbehorende reactie}
         \label{tab:planning}
-    \end{figure}
+    \end{table}
 
-De speler kan schieten door op de muis te drukken. Door de muis naar boven te bewegen, kijkt de speler verder omhoog. Merk op dat het mikpunt altijd in het midden van het scherm blijft. De speler ziet dit dus doordat de horizon omlaag of omhoog schuift.
+De speler kan schieten door op de muis te drukken. Door de muis naar boven te bewegen, kijkt de speler verder omhoog. Merk op dat het vizier altijd in het midden van het scherm blijft. De speler ziet dit dus doordat de horizon omlaag of omhoog schuift.
+\FloatBarrier
+\subsection{Schieten met het lasergeweer}
+Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duidelijk uit de interface wordt. Immers, het vizier wordt niet op het scherm, op het zelfde punt afgebeeld. Echter het vizier is eenvoudig mee te richten, daarom wordt bij het schieten een laser afgevuurd vanuit het wapen naar het punt waar de vizier op gericht staat. Dit is te zien in figuur \ref{fig:COL}.
+ 
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{Graphics/Collision.eps}
+\caption{Een voorbeeld van het schieten van je geweer}
+\label{fig:COL}
+\end{figure}
 
+
+Een ander probleem wat voor kan komen, is dat het vizier een bepaald punt aanwijst, maar dat de laser geen schot kan afvuren naar dit punt omdat een object voor dit punt staat. Er zijn dan twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object. Dit is te zien in figuur \ref{fig:COL2} Een andere oplossing is om de laser in de richting van het punt een schot af te vuren en als er een object in de weg staat, dit object te raken. Dit is natuurlijk realistischer maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, bij een tijdoverschot, kunnen wij de tweede manier implementeren.
+\FloatBarrier
+\begin{figure}[h]
+\begin{subfigure}{0.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Graphics/Collision2.eps}
+\caption{De laser komt altijd aan op het punt aangewezen door het vizier}
+\label{fig:COL2}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Graphics/Collision3.eps}
+\caption{De laser stopt zodra hij een ander object raakt}
+\label{fig:COL3}
+\end{subfigure}
+\end{figure}
+\FloatBarrier
 \section{Optioneel}
-We hebben ook een aantal plannen voor uitbreiding van het spel, vooral om het uitgebreider te maken en leuker om te spelen. De volgende idee\"en staan op ons lijstje, waarbij de idee\"en gesorteerd zijn op aflopende volgorde van belangrijkheid.
+\label{sec:OPT}
+We hebben ook een aantal plannen voor uitbreiding van het spel. De volgende idee\"en zouden wij graag extra implementeren. De idee\"en zijn gesorteerd op aflopende volgorde van belangrijkheid.
 
 \begin{itemize}
   \item Extra goud, de gezamenlijke kas wordt periodiek met een vaste hoeveelheid verhoogd. Dit is dan additief met eventuele mijnen. Wij verwachten dat dit weinig tijd kost.
