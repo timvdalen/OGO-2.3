@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_lobby_1_1_client_lobby.html" title="{Lobby::ClientLobby\n||+ ClientLobby()\l+ ~ClientLobby()\l+ state()\l}" alt="" coords="5,321,139,428"/>
+<area shape="rect" id="node5" href="$class_lobby_1_1_server_lobby.html" title="{Lobby::ServerLobby\n||+ ServerLobby()\l+ ~ServerLobby()\l+ team()\l+ chat()\l+ start()\l}" alt="" coords="163,307,297,443"/>
+</map>

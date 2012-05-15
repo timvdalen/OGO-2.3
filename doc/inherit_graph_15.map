@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$struct_lobby_1_1_game_lobby_data.html" title="Lobby::GameLobbyData" alt="" coords="5,5,168,32"/>
+<area shape="rect" id="node3" href="$struct_lobby_1_1_server_lobby_data.html" title="Lobby::ServerLobbyData" alt="" coords="216,5,379,32"/>
+</map>
