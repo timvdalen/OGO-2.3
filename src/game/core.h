@@ -16,6 +16,7 @@
 
 #include "base.h"
 
+//! Core module
 namespace Core {
 
 using namespace std;
@@ -26,23 +27,47 @@ using namespace Base;
 // Forward declarations
 
 template <class type> class Handle;
-struct Object; typedef Handle<Object> ObjectHandle;
+class Object; typedef Handle<Object> ObjectHandle;
 struct Material; typedef Handle<Material> MaterialHandle;
+typedef int Resource;
+typedef float Power;
 
 //------------------------------------------------------------------------------
 //                                Object
-
-struct Object
+//! Represents an object in the game
+class Object
 {
+	public:
+
+	//! The origin of this object
 	Point<double> origin;
+
+	//! The rotation of this object
+	Quaternion<double> rotation;
+
+	//! A \ref set of other objects that belong to this object	
 	set<ObjectHandle> children;
 	
-	Object(Point<double> P = Point<double>()) : origin(P) {}
+
+	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
+	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>()) : origin(P), rotation(R) {}
+
+	//! Destroys all children and then terminates
 	virtual ~Object() {}
-	
+
+	//! Sets up translations and rotations
 	virtual void preRender();
-	virtual void render();
+
+	//! Draw the object
+	virtual void draw();
+
+	//! Draws the objects children and pop the translations and rotations
 	virtual void postRender();
+
+	//! Renders the object. This calls preRender(), draw() and postRender() in that order
+	virtual void render();
+
+
 };
 
 //------------------------------------------------------------------------------
