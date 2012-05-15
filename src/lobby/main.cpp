@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <map>
+
 #include "net.h"
 #include "protocol.h"
 #include "games.h"
@@ -20,85 +22,57 @@
 
 //------------------------------------------------------------------------------
 
-void Join(Net::Address server, Lobby::Game game)
-{
-	printf("Joined: %s %d\n", game.name.c_str(), game.numPlayers);
-}
+std::map<Net::Address,Lobby::Game> gamelist;
 
-void Change(Net::Address server, Lobby::Game game)
-{
-	printf("Changed: %s %d\n", game.name.c_str(), game.numPlayers);
-}
-
-void Part(Net::Address server)
-{
-	printf("Parted\n");
-}
+void gamelist_update();
+void gamelist_join(Net::Address server, Lobby::Game game);
+void gamelist_change(Net::Address server, Lobby::Game game);
+void gamelist_part(Net::Address server);
 
 //------------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
-	
-	/*{
-	Net::Initialize();
-	
-	char buffer[1024];
-	size_t length;
-	
-	Protocol::TextSocket server;
-	server.listen(72);
-	
-	puts("Listening...");
-	
-	Net::Address remote;
-	Protocol::TextSocket client = server.accept(remote);
-	
-	remote.name(buffer, sizeof (buffer));
-	printf("Client connected: %s\n", buffer);
-	
-	std::string msg;
-	while (client.valid())
-	{
-		msg = client.recv();
-		
-		if (msg.empty())
-			continue;
-		
-		if (msg == "exit")
-			client.close();
-		else
-		{
-			client.send(msg);
-			printf("> %s\n", msg.c_str());
-		}
-	}
-	
-	Net::Terminate();
-	}*/
-	
 	{
 	Net::Initialize();
 	
+	std::string playerName, gameName;
+	char name[256];
 	int choice;
-	printf("1) server\n2) client\n >");
+	
+	printf("player name> ");
+	playerName = gets(name);
+	
+	printf("\t1) server\n\t2) client\n> ");
 	scanf("%d", &choice);
 	
-	if (choice == 2)
-	{
-		Lobby::GameList gamelist(LOBBY_PORT);
-		
-		while (gamelist.valid());
-	}
-	else if (choice == 1)
+
+	if (choice == 1)
 	{
 		fflush(stdin);
-		printf(" name>");
-		char name[256];
-		gets(name);
-		Lobby::ServerLobby lobby(std::string(name), "unknown", LOBBY_PORT);
+		printf("game name> ");
+		gameName = gets(name);
+		
+		Lobby::ServerLobby lobby(gameName, playerName, LOBBY_PORT);
 		
 		while (lobby.valid());
+	}
+	else if (choice == 2)
+	{
+		{
+			Lobby::GameList gamelist(LOBBY_PORT);
+		
+			puts("Waiting for servers...");
+			scanf("%d", &choice);
+		}
+		{
+			std::map<Net::Address,Lobby::Game>::iterator it;
+			int i;
+			for (it = gamelist.begin(), i = 0; i < choice; ++it, ++i);
+			Lobby::ClientLobby lobby(playerName, it->first);
+			
+			while (lobby.valid());
+		}
 	}
 	
 	Net::Terminate();
@@ -107,6 +81,45 @@ int main(int argc, char *argv[])
 	puts("Press any key...");
 	getchar();
 	return (EXIT_SUCCESS);
+}
+
+//------------------------------------------------------------------------------
+
+void gamelist_update()
+{
+	puts(std::string(50, '\n').c_str());
+	puts("Servers found:");
+	
+	std::map<Net::Address,Lobby::Game>::iterator it;
+	int i;
+	for (it = gamelist.begin(), i = 0; it != gamelist.end(); ++it, ++i)
+		printf("\t%d) %s (%d)\n", i, it->second.name.c_str(), it->second.numPlayers);
+	
+	printf("> ");
+}
+
+//------------------------------------------------------------------------------
+
+void gamelist_join(Net::Address server, Lobby::Game game)
+{
+	gamelist[server] = game;
+	gamelist_update();
+}
+
+//------------------------------------------------------------------------------
+
+void gamelist_change(Net::Address server, Lobby::Game game)
+{
+	gamelist[server] = game;
+	gamelist_update();
+}
+
+//------------------------------------------------------------------------------
+
+void gamelist_part(Net::Address server)
+{
+	gamelist.erase(server);
+	gamelist_update();
 }
 
 //------------------------------------------------------------------------------

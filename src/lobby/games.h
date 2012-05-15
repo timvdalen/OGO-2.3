@@ -23,7 +23,7 @@ namespace Lobby {
 struct Game
 {
 	std::string name;        //!< Game name
-	unsigned int numPlayers; //!< Number of players currently on the game
+	unsigned int numPlayers; //!< Number of players currently in the game
 };
 
 //------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ class GameList
 	GameList(unsigned int port);
 	~GameList();
 	
-	bool valid() { return !!data; }
+	bool valid() const { return !!data; }
 	
 	private:
 	void *data;

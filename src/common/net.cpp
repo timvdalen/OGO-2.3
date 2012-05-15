@@ -2,14 +2,31 @@
  * Network module -- see header file
  */
 
+#include <stdio.h>
 #include <string.h>
+
+#ifdef _MSC_VER
+	#ifndef WIN32
+		#define WIN32 1
+	#endif
+#endif
 
 #ifdef WIN32
 	#define _WIN32_WINNT 0x0501 
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
 	#define ssize_t signed long int
+	#define socklen_t int
 #else
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <unistd.h>
+	#include <errno.h>
+	#include <fcntl.h>
+	#include <netdb.h>
+	#define SOCKET_ERROR -1
 	#define SOCKET int
 #endif
 
@@ -50,7 +67,7 @@ Address::Address() : data(new sockaddr_in), length(sizeof (sockaddr_in))
 //------------------------------------------------------------------------------
 
 Address::Address(const Address &address)
-	: data(new sockaddr_in), length(address.length)
+	: data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
 	memcpy(data, address.data, length);
 }
@@ -58,7 +75,7 @@ Address::Address(const Address &address)
 //------------------------------------------------------------------------------
 
 Address::Address(unsigned long address, unsigned port)
-	 : data(new sockaddr_in), length(sizeof (sockaddr_in))
+	: data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
 	if (!data)
 		return;
@@ -99,27 +116,81 @@ Address::Address(const char *address, unsigned int port)
 
 Address::~Address()
 {
-	if (data)
-		delete (sockaddr_in *)data;
+	if (!data)
+		return;
+	
+	sockaddr_in *addr = (sockaddr_in *) data;
+	delete addr;
 }
 
 //------------------------------------------------------------------------------
 
-bool Address::name(char *str, size_t len)
+bool Address::name(char *str, size_t len) const
 {
 	return getnameinfo((sockaddr *) data, length, str, len, 0, 0, 0);
 }
 
 //------------------------------------------------------------------------------
 
+bool Address::string(char *str) const
+{
+	sockaddr_in *addr = (sockaddr_in *) data;
+	return (sprintf(str, "%s:%d", inet_ntoa(addr->sin_addr),
+	                ntohs(addr->sin_port)) > 0);
+}
+
+//------------------------------------------------------------------------------
+
+bool Address::operator ==(const Address &addr) const
+{
+	sockaddr_in *a = (sockaddr_in *) data;
+	sockaddr_in *b = (sockaddr_in *) addr.data;
+	if ((a->sin_addr.s_addr != b->sin_addr.s_addr)
+	||  (a->sin_port != b->sin_port))
+		return false;
+	else
+		return true;
+}
+
+//------------------------------------------------------------------------------
+
 bool Address::operator <(const Address &addr) const
 {
-	sockaddr_in *a = (sockaddr_in *) this;
-	sockaddr_in *b = (sockaddr_in *) &addr;
+	sockaddr_in *a = (sockaddr_in *) data;
+	sockaddr_in *b = (sockaddr_in *) addr.data;
 	if (a->sin_addr.s_addr == b->sin_addr.s_addr)
 		return a->sin_port < b->sin_port;
 	else
 		return a->sin_addr.s_addr < b->sin_addr.s_addr;
+}
+
+//------------------------------------------------------------------------------
+
+Address &Address::operator =(const Address &addr)
+{
+	memcpy(data, addr.data, length);
+	return *this;
+}
+
+//------------------------------------------------------------------------------
+
+Socket::Socket() : data((void *) SOCKET_ERROR)
+{
+}
+
+//------------------------------------------------------------------------------
+
+Socket::Socket(Socket &sock)
+{
+	data = sock.data;
+	sock.data = (void *) SOCKET_ERROR;
+}
+
+//------------------------------------------------------------------------------
+
+Socket::~Socket()
+{
+	close();	
 }
 
 //------------------------------------------------------------------------------
@@ -152,16 +223,23 @@ bool Socket::setNonBlocking()
 
 void Socket::close()
 {
-	if (!data)
+	if ((SOCKET) data == SOCKET_ERROR)
 		return;
 	
 	#ifdef WIN32
 		closesocket((SOCKET) data);
 	#else
-		close((SOCKET) data);
+		::close((SOCKET) data);
 	#endif
 	
-	data = 0;
+	data = (void *) -1;
+}
+
+//------------------------------------------------------------------------------
+
+bool Socket::valid() const
+{
+	return ((SOCKET) data != SOCKET_ERROR);
 }
 
 //------------------------------------------------------------------------------
@@ -213,44 +291,41 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	int ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
 	                              write.empty() ? NULL : &wfds,
 					              error.empty() ? NULL : &efds,
-					              timeout ? &tv : NULL);
+					              timeout > 0 ? &tv : NULL);
 	return true;
-	if (ret == -1)
+	if (ret == SOCKET_ERROR)
 		return false;
 	
-	List list;
 	if (!read.empty())
-	{
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
 			if (FD_ISSET((SOCKET) (*it)->data, &rfds))
-				list.push_back(*it);
-		read = list;
-	}
+				read.erase(it--);
 	
 	if (!write.empty())
-	{
 		for (List::iterator it = write.begin(); it != write.end(); ++it)
 			if (!FD_ISSET((SOCKET) (*it)->data, &wfds))
-				list.push_back(*it);
-		write = list;
-	}
+				write.erase(it--);
 	
 	if (!error.empty())
-	{
 		for (List::iterator it = error.begin(); it != error.end(); ++it)
 			if (!FD_ISSET((SOCKET) (*it)->data, &efds))
-				list.push_back(*it);
-		error = list;
-	}
+				error.erase(it--);
 	
 	return true;
 }
-
 //------------------------------------------------------------------------------
 
 UDPSocket::UDPSocket()
 {
 	data = (void *)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+}
+
+//------------------------------------------------------------------------------
+
+UDPSocket::UDPSocket(UDPSocket &sock)
+{
+	data = sock.data;
+	sock.data = (void *) SOCKET_ERROR;
 }
 
 //------------------------------------------------------------------------------
@@ -297,7 +372,6 @@ bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &leng
 	#ifdef NETDEBUG
 		printf("%03X> %s\n", data, data_in);
 	#endif
-	
 	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
@@ -311,11 +385,10 @@ bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &leng
 
 bool UDPSocket::shout(unsigned int port, const char *data_in, size_t &length)
 {
+	Address address(INADDR_BROADCAST, port);
 	#ifdef NETDEBUG
 		printf("%03X>> %s\n", data, data_in);
 	#endif
-	
-	Address address(INADDR_BROADCAST, port);
 	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
@@ -329,17 +402,27 @@ bool UDPSocket::shout(unsigned int port, const char *data_in, size_t &length)
 
 bool UDPSocket::recvfrom(Address &address, char *data_out, size_t &length)
 {
-	ssize_t ret = ::recvfrom((SOCKET) data, data_out, length, 0,
-		(sockaddr *) address.data, (int *) &address.length);
+	ssize_t ret = ::recvfrom((SOCKET) data, data_out, --length, 0,
+		(sockaddr *) address.data, (socklen_t *) &address.length);
 	if (ret >= 0)
 	{
+		length = ret;
+		data_out[length] = 0;
 		#ifdef NETDEBUG
 			printf("%03X< %s\n", data, data_out);
 		#endif
-		
-		length = ret;
 		return true;
 	}
+	#ifdef WIN32
+		int error = WSAGetLastError();
+		if ((error != WSAEINPROGRESS)
+		&&  (error != WSAEWOULDBLOCK)
+		&&  (error != WSAEMSGSIZE))
+			close();
+	#else
+		if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+			close();
+	#endif
 	return false;
 }
 
@@ -348,6 +431,14 @@ bool UDPSocket::recvfrom(Address &address, char *data_out, size_t &length)
 TCPSocket::TCPSocket()
 {
 	data = (void *)socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+}
+
+//------------------------------------------------------------------------------
+
+TCPSocket::TCPSocket(TCPSocket &sock)
+{
+	data = sock.data;
+	sock.data = (void *) SOCKET_ERROR;
 }
 
 //------------------------------------------------------------------------------
@@ -378,18 +469,17 @@ bool TCPSocket::listen(const Address &address)
 
 bool TCPSocket::listen(unsigned int port)
 {
-	return listen(Address(htonl(INADDR_ANY), port));
+	return listen(Address(ntohl(INADDR_ANY), port));
 }
 
 //------------------------------------------------------------------------------
 
-TCPSocket TCPSocket::accept(Address &address)
+bool TCPSocket::accept(TCPSocket &socket, Address &address)
 {
 	SOCKET sock = ::accept((SOCKET) data,
-		(sockaddr *)address.data, (int *) &address.length);
-	TCPSocket socket;
+		(sockaddr *)address.data, (socklen_t *) &address.length);
 	socket.data = (void *)sock;
-	return socket;
+	return (sock != SOCKET_ERROR);
 }
 
 //------------------------------------------------------------------------------
@@ -399,7 +489,6 @@ bool TCPSocket::send(const char *data_in, size_t &length)
 	#ifdef NETDEBUG
 		printf("%03X> %s\n", data, data_in);
 	#endif
-	
 	ssize_t ret = ::send((SOCKET) data, data_in, length, 0);
 	if (ret == length)
 		return true;
@@ -412,15 +501,26 @@ bool TCPSocket::send(const char *data_in, size_t &length)
 
 bool TCPSocket::recv(char *data_out, size_t &length)
 {
-	ssize_t ret = ::recv((SOCKET) data, data_out, length, 0);
+	ssize_t ret = ::recv((SOCKET) data, data_out, --length, 0);
 	if (ret >= 0)
 	{
+		length = ret;
+		data_out[length] = 0;
 		#ifdef NETDEBUG
 			printf("%03X< %s\n", data, data_out);
 		#endif
-		length = ret;
 		return true;
 	}
+	#ifdef WIN32
+		int error = WSAGetLastError();
+		if ((error != WSAEINPROGRESS)
+		&&  (error != WSAEWOULDBLOCK)
+		&&  (error != WSAEMSGSIZE))
+			close();
+	#else
+		if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+			close();
+	#endif
 	return false;
 }
 

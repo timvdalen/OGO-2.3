@@ -1,30 +1,29 @@
 # Project: lobby
 # Makefile created by Dev-C++ 4.9.9.2
 
-CPP  = g++.exe -D__DEBUG__
-CC   = gcc.exe -D__DEBUG__
-WINDRES = windres.exe
+CPP  = g++ -D__DEBUG__
+CC   = gcc -D__DEBUG__
 RES  = 
 OBJ  = ../../obj/games.o ../../obj/main.o ../../obj/net.o ../../obj/protocol.o ../../obj/lobby.o $(RES)
 LINKOBJ  = ../../obj/games.o ../../obj/main.o ../../obj/net.o ../../obj/protocol.o ../../obj/lobby.o $(RES)
-LIBS =  -L"C:/Dev/MinGW/lib" -lpthread -lws2_32  -g3 
+LIBS =  -lpthread  -g3 
 INCS =  -I"../common" 
-CXXINCS =  -I"C:/Dev/MinGW/include"  -I"../common" 
-BIN  = ../../bin/lobby.exe
+CXXINCS =  -I"../common" 
+BIN  = ../../bin/lobby
 CXXFLAGS = $(CXXINCS) -DNETDEBUG   -g3
 CFLAGS = $(INCS)   -g3
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
-all: all-before ../../bin/lobby.exe all-after
+all: all-before ../../bin/lobby all-after
 
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
-	$(CPP) $(LINKOBJ) -o "..\..\bin\lobby.exe" $(LIBS)
+	$(CPP) $(LINKOBJ) -o "../../bin/lobby" $(LIBS)
 
 ../../obj/games.o: games.cpp
 	$(CPP) -c games.cpp -o ../../obj/games.o $(CXXFLAGS)

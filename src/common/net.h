@@ -29,7 +29,7 @@ struct Address
 {
 	//! Creates an empty address
 	Address();
-	//! Copy constructor
+	//! Creates a copy of an address
 	Address(const Address &);
 	//! Creates an address from raw types
 	Address(unsigned long address, unsigned port = 0);
@@ -38,13 +38,17 @@ struct Address
 	//! Cleans up the address
 	~Address();
 	
+	//! Gets the hostname the address points to
+	bool name(char *str, size_t len) const;
 	//! Gets a textual representation of an address
-	bool name(char *str, size_t len);
+	bool string(char *str) const;
 
 	friend struct UDPSocket;
 	friend struct TCPSocket;
 	
+	bool operator ==(const Address &) const;
 	bool operator <(const Address &) const;
+	Address &operator =(const Address &);
 	
 	private:
 	size_t length;
@@ -56,12 +60,17 @@ struct Address
 //! Basic internet socket.
 struct Socket
 {
+	Socket();
+	//! Copies a socket: this will invalidate the original socket.
+	Socket(Socket &);
+	~Socket();
+	
 	bool setBlocking();    //!< Makes operations on this socket block. (default)
 	bool setNonBlocking(); //!< Makes operations on this socket not block.
 	
 	void close(); //!< Closes the socket. This will invalidate the instance.
 	//! Returns the validity of the socket.
-	bool valid() { return !!data; }
+	bool valid() const;
 	
 	//! Socket list
 	typedef std::vector<Socket *> List;
@@ -70,7 +79,9 @@ struct Socket
 	//! Note: The lists will reflect the changed sockets afterwards.
 	static bool select(Socket::List &read,
 	                   Socket::List &write,
-				       Socket::List &error, long timeout);
+				       Socket::List &error, long timeout = 0);
+	
+	void operator =(Socket &); // Not allowed
 	
 	protected:
 	void *data;
@@ -82,6 +93,7 @@ struct Socket
 struct UDPSocket : public Socket
 {
 	UDPSocket();
+	UDPSocket(UDPSocket &);
 	~UDPSocket();
 	
 	//! Binds the socket to a local address.
@@ -105,6 +117,7 @@ struct UDPSocket : public Socket
 struct TCPSocket : public Socket
 {
 	TCPSocket();
+	TCPSocket(TCPSocket &);
 	~TCPSocket();
 	
 	//! Connects to a remote host.
@@ -114,7 +127,7 @@ struct TCPSocket : public Socket
 	//! Makes this socket a listening socket to bound to the specified address.
 	bool listen(const Address &local);
 	//! Accepts a incomming connection (when this is a listening socket). \sa listen
-	TCPSocket accept(Address &remote);
+	bool accept(TCPSocket &client, Address &remote);
 	
 	//! Sends a message to the remote host.
 	bool send(const char *data, size_t &length);
