@@ -41,7 +41,7 @@ De spelers kunnen zelf kiezen bij welk team ze gaan, onder de voorwaarde dat elk
 \section{Gebruikersomgeving}
 \label{sec:UI}
 
-Via de gebruikersomgeving kan de speler de interactie met het 3D-model aangaan. De volgende componenten worden weergegeven in de User Interface tijdens het spel:
+Via de gebruikersomgeving kan de speler de interactie met het 3D-model aangaan. De volgende componenten worden weergegeven op de gebruikersomgeving tijdens het spel:
 \begin{itemize}
 \item De hoeveelheid goud van het team.
 \item De sterkte van het harnas.
@@ -50,7 +50,7 @@ Via de gebruikersomgeving kan de speler de interactie met het 3D-model aangaan. 
 
 De hoeveelheid goud van het team wordt weergegeven met behulp van een getal na een speciaal symbool linksboven: een goudstaaf. De sterkte van het harnas geven wij ook linksboven weer: de sterkte van het harnas wordt gerepresenteerd met een statusbalk. Hoe voller de balk is, hoe sterker het harnas is. We eisen dat dit verband recht evenredig is. Hierbij representeert een volle balk dat de speler nog een volledig harnas heeft. Als de balk leeg is, gaat de speler dood.
 
-We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in de sectie \ref{sec:OPT}: \emph{Optioneel}, is ook weergegeven in figuur \ref{fig:UI}.
+We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in het sectie \ref{sec:OPT}: \emph{Optioneel}, wordt ook aangegeven in figuur \ref{fig:UI}.
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{Graphics/UI.eps}
 \caption{De gebruikersomgeving tijdens het spel}
@@ -76,15 +76,15 @@ De speler kan schieten door op de muis te drukken. Door de muis naar boven te be
 \FloatBarrier
 \subsection{Schieten met het lasergeweer}
 Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duidelijk uit de gebruikersomgeving wordt. Immers, het vizier wordt niet op hetzelfde punt als het wapen op het scherm afgebeeld. Aangezien, het vizier eenvoudiger is om mee te richtens dan het wapen, wordt bij het schieten een laserstraal afgevuurd vanuit het wapen naar het punt waar de vizier op gericht staat. Dit is te zien in figuur \ref{fig:COL}.
-
+ 
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{Graphics/Collision.eps}
 \caption{Een voorbeeld van het schieten van het wapen}
 \label{fig:COL}
 \end{figure}
 
-Een probleem hierbij, is dat een object in het pad van het wapen naar het punt, dat de vizier aanwijst, blokkeert. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
 
+Een probleem hierbij, is dat een object in het pad van het wapen naar het punt, dat de vizier aanwijst, blokkeert. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
 \FloatBarrier
 \begin{figure}[h]
 \begin{subfigure}{0.5\textwidth}
