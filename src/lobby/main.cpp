@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 	
 	printf("\t1) server\n\t2) client\n> ");
 	scanf("%d", &choice);
+	fflush(stdin);
 	
 	GameLobby *lobby;
 	if (choice == 1)
@@ -135,7 +136,7 @@ void gamelist_update()
 	for (it = gamelist.begin(); it != gamelist.end(); ++it)
 	{
 		char addr[256];
-		it->first.name(addr, sizeof (addr));
+		it->first.string(addr);
 		printf("\t%s) %s (%d)\n", addr, it->second.name.c_str(), it->second.numPlayers);
 	}
 	

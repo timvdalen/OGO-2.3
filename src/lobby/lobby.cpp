@@ -599,7 +599,7 @@ void *ServerLobby::listen(void *arg)
 					msg_part.push_back((int) player->id);
 					
 					p->players.erase(p->players.find(*player));
-					delete player->sock;
+					//delete player->sock;
 					//delete player; TODO: find out where the dependency is
 					
 					for (pit = p->players.begin(); pit != p->players.end(); ++pit)
