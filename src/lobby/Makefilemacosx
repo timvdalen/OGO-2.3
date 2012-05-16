@@ -1,0 +1,40 @@
+# Project: lobby
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++ -D__DEBUG__
+CC   = gcc -D__DEBUG__
+RES  = 
+OBJ  = ../../obj/games.o ../../obj/main.o ../../obj/net.o ../../obj/protocol.o ../../obj/lobby.o $(RES)
+LINKOBJ  = ../../obj/games.o ../../obj/main.o ../../obj/net.o ../../obj/protocol.o ../../obj/lobby.o $(RES)
+LIBS =  -lpthread  -g3 
+INCS =  -I"../common" 
+CXXINCS =  -I"../common" 
+BIN  = ../../bin/lobby
+CXXFLAGS = -I"../common" -DNETDEBUG   -g3
+CFLAGS = $(INCS)   -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before ../../bin/lobby all-after
+
+
+clean: clean-custom
+	rm -f ../../obj/games.o ../../obj/main.o ../../obj/net.o ../../obj/protocol.o ../../obj/ ../../bin/lobby
+
+$(BIN): $(OBJ)
+	g++ -D__DEBUG__ ../../obj/games.o ../../obj/main.o ../../obj/net.o ../../obj/protocol.o ../../obj/lobby.o -o "../../bin/lobby" -lpthread  -g3 
+
+../../obj/games.o: games.cpp
+	g++ -D__DEBUG__ -c games.cpp -o ../../obj/games.o -I"../common" -DNETDEBUG   -g3
+
+../../obj/main.o: main.cpp
+	g++ -D__DEBUG__ -c main.cpp -o ../../obj/main.o -I"../common" -DNETDEBUG   -g3
+
+../../obj/net.o: ../common/net.cpp
+	g++ -D__DEBUG__ -c ../common/net.cpp -o ../../obj/net.o -I"../common" -DNETDEBUG   -g3
+../../obj/protocol.o: ../common/protocol.cpp
+	g++ -D__DEBUG__ -c ../common/protocol.cpp -o ../../obj/protocol.o -I"../common" -DNETDEBUG   -g3
+
+../../obj/lobby.o: lobby.cpp
+	g++ -D__DEBUG__ -c lobby.cpp -o ../../obj/lobby.o -I"../common" -DNETDEBUG   -g3
