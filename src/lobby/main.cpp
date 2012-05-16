@@ -98,9 +98,13 @@ int main(int argc, char *argv[])
 	else if (choice == 2)
 	{
 		{
-			Lobby::GameList gamelist(LOBBY_PORT);
+			Lobby::GameList games(LOBBY_PORT);
+			games.onJoin = gamelist_join;
+			games.onChange = gamelist_change;
+			games.onPart = gamelist_part;
 		
 			puts("Waiting for servers...");
+			
 			scanf("%d", &choice);
 		}
 		{
