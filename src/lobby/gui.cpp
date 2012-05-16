@@ -2,6 +2,12 @@
 #include <wx/statline.h>
 #include <string>
 #include "../common/ConfigFile.h"
+#include "games.h"
+#include "lobby.h"
+#include "common.h"
+
+using namespace Lobby;
+using namespace Net;
 
 /* Globals */
 //TODO: This is very ugly, need a way to pass messages between frames.
@@ -10,6 +16,11 @@ bool joining;
 wxString playerName;
 int playnum;
 wxCheckBox *playlist[6];
+
+GameList games(LOBBY_PORT);
+
+static void onJoinGame(Address server, Game game);
+
 
 class LobbyGUI: public wxApp{
 	    virtual bool OnInit();
@@ -26,6 +37,10 @@ class mainFrame: public wxFrame{
 
 		DECLARE_EVENT_TABLE()	
 };
+
+
+mainFrame *frame;
+
 
 class gameLobby: public wxFrame{
 	public:
@@ -56,13 +71,15 @@ END_EVENT_TABLE()
 IMPLEMENT_APP(LobbyGUI)
 
 bool LobbyGUI::OnInit(){
+
+	
 	ConfigFile config("game.conf");
 	string pname;
 	config.readInto(pname, "playername");
 	wxString pnamet(pname.c_str(), wxConvUTF8);
 	playerName = pnamet;
 
-	mainFrame *frame = new mainFrame( _("name T.B.D. Lobby"), wxPoint(49, 50), wxSize(320, 200) );
+	frame = new mainFrame( _("name T.B.D. Lobby"), wxPoint(49, 50), wxSize(320, 200) );
 	frame->Show(true);
 	SetTopWindow(frame);
 
@@ -70,6 +87,8 @@ bool LobbyGUI::OnInit(){
 }
 
 mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
+	games.onJoin = onJoinGame;
+	
 	wxPanel *panel = new wxPanel(this, wxID_ANY);
 	wxStaticText *st = new wxStaticText(panel, wxID_ANY, _("Possible games"), wxPoint(10, 10), wxDefaultSize, wxALIGN_LEFT);
 	listbox = new wxListBox(panel, ID_LISTBOX, wxPoint(10, 30), wxSize(300, 100)); 
@@ -115,6 +134,16 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 		wxMessageBox(_("Please enter a game name"), _("No text"), wxOK | wxICON_EXCLAMATION);
 	}
 }
+
+
+static void onJoinGame(Address sever, Game game){
+	wxString gamename(game.name.c_str(), wxConvUTF8);
+	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
+	gameList->Append(gamename);
+	printf("Game: %s", game.name.c_str());
+}
+
+
 
 
 gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
