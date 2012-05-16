@@ -182,3 +182,9 @@ Session.vim
 
 # Doxy gen #
 doc/*
+
+src/lobby/Lobby/Lobby.cbp
+
+src/lobby/lobby.cbp
+
+src/lobby/lobby.depend
