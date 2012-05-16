@@ -63,40 +63,18 @@ int main(int argc, char *argv[])
 	printf("\t1) server\n\t2) client\n> ");
 	scanf("%d", &choice);
 	
-
+	GameLobby *lobby;
 	if (choice == 1)
 	{
 		fflush(stdin);
 		printf("game name> ");
 		gameName = gets(buffer);
 		
-		Lobby::ServerLobby lobby(gameName, playerName, LOBBY_PORT);
-		
-		lobby.onConnect = lobby_connect;
-		lobby.onPlayer = lobby_player;
-		lobby.onJoin = lobby_join;
-		lobby.onPart = lobby_part;
-		lobby.onTeam = lobby_team;
-		lobby.onState = lobby_state;
-		lobby.onChat = lobby_chat;
-		lobby.onClose = lobby_close;
-		lobby.onStart = lobby_start;
-		
-		{
-			Game game;
-			game.numPlayers = 1;
-			game.name = gameName;
-			lobby_connect(1, game);
-		}
-		
-		while (lobby.valid())
-		{
-			std::string input = gets(buffer);
-			lobby.chat(input);
-		}
+		lobby = new ServerLobby(gameName, playerName, LOBBY_PORT);
 	}
 	else if (choice == 2)
 	{
+		Net::Address addr;
 		{
 			Lobby::GameList games(LOBBY_PORT);
 			games.onJoin = gamelist_join;
@@ -104,32 +82,39 @@ int main(int argc, char *argv[])
 			games.onPart = gamelist_part;
 		
 			puts("Waiting for servers...");
+			printf("addr> ");
 			
-			scanf("%d", &choice);
+			std::string address = gets(buffer);
+			addr = Net::Address(address.c_str(), LOBBY_PORT);
 		}
-		{
-			std::map<Net::Address,Game>::iterator it;
-			int i;
-			for (it = gamelist.begin(), i = 0; i < choice; ++it, ++i);
-			ClientLobby lobby(playerName, it->first);
-			
-			lobby.onConnect = lobby_connect;
-			lobby.onPlayer = lobby_player;
-			lobby.onJoin = lobby_join;
-			lobby.onPart = lobby_part;
-			lobby.onTeam = lobby_team;
-			lobby.onState = lobby_state;
-			lobby.onChat = lobby_chat;
-			lobby.onClose = lobby_close;
-			lobby.onStart = lobby_start;
-			
-			while (lobby.valid())
-			{
-				std::string input = gets(buffer);
-				lobby.chat(input);
-			}
-		}
+		lobby = new ClientLobby(playerName, addr);
 	}
+	
+	lobby->onConnect = lobby_connect;
+	lobby->onPlayer = lobby_player;
+	lobby->onJoin = lobby_join;
+	lobby->onPart = lobby_part;
+	lobby->onTeam = lobby_team;
+	lobby->onState = lobby_state;
+	lobby->onChat = lobby_chat;
+	lobby->onClose = lobby_close;
+	lobby->onStart = lobby_start;
+	
+	if (choice == 1)
+	{
+		Game game;
+		game.numPlayers = 1;
+		game.name = gameName;
+		lobby_connect(1, game);
+	}
+	
+	while (lobby->valid())
+	{
+		std::string input = gets(buffer);
+		lobby->chat(input);
+	}
+	
+	delete lobby;
 	
 	Net::Terminate();
 	}
@@ -147,11 +132,14 @@ void gamelist_update()
 	puts("Servers found:");
 	
 	std::map<Net::Address,Game>::iterator it;
-	int i;
-	for (it = gamelist.begin(), i = 0; it != gamelist.end(); ++it, ++i)
-		printf("\t%d) %s (%d)\n", i, it->second.name.c_str(), it->second.numPlayers);
+	for (it = gamelist.begin(); it != gamelist.end(); ++it)
+	{
+		char addr[256];
+		it->first.name(addr, sizeof (addr));
+		printf("\t%s) %s (%d)\n", addr, it->second.name.c_str(), it->second.numPlayers);
+	}
 	
-	printf("> ");
+	printf("addr> ");
 }
 
 //------------------------------------------------------------------------------
