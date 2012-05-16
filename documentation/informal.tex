@@ -52,7 +52,7 @@ De hoeveelheid goud van het team wordt weergegeven met behulp van een getal na e
 
 We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in sectie \ref{sec:OPT}: \emph{Optioneel}, wordt ook aangegeven in figuur \ref{fig:UI}.
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{Graphics/UI.eps}
+\includegraphics[width=0.9\textwidth]{Graphics/UI.eps}
 \caption{De gebruikersomgeving tijdens het spel}
 \label{fig:UI}
 \end{figure}
@@ -72,7 +72,7 @@ De besturing van de robot kan met de \textsc{wasd}-toetsencombinatie of door geb
         \label{tab:planning}
     \end{table}
 
-De speler kan schieten door op de muis te drukken. Door de muis naar boven te bewegen, kijkt de speler verder omhoog. Merk op dat het vizier altijd in het midden van het scherm blijft. De speler ziet dit dus doordat de horizon omlaag of omhoog schuift.
+De speler kan schieten door op de muis te drukken. Door de muis naar boven of naar beneden te bewegen, kijkt de speler verder omhoog of omlaag respectievelijk. Op analoge wijze kan de speler naar links of naar rechts draaien door respectievelijk de muis naar links of naar rechts te bewegen. Merk op dat het vizier altijd in het midden van het scherm blijft. De speler ziet dit dus doordat de horizon omlaag of omhoog schuift.
 \FloatBarrier
 \subsection{Schieten met het lasergeweer}
 Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duidelijk uit de gebruikersomgeving wordt. Immers, het vizier wordt niet op hetzelfde punt als het wapen op het scherm afgebeeld. Aangezien het vizier eenvoudiger is om mee te richten dan het wapen, wordt bij het schieten een laserstraal afgevuurd vanuit het wapen naar het punt waar het vizier op gericht staat. Dit is te zien in figuur \ref{fig:COL}. Als het vizier niet op een object gericht staat, dan zal, bij het schieten, de laserstraal uit het wapen afgevuurd worden in de kijkrichting.
@@ -83,7 +83,7 @@ Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duide
 \label{fig:COL}
 \end{figure}
 
-Een probleem ontstaat wanneer er een object de laserstraal, vanaf het wapen naar het punt , waar het vizier op gericht staat, blokkeert. Het object zou dan geraakt moeten worden en niet het punt waar het vizier op gericht staat. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
+Een probleem ontstaat wanneer er een object de laserstraal vanaf het wapen naar het punt, waar het vizier op gericht staat, blokkeert. Het object zou dan geraakt moeten worden en niet het punt waar het vizier op gericht staat. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
 \FloatBarrier
 \begin{figure}[h]
 \begin{subfigure}{0.45\textwidth}
@@ -100,7 +100,22 @@ Een probleem ontstaat wanneer er een object de laserstraal, vanaf het wapen naar
 \end{subfigure}
 \caption{Oplossingen voor de problemen bij het schieten}
 \end{figure}
+
 \FloatBarrier
+\subsection{Het neerzetten van gebouwen}
+De speler kan ook opdracht geven om op een bepaalde plek een gebouw neer te laten zetten. Om een gebouw neer te zetten moet de speler eerst op de knop \textsc{b} drukken. Dan gaat de speler in de zogenaamde \emph{bouw-modus}. Op dat moment wordt er een klein menu onderaan het scherm van de speler afgebeeld. Door middel van sneltoetsen kan de speler een gebouw van dit menu kiezen. 
+
+Merk op dat de muis op dit moment nog steeds de kijkrichting bestuurt. Als het gebouw gekozen is, wordt op de ondergrond een rooster getekend. Door middel van het vizier kan de speler een plek op het rooster aanwijzen. De speler kan door te klikken dan de opdracht geven om het gebouw neer te laten zetten. Op dat moment wordt de bijbehorende hoeveelheid goud uit de gezamenlijke kas gehaald. Vervolgens zal het gebouw ook worden neergezet.
+
+Als de speler niet genoeg geld in de gezamenlijke kas heeft voor het gebouw, wordt de speler gewaarschuwd. Dan wordt er natuurlijk geen geld uit de gezamenlijke kas gehaald en het gebouw niet neergezet. Na het neerzetten van het gebouw gaat de speler weer uit de bouw-modus. Op elk moment kan dit proces afgebroken worden door op de knop \textsc{b} te drukken. Dit kan gezien worden in figuur \ref{fig:gebouw}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{Graphics/UI2.pdf}
+\caption{Een voorbeeld van het bouwen van een gebouw in de gebruikersomgeving.}
+\label{fig:gebouw}
+\end{figure}
+
 \section{Optioneel}
 \label{sec:OPT}
 We hebben ook een aantal plannen voor uitbreiding van het spel. De volgende idee\"en zouden wij graag extra implementeren. De idee\"en zijn gesorteerd op aflopende volgorde van belangrijkheid.

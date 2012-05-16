@@ -1,7 +1,7 @@
 #include <wx/wx.h>
 #include <wx/statline.h>
 #include <string>
-#include "../../common/ConfigFile.h"
+#include "../common/ConfigFile.h"
 
 /* Globals */
 //TODO: This is very ugly, need a way to pass messages between frames.
