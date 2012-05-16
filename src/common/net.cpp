@@ -12,7 +12,7 @@
 #endif
 
 #ifdef WIN32
-	#define _WIN32_WINNT 0x0501 
+	#define _WIN32_WINNT 0x0501
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
 	#define ssize_t signed long int
@@ -79,7 +79,7 @@ Address::Address(unsigned long address, unsigned port)
 {
 	if (!data)
 		return;
-	
+
 	memset(data, 0, length);
 	sockaddr_in *addr = (sockaddr_in *)data;
 	addr->sin_family = AF_INET;
@@ -94,21 +94,21 @@ Address::Address(const char *address, unsigned int port)
 {
 	if (!data)
 		return;
-	
+
 	memset(data, 0, length);
-	
+
 	addrinfo *result;
 	if (getaddrinfo(address, NULL, NULL, &result))
 		return;
-	
+
 	if (result && (result->ai_family == AF_INET))
 	{
 		memcpy(data, result->ai_addr, result->ai_addrlen);
-		
+
 		if (port)
 			((sockaddr_in *) data)->sin_port = htons(port);
 	}
-	
+
 	freeaddrinfo(result);
 }
 
@@ -118,7 +118,7 @@ Address::~Address()
 {
 	if (!data)
 		return;
-	
+
 	sockaddr_in *addr = (sockaddr_in *) data;
 	delete addr;
 }
@@ -190,7 +190,7 @@ Socket::Socket(Socket &sock)
 
 Socket::~Socket()
 {
-	close();	
+	close();
 }
 
 //------------------------------------------------------------------------------
@@ -225,13 +225,13 @@ void Socket::close()
 {
 	if ((SOCKET) data == SOCKET_ERROR)
 		return;
-	
+
 	#ifdef WIN32
 		closesocket((SOCKET) data);
 	#else
 		::close((SOCKET) data);
 	#endif
-	
+
 	data = (void *) -1;
 }
 
@@ -248,13 +248,13 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	Socket::List &error, long timeout)
 {
 	int maxfd = 0;
-	
+
 	timeval tv;
 	tv.tv_sec = timeout;
 	tv.tv_usec = 0;
-	
+
 	fd_set rfds, wfds, efds;
-	
+
 	if (!read.empty())
 	{
 		FD_ZERO(&rfds);
@@ -265,7 +265,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 			maxfd = maxfd < fd ? fd : maxfd;
 		}
 	}
-	
+
 	if (!write.empty())
 	{
 		FD_ZERO(&wfds);
@@ -276,7 +276,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 			maxfd = maxfd < fd ? fd : maxfd;
 		}
 	}
-	
+
 	if (!error.empty())
 	{
 		FD_ZERO(&efds);
@@ -287,7 +287,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 			maxfd = (maxfd < fd ? fd : maxfd);
 		}
 	}
-	
+
 	int ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
 	                              write.empty() ? NULL : &wfds,
 					              error.empty() ? NULL : &efds,
@@ -295,22 +295,22 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	return true;
 	if (ret == SOCKET_ERROR)
 		return false;
-	
+
 	if (!read.empty())
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
 			if (FD_ISSET((SOCKET) (*it)->data, &rfds))
 				read.erase(it--);
-	
+
 	if (!write.empty())
 		for (List::iterator it = write.begin(); it != write.end(); ++it)
 			if (!FD_ISSET((SOCKET) (*it)->data, &wfds))
 				write.erase(it--);
-	
+
 	if (!error.empty())
 		for (List::iterator it = error.begin(); it != error.end(); ++it)
 			if (!FD_ISSET((SOCKET) (*it)->data, &efds))
 				error.erase(it--);
-	
+
 	return true;
 }
 //------------------------------------------------------------------------------
@@ -347,7 +347,7 @@ bool UDPSocket::bind(const Address &address)
 
 bool UDPSocket::bind(unsigned int port)
 {
-	return bind(Address(htonl(INADDR_ANY), port));
+	return bind(Address((long unsigned int)htonl(INADDR_ANY), port));
 }
 
 //------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &leng
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
 		return true;
-	
+
 	length = ret;
 	return false;
 }
@@ -393,7 +393,7 @@ bool UDPSocket::shout(unsigned int port, const char *data_in, size_t &length)
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
 		return true;
-	
+
 	length = ret;
 	return false;
 }
@@ -469,7 +469,7 @@ bool TCPSocket::listen(const Address &address)
 
 bool TCPSocket::listen(unsigned int port)
 {
-	return listen(Address(ntohl(INADDR_ANY), port));
+	return listen(Address((long unsigned int)ntohl(INADDR_ANY), port));
 }
 
 //------------------------------------------------------------------------------
@@ -492,7 +492,7 @@ bool TCPSocket::send(const char *data_in, size_t &length)
 	ssize_t ret = ::send((SOCKET) data, data_in, length, 0);
 	if (ret == length)
 		return true;
-	
+
 	length = ret;
 	return false;
 }
