@@ -188,3 +188,9 @@ src/lobby/Lobby/Lobby.cbp
 src/lobby/lobby.cbp
 
 src/lobby/lobby.depend
+
+src/lobby/lib_finder.script
+
+src/lobby/lobby.cbp.cbTemp
+
+src/lobby/lobby.layout.cbTemp
