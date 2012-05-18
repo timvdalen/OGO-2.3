@@ -106,7 +106,7 @@ $(OBJDIR)ConfigFile.o: ../common/ConfigFile.cpp
 	$(CPP) -c ../common/ConfigFile.cpp -o $(OBJDIR)ConfigFile.o $(CXXFLAGS)
 
 $(OBJDIR)net.o: ../common/net.cpp
-	$(CPP) -c ../common/net.cpp -o $(OBJDIR)net.o $(CXXFLAGS)
+	$(CPP) -c ../common/net.cpp -o $(OBJDIR)net.o $(CXXFLAGS) -fpermissive
 
 $(OBJDIR)protocol.o: ../common/protocol.cpp
 	$(CPP) -c ../common/protocol.cpp -o $(OBJDIR)protocol.o $(CXXFLAGS)
