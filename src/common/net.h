@@ -42,7 +42,9 @@ struct Address
 	bool name(char *str, size_t len) const;
 	//! Gets a textual representation of an address
 	bool string(char *str) const;
-
+	
+	bool valid() const;
+	
 	friend struct UDPSocket;
 	friend struct TCPSocket;
 	

@@ -5,7 +5,7 @@
 #if (defined WIN32 || defined _MSC_VER)
 	#define WIN32_LEAN_AND_MEAN 1
 	#include <windows.h>
-	#define sleep Sleep
+	#define sleep(x) Sleep((x)*1000)
 #else
 	#include <unistd.h>
 #endif
@@ -66,6 +66,19 @@ struct ServerLobbyData : public GameLobbyData
 GameLobby::GameLobby() : onConnect(0), onPlayer(0), onJoin(0), onPart(0),
 	onTeam(0), onState(0), onChat(0), onClose(0), onStart(0)
 {
+}
+
+//------------------------------------------------------------------------------
+
+bool GameLobby::valid() const
+{
+	if (!data)
+		return false;
+	
+	GameLobbyData *lobby = (GameLobbyData *) data;
+	if (!lobby->sock)
+		return false;
+	return lobby->sock->valid();
 }
 
 //------------------------------------------------------------------------------
@@ -131,6 +144,11 @@ ClientLobby::ClientLobby(string playerName, const Address &server)
 		return;
 	}
 	
+	Message msg;
+	msg.push_back("NAME");
+	msg.push_back(playerName);
+	p->sock->send(msg);
+	
 	pthread_attr_destroy(&attr);
 }
 
@@ -143,6 +161,8 @@ ClientLobby::~ClientLobby()
 	
 	GameLobbyData *lobby = (GameLobbyData *) data;
 	
+	lobby->sock->close();
+	
 	pthread_cancel(lobby->thread);
 	
 	void *status;
@@ -150,7 +170,6 @@ ClientLobby::~ClientLobby()
 	
 	delete lobby->sock;
 	delete lobby;
-	lobby = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -161,10 +180,7 @@ bool ClientLobby::state(bool ready)
 		return false;
 	
 	GameLobbyData *lobby = (GameLobbyData *) data;
-	
-	Message msg;
-	msg.push_back(ready ? "READY" : "BUSY");
-	return lobby->sock->send(msg);
+	return lobby->sock->send(Message(ready ? "READY" : "BUSY"));
 }
 
 //------------------------------------------------------------------------------
@@ -202,8 +218,8 @@ void *ClientLobby::listen(void *arg)
 					continue;
 				
 				client = (int) msg[1];
-				game.numPlayers = (int) msg[2];
-				game.name = (string) msg[3];
+				game.numPlayers = (int) msg[3];
+				game.name = (string) msg[4];
 			}
 			else if (cmd == "PLAYER") //-----------------------------
 			{
@@ -264,11 +280,12 @@ void *ClientLobby::listen(void *arg)
 		
 		if (msg.eof())
 		{
-			CALL(lobby->onClose)();
+			p->sock->close();
 			break;
 		}
 	}
 	
+	CALL(lobby->onClose)();
 	pthread_exit(0);
 	return (NULL);
 }
@@ -346,6 +363,8 @@ ServerLobby::~ServerLobby()
 		return;
 	
 	ServerLobbyData *lobby = (ServerLobbyData *) data;
+	
+	lobby->sock->close();
 	
 	pthread_cancel(lobby->thread);
 	pthread_cancel(lobby->thread2);
@@ -432,6 +451,7 @@ void *ServerLobby::listen(void *arg)
 		Game game;
 		game.numPlayers = p->players.size() + 1;
 		game.name = p->name;
+		if (!lobby->onConnect) sleep(1);
 		CALL(lobby->onConnect)(p->host.id, game);
 	}
 	
@@ -598,9 +618,13 @@ void *ServerLobby::listen(void *arg)
 					msg_part.push_back("PART");
 					msg_part.push_back((int) player->id);
 					
+					player->sock->close();
 					p->players.erase(p->players.find(*player));
 					//delete player->sock;
 					//delete player; TODO: find out where the dependency is
+					
+					if (!player->id)
+						continue;
 					
 					for (pit = p->players.begin(); pit != p->players.end(); ++pit)
 						if (pit->id)
@@ -642,7 +666,7 @@ void *ServerLobby::broadcast(void *arg)
 		p->bcsock->shout(p->port, str.c_str(), length = str.length());
 		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 		
-		sleep(LOBBY_BC_INTERVAL * 1000);
+		sleep(LOBBY_BC_INTERVAL);
 	}
 	
 	pthread_exit(0);

@@ -69,6 +69,7 @@ Address::Address() : data(new sockaddr_in), length(sizeof (sockaddr_in))
 Address::Address(const Address &address)
 	: data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
+	if (!data) return;
 	memcpy(data, address.data, length);
 }
 
@@ -77,9 +78,7 @@ Address::Address(const Address &address)
 Address::Address(unsigned long address, unsigned port)
 	: data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
-	if (!data)
-		return;
-
+	if (!data) return;
 	memset(data, 0, length);
 	sockaddr_in *addr = (sockaddr_in *)data;
 	addr->sin_family = AF_INET;
@@ -92,16 +91,17 @@ Address::Address(unsigned long address, unsigned port)
 Address::Address(const char *address, unsigned int port)
 	 : data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
-	if (!data)
-		return;
-
+	if (!data) return;
 	memset(data, 0, length);
 
 	addrinfo *result;
 	if (getaddrinfo(address, NULL, NULL, &result))
 		return;
-
-	if (result && (result->ai_family == AF_INET))
+	
+	if (!result)
+		return;
+	
+	if (result->ai_family == AF_INET)
 	{
 		memcpy(data, result->ai_addr, result->ai_addrlen);
 
@@ -137,6 +137,17 @@ bool Address::string(char *str) const
 	sockaddr_in *addr = (sockaddr_in *) data;
 	return (sprintf(str, "%s:%d", inet_ntoa(addr->sin_addr),
 	                ntohs(addr->sin_port)) > 0);
+}
+
+//------------------------------------------------------------------------------
+
+bool Address::valid() const
+{
+	if (!data)
+		return false;
+	
+	sockaddr_in *addr = (sockaddr_in *) data;
+	return (addr->sin_family == AF_INET);
 }
 
 //------------------------------------------------------------------------------
@@ -197,6 +208,9 @@ Socket::~Socket()
 
 bool Socket::setBlocking()
 {
+	if ((SOCKET) data == SOCKET_ERROR)
+		return false;
+	
 	#ifdef WIN32
 		u_long x = 0;
 		return (ioctlsocket((SOCKET) data, FIONBIO, &x) != -1);
@@ -210,6 +224,9 @@ bool Socket::setBlocking()
 
 bool Socket::setNonBlocking()
 {
+	if ((SOCKET) data == SOCKET_ERROR)
+		return false;
+	
 	#ifdef WIN32
 		u_long x = 1;
 		return (ioctlsocket((SOCKET) data, FIONBIO, &x) != -1);
@@ -287,18 +304,39 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 			maxfd = (maxfd < fd ? fd : maxfd);
 		}
 	}
-
+	
+	#ifdef WIN32 // Windows will not cancel threads during select, curses!
+	int ret;
+	for (;;)
+	{
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		
+		ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
+		                          write.empty() ? NULL : &wfds,
+						          error.empty() ? NULL : &efds,
+						          &tv);
+		
+		if ((ret != 0) || (timeout == 1))
+			break;
+		
+		if (timeout > 0)
+			--timeout;
+	}
+	
+	#else
 	int ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
 	                              write.empty() ? NULL : &wfds,
 					              error.empty() ? NULL : &efds,
 					              timeout > 0 ? &tv : NULL);
-	return true;
+	#endif
+	
 	if (ret == SOCKET_ERROR)
 		return false;
 
 	if (!read.empty())
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
-			if (FD_ISSET((SOCKET) (*it)->data, &rfds))
+			if (!FD_ISSET((SOCKET) (*it)->data, &rfds))
 				read.erase(it--);
 
 	if (!write.empty())
@@ -354,6 +392,9 @@ bool UDPSocket::bind(unsigned int port)
 
 bool UDPSocket::broadcast()
 {
+	if ((SOCKET) data == SOCKET_ERROR)
+		return false;
+	
 	#ifdef WIN32
 		const char mode = 1;
 		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_BROADCAST,
