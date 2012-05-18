@@ -12,7 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
+#include <string>
 #include <map>
 
 #include "net.h"
@@ -20,13 +22,17 @@
 #include "games.h"
 #include "lobby.h"
 
+using namespace std;
 using namespace Lobby;
 
-std::string playerName, gameName;
+string playerName, gameName;
+string queue = "";
+bool queueing = false;
+bool hosting = false, connecting = false;
 
 //------------------------------------------------------------------------------
 
-std::map<Net::Address,Game> gamelist;
+map<Net::Address,Game> gamelist; // Should be guarded by a mutex
 
 void gamelist_update();
 void gamelist_join(Net::Address server, Game game);
@@ -35,17 +41,20 @@ void gamelist_part(Net::Address server);
 
 //------------------------------------------------------------------------------
 
-std::map<Lobby::Player::Id, std::string> playerlist;
+map<Lobby::Player::Id, string> playerlist; // Should be guarded by a mutex
 
 void lobby_connect(Player::Id pid, Game game);
 void lobby_player(Player player);
-void lobby_join(Player::Id pid, std::string playerName);
+void lobby_join(Player::Id pid, string playerName);
 void lobby_part(Player::Id pid);
 void lobby_team(Player::Id pid, unsigned char team);
 void lobby_state(Player::Id pid, Player::State state);
-void lobby_chat(Player::Id pid, std::string line);
+void lobby_chat(Player::Id pid, string line);
 void lobby_close();
 void lobby_start();
+
+char *gets2(char *data, size_t len);
+char *printf2(const char *fmt, ...);
 
 //------------------------------------------------------------------------------
 
@@ -54,41 +63,95 @@ int main(int argc, char *argv[])
 	{
 	Net::Initialize();
 	
-	char buffer[512];
-	int choice;
-	
-	printf("player name> ");
-	playerName = gets(buffer);
-	
-	printf("\t1) server\n\t2) client\n> ");
-	scanf("%d", &choice);
-	fflush(stdin);
-	
+	char buffer[1024];
+	string line, cmd;
+	Protocol::Message msg;
 	GameLobby *lobby;
-	if (choice == 1)
+	
+	printf("Player name> ");
+	playerName = gets2(buffer, sizeof (buffer));
+	printf("Welcome %s!\nCommands:\n\t!list\t\tget active server list\n"
+	       "\t!host [name]\tstart a server\n\t!connect <addr>\tjoin a lobby\n> ");
+	
 	{
-		fflush(stdin);
-		printf("game name> ");
-		gameName = gets(buffer);
+		GameList games(LOBBY_PORT);
+		games.onJoin = gamelist_join;
+		games.onChange = gamelist_change;
+		games.onPart = gamelist_part;
 		
-		lobby = new ServerLobby(gameName, playerName, LOBBY_PORT);
-	}
-	else if (choice == 2)
-	{
-		Net::Address addr;
+		while (games.valid())
 		{
-			Lobby::GameList games(LOBBY_PORT);
-			games.onJoin = gamelist_join;
-			games.onChange = gamelist_change;
-			games.onPart = gamelist_part;
-		
-			puts("Waiting for servers...");
-			printf("addr> ");
-			
-			std::string address = gets(buffer);
-			addr = Net::Address(address.c_str(), LOBBY_PORT);
+			line = gets2(buffer, sizeof (buffer));
+			if (line[0] == '!')
+			{
+				msg = line;
+				cmd = (string) msg[0];
+				if (cmd == "!list")
+				{
+					map<Net::Address,Game>::iterator it;
+					for (it = gamelist.begin(); it != gamelist.end(); ++it)
+					{
+						it->first.string(buffer);
+						printf("%s) %s (%d)\n", buffer, it->second.name.c_str(),
+						                                it->second.numPlayers);
+					}
+				}
+				else if (cmd == "!connect")
+				{
+					if (msg.size() < 2) continue;
+					connecting = true;
+					break;
+				}
+				else if (cmd == "!host")
+				{
+					hosting = true;
+					break;
+				}
+			}
+			printf("> ");
 		}
+		
+		if (!games.valid())
+		{
+			puts("Game polling failed!");
+			return (EXIT_FAILURE);
+		}
+	}
+	
+	puts("Stopped polling for servers.");
+	
+	if (connecting)
+	{
+		string line = msg[1];
+		Net::Address addr((const char *) line.c_str(), LOBBY_PORT);
+		if (!addr.valid())
+		{
+			printf("Address '%s' is invalid!\n", line.c_str());
+			return (EXIT_FAILURE);
+		}
+		
+		addr.string(buffer);
+		printf("Connecting to %s...\n", buffer);
+		
 		lobby = new ClientLobby(playerName, addr);
+		if (!lobby || !lobby->valid())
+		{
+			puts("Could not connect to the lobby.");
+			return (EXIT_FAILURE);
+		}
+	}
+	else if (hosting)
+	{
+		string line = (msg.size() < 2) ? "" : msg[1];
+		if (line.empty())
+			line = playerName + "'s game";
+		
+		lobby = new ServerLobby(line, playerName, LOBBY_PORT);
+		if (!lobby || !lobby->valid())
+		{
+			puts("Could not create a new lobby.");
+			return (EXIT_FAILURE);
+		}
 	}
 	
 	lobby->onConnect = lobby_connect;
@@ -101,18 +164,49 @@ int main(int argc, char *argv[])
 	lobby->onClose = lobby_close;
 	lobby->onStart = lobby_start;
 	
-	if (choice == 1)
-	{
-		Game game;
-		game.numPlayers = 1;
-		game.name = gameName;
-		lobby_connect(1, game);
-	}
-	
 	while (lobby->valid())
 	{
-		std::string input = gets(buffer);
-		lobby->chat(input);
+		ServerLobby *server = reinterpret_cast<ServerLobby *> (lobby);
+		ClientLobby *client = reinterpret_cast<ClientLobby *> (lobby);
+		line = gets2(buffer, sizeof (buffer));
+		
+		if (!queue.empty())
+		{
+			printf(queue.c_str());
+			queue.clear();
+		}
+		
+		if (line.empty())
+			queueing = !queueing;
+		else if (line[0] == '!')
+		{
+			msg = line;
+			cmd = (string) msg[0];
+			if ((cmd == "!close") || (cmd == "!exit"))
+				break;
+			
+			else if ((msg.size() > 1) && (cmd == "!team"))
+			{
+				     if (hosting)    server->team((int) msg[1]);
+				else if (connecting) client->team((int) msg[1]);
+			}
+			
+			else if (hosting)
+			{
+				if (cmd == "!start") server->start();
+			}
+			
+			else if (connecting)
+			{
+				     if (cmd == "!ready") client->state(true);
+				else if (cmd == "!busy")  client->state(false);
+			}
+		}
+		else if (hosting)    server->chat(line);
+		else if (connecting) client->chat(line);
+		
+		if (queueing)
+			printf("> ");
 	}
 	
 	delete lobby;
@@ -127,28 +221,9 @@ int main(int argc, char *argv[])
 
 //------------------------------------------------------------------------------
 
-void gamelist_update()
-{
-	puts(std::string(50, '\n').c_str());
-	puts("Servers found:");
-	
-	std::map<Net::Address,Game>::iterator it;
-	for (it = gamelist.begin(); it != gamelist.end(); ++it)
-	{
-		char addr[256];
-		it->first.string(addr);
-		printf("\t%s) %s (%d)\n", addr, it->second.name.c_str(), it->second.numPlayers);
-	}
-	
-	printf("addr> ");
-}
-
-//------------------------------------------------------------------------------
-
 void gamelist_join(Net::Address server, Game game)
 {
 	gamelist[server] = game;
-	gamelist_update();
 }
 
 //------------------------------------------------------------------------------
@@ -156,7 +231,6 @@ void gamelist_join(Net::Address server, Game game)
 void gamelist_change(Net::Address server, Game game)
 {
 	gamelist[server] = game;
-	gamelist_update();
 }
 
 //------------------------------------------------------------------------------
@@ -164,7 +238,6 @@ void gamelist_change(Net::Address server, Game game)
 void gamelist_part(Net::Address server)
 {
 	gamelist.erase(server);
-	gamelist_update();
 }
 
 //------------------------------------------------------------------------------
@@ -172,7 +245,7 @@ void gamelist_part(Net::Address server)
 void lobby_connect(Player::Id pid, Game game)
 {
 	gameName = game.name;
-	printf("Connected to server: %s (%d)\n", game.name.c_str(), game.numPlayers);
+	printf2("--- Connected to server: %s (%d)\n", game.name.c_str(), game.numPlayers);
 	playerlist[pid] = playerName;
 }
 
@@ -185,9 +258,9 @@ void lobby_player(Player player)
 
 //------------------------------------------------------------------------------
 
-void lobby_join(Player::Id pid, std::string playerName)
+void lobby_join(Player::Id pid, string playerName)
 {
-	printf("*** %s joined.\n", playerName.c_str());
+	printf2("*** %s joined.\n", playerName.c_str());
 	playerlist[pid] = playerName;
 }
 
@@ -195,7 +268,7 @@ void lobby_join(Player::Id pid, std::string playerName)
 
 void lobby_part(Player::Id pid)
 {
-	printf("*** %s parted.\n", playerlist[pid].c_str());
+	printf2("*** %s parted.\n", playerlist[pid].c_str());
 	playerlist.erase(pid);
 }
 
@@ -203,7 +276,7 @@ void lobby_part(Player::Id pid)
 
 void lobby_team(Player::Id pid, unsigned char team)
 {
-	printf("*** %s changed to team %d.\n", playerlist[pid].c_str(), team);
+	printf2("*** %s changed to team %d.\n", playerlist[pid].c_str(), team);
 }
 
 //------------------------------------------------------------------------------
@@ -211,27 +284,55 @@ void lobby_team(Player::Id pid, unsigned char team)
 void lobby_state(Player::Id pid, Player::State state)
 {
 	
-	printf("*** %s is %s.\n", playerlist[pid].c_str(), state ? "ready" : "busy");
+	printf2("*** %s is %s.\n", playerlist[pid].c_str(), state ? "ready" : "busy");
 }
 
 //------------------------------------------------------------------------------
 
-void lobby_chat(Player::Id pid, std::string line)
+void lobby_chat(Player::Id pid, string line)
 {
-	printf("<%s> %s\n", playerlist[pid].c_str(), line.c_str());
+	printf2("<%s> %s\n", playerlist[pid].c_str(), line.c_str());
 }
 
 //------------------------------------------------------------------------------
 
 void lobby_close()
 {
-	puts("Connection lost.");
+	printf2("--- Connection lost.\n");
 }
 
 //------------------------------------------------------------------------------
 
 void lobby_start()
 {
+}
+
+//------------------------------------------------------------------------------
+
+char *gets2(char *data, size_t len)
+{
+	fgets(data, len, stdin);
+	char *ptr = data + strlen(data) - 1;
+	if (*ptr == '\n') *ptr-- = 0;
+	if (*ptr == '\r') *ptr = 0;
+	return data;
+}
+
+//------------------------------------------------------------------------------
+
+char *printf2(const char *fmt, ...)
+{
+	char buffer[1024];
+	va_list args;
+	
+	va_start(args, fmt);
+	vsprintf(buffer, fmt, args);
+	va_end(args);
+	
+	if (queueing)
+		queue += string(buffer);
+	else
+		printf(buffer);
 }
 
 //------------------------------------------------------------------------------

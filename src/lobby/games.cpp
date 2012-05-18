@@ -96,6 +96,9 @@ void *GameList::listen(void *arg)
 	
 	GameListData *p = (GameListData *) gamelist->data;
 	
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+	
 	Net::Socket::List read, write, error;
 	for (;;)
 	{
@@ -121,7 +124,11 @@ void *GameList::listen(void *arg)
 		// Wait for timeouts or incomming broadcasts
 		read.clear(), write.clear(), error.clear();
 		read.push_back(p->sock);
-		Net::Socket::select(read, write, error, min - now);
+		if (Net::Socket::select(read, write, error, min - now) < 0)
+		{
+			pthread_exit(0);
+			return (NULL);
+		}
 		
 		// Process broadcasts
 		if (!read.empty())
