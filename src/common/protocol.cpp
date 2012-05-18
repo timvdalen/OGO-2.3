@@ -155,9 +155,12 @@ bool Message::empty() const
 
 Message::operator std::string() const
 {
-	std::string str;
+	if (size() == 1)
+		return (*begin());
 	
+	std::string str;
 	Message::const_iterator it;
+	
 	for (it = begin(); it != end(); ++it)
 	{
 		if ((it + 1) == end())

@@ -16,10 +16,6 @@
 #include "common.h"
 #include "games.h"
 
-#ifdef WIN32
-	#define sleep Sleep
-#endif
-
 namespace Lobby {
 
 //------------------------------------------------------------------------------
@@ -60,7 +56,7 @@ class GameLobby
 	bool team(unsigned char team);
 	bool chat(const std::string &line);
 	
-	bool valid() const { return !!data; }
+	bool valid() const;
 	
 	protected:
 	void *data;
