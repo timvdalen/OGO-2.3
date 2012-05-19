@@ -1,13 +1,20 @@
 #include <wx/wx.h>
 #include <wx/statline.h>
 #include <string>
-#include "../common/ConfigFile.h"
+#include <map>
+#include "ConfigFile.h"
 #include "games.h"
 #include "lobby.h"
 #include "common.h"
 
 using namespace Lobby;
 using namespace Net;
+using namespace std;
+
+struct GameNo{
+	Game game;
+	int id;
+};
 
 /* Globals */
 //TODO: This is very ugly, need a way to pass messages between frames.
@@ -16,10 +23,12 @@ bool joining;
 wxString playerName;
 int playnum;
 wxCheckBox *playlist[6];
+map<Address, GameNo> gameMap;
 
 GameList games(LOBBY_PORT);
 
-static void onJoinGame(Address server, Game game);
+static void onJoinGame(Address _server, Game _game);
+static void onPartGame(Address _server);
 
 
 class LobbyGUI: public wxApp{
@@ -88,6 +97,7 @@ bool LobbyGUI::OnInit(){
 
 mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
 	games.onJoin = onJoinGame;
+	games.onPart = onPartGame;
 	
 	wxPanel *panel = new wxPanel(this, wxID_ANY);
 	wxStaticText *st = new wxStaticText(panel, wxID_ANY, _("Possible games"), wxPoint(10, 10), wxDefaultSize, wxALIGN_LEFT);
@@ -133,11 +143,40 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 }
 
 
-static void onJoinGame(Address sever, Game game){
-	wxString gamename(game.name.c_str(), wxConvUTF8);
-	setStatusText(_("New game found: ") + gamename);
+static void onJoinGame(Address _server, Game _game){
 	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
+	int newid = gameList->GetCount(); 
+	struct GameNo newgame;
+	newgame.game = _game;
+	newgame.id = newid;
+	gameMap.insert(pair<Address, GameNo>(_server, newgame));
+	wxString gamename(_game.name.c_str(), wxConvUTF8);
+	frame->SetStatusText(_("New game found: ") + gamename);
+
 	gameList->Append(gamename);
+}
+
+static void onPartGame(Address _server){
+	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
+	GameNo gameno = gameMap[_server];
+	gameList->Delete(gameno.id);
+	map<Address,GameNo>::iterator it;
+	for(it = gameMap.begin(); it != gameMap.end(); it++){
+		GameNo cur = it->second;
+		if(cur.id > gameno.id){
+			cur.id--;
+			gameMap.insert(pair<Address, GameNo>(it->first, cur));//TODO: Check is this is needed
+		}
+	}
+	wxString gamename(gameno.game.name.c_str(), wxConvUTF8);
+	frame->SetStatusText(_("Game left: " + gamename));
+}
+
+static void onChangeGame(Address _server, Game _game){
+	//TODO: This could be better
+	//A lot.
+	onPartGame(_server);
+	onJoinGame(_server, _game);
 }
 
 
