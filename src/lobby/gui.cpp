@@ -92,9 +92,6 @@ mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 	wxPanel *panel = new wxPanel(this, wxID_ANY);
 	wxStaticText *st = new wxStaticText(panel, wxID_ANY, _("Possible games"), wxPoint(10, 10), wxDefaultSize, wxALIGN_LEFT);
 	listbox = new wxListBox(panel, ID_LISTBOX, wxPoint(10, 30), wxSize(300, 100)); 
-	listbox->Append(_("Game 1"));
-	listbox->Append(_("Andere game"));
-	listbox->Append(_("Weer andere game"));
 
 	wxButton *btnJoin = new wxButton(panel, ID_JOIN, _("Join"), wxPoint(10, 135));
 	Connect(ID_JOIN, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainFrame::OnJoinClick));
@@ -138,9 +135,9 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 
 static void onJoinGame(Address sever, Game game){
 	wxString gamename(game.name.c_str(), wxConvUTF8);
+	setStatusText(_("New game found: ") + gamename);
 	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
 	gameList->Append(gamename);
-	printf("Game: %s", game.name.c_str());
 }
 
 
