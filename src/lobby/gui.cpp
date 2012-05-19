@@ -24,6 +24,8 @@ wxString playerName;
 int playnum;
 wxCheckBox *playlist[6];
 map<Address, GameNo> gameMap;
+GameLobby *lobby;
+
 
 GameList games(LOBBY_PORT);
 
@@ -51,14 +53,16 @@ class mainFrame: public wxFrame{
 mainFrame *frame;
 
 
-class gameLobby: public wxFrame{
+class gameLobbyFrame: public wxFrame{
 	public:
-		gameLobby(const wxString& title, const wxPoint& pos, const wxSize& size);
+		gameLobbyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 		void OnSendClick(wxCommandEvent& event);
 		void OnReadyClick(wxCommandEvent& event);
 
 		DECLARE_EVENT_TABLE()
 };
+
+gameLobbyFrame *lobbyFrame;
 
 enum{
 	ID_LISTBOX,
@@ -73,8 +77,8 @@ enum{
 BEGIN_EVENT_TABLE(mainFrame, wxFrame)
 END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE(gameLobby, wxFrame)
-	//EVT_TEXT_ENTER(ID_SEND, gameLobby::OnSendClick)
+BEGIN_EVENT_TABLE(gameLobbyFrame, wxFrame)
+	//EVT_TEXT_ENTER(ID_SEND, gameLobbyFrame::OnSendClick)
 END_EVENT_TABLE()
 
 IMPLEMENT_APP(LobbyGUI)
@@ -119,11 +123,23 @@ void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
 	if(sel < 0){
 		wxMessageBox(_("Please select a game"), _("No selection"), wxOK | wxICON_EXCLAMATION);
 	}else{
-		selected = listbox->GetString(sel);
 		joining = true;
+		Address addr;
+		Game game;
+		map<Address,GameNo>::iterator it;
+		for(it = gameMap.begin(); it != gameMap.end(); it++){
+			GameNo cur = it->second;
+			if(cur.id == sel){
+				addr = it->first;
+				game = cur.game;
+				break;
+			}
+		}
+		lobby = new ClientLobby(string(playerName.mb_str()), addr); 
 		this->Close();
-		gameLobby *lobby = new gameLobby( _("Joining: ") + selected, wxPoint(49, 50), wxSize(900, 300));
-		lobby->Show(true);
+		wxString gamename(game.name.c_str(), wxConvUTF8);
+		lobbyFrame = new gameLobbyFrame( _("Joining: ") + gamename, wxPoint(49, 50), wxSize(900, 300));
+		lobbyFrame->Show(true);
 	}
 }
 
@@ -135,7 +151,7 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 		selected = seltemp;
 		joining = false;
 		this->Close();
-		gameLobby *lobby = new gameLobby( _("Hosting: ") + selected, wxPoint(49, 50), wxSize(900, 300));
+		gameLobbyFrame *lobby = new gameLobbyFrame( _("Hosting: ") + selected, wxPoint(49, 50), wxSize(900, 300));
 		lobby->Show(true);
 	}else{
 		wxMessageBox(_("Please enter a game name"), _("No text"), wxOK | wxICON_EXCLAMATION);
@@ -182,7 +198,7 @@ static void onChangeGame(Address _server, Game _game){
 
 
 
-gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
+gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
 	wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(900, 300));
 
 	wxPanel *panelLeft = new wxPanel(mainPanel, wxID_ANY, wxPoint(0, 0), wxSize(599, 300));
@@ -192,8 +208,8 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 	wxStaticText *txtPlayerName = new wxStaticText(panelLeft, wxID_ANY, playerName + _(":"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
 	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER);
 	wxButton *btnSend = new wxButton(panelLeft, ID_SEND, _("Send"), wxPoint(490, 260));
-	Connect(ID_SEND, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobby::OnSendClick));
-	Connect(ID_TXTSEND, wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(gameLobby::OnSendClick));
+	Connect(ID_SEND, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnSendClick));
+	Connect(ID_TXTSEND, wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(gameLobbyFrame::OnSendClick));
 
 	wxStaticLine *slMain = new wxStaticLine(mainPanel, wxID_ANY, wxPoint(599, 10), wxSize(1, 280), wxLI_VERTICAL);
 	
@@ -232,17 +248,17 @@ gameLobby::gameLobby(const wxString& title, const wxPoint& pos, const wxSize& si
 		btnReady->Enable(false);
 	}
 
-	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobby::OnReadyClick));
+	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnReadyClick));
 }
 
-void gameLobby::OnSendClick(wxCommandEvent& WXUNUSED(event)){
+void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
 	wxTextCtrl *textInput = (wxTextCtrl*) this->FindWindowById(ID_TXTSEND);
 	wxTextCtrl *textChat = (wxTextCtrl*) this->FindWindowById(ID_CHAT);
 	textChat->AppendText(_("\n") + playerName + _(": ") + textInput->GetValue());
 	textInput->ChangeValue(_(""));
 }
 
-void gameLobby::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
+void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
 	if(joining){
 		wxCheckBox *chk = playlist[playnum];
 		chk->SetValue(!chk->GetValue());
