@@ -253,6 +253,14 @@ void lobby_connect(Player::Id pid, Game game)
 
 void lobby_player(Player player)
 {
+	char state;
+	switch (player.state)
+	{
+		case Player::stBusy: state = 'B'; break;
+		case Player::stReady: state = 'R'; break;
+		case Player::stHost: state = 'H'; break;
+	}
+	printf("   [%d]\t%s\t%c\n", player.team, player.name.c_str(), state);
 	playerlist[player.id] = player.name;
 }
 
