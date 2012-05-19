@@ -18,7 +18,7 @@
 #include "protocol.h"
 #include "lobby.h"
 
-#define CALL(x) if (x) x
+#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 namespace Lobby {
 
@@ -231,7 +231,7 @@ void *ClientLobby::listen(void *arg)
 				player.team = (int) msg[2];
 				player.state = (Player::State) (int) msg[3];
 				player.name = (string) msg[4];
-				CALL(lobby->onPlayer)(player);
+				CALL(lobby->onPlayer, player)
 			}
 			else if (cmd == "JOIN")  //------------------------------
 			{
@@ -239,23 +239,23 @@ void *ClientLobby::listen(void *arg)
 					continue;
 				
 				if ((int) msg[1] == client)
-					CALL(lobby->onConnect)(client, game);
+					CALL(lobby->onConnect, client, game)
 				else
-					CALL(lobby->onJoin)((int) msg[1], msg[2]);
+					CALL(lobby->onJoin, (int) msg[1], msg[2])
 			}
 			else if (cmd == "PART") //-------------------------------
 			{
 				if (msg.size() < 2)
 					continue;
 				
-				CALL(lobby->onPart)((int) msg[1]);
+				CALL(lobby->onPart, (int) msg[1])
 			}
 			else if (cmd == "TEAM") //-------------------------------
 			{
 				if (msg.size() < 3)
 					continue;
 				
-				CALL(lobby->onTeam)((int) msg[1], (int) msg[2]);
+				CALL(lobby->onTeam, (int) msg[1], (int) msg[2])
 			}
 			else if ((cmd == "READY") //-----------------------------
 			     ||  (cmd ==  "BUSY"))
@@ -266,7 +266,7 @@ void *ClientLobby::listen(void *arg)
 				Player::State state = (cmd == "BUSY") ? Player::stBusy
 				                                      : Player::stReady;
 				
-				CALL(lobby->onState)((int) msg[1], state);
+				CALL(lobby->onState, (int) msg[1], state)
 				
 			}
 			else if (cmd == "CHAT") //-------------------------------
@@ -274,7 +274,7 @@ void *ClientLobby::listen(void *arg)
 				if (msg.size() < 3)
 					continue;
 				
-				CALL(lobby->onChat)((int) msg[1], msg[2]);
+				CALL(lobby->onChat, (int) msg[1], msg[2])
 			}
 		}
 		
@@ -285,7 +285,7 @@ void *ClientLobby::listen(void *arg)
 		}
 	}
 	
-	CALL(lobby->onClose)();
+	CALL(lobby->onClose)
 	pthread_exit(0);
 	return (NULL);
 }
@@ -403,7 +403,7 @@ bool ServerLobby::team(unsigned char team)
 		if (pit->id)
 			pit->sock->send(msg);
 	
-	CALL(onTeam)((int) lobby->host.id, team);
+	CALL(onTeam, (int) lobby->host.id, team)
 	return true;
 }
 
@@ -426,7 +426,7 @@ bool ServerLobby::chat(const string &line)
 		if (pit->id)
 			pit->sock->send(msg);
 	
-	CALL(onChat)(lobby->host.id, line);
+	CALL(onChat, lobby->host.id, line)
 	return true;
 }
 
@@ -452,7 +452,7 @@ void *ServerLobby::listen(void *arg)
 		game.numPlayers = p->players.size() + 1;
 		game.name = p->name;
 		if (!lobby->onConnect) sleep(1);
-		CALL(lobby->onConnect)(p->host.id, game);
+		CALL(lobby->onConnect, p->host.id, game)
 	}
 	
 	Socket::List read, write, error;
@@ -551,7 +551,7 @@ void *ServerLobby::listen(void *arg)
 							pit->sock->send(msg_join);
 						}
 						sock->send(msg_join);
-						CALL(lobby->onJoin)(player->id, player->name);
+						CALL(lobby->onJoin, player->id, player->name)
 					}
 					else if (!player->id) //-------------------------
 					{
@@ -574,7 +574,7 @@ void *ServerLobby::listen(void *arg)
 							if (pit->id)
 								pit->sock->send(msg);
 						
-						CALL(lobby->onTeam)(player->id, team);
+						CALL(lobby->onTeam, player->id, team)
 					}
 					else if ((cmd == "READY") //---------------------
 					     ||  (cmd ==  "BUSY"))
@@ -595,7 +595,7 @@ void *ServerLobby::listen(void *arg)
 							if (pit->id)
 								pit->sock->send(msg);
 						
-						CALL(lobby->onState)(player->id, state);
+						CALL(lobby->onState, player->id, state)
 					}
 					else if (cmd == "CHAT") //-----------------------
 					{
@@ -608,7 +608,7 @@ void *ServerLobby::listen(void *arg)
 							if (pit->id)
 								pit->sock->send(msg);
 						
-						CALL(lobby->onChat)(player->id, msg[2]);
+						CALL(lobby->onChat, player->id, msg[2])
 					}
 				}
 				
@@ -630,13 +630,13 @@ void *ServerLobby::listen(void *arg)
 						if (pit->id)
 							pit->sock->send(msg_part);
 					
-					CALL(lobby->onPart)(player->id);
+					CALL(lobby->onPart, player->id)
 				}
 			}
 		}
 	}
 	
-	CALL(lobby->onClose)();
+	CALL(lobby->onClose)
 	pthread_exit(0);
 	return (NULL);
 }
