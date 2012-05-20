@@ -7,12 +7,15 @@
  *
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 
 //------------------------------------------------------------------------------
 
 int main(int argc, char *argv)
 {
+	puts("Press any key...");
+	getchar();
 	return (EXIT_SUCCESS);
 }
 

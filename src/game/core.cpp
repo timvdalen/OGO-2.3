@@ -2,6 +2,7 @@
  * Core module -- see header
  */
 
+#include "video.h"
 #include "core.h"
 
 namespace Core {

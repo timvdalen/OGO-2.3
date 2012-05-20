@@ -249,7 +249,7 @@ void Socket::close()
 		::close((SOCKET) data);
 	#endif
 
-	data = (void *) -1;
+	data = (void *) SOCKET_ERROR;
 }
 
 //------------------------------------------------------------------------------
@@ -452,6 +452,8 @@ bool UDPSocket::recvfrom(Address &address, char *data_out, size_t &length)
 		#ifdef NETDEBUG
 			printf("%03X< %s\n", data, data_out);
 		#endif
+		if (!length)
+			close();
 		return true;
 	}
 	#ifdef WIN32
@@ -550,6 +552,8 @@ bool TCPSocket::recv(char *data_out, size_t &length)
 		#ifdef NETDEBUG
 			printf("%03X< %s\n", data, data_out);
 		#endif
+		if (!length)
+			close();
 		return true;
 	}
 	#ifdef WIN32

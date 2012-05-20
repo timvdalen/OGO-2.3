@@ -20,6 +20,7 @@
 namespace Objects{
 
 using namespace Core;
+using namespace Base::Alias;
 
 struct Boundingbox;
 class BoundedObject;
@@ -37,27 +38,14 @@ class ResourceMine;
 struct BoundingBox{
 	Point<double> lbl, rbl, ltl, rtl, lbh, rbh, lth, rth;
 	
-	BoundingBox(const BoundingBox &B){
-		lbl = B.lbl;
-		rbl = B.rbl;
-		ltl = B.ltl;
-		rtl = B.rtl;
-		lbh = B.lbh;
-		rbh = B.rbh;
-		lth = B.lth;
-	       	rth = B.rth;	
-	}
+	BoundingBox(const BoundingBox &B)
+		: lbl(B.lbl), rbl(B.rbl), ltl(B.ltl), rtl(B.rtl),
+		  lbh(B.lbh), rbh(B.rbh), lth(B.lth), rth(B.rth) {}
 
-	BoundingBox(Point<double> _lbl = Point<double>(), Point<double> _rbl = Point<double>(), Point<double> _ltl, Point<double> _rtl, Point<double> _lbh, Point<double> _bh, Point<double> _lth, Point<double> _rth){
-		lbl = _lbl;
-		rbl = _rbl;
-		ltl = _ltl;
-		rtl = _rtl;
-		lbh = _lbh;
-		rbh = _rbh;
-		lth = _lth;
-		rth = _rth;
-	}
+	BoundingBox(Pd _lbl = Pd(), Pd _rbl = Pd(), Pd _ltl = Pd(), Pd _rtl = Pd(),
+	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
+		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl), 
+		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
 };
 
 //! Represents an object with a bounding box
@@ -66,9 +54,9 @@ class BoundedObject: public Object{
 		//! The boundingbox for this object
 		BoundingBox bb;
 	
-	
 		//! Constructs a new bounded object
-		BoundedObject(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), BoundingBox B) : Object(P, R), bb(B) {}
+		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
+			: Object(P, R), bb(B) {}
 
 
 		//! Checks if a line from origin to direction collides with this object or one of its children.
@@ -91,7 +79,7 @@ class World: public BoundedObject{
 		double height;
 
 		//! Constructs a new world
-		World(double _width, double _height) : BoundedObject(Point<double>(), Quaternion<double>(), BoundingBox(Point<double>(0,0,0), Point<double>(_width,0,0), Point<double>(0,_height,0), Point<double>(_width,_height,0)) {
+		World(double _width, double _height) : BoundedObject(Pd(), Qd(), BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0))) {
 			width = _width;
 			height = _height;
 		}
@@ -111,7 +99,12 @@ class Terrain: public Object{
 };
 
 //! Represents a structure on the terrain
-class Structure: public Object{};
+class Structure: public BoundedObject
+{
+	public:
+	Structure(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
+			: BoundedObject(P, R, B) {}
+};
 
 //! Represents a mine structure on the terrain
 class Mine: public Structure{
@@ -120,9 +113,9 @@ class Mine: public Structure{
 		Resource maxIncome;
 
 		//! Constructs a new mine
-		Mine(Point<double> P = Point<double>(), Quaternion R = Quaternion<double>(), BoundingBox B = BoundingBox(), Resource _maxIncome) : BoundedObject(P, R, B){
-			maxIncome = _maxIncome;
-		}
+		Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
+		     Resource _maxIncome)
+			: Structure(P, R, B), maxIncome(_maxIncome) {}
 
 		//! Draws the mine
 		void draw();
@@ -136,7 +129,7 @@ class Building: public Structure{
 		//! The income this building generates
 		Resource income;
 		//! The time at which the construction of this building was started
-		time_t buildTime
+		time_t buildTime;
 		//! The time it takes to completely build this building
 		time_t buildDuration;
 		//! The attack power of this building
@@ -144,13 +137,13 @@ class Building: public Structure{
 
 
 		//! Constructs a new building
-		Building(Point<double> P = Point<double>(), Quaternion R = Quaternion<double>(), BoundingBox B = BoundingBox(), Resource _cost, Resource _income, time_t _buildTime, time_t _buildDuration, Power _attackPower) : BoundedObject(P, R, B){
-			cost = _cost;
-			income = _income;
-			buildTime = _buildTime;
-			buildDuration = _buildDuration;
-			attackPower = _attackPower;
-		}
+		Building(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
+		         Resource _cost, Resource _income, time_t _buildTime,
+				 time_t _buildDuration, Power _attackPower)
+			: Structure(P, R, B),
+			  cost(_cost), income(_income),
+			  buildTime(_buildTime), buildDuration(_buildDuration),
+			  attackPower(_attackPower) {}
 
 		//! Draws the building
 		void draw();
@@ -158,18 +151,33 @@ class Building: public Structure{
 };
 
 //! Represents a headquarters
-class HeadQuarters: Building{
-
+class HeadQuarters: public Building{
+	public:
+	HeadQuarters(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
+		: Building(P, R, B,
+		  0, 0,
+		  0, 0,
+		  0) {}
 };
 
 //! Represents a defense tower
-class DefenseTower: Building{
-
+class DefenseTower: public Building{
+	public:
+	DefenseTower(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
+		: Building(P, R, B,
+		  0, 0,
+		  0, 0,
+		  0) {}
 };
 
 //! Represents a mining tower built over a mine
-class ResourceMine: Building{
-
+class ResourceMine: public Building{
+	public:
+	ResourceMine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
+		: Building(P, R, B,
+		  0, 0,
+		  0, 0,
+		  0) {}
 };
 
 }

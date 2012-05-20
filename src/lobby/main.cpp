@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 			msg = line;
 			cmd = (string) msg[0];
 			if ((cmd == "!close") || (cmd == "!exit"))
-				break;
+				lobby->close();
 			
 			else if ((msg.size() > 1) && (cmd == "!team"))
 			{

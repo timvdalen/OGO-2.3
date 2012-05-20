@@ -23,9 +23,6 @@ bool TextSocket::send(const std::string &input)
 
 std::string TextSocket::recv()
 {
-	if (!valid())
-		return ("\r\n\r\n");
-	
 	std::string msg;
 	size_t pos = buffer.find("\r\n");
 	if (pos != std::string::npos)
@@ -35,12 +32,14 @@ std::string TextSocket::recv()
 		return msg;
 	}
 	
+	if (!valid())
+		return ("\r\n\r\n");
+	
 	char buf[1024];
 	while (TCPSocket::recv(buf, pos = sizeof (buf)))
 	{
 		if (!pos)
 		{
-			close();
 			msg = buffer;
 			buffer.clear();
 			return msg;
