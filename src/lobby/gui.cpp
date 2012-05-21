@@ -22,15 +22,22 @@ wxString selected;
 bool joining;
 wxString playerName;
 int playnum;
-wxCheckBox *playlist[6];
+map<int, Player> playerList;
+wxCheckBox *cbList[6];
 map<Address, GameNo> gameMap;
 GameLobby *lobby;
 
 
 GameList games(LOBBY_PORT);
 
+//Gamelist listeners
 static void onJoinGame(Address _server, Game _game);
+static void onChangeGame(Address _server, Game _game);
 static void onPartGame(Address _server);
+
+//Lobby listeners
+static void lobbyOnConnect(Player::Id pid, Game game);
+
 
 
 class LobbyGUI: public wxApp{
@@ -100,9 +107,6 @@ bool LobbyGUI::OnInit(){
 }
 
 mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
-	games.onJoin = onJoinGame;
-	games.onPart = onPartGame;
-	
 	wxPanel *panel = new wxPanel(this, wxID_ANY);
 	wxStaticText *st = new wxStaticText(panel, wxID_ANY, _("Possible games"), wxPoint(10, 10), wxDefaultSize, wxALIGN_LEFT);
 	listbox = new wxListBox(panel, ID_LISTBOX, wxPoint(10, 30), wxSize(300, 100)); 
@@ -114,6 +118,10 @@ mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 
 	CreateStatusBar();
 	SetStatusText(_("Waiting for broadcast...."));
+
+	games.onJoin = onJoinGame;
+	games.onChange = onChangeGame;
+	games.onPart = onPartGame;
 }
 
 void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
@@ -135,11 +143,8 @@ void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
 				break;
 			}
 		}
-		lobby = new ClientLobby(string(playerName.mb_str()), addr); 
-		this->Close();
-		wxString gamename(game.name.c_str(), wxConvUTF8);
-		lobbyFrame = new gameLobbyFrame( _("Joining: ") + gamename, wxPoint(49, 50), wxSize(900, 300));
-		lobbyFrame->Show(true);
+		lobby = new ClientLobby(string(playerName.mb_str()), addr);
+	       	lobby->onConnect = lobbyOnConnect;
 	}
 }
 
@@ -158,7 +163,7 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 	}
 }
 
-
+/* Game list listeners */
 static void onJoinGame(Address _server, Game _game){
 	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
 	int newid = gameList->GetCount(); 
@@ -196,14 +201,15 @@ static void onChangeGame(Address _server, Game _game){
 }
 
 
-
-
 gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)	: wxFrame(NULL, -1, title, pos, size){
+
+
 	wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(900, 300));
 
 	wxPanel *panelLeft = new wxPanel(mainPanel, wxID_ANY, wxPoint(0, 0), wxSize(599, 300));
 	
-	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + selected, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
+//	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + selected, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
+	/*
 	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, ID_CHAT, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
 	wxStaticText *txtPlayerName = new wxStaticText(panelLeft, wxID_ANY, playerName + _(":"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
 	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER);
@@ -211,28 +217,44 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	Connect(ID_SEND, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnSendClick));
 	Connect(ID_TXTSEND, wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(gameLobbyFrame::OnSendClick));
 
+	/*
 	wxStaticLine *slMain = new wxStaticLine(mainPanel, wxID_ANY, wxPoint(599, 10), wxSize(1, 280), wxLI_VERTICAL);
 	
 	wxPanel *panelRight = new wxPanel(mainPanel, wxID_ANY, wxPoint(601, 0), wxSize(299, 300));
 
 	wxPanel *panelRightTop = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 0), wxSize(299, 129));
 
-	playnum = 3;
 
-	for(int i=0; i < 6; i++){
+/*	
+	map<int, Player>::iterator it;
+	int i=0;
+	for(it = playerList.begin(); it != playerList.end(); it++){
+		int id = it->first;
+		Player player = it->second;
+
 		wxCheckBox *chk = new wxCheckBox(panelRightTop, wxID_ANY, _(""), wxPoint(10, (15*i)));
-		chk->Enable(false);
-		playlist[i] = chk;
+		bool state;
 
-		if(i == playnum){
-			if(!joining){
-				chk->SetValue(true);
-			}
-			wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, playerName, wxPoint(30, 5+(15*i)));
-		}else{
-			wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, wxString::Format(_("Player %i"), (i+1)), wxPoint(30, 5+(15*i)));
+		switch(player.state){
+			case Player::stReady:
+			case Player::stHost:
+				state = true; break;
+
+			case Player::stBusy:
+			default:
+				state = false; break;
 		}
+		chk->Enable(false);
+		chk->SetValue(state);
+		cbList[id] = chk;
+
+		wxString name(player.name.c_str(), wxConvUTF8);
+
+		wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, name, wxPoint(30, 5+(15*i)));
+		i++;
 	}
+	
+
 
 	wxStaticLine *slRight = new wxStaticLine(panelRight, wxID_ANY, wxPoint(5, 130), wxSize(290, 1), wxLI_HORIZONTAL); 
 	
@@ -249,6 +271,7 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	}
 
 	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnReadyClick));
+	*/
 }
 
 void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
@@ -260,9 +283,51 @@ void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
 
 void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
 	if(joining){
-		wxCheckBox *chk = playlist[playnum];
-		chk->SetValue(!chk->GetValue());
+		Player me = playerList[playnum];
+		wxCheckBox *chk = cbList[playnum];
+		//At this point, state is either busy or ready
+		if(me.state == Player::stBusy){
+			me.state = Player::stReady;
+		}else{
+			me.state = Player::stBusy;
+		}
+
+		bool state;
+
+		switch(me.state){
+			case Player::stReady:
+			case Player::stHost:
+				state = true; break;
+
+			case Player::stBusy:
+			default:
+				state = false; break;
+		}
+
+		chk->SetValue(state);
+
+		//TODO: Again, do I need to do this?
+		playerList[playnum] = me;
 	}else{
 		wxMessageBox(_("Starting game"), _("Starting game"), wxOK);
 	}
 }
+
+/* Game lobby listeners */
+static void lobbyOnConnect(Player::Id pid, Game game){
+	GameList *glp = &games;	
+	delete glp;
+	
+	playnum = pid;
+	Player me;
+	me.id = pid;
+	me.state = Player::stBusy;
+	me.name = string(playerName.mb_str());	
+	playerList.insert(pair<int, Player>((int) pid, me));
+
+	frame->Close();
+	wxString gamename(game.name.c_str(), wxConvUTF8);
+	lobbyFrame = new gameLobbyFrame( _("Joining: ") + gamename, wxPoint(49, 50), wxSize(900, 300));
+	lobbyFrame->Show(true);
+}
+
