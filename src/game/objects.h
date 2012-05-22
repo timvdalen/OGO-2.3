@@ -114,7 +114,7 @@ class Mine: public Structure{
 
 		//! Constructs a new mine
 		Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-		     Resource _maxIncome)
+		     Resource _maxIncome = 0)
 			: Structure(P, R, B), maxIncome(_maxIncome) {}
 
 		//! Draws the mine
@@ -138,8 +138,8 @@ class Building: public Structure{
 
 		//! Constructs a new building
 		Building(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-		         Resource _cost, Resource _income, time_t _buildTime,
-				 time_t _buildDuration, Power _attackPower)
+		         Resource _cost = 0, Resource _income = 0, time_t _buildTime = 0,
+				 time_t _buildDuration = 0, Power _attackPower = 0)
 			: Structure(P, R, B),
 			  cost(_cost), income(_income),
 			  buildTime(_buildTime), buildDuration(_buildDuration),

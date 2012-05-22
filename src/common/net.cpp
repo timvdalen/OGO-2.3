@@ -75,7 +75,7 @@ Address::Address(const Address &address)
 
 //------------------------------------------------------------------------------
 
-Address::Address(unsigned long address, unsigned port)
+Address::Address(unsigned long address, unsigned short port)
 	: data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
 	if (!data) return;
@@ -88,7 +88,7 @@ Address::Address(unsigned long address, unsigned port)
 
 //------------------------------------------------------------------------------
 
-Address::Address(const char *address, unsigned int port)
+Address::Address(const char *address, unsigned short port)
 	 : data(new sockaddr_in), length(sizeof (sockaddr_in))
 {
 	if (!data) return;
@@ -182,6 +182,13 @@ Address &Address::operator =(const Address &addr)
 	memcpy(data, addr.data, length);
 	return *this;
 }
+//------------------------------------------------------------------------------
+
+unsigned short &Address::port()
+{
+	sockaddr_in *addr = (sockaddr_in *) data;
+	return addr->sin_port;
+}
 
 //------------------------------------------------------------------------------
 
@@ -234,6 +241,21 @@ bool Socket::setNonBlocking()
 		int x = fcntl((SOCKET) data, F_GETFL, 0);
 		return (fcntl((SOCKET) data, F_SETFL, x | O_NONBLOCK) != -1);
 	#endif
+}
+
+//------------------------------------------------------------------------------
+
+bool Socket::bind(const Address &address)
+{
+	return !::bind((SOCKET) data, (const sockaddr *) address.data,
+		address.length);
+}
+
+//------------------------------------------------------------------------------
+
+bool Socket::bind(unsigned short port)
+{
+	return bind(Address((long unsigned int)htonl(INADDR_ANY), port));
 }
 
 //------------------------------------------------------------------------------
@@ -307,10 +329,12 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	
 	#ifdef WIN32 // Windows will not cancel threads during select, curses!
 	int ret;
+	fd_set _rfds = rfds, _wfds = wfds, _efds = efds;
 	for (;;)
 	{
 		tv.tv_sec = 1;
 		tv.tv_usec = 0;
+		rfds = _rfds, wfds = _wfds, efds = _efds;
 		
 		ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
 		                          write.empty() ? NULL : &wfds,
@@ -323,7 +347,6 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 		if (timeout > 0)
 			--timeout;
 	}
-	
 	#else
 	int ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
 	                              write.empty() ? NULL : &wfds,
@@ -375,21 +398,6 @@ UDPSocket::~UDPSocket()
 
 //------------------------------------------------------------------------------
 
-bool UDPSocket::bind(const Address &address)
-{
-	return !::bind((SOCKET) data, (const sockaddr *) address.data,
-		address.length);
-}
-
-//------------------------------------------------------------------------------
-
-bool UDPSocket::bind(unsigned int port)
-{
-	return bind(Address((long unsigned int)htonl(INADDR_ANY), port));
-}
-
-//------------------------------------------------------------------------------
-
 bool UDPSocket::broadcast()
 {
 	if ((SOCKET) data == SOCKET_ERROR)
@@ -424,7 +432,7 @@ bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &leng
 
 //------------------------------------------------------------------------------
 
-bool UDPSocket::shout(unsigned int port, const char *data_in, size_t &length)
+bool UDPSocket::shout(unsigned short port, const char *data_in, size_t &length)
 {
 	Address address(INADDR_BROADCAST, port);
 	#ifdef NETDEBUG
@@ -503,16 +511,18 @@ bool TCPSocket::connect(const Address &address)
 
 bool TCPSocket::listen(const Address &address)
 {
-	if (::bind((SOCKET) data, (const sockaddr *) address.data, address.length))
+	if (!bind(address))
 		return false;
 	return !::listen((SOCKET) data, 10);
 }
 
 //------------------------------------------------------------------------------
 
-bool TCPSocket::listen(unsigned int port)
+bool TCPSocket::listen(unsigned short port)
 {
-	return listen(Address((long unsigned int)ntohl(INADDR_ANY), port));
+	if (!bind(port))
+		return false;
+	return !::listen((SOCKET) data, 10);
 }
 
 //------------------------------------------------------------------------------
