@@ -41,7 +41,7 @@ static void onPartGame(Address _server);
 static void lobbyOnConnect(Player::Id pid, Game game);
 static void lobbyOnPlayer(Player player);
 static void lobbyOnChat(Player::Id pid, string line);
-
+static void lobbyOnClose();
 
 
 class LobbyGUI: public wxApp{
@@ -73,6 +73,7 @@ class gameLobbyFrame: public wxFrame{
 		void SetupPlayerList();
 		void AddToPlayerList(Player player, int position);
 		void AddChatLine(Player player, string line);
+		void CloseLobby();
 
 
 		wxPanel *panelRightTop;
@@ -362,6 +363,11 @@ void gameLobbyFrame::AddChatLine(Player player, string line){
 	txtChat->AppendText(playername + _(": ") + wxline + _("\n"));	
 }
 
+void gameLobbyFrame::CloseLobby(){
+	wxMessageBox( wxT("The server closed the connection. This program will exit now."), wxT("Connection closed"), wxICON_ERROR);
+	this->Close();
+}
+
 /* Game lobby listeners */
 static void lobbyOnConnect(Player::Id pid, Game game){
 	playnum = pid;
@@ -389,4 +395,8 @@ static void lobbyOnPlayer(Player player){
 static void lobbyOnChat(Player::Id pid, string line){
 	Player player = playerList[(int) pid];
 	lobbyFrame->AddChatLine(player, line);
+}
+
+static void lobbyOnClose(){
+	lobbyFrame->CloseLobby();
 }
