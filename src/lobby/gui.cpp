@@ -271,6 +271,7 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	lobby->onConnect = lobbyOnConnect;
 	lobby->onPlayer = lobbyOnPlayer;
 	lobby->onChat = lobbyOnChat;
+	lobby->onClose = lobbyOnClose;
 }
 
 void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
@@ -355,7 +356,6 @@ void gameLobbyFrame::AddChatLine(Player player, string line){
 }
 
 void gameLobbyFrame::CloseLobby(){
-	wxMessageBox( wxT("The server closed the connection. This program will exit now."), wxT("Connection closed"), wxICON_ERROR);
 	this->Close();
 }
 
