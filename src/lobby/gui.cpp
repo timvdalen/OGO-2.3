@@ -40,9 +40,12 @@ static void onPartGame(Address _server);
 //Lobby listeners
 static void lobbyOnConnect(Player::Id pid, Game game);
 static void lobbyOnPlayer(Player player);
+static void lobbyOnJoin(Player::Id pid, string playerName);
 static void lobbyOnChat(Player::Id pid, string line);
 static void lobbyOnClose();
 static void lobbyOnState(Player::Id pid, Player::State state);
+
+static void lobbyAddPlayer(Player player);
 
 class LobbyGUI: public wxApp{
 	    virtual bool OnInit();
@@ -274,6 +277,7 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	lobby = new ClientLobby(string(playerName.mb_str()), server);
 	lobby->onConnect = lobbyOnConnect;
 	lobby->onPlayer = lobbyOnPlayer;
+	lobby->onJoin = lobbyOnJoin;
 	lobby->onChat = lobbyOnChat;
 	lobby->onClose = lobbyOnClose;
 	lobby->onState = lobbyOnState;
@@ -386,12 +390,24 @@ static void lobbyOnConnect(Player::Id pid, Game game){
 	lobbyFrame->SetupPlayerList();
 }
 
+static void lobbyOnJoin(Player::Id pid, string _playername){
+	//I'm assuming this is called for new players in the lobby
+	//TODO: Confirm this
+	Player newplayer;
+	newplayer.id = pid;
+	newplayer.state = Player::stBusy;
+	newplayer.name = _playername;
+	
+	lobbyAddPlayer(newplayer);
+}
+
 static void lobbyOnPlayer(Player player){
 	//I'm assuming this is called for existing players in the lobby you just joined
 	//TODO: Confirm this
+	lobbyAddPlayer(player);
+}
 
-	puts("onPlayer received");
-
+static void lobbyAddPlayer(Player player){
 	lobbyFrame->AddToPlayerList(player);
 
 	playerList.insert(pair<int, Player>((int) player.id, player));
