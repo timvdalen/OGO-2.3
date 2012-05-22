@@ -42,7 +42,7 @@ static void lobbyOnConnect(Player::Id pid, Game game);
 static void lobbyOnPlayer(Player player);
 static void lobbyOnChat(Player::Id pid, string line);
 static void lobbyOnClose();
-
+static void lobbyOnState(Player::Id pid, Player::State state);
 
 class LobbyGUI: public wxApp{
 	    virtual bool OnInit();
@@ -65,6 +65,9 @@ mainFrame *frame;
 
 
 class gameLobbyFrame: public wxFrame{
+	private:
+		static bool GetState(Player::State);
+
 	public:
 		gameLobbyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 		void OnSendClick(wxCommandEvent& event);
@@ -72,6 +75,7 @@ class gameLobbyFrame: public wxFrame{
 
 		void SetupPlayerList();
 		void AddToPlayerList(Player player, int position);
+		void UpdatePlayerList(Player player);
 		void AddChatLine(Player player, string line);
 		void CloseLobby();
 
@@ -272,6 +276,7 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	lobby->onPlayer = lobbyOnPlayer;
 	lobby->onChat = lobbyOnChat;
 	lobby->onClose = lobbyOnClose;
+	lobby->onState = lobbyOnState;
 }
 
 void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
@@ -330,23 +335,32 @@ void gameLobbyFrame::SetupPlayerList(){
 
 void gameLobbyFrame::AddToPlayerList(Player player, int i = playerList.size()){
 	wxCheckBox *chk = new wxCheckBox(panelRightTop, wxID_ANY, _("")	, wxPoint(10, (15*i)));
-	bool state;
-
-	switch(player.state){
-		case Player::stReady:
-		case Player::stHost:
-			state = true; break;
-			case Player::stBusy:
-		default:
-			state = false; break;
-	}
 	chk->Enable(false);
-	chk->SetValue(state);
+	chk->SetValue(gameLobbyFrame::GetState(player.state));
 	cbList[(int) player.id] = chk;
 
 	wxString name(player.name.c_str(), wxConvUTF8);
 
 	wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, name, wxPoint(30, 5+(15*i)));
+}
+
+void gameLobbyFrame::UpdatePlayerList(Player player){
+	wxCheckBox *chk = cbList[(int) player.id];
+	chk->SetValue(gameLobbyFrame::GetState(player.state));
+}
+
+bool gameLobbyFrame::GetState(Player::State state){
+	bool ret;
+	switch(state){
+		case Player::stReady:
+		case Player::stHost:
+			ret = true; break;
+			case Player::stBusy:
+		default:
+			ret = false; break;
+	}
+
+	return ret;
 }
 
 void gameLobbyFrame::AddChatLine(Player player, string line){
@@ -390,4 +404,14 @@ static void lobbyOnChat(Player::Id pid, string line){
 
 static void lobbyOnClose(){
 	lobbyFrame->CloseLobby();
+}
+
+static void lobbyOnState(Player::Id pid, Player::State state){
+	Player player = playerList[(int) pid];
+	player.state = state;
+
+	lobbyFrame->UpdatePlayerList(player);
+
+	//TODO: Yet again
+	playerList[(int) pid] = player;	
 }
