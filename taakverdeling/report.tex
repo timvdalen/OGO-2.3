@@ -11,6 +11,23 @@
 	margin=2.54cm
 }
 
+\newcommand{\BS}{BrnStrm}
+\newcommand{\ON}{Ori\"entatie}
+\newcommand{\MW}{Werkplan}
+\newcommand{\MS}{SpelSpec}
+\newcommand{\MA}{Spelkeus}
+\newcommand{\BO}{Deel. Docu.}
+\newcommand{\OC}{Protocol}
+\newcommand{\MN}{Impl.Proto.}
+\newcommand{\CT}{Proto Test}
+\newcommand{\MK}{Klas.diagr.}
+\newcommand{\MT}{Taakverdel.}
+\newcommand{\IS}{Implement}
+\newcommand{\BG}{Handl.}
+\newcommand{\AV}{Eind Docu}
+\newcommand{\ME}{Mkn.prsnt.}
+\newcommand{\EP}{Presenteren}
+
 \begin{document}
 	\input{title}
 	
@@ -21,6 +38,48 @@
 	\input{introduction}
 	\newpage
     
-    \section{Verdeling}
+    \section{Taakanalyse}
+    Voordat we het werkplan kunnen maken voor de implementatiefase, moeten we de belangrijkste taken identificeren. Bij de belangrijkste taken zullen we ook de deeltaken aangeven. Dit geeft de volgende lijst van taken:
+    \begin{itemize}
+    \item Scene modelleren. Hieronder valt niet alleen het maken van de modellen en textures, maar ook het inladen van de modellen in OpenGL. 
+    \item Het maken van de basisklassen. Hiermee bedoelen we de lagere klassen, die worden gebruikt om de scene te modelleren. We denken hierbij bijvoorbeeld aan: \emph{Terrain}, \emph{Building}, \emph{Player} en \emph{Camera}. 
+    \item De netcode. De netcode verzorgt alle communicatie met de buitenwereld. Dit valt uit elkaar in twee delen: het implementeren van het protocol en het testen van het protocol. Zoals ook al is aangegeven in het document \emph{Werkplan}, wordt het protocol al ontwikkeld tijdens de ontwerpfase.
+        \begin{itemize}
+        \item Protocol implementatie.
+        \item Protocol testen.
+        \end{itemize}
+    \item De lobbycode. Dit is alleen de grafische gebruikersinterface voor de lobby (immers, de communicatie wordt al verzorgd door de netcode). De lobby wordt gebruikt tijdens het opstarten van het spel.
+    \item De gebruikersomgeving tijdens het spel. Hieronder verstaan wij zowel het weergeven van de scene als het reageren op de gebruiker:
+        \begin{itemize}
+        \item Weergeven van scene.
+        \item Reageren op gebruiker.
+        \end{itemize}
+    \end{itemize}
+ 
+    \section{Taakverdeling}
+    Na het analyseren van de taken, is het nu mogelijk om ze zo goed mogelijk te verdelen. Het is daarbij belangrijk om in te zien dat de taken in de taakanalyse al redelijk onafhankelijk van elkaar zijn uit te voeren. We proberen er in de taakverdeling voor te zorgen dat een klein aantal groepen zo onafhankelijk mogelijk van de rest kan werken. Om dit te bereiken, werken we zoveel mogelijk \emph{bottom-up}. 
     
+    Verder hebben we als doel dat MISSCHIEN STERK-ZWAK, VERSCHILLENDE ASPECTEN VAN ALLES VOOR IEDEREEN. Aangezien het protocol al af zou moeten zijn voor de implementatiefase, zullen wij hier bij dit werkplan voor de implementatiefase natuurlijk geen rekening mee hoeven te houden. Bovendien kan er zonder problemen al eerder worden begonnen aan het modelleren van de scene, dit is namelijk volledig onafhankelijk van de rest. Daarom is tijdens de eerdere fasen een deel van het modelleren al gedaan, zoals ook al aangegeven als mogelijkheid in het document \emph{Werkplan}.
+   \begin{figure}[H]
+        \small
+        \centering
+        \begin{tabular}{| l | l | l | l | l | l | l |}
+        \hline
+        Week & Carl & Ferry & Kay & Luca & Peter & Tim \\ \hline
+        Week 6 01-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline ontwerpfase}} \\ \hline
+        Week 7 05-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
+        Week 7 06-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
+        Week 7 07-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
+        Week 8 12-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
+        Week 8 13-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
+        Week 8 14-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
+        Week 8 14-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline implementatiefase eerste versie}} \\ \hline
+        Week 9 19-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
+        Week 9 20-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
+        Week 9 21-06-2012 & \EP & \EP & \EP & \EP & \EP & \EP \\ \hline
+        Week 9 22-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline verslag}} \\ \hline
+        \end{tabular}
+        \caption{Gedetailleerde taakverdeling per dag}
+        \label{tab:planning}
+    \end{figure}
 \end{document}
