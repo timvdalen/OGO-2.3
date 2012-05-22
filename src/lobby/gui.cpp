@@ -303,6 +303,9 @@ void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
 				state = false; break;
 		}
 
+		ClientLobby *client = reinterpret_cast<ClientLobby *> (lobby);
+		client->state(state);
+
 		chk->SetValue(state);
 
 		//TODO: Again, do I need to do this?
