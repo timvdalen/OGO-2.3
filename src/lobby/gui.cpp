@@ -24,6 +24,7 @@ wxString playerName;
 int playnum;
 map<int, Player> playerList;
 wxCheckBox *cbList[6];
+wxStaticText *stList[6];
 map<Address, GameNo> gameMap;
 GameLobby *lobby;
 Game activeGame;
@@ -41,6 +42,7 @@ static void onPartGame(Address _server);
 static void lobbyOnConnect(Player::Id pid, Game game);
 static void lobbyOnPlayer(Player player);
 static void lobbyOnJoin(Player::Id pid, string playerName);
+static void lobbyOnPart(Player::Id pid);
 static void lobbyOnChat(Player::Id pid, string line);
 static void lobbyOnClose();
 static void lobbyOnState(Player::Id pid, Player::State state);
@@ -63,9 +65,7 @@ class mainFrame: public wxFrame{
 		DECLARE_EVENT_TABLE()	
 };
 
-
 mainFrame *frame;
-
 
 class gameLobbyFrame: public wxFrame{
 	private:
@@ -80,6 +80,7 @@ class gameLobbyFrame: public wxFrame{
 		void AddToPlayerList(Player player, int position);
 		void UpdatePlayerList(Player player);
 		void AddChatLine(Player player, string line);
+		void RemoveCheckboxes();
 		void CloseLobby();
 
 
@@ -278,6 +279,7 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	lobby->onConnect = lobbyOnConnect;
 	lobby->onPlayer = lobbyOnPlayer;
 	lobby->onJoin = lobbyOnJoin;
+	lobby->onPart = lobbyOnPart;
 	lobby->onChat = lobbyOnChat;
 	lobby->onClose = lobbyOnClose;
 	lobby->onState = lobbyOnState;
@@ -346,6 +348,7 @@ void gameLobbyFrame::AddToPlayerList(Player player, int i = playerList.size()){
 	wxString name(player.name.c_str(), wxConvUTF8);
 
 	wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, name, wxPoint(30, 5+(15*i)));
+	stList[(int) player.id] = pn;
 }
 
 void gameLobbyFrame::UpdatePlayerList(Player player){
@@ -373,6 +376,20 @@ void gameLobbyFrame::AddChatLine(Player player, string line){
 	txtChat->AppendText(playername + _(": ") + wxline + _("\n"));	
 }
 
+void gameLobbyFrame::RemoveCheckboxes(){
+	map<int, Player>::iterator it;
+	for(it = playerList.begin(); it != playerList.end(); it++){		
+		int id = it->first;
+		
+		char * str;
+		sprintf(str, "id: %i, name: %s", id, it->second.name.c_str());
+		puts(str);
+		cbList[id]->Destroy();
+		stList[id]->Destroy();
+	}
+
+}
+
 void gameLobbyFrame::CloseLobby(){
 	this->Close();
 }
@@ -384,10 +401,8 @@ static void lobbyOnConnect(Player::Id pid, Game game){
 	me.id = pid;
 	me.state = Player::stBusy;
 	me.name = string(playerName.mb_str());	
-	playerList.insert(pair<int, Player>((int) pid, me));
-
-
-	lobbyFrame->SetupPlayerList();
+	
+	lobbyAddPlayer(me);
 }
 
 static void lobbyOnJoin(Player::Id pid, string _playername){
@@ -412,6 +427,14 @@ static void lobbyAddPlayer(Player player){
 
 	playerList.insert(pair<int, Player>((int) player.id, player));
 }
+
+static void lobbyOnPart(Player::Id pid){
+	lobbyFrame->RemoveCheckboxes();
+	playerList.erase((int) pid);
+	lobbyFrame->SetupPlayerList();
+}
+
+
 
 static void lobbyOnChat(Player::Id pid, string line){
 	Player player = playerList[(int) pid];
