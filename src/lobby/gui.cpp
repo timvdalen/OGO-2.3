@@ -315,9 +315,11 @@ void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
 
 /* Game lobby listeners */
 static void lobbyOnConnect(Player::Id pid, Game game){
-	GameList *glp = &games;	
-	delete glp;
-	
+	//TODO: Very quick hack
+	games.onJoin = NULL;
+	games.onChange = NULL;
+	games.onPart = NULL;
+
 	playnum = pid;
 	Player me;
 	me.id = pid;
