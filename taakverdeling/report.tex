@@ -11,31 +11,10 @@
 	margin=2.54cm
 }
 
-\newcommand{\BS}{BrnStrm}
-\newcommand{\ON}{Ori\"entatie}
-\newcommand{\MW}{Werkplan}
-\newcommand{\MS}{SpelSpec}
-\newcommand{\MA}{Spelkeus}
-\newcommand{\BO}{Deel. Docu.}
-\newcommand{\OC}{Protocol}
-\newcommand{\MN}{Impl.Proto.}
-\newcommand{\CT}{Proto Test}
-\newcommand{\MK}{Klas.diagr.}
-\newcommand{\MT}{Taakverdel.}
-\newcommand{\IS}{Implement}
-\newcommand{\BG}{Handl.}
-\newcommand{\AV}{Eind Docu}
-\newcommand{\ME}{Mkn.prsnt.}
-\newcommand{\EP}{Presenteren}
-
 \begin{document}
 	\input{title}
 	
 	\tableofcontents
-	\newpage
-
-	\section{Introductie}
-	\input{introduction}
 	\newpage
     
     \section{Taakanalyse}
@@ -59,25 +38,26 @@
     \section{Taakverdeling}
     Na het analyseren van de taken, is het nu mogelijk om ze zo goed mogelijk te verdelen. Het is daarbij belangrijk om in te zien dat de taken in de taakanalyse al redelijk onafhankelijk van elkaar zijn uit te voeren. We proberen er in de taakverdeling voor te zorgen dat een klein aantal groepen zo onafhankelijk mogelijk van de rest kan werken. Om dit te bereiken, werken we zoveel mogelijk \emph{bottom-up}. 
     
-    Verder hebben we als doel dat MISSCHIEN STERK-ZWAK, VERSCHILLENDE ASPECTEN VAN ALLES VOOR IEDEREEN. Aangezien het protocol al af zou moeten zijn voor de implementatiefase, zullen wij hier bij dit werkplan voor de implementatiefase natuurlijk geen rekening mee hoeven te houden. Bovendien kan er zonder problemen al eerder worden begonnen aan het modelleren van de scene, dit is namelijk volledig onafhankelijk van de rest. Daarom is tijdens de eerdere fasen een deel van het modelleren al gedaan, zoals ook al aangegeven als mogelijkheid in het document \emph{Werkplan}.
+    Verder hebben we als doel dat iedereen met de verschillende aspecten van het programma te maken krijgt. Het protocol is al gezamenlijk ontworpen en getest, zodat iedereen met het gedistribueerde aspect te maken heeft gehad. We zullen met deze taakverdeling proberen iedereen ook te laten werken aan het grafische aspect.
+    
+    Aangezien ons plan is om het protocol voor de implementatiefase al af te hebben, zullen wij hier bij dit werkplan voor de implementatiefase natuurlijk geen rekening mee houden. We hebben besloten het protocol al eerder te maken om onverwachte vertragingen vanwege \emph{bugs} te voorkomen, die in onze mening het meest waarschijnlijk zijn bij dit onderdeel van het programma. Dit wordt uitgebreid besproken in het document \emph{Werkplan}.
+    
+    Bovendien kan er zonder problemen al eerder worden begonnen aan het modelleren van de scene, dit is namelijk volledig onafhankelijk van de rest. Daarom is tijdens de eerdere fasen een deel van het modelleren al gedaan. Dit geeft ons wat extra tijd tijdens de implementatiefase, die wordt gebruikt als uitloop. Ook hier verwijzen we voor een uitgebreide bespreking naar het document \emph{Werkplan}.
+    
+    We geven de volgende tabel voor de taakverdeling. In deze tabel is week 9 weggelaten. Die is in principe bedoeld voor het afronden van het verslag en het voorbereiden van de eindpresentatie. Echter, deze kan ook worden gebruikt als extra uitloop.
    \begin{figure}[H]
         \small
         \centering
         \begin{tabular}{| l | l | l | l | l | l | l |}
         \hline
         Week & Carl & Ferry & Kay & Luca & Peter & Tim \\ \hline
-        Week 6 01-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline ontwerpfase}} \\ \hline
-        Week 7 05-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
-        Week 7 06-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
-        Week 7 07-06-2012 & \IS & \IS & \IS & \IS & \IS & \IS \\ \hline
-        Week 8 12-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
-        Week 8 13-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
-        Week 8 14-06-2012 & \BG & \IS & \IS & \IS & \IS & \BG \\ \hline
+        Week 7 05-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
+        Week 7 06-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
+        Week 7 07-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
+        Week 8 12-06-2012 & BG & Scene & Scene & Gbr reactie & Gbr reactie & BG \\ \hline
+        Week 8 13-06-2012 & BG & Scene & Scene & Gbr reactie & Gbr reactie & BG \\ \hline
+        Week 8 14-06-2012 & BG & Scene & Scene & Gbr reactie & Gbr reactie & BG \\ \hline
         Week 8 14-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline implementatiefase eerste versie}} \\ \hline
-        Week 9 19-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
-        Week 9 20-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
-        Week 9 21-06-2012 & \EP & \EP & \EP & \EP & \EP & \EP \\ \hline
-        Week 9 22-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline verslag}} \\ \hline
         \end{tabular}
         \caption{Gedetailleerde taakverdeling per dag}
         \label{tab:planning}
