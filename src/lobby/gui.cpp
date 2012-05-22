@@ -26,6 +26,8 @@ map<int, Player> playerList;
 wxCheckBox *cbList[6];
 map<Address, GameNo> gameMap;
 GameLobby *lobby;
+Game activeGame;
+Address server;
 
 
 GameList games(LOBBY_PORT);
@@ -37,6 +39,8 @@ static void onPartGame(Address _server);
 
 //Lobby listeners
 static void lobbyOnConnect(Player::Id pid, Game game);
+static void lobbyOnPlayer(Player player);
+static void lobbyOnChat(Player::Id pid, string line);
 
 
 
@@ -65,6 +69,14 @@ class gameLobbyFrame: public wxFrame{
 		gameLobbyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 		void OnSendClick(wxCommandEvent& event);
 		void OnReadyClick(wxCommandEvent& event);
+
+		void SetupPlayerList();
+		void AddToPlayerList(Player player, int position);
+		void AddChatLine(Player player, string line);
+
+
+		wxPanel *panelRightTop;
+		wxTextCtrl *txtChat;
 
 		DECLARE_EVENT_TABLE()
 };
@@ -143,8 +155,19 @@ void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
 				break;
 			}
 		}
-		lobby = new ClientLobby(string(playerName.mb_str()), addr);
-	       	lobby->onConnect = lobbyOnConnect;
+
+		server = addr;
+
+		games.onJoin = NULL;
+		games.onChange = NULL;
+		games.onPart = NULL;
+
+		activeGame = game;
+
+		frame->Close();
+		wxString gamename(game.name.c_str(), wxConvUTF8);
+		lobbyFrame = new gameLobbyFrame( _("Joining: ") + gamename, wxPoint(49, 50), wxSize(900, 300));
+		lobbyFrame->Show(true);
 	}
 }
 
@@ -206,54 +229,35 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 
 	wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(900, 300));
 
+
 	wxPanel *panelLeft = new wxPanel(mainPanel, wxID_ANY, wxPoint(0, 0), wxSize(599, 300));
+
+
+	wxString gameName(activeGame.name.c_str(), wxConvUTF8);
 	
-//	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + selected, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
-	/*
-	wxTextCtrl *textChat = new wxTextCtrl(panelLeft, ID_CHAT, _("Player 1: Bla bla bla\nPlayer3: I agree bla bla\nPlayer 4: Nog een bla bla"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
+	wxStaticText *st = new wxStaticText(panelLeft, wxID_ANY, _("Game: ") + gameName, wxPoint(10, 5), wxDefaultSize, wxALIGN_LEFT);	
+
+
+
+	
+	txtChat = new wxTextCtrl(panelLeft, ID_CHAT, _("Server: Welcome to the game! Enjoy your stay. [MOTD hier]\n"), wxPoint(10, 20), wxSize(579, 240), wxTE_MULTILINE | wxTE_READONLY);
 	wxStaticText *txtPlayerName = new wxStaticText(panelLeft, wxID_ANY, playerName + _(":"), wxPoint(10, 270), wxDefaultSize, wxALIGN_LEFT);
 	wxTextCtrl *textInput = new wxTextCtrl(panelLeft, ID_TXTSEND, _(""), wxPoint(65, 263), wxSize(420, 25), wxTE_PROCESS_ENTER);
 	wxButton *btnSend = new wxButton(panelLeft, ID_SEND, _("Send"), wxPoint(490, 260));
 	Connect(ID_SEND, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnSendClick));
 	Connect(ID_TXTSEND, wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(gameLobbyFrame::OnSendClick));
 
-	/*
+
+
 	wxStaticLine *slMain = new wxStaticLine(mainPanel, wxID_ANY, wxPoint(599, 10), wxSize(1, 280), wxLI_VERTICAL);
 	
 	wxPanel *panelRight = new wxPanel(mainPanel, wxID_ANY, wxPoint(601, 0), wxSize(299, 300));
 
-	wxPanel *panelRightTop = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 0), wxSize(299, 129));
+	panelRightTop = new wxPanel(panelRight, wxID_ANY, wxPoint(0, 0), wxSize(299, 129));
 
 
-/*	
-	map<int, Player>::iterator it;
-	int i=0;
-	for(it = playerList.begin(); it != playerList.end(); it++){
-		int id = it->first;
-		Player player = it->second;
-
-		wxCheckBox *chk = new wxCheckBox(panelRightTop, wxID_ANY, _(""), wxPoint(10, (15*i)));
-		bool state;
-
-		switch(player.state){
-			case Player::stReady:
-			case Player::stHost:
-				state = true; break;
-
-			case Player::stBusy:
-			default:
-				state = false; break;
-		}
-		chk->Enable(false);
-		chk->SetValue(state);
-		cbList[id] = chk;
-
-		wxString name(player.name.c_str(), wxConvUTF8);
-
-		wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, name, wxPoint(30, 5+(15*i)));
-		i++;
-	}
 	
+		
 
 
 	wxStaticLine *slRight = new wxStaticLine(panelRight, wxID_ANY, wxPoint(5, 130), wxSize(290, 1), wxLI_HORIZONTAL); 
@@ -271,14 +275,20 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	}
 
 	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnReadyClick));
-	*/
+	
+
+	//Wait for lobby to connect
+	lobby = new ClientLobby(string(playerName.mb_str()), server);
+	lobby->onConnect = lobbyOnConnect;
+	lobby->onPlayer = lobbyOnPlayer;
+	lobby->onChat = lobbyOnChat;
 }
 
 void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
 	wxTextCtrl *textInput = (wxTextCtrl*) this->FindWindowById(ID_TXTSEND);
-	wxTextCtrl *textChat = (wxTextCtrl*) this->FindWindowById(ID_CHAT);
-	textChat->AppendText(_("\n") + playerName + _(": ") + textInput->GetValue());
+	wxString message = textInput->GetValue();
 	textInput->ChangeValue(_(""));
+	lobby->chat(string(message.mb_str()));
 }
 
 void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
@@ -313,13 +323,47 @@ void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
 	}
 }
 
+void gameLobbyFrame::SetupPlayerList(){
+	map<int, Player>::iterator it;
+	puts("Setting up players");
+	int i=0;
+	for(it = playerList.begin(); it != playerList.end(); it++){		
+		Player player = it->second;
+		this->AddToPlayerList(player, i);
+		i++;
+	}
+
+}
+
+void gameLobbyFrame::AddToPlayerList(Player player, int i = playerList.size()){
+	wxCheckBox *chk = new wxCheckBox(panelRightTop, wxID_ANY, _("")	, wxPoint(10, (15*i)));
+	bool state;
+
+	switch(player.state){
+		case Player::stReady:
+		case Player::stHost:
+			state = true; break;
+			case Player::stBusy:
+		default:
+			state = false; break;
+	}
+	chk->Enable(false);
+	chk->SetValue(state);
+	cbList[(int) player.id] = chk;
+
+	wxString name(player.name.c_str(), wxConvUTF8);
+
+	wxStaticText *pn = new wxStaticText(panelRightTop, wxID_ANY, name, wxPoint(30, 5+(15*i)));
+}
+
+void gameLobbyFrame::AddChatLine(Player player, string line){
+	wxString playername(player.name.c_str(), wxConvUTF8);
+	wxString wxline(line.c_str(), wxConvUTF8);
+	txtChat->AppendText(playername + _(": ") + wxline + _("\n"));	
+}
+
 /* Game lobby listeners */
 static void lobbyOnConnect(Player::Id pid, Game game){
-	//TODO: Very quick hack
-	games.onJoin = NULL;
-	games.onChange = NULL;
-	games.onPart = NULL;
-
 	playnum = pid;
 	Player me;
 	me.id = pid;
@@ -327,9 +371,22 @@ static void lobbyOnConnect(Player::Id pid, Game game){
 	me.name = string(playerName.mb_str());	
 	playerList.insert(pair<int, Player>((int) pid, me));
 
-	frame->Close();
-	wxString gamename(game.name.c_str(), wxConvUTF8);
-	lobbyFrame = new gameLobbyFrame( _("Joining: ") + gamename, wxPoint(49, 50), wxSize(900, 300));
-	lobbyFrame->Show(true);
+
+	lobbyFrame->SetupPlayerList();
 }
 
+static void lobbyOnPlayer(Player player){
+	//I'm assuming this is called for existing players in the lobby you just joined
+	//TODO: Confirm this
+
+	puts("onPlayer received");
+
+	lobbyFrame->AddToPlayerList(player);
+
+	playerList.insert(pair<int, Player>((int) player.id, player));
+}
+
+static void lobbyOnChat(Player::Id pid, string line){
+	Player player = playerList[(int) pid];
+	lobbyFrame->AddChatLine(player, line);
+}
