@@ -19,14 +19,14 @@ MV       = -mv -f
 
 OBJDIR   = ../../obj/
 BINDIR   = ../../bin/
-INCS     =  -I"../common" 
-CXXINCS  =  -I"../common" 
+INCS     =  -I"../common"
+CXXINCS  =  -I"../common"
 OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
-           $(OBJDIR)objects.o  $(OBJDIR)netalg.o
+           $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o
 BIN      = $(BINDIR)Game
-CXXFLAGS = $(CXXINCS) 
-LIBS     = -lpthread 
+CXXFLAGS = $(CXXINCS)
+LIBS     = -lpthread
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC
@@ -43,10 +43,10 @@ ifeq ($(build),netdebug)
 	CXXFLAGS += -g -DDEBUG -DNETDEBUG
 endif
 ifeq ($(build),release)
-	CXXFLAGS += -fexpensive-optimizations -O3 
+	CXXFLAGS += -fexpensive-optimizations -O3
 endif
 
-.PHONY: all clean run 
+.PHONY: all clean run
 default: all
 
 all: $(BIN)
@@ -58,7 +58,7 @@ clean:
 run: default
 	@echo -------------------------------------------------------------------------------
 	@echo Running game...
-	@echo 
+	@echo
 	@$(BIN)
 
 $(BIN): $(OBJ)
@@ -79,14 +79,17 @@ $(OBJDIR)objects.o: objects.cpp
 $(OBJDIR)ConfigFile.o: ../common/ConfigFile.cpp
 	$(CPP) -c ../common/ConfigFile.cpp -o $(OBJDIR)ConfigFile.o $(CXXFLAGS)
 
+$(OBJDIR)CrossPlatform.o: ../common/CrossPlatform.cpp
+	$(CPP) -c ../common/CrossPlatform.cpp -o $(OBJDIR)CrossPlatform.o $(CXXFLAGS)
+
 $(OBJDIR)net.o: ../common/net.cpp
 	$(CPP) -c ../common/net.cpp -o $(OBJDIR)net.o $(CXXFLAGS) -fpermissive
 
 $(OBJDIR)protocol.o: ../common/protocol.cpp
 	$(CPP) -c ../common/protocol.cpp -o $(OBJDIR)protocol.o $(CXXFLAGS)
 
-$(OBJDIR)video.o: video.cpp
-	$(CPP) -c video.cpp -o $(OBJDIR)video.o $(CXXFLAGS)
+$(OBJDIR)video.o: video_glut.cpp
+	$(CPP) -c video_glut.cpp -o $(OBJDIR)video.o $(CXXFLAGS)
 
 $(OBJDIR)netalg.o: netalg.cpp
-	$(CPP) -c netalg.cpp -o $(OBJDIR)netalg.o $(CXXFLAGS)
+	$(CPP) -c netalg.cpp -o $(OBJDIR)netalg.o $(CXXFLAGS) 

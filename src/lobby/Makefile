@@ -19,29 +19,29 @@ MV       = -mv -f
 
 OBJDIR   = ../../obj/
 BINDIR   = ../../bin/
-INCS     =  -I"../common" 
-CXXINCS  =  -I"../common" 
-OBJ      = $(OBJDIR)games.o $(OBJDIR)lobby.o $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o 
+INCS     =  -I"../common"
+CXXINCS  =  -I"../common"
+OBJ      = $(OBJDIR)games.o $(OBJDIR)lobby.o $(OBJDIR)ConfigFile.o $(OBJDIR)CrossPlatform.o $(OBJDIR)net.o $(OBJDIR)protocol.o
 BIN      = $(BINDIR)Lobby
-CXXFLAGS = $(CXXINCS) 
-LIBS     = -lpthread 
+CXXFLAGS = $(CXXINCS)
+LIBS     = -lpthread
 
-CLI_OBJ = $(OBJDIR)main.o $(OBJ) 
+CLI_OBJ = $(OBJDIR)main.o $(OBJ)
 CLI_BIN := $(BIN)CLI
-CLI_CXXFLAGS = $(CXXFLAGS) 
-CLI_LIBS = $(LIBS) 
+CLI_CXXFLAGS = $(CXXFLAGS)
+CLI_LIBS = $(LIBS)
 
-GUI_OBJ = $(OBJDIR)gui.o $(OBJ) 
+GUI_OBJ = $(OBJDIR)gui.o $(OBJ)
 GUI_BIN := $(BIN)GUI
-GUI_CXXFLAGS = `wx-config --cxxflags` $(CXXFLAGS) 
-GUI_LIBS = `wx-config --libs` $(LIBS) 
+GUI_CXXFLAGS = `wx-config --cxxflags` $(CXXFLAGS)
+GUI_LIBS = `wx-config --libs` $(LIBS)
 
 ifeq ($(platform),win32)
 	LIBS    += -lws2_32
 	BIN     := $(BIN).exe
 	CLI_BIN := $(CLI_BIN).exe
 	GUI_BIN := $(GUI_BIN).exe
-	GUI_LIBS = `wx-config --static=yes --libs` -static $(LIBS) 
+	GUI_LIBS = `wx-config --static=yes --libs` -static $(LIBS)
 endif
 
 ifeq ($(build),debug)
@@ -51,7 +51,7 @@ ifeq ($(build),netdebug)
 	CXXFLAGS += -g -DDEBUG -DNETDEBUG
 endif
 ifeq ($(build),release)
-	CXXFLAGS += -fexpensive-optimizations -O3 
+	CXXFLAGS += -fexpensive-optimizations -O3
 endif
 
 .PHONY: all gui cli clean run run-cli run-gui
@@ -72,19 +72,19 @@ clean:
 run: default
 	@echo -------------------------------------------------------------------------------
 	@echo Running default...
-	@echo 
+	@echo
 	@$(BIN)
 
 run-cli: cli
 	@echo -------------------------------------------------------------------------------
 	@echo Running CLI...
-	@echo 
+	@echo
 	@$(BIN)
 
 run-gui: gui
 	@echo -------------------------------------------------------------------------------
 	@echo Running GUI...
-	@echo 
+	@echo
 	@$(BIN)
 
 $(BIN): $(OBJ)
@@ -105,6 +105,9 @@ $(OBJDIR)lobby.o: lobby.cpp
 $(OBJDIR)ConfigFile.o: ../common/ConfigFile.cpp
 	$(CPP) -c ../common/ConfigFile.cpp -o $(OBJDIR)ConfigFile.o $(CXXFLAGS)
 
+$(OBJDIR)CrossPlatform.o: ../common/CrossPlatform.cpp
+	$(CPP) -c ../common/CrossPlatform.cpp -o $(OBJDIR)CrossPlatform.o $(CXXFLAGS)
+
 $(OBJDIR)net.o: ../common/net.cpp
 	$(CPP) -c ../common/net.cpp -o $(OBJDIR)net.o $(CXXFLAGS) -fpermissive
 
@@ -115,4 +118,4 @@ $(OBJDIR)main.o: main.cpp
 	$(CPP) -c main.cpp -o $(OBJDIR)main.o $(CLI_CXXFLAGS)
 
 $(OBJDIR)gui.o: gui.cpp
-	$(CPP) -c gui.cpp -o $(OBJDIR)gui.o $(GUI_CXXFLAGS)
+	$(CPP) -c gui.cpp -o $(OBJDIR)gui.o $(GUI_CXXFLAGS) 
