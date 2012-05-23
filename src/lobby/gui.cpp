@@ -32,7 +32,7 @@ Game activeGame;
 Address server;
 
 
-GameList games(LOBBY_PORT);
+GameList *games;
 
 //Gamelist listeners
 static void onJoinGame(Address _server, Game _game);
@@ -141,9 +141,11 @@ mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 	CreateStatusBar();
 	SetStatusText(_("Waiting for broadcast...."));
 
-	games.onJoin = onJoinGame;
-	games.onChange = onChangeGame;
-	games.onPart = onPartGame;
+	games = new GameList(LOBBY_PORT);
+
+	games->onJoin = onJoinGame;
+	games->onChange = onChangeGame;
+	games->onPart = onPartGame;
 }
 
 void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
@@ -168,9 +170,7 @@ void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
 
 		server = addr;
 
-		games.onJoin = NULL;
-		games.onChange = NULL;
-		games.onPart = NULL;
+		delete games;
 
 		activeGame = game;
 
