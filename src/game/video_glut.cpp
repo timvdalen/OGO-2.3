@@ -20,7 +20,7 @@ namespace Video {
 using namespace std;
 
 //------------------------------------------------------------------------------
-void idle_event() {}
+
 void Initialize(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
@@ -31,9 +31,6 @@ void Initialize(int argc, char *argv[])
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glShadeModel(GL_SMOOTH);
-	
-	glutDisplayFunc(Window::display);
-	glutIdleFunc(idle_event);
 }
 
 //------------------------------------------------------------------------------
@@ -47,6 +44,8 @@ void Terminate()
 
 void StartEventLoop()
 {
+	glutDisplayFunc(Window::display);
+	
 	glutMainLoop();
 }
 
@@ -63,6 +62,7 @@ std::set<Window *> Window::windows;
 
 struct WindowData
 {
+	uword width, height;
 };
 
 //------------------------------------------------------------------------------
@@ -72,7 +72,11 @@ Window::Window(uword width, uword height, const char *title,
 {
 	data = (void *) new WindowData;
 	
-	glutInitWindowPosition(xpos, -1);
+	PRIV(WindowData, wd);
+	wd->width = width;
+	wd->height = height;
+	
+	glutInitWindowPosition(xpos, ypos);
 	glutInitWindowSize(width, height);
 	glutCreateWindow(title);
 	
@@ -98,7 +102,7 @@ void Window::render()
 	set<Viewport *>::iterator vit;
 	for (vit = viewports.begin(); vit != viewports.end(); ++vit)
 	{
-		(*vit)->select();
+		(*vit)->select(this);
 		(*vit)->render();
 	}
 }
@@ -122,15 +126,17 @@ void Window::display()
 
 struct ViewportData
 {
-	word x, y;
-	dword w, h;
+	double x, y;
+	double w, h;
 	double f, a;
 	bool changed;
+	Window *lastwin;
 };
 
 //------------------------------------------------------------------------------
 
-Viewport::Viewport(uword width, uword height, word xpos, word ypos, double fov)
+Viewport::Viewport(double width, double height, double xpos, double ypos,
+                   double fov)
 {
 	data = (void*) new ViewportData;
 	
@@ -142,6 +148,7 @@ Viewport::Viewport(uword width, uword height, word xpos, word ypos, double fov)
 	vd->y = ypos;
 	vd->f = fov;
 	vd->changed = true;
+	vd->lastwin = NULL;
 	
 	if (vd->h < 1)
 		vd->h = 1;
@@ -158,7 +165,7 @@ Viewport::~Viewport()
 
 //------------------------------------------------------------------------------
 
-void Viewport::move(word xpos, word ypos)
+void Viewport::move(double xpos, double ypos)
 {
 	PRIV(ViewportData, vd)
 	vd->x = xpos;
@@ -168,7 +175,7 @@ void Viewport::move(word xpos, word ypos)
 
 //------------------------------------------------------------------------------
 
-void Viewport::resize(uword width, uword height)
+void Viewport::resize(double width, double height)
 {
 	PRIV(ViewportData, vd)
 	
@@ -177,7 +184,7 @@ void Viewport::resize(uword width, uword height)
 	
 	vd->w = width;
 	vd->h = height;
-	vd->a = (double) vd->w / (double) vd->h;
+	vd->a = width / height;
 	vd->changed = true;
 }
 
@@ -193,11 +200,17 @@ void Viewport::setfov(double fov)
 
 //------------------------------------------------------------------------------
 
-void Viewport::select()
+void Viewport::select(Window *w)
 {
 	PRIV(ViewportData, vd)
+	if (!w) return;
 	
-	glViewport(vd->x, vd->y, vd->w, vd->h);
+	WindowData *wd = (WindowData *) w->data;
+	
+	vd->lastwin = w;
+	
+	glViewport((GLint) vd->x * wd->width, (GLint) vd->y * wd->height,
+	           (GLint) vd->w * wd->width, (GLint) vd->h * wd->height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(vd->f, vd->a, 0.1f, 1000.0f);
@@ -214,7 +227,7 @@ void Viewport::render()
 	
 	// Reset viewport when parameters changed
 	if (vd->changed)
-		select();
+		select(vd->lastwin);
 	
 	// Set up render
 	glMatrixMode(GL_MODELVIEW);

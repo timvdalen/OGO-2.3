@@ -49,6 +49,7 @@ void StopEventLoop();
 
 //------------------------------------------------------------------------------
 
+//! A windows instance
 class Window
 {
 	public:
@@ -61,7 +62,10 @@ class Window
 	void render();
 	
 	friend void Initialize(int argc, char *argv[]);
+	friend void StartEventLoop();
+	friend void StopEventLoop();
 	friend void Terminate();
+	friend class Viewport;
 	
 	private:
 	void *data;
@@ -80,25 +84,28 @@ struct Camera
 
 //------------------------------------------------------------------------------
 
+//! Viewport class, displays on a portion of a window
 class Viewport
 {
 	public:
-	Camera camera;
-	ObjectHandle world;
+	Camera camera;      //!< Defined where the viewport view from in the world
+	ObjectHandle world; //!< Defines the world the viewport will show
 	
-	Viewport(uword width, uword height, word xpos = 0, word ypos = 0,
+	//! create a new viewport
+	//! \note the  width, height and position are factors relative to the the window sise
+	Viewport(double width, double height, double xpos = 0, double ypos = 0,
 	         double fov = 45.0);
 	~Viewport();
 	
 	//! Changes viewport offset (relative to screen)
-	void move(word xpos, word ypos);
+	void move(double xpos, double ypos);
 	//! Resizes viewport
-	void resize(uword width, uword height);
+	void resize(double width, double height);
 	//! Changes the field of view of the viewport
 	void setfov(double fov);
 	
 	//! Actuates viewport
-	void select();
+	void select(Window *);
 	//! Draws screne viewed from camera in viewport
 	void render();
 	
