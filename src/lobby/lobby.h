@@ -57,6 +57,7 @@ class GameLobby
 	bool chat(const std::string &line);
 	
 	bool valid() const;
+	void close();
 	
 	protected:
 	void *data;

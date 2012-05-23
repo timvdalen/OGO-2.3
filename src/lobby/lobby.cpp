@@ -83,6 +83,17 @@ bool GameLobby::valid() const
 
 //------------------------------------------------------------------------------
 
+void GameLobby::close()
+{
+	if (!data)
+		return;
+	
+	GameLobbyData *lobby = (GameLobbyData *) data;
+	lobby->sock->close();
+}
+
+//------------------------------------------------------------------------------
+
 bool GameLobby::team(unsigned char team)
 {
 	if (!data)
@@ -277,15 +288,10 @@ void *ClientLobby::listen(void *arg)
 				CALL(lobby->onChat, (int) msg[1], msg[2])
 			}
 		}
-		
-		if (msg.eof())
-		{
-			p->sock->close();
-			break;
-		}
 	}
 	
 	CALL(lobby->onClose)
+	
 	pthread_exit(0);
 	return (NULL);
 }
@@ -456,6 +462,7 @@ void *ServerLobby::listen(void *arg)
 	}
 	
 	Socket::List read, write, error;
+	ServerLobbyData::PlayerSet::iterator pit;
 	while (p->sock->valid())
 	{
 		// Wait for incomming connections or messages
@@ -464,13 +471,32 @@ void *ServerLobby::listen(void *arg)
 		{
 			ServerLobbyData::PlayerSet::iterator it;
 			for (it = p->players.begin(); it != p->players.end(); ++it)
-				read.push_back(it->sock);
+			{
+				if (!it->sock->valid())
+				{
+					const ServerPlayer &player = *it;
+					
+					Message msg_part;
+					msg_part.push_back("PART");
+					msg_part.push_back((int) player.id);
+					
+					if (player.id)
+						for (pit = p->players.begin(); pit != p->players.end(); ++pit)
+							if (pit->id)
+								pit->sock->send(msg_part);
+					
+					CALL(lobby->onPart, player.id)
+					delete player.sock;
+					p->players.erase(it--);
+				}
+				else
+					read.push_back(it->sock);
+			}
 		}
 		Socket::select(read, write, error);
 		
 		// Process incomming connections or messages
 		Socket::List::iterator it;
-		ServerLobbyData::PlayerSet::iterator pit;
 		for (it = read.begin(); it != read.end(); ++it)
 		{
 			if (*it == p->sock)
@@ -610,27 +636,6 @@ void *ServerLobby::listen(void *arg)
 						
 						CALL(lobby->onChat, player->id, msg[2])
 					}
-				}
-				
-				if (msg.eof())
-				{
-					Message msg_part;
-					msg_part.push_back("PART");
-					msg_part.push_back((int) player->id);
-					
-					player->sock->close();
-					p->players.erase(p->players.find(*player));
-					//delete player->sock;
-					//delete player; TODO: find out where the dependency is
-					
-					if (!player->id)
-						continue;
-					
-					for (pit = p->players.begin(); pit != p->players.end(); ++pit)
-						if (pit->id)
-							pit->sock->send(msg_part);
-					
-					CALL(lobby->onPart, player->id)
 				}
 			}
 		}
