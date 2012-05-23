@@ -100,7 +100,7 @@ class Handle
 	inline void clear()
 	{
 		if (!ref) return;
-		if (--ref->count < 1) delete ref;
+		if (--(ref->count) < 1) delete ref;
 		ref = 0;
 	}
 	

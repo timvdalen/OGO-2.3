@@ -66,7 +66,7 @@ class BoundedObject: public Object{
 		ObjectHandle checkCollision(Point<double> origin, Vector<double> direction);
 
 		//! Draws this object
-		virtual void draw();
+		virtual void draw() {}
 };
 
 
@@ -90,7 +90,7 @@ class World: public BoundedObject{
 		}
 
 		//! Draws the world
-		virtual void draw();
+		virtual void draw() {}
 };
 
 //! Represents the terrain of the game

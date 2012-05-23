@@ -12,12 +12,24 @@
 
 #include "common.h"
 #include "netalg.h"
+#include "objects.h"
+#include "video.h"
 
 //------------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
-	{
+	Video::Initialize(argc, argv);
+	Video::Window w1(640, 480, "Game");
+	
+	Video::Viewport *v1 = new Video::Viewport(640, 480);
+	v1->world = Objects::World(100,100);
+	
+	w1.viewports.insert(v1);
+	
+	Video::StartEventLoop();
+	
+	/*{
 		Net::Initialize();
 		
 		unsigned short port = 23;
@@ -58,7 +70,7 @@ int main(int argc, char *argv[])
 		puts("Connection closed!");
 		
 		Net::Terminate();
-	}
+	}*/
 	
 	puts("Press any key...");
 	getchar();

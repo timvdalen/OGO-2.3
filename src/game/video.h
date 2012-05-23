@@ -16,16 +16,13 @@
 	#include <windows.h>
 	#include <gl\gl.h>
 	#include <gl\glu.h>
-	#include <gl\freeglut.h>
 	#include <gl\glext.h>
 #elif defined __APPLE__
 	#include <OpenGL/gl.h>
 	#include <OpenGL/glu.h>
-	#include <GLUT/freeglut.h>
 #else
 	#include <GL/gl.h>
 	#include <GL/glu.h>
-	#include <GL/freeglut.h>
 #endif
 
 #include <set>
