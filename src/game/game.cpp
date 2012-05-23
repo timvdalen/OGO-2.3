@@ -2,8 +2,6 @@
 //#include <wx/sizer.h>
 #include <wx/glcanvas.h>
 
-#include "game.h"
-
 // OpenGL
 #ifdef __WXMAC__
 #include "OpenGL/glu.h"
