@@ -6,6 +6,7 @@
 #include "games.h"
 #include "lobby.h"
 #include "common.h"
+#include "CrossPlatform.cpp"
 
 using namespace Lobby;
 using namespace Net;
@@ -112,7 +113,7 @@ END_EVENT_TABLE()
 IMPLEMENT_APP(LobbyGUI)
 
 bool LobbyGUI::OnInit(){
-
+    CrossPlatform::init();
 	
 	ConfigFile config("game.conf");
 	string pname;
