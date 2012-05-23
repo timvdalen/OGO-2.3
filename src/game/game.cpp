@@ -1,149 +1,129 @@
-/*
-	OGO 2.3	Game project
+#include <wx/wx.h>
+//#include <wx/sizer.h>
+#include <wx/glcanvas.h>
 
-*/
+#include "game.h"
 
-// Include header files according to platform
-//Using freeglut instead of glu
-#if defined _WIN32
-# define WIN32_LEAN_AND_MEAN
-# include <windows.h>
-# include <gl\gl.h>
-# include <gl\glu.h>
-# include <gl\glut.h>
-#elif defined __APPLE__
-# include <OpenGL/gl.h>
-# include <OpenGL/glu.h>
-# include <GLUT/freeglut.h>
+// OpenGL
+#ifdef __WXMAC__
+#include "OpenGL/glu.h"
+#include "OpenGL/gl.h"
+#include <GLUT/glut.h>
 #else
-# include <GL/gl.h>
-# include <GL/glu.h>
-# include <GL/freeglut.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <sstream>
-#include <string>
-#include <time.h>
-#include <vector>
+//----------------------------------------------
 
-#include <math.h>       // trigonometry support
-#include <cmath>	// float mod
-#ifndef M_PI
-# define M_PI 3.14159265358979323846
-#endif
-#ifndef M_E
-# define M_E 2.7182818284
-#endif
-#ifndef NULL
-# define NULL ((void *)(0))
-#endif
+class Canvas : public wxGLCanvas {
+	void Render();
+public:
+	Canvas(wxFrame * frame, int * args) : 
+	wxGLCanvas(frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, _("GLCanvas"), args) {
+		//empty
+	}
+	void Paint(wxPaintEvent& event);
+	void View3D(int topleft_x, int topleft_y, int bottomright_x, int bottomright_y);
+protected:
+    DECLARE_EVENT_TABLE()
+};
 
-#define MOUSEWHEEL_UP 3
-#define MOUSEWHEEL_DOWN 4
+//----------------------------------------------
 
-//Global vars
-int winx,winy = 500;
+BEGIN_EVENT_TABLE(Canvas, wxGLCanvas)
+    EVT_PAINT    (Canvas::Paint)
+END_EVENT_TABLE()
 
-//Includes van classes
+//----------------------------------------------
 
-
-/*  Display function.
- *  Renders the picture that is going to be displayed  */
-void display (void) {
-	//clear image- and depth buffer to get a clean canvas
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	//Swap buffers to display result
-	glutSwapBuffers();
+void Canvas::Paint(wxPaintEvent& WXUNUSED(event)){
+    Render();
 }
 
-/*  Reshape function.
-    activated when the position/size of the glut window changes (w, h window dims)*/
-void reshape (int w, int h) {
-    winx=w;
-    winy=h;
+//----------------------------------------------
 
-    // Set projection matrix
+void Canvas::View3D(int topleft_x, int topleft_y, int bottomright_x, int bottomright_y) {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black Background
+    glClearDepth(1.0f);	// Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+    glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	
+    glEnable(GL_COLOR_MATERIAL);
+	
+    glViewport(topleft_x, topleft_y, bottomright_x-topleft_x, bottomright_y-topleft_y);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
-    // Set up a perspective camera at point (0,0,0), looking in negative Z-direction
-    // Angle of view is 90 degrees. Near and far clipping planes are 10 and 1000
-    gluPerspective(90.0, 1.0, 1.0, 1000);
-    // set up geometric transformations
+	
+    float ratio = (float)(bottomright_x-topleft_x)/(float)(bottomright_y-topleft_y);
+    gluPerspective(45, ratio, 0.1, 200);
     glMatrixMode(GL_MODELVIEW);
-    // Set up viewport
-    glViewport(0, 0, w, h);
+    glLoadIdentity();
 }
 
-/*  Idle function,
- *  activated when the event queue is empty (all the time)  */
-void idle (void) {
-   glutPostRedisplay();
-}
+//----------------------------------------------*/
 
+void Canvas::Render() {
+	SetCurrent();
+    wxPaintDC(this);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//View3D(-GetSize().x,0,GetSize().x, GetSize().y);
+	View3D(0,0,GetSize().x, GetSize().y);
+	glLoadIdentity();
 
-/*  Mouse callback function
- *  x and y are the mouse coordinates when the click occured  */
-void mouse (int button, int state, int x, int y) {
-	if(state==GLUT_DOWN && button == GLUT_LEFT_BUTTON){
-        // TODO: Left mouse
+// using a little of glut
+	glColor4f(0,0,1,1);
+	glTranslatef(3,0,-5);
+	//glRotatef(90,0,0,1);
+    glutWireTeapot(0.4);
+
+	for (int i = 0; i < 8; i++) {
+		glTranslatef(-0.5,0,0.5);
+		glPushMatrix();
+		glRotatef(i*45,0,1,0.5);
+		glutWireTeapot(0.4);
+		glPopMatrix();
 	}
-	if(state==GLUT_DOWN && button == GLUT_RIGHT_BUTTON){
-        // TODO: Right mouse
-	}
-	/* Mousewheel */
-    if(button == MOUSEWHEEL_UP){
-		// TODO: Mousewheel up
-	}else if(button == MOUSEWHEEL_DOWN){
-		// TODO: Mousewheel down
-	}
+ 
+    glFlush();
+    SwapBuffers();
 }
 
+//----------------------------------------------
 
-/*  The keyboard callback function
- *  x and y are the mouse coordinates when the character was typed  */
-void keyboard (unsigned char key, int x, int y) {
-    switch(key){
-    	
-	}
-}
+class Game : public wxApp {
+	virtual bool OnInit();
 
+	wxFrame * frame;
+	wxGLCanvas * glPane;
+};
 
-/*  The menu callback function */
-void menu(int entry) {
-	keyboard(entry, 0, 0);
-}
+//----------------------------------------------
 
-/*  Main function:
- *  program entry point  */
-int main (int argc, char **argv) {
-    //Initializing GLUT
-    glutInit(&argc, argv);
-    // we want:     double buffering, rgb color and Z-buffer
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    // initialize window with size and name
+IMPLEMENT_APP(Game)
+ 
+// This is executed upon startup, like 'main()' in non-wxWidgets programs.
+bool Game::OnInit() {
+	frame = new wxFrame((wxFrame*) NULL, -1, _T("GOTO - Client v0.1"), wxPoint(0,0), wxSize(1600,800));
+	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+	int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
-#ifdef FULLSCREEN
-    glutGameModeString("1440x900:32@60");
-    glutEnterGameMode();
-#else
-    glutInitWindowSize(winx, winy);
-    glutCreateWindow("OpenGL/glut skeleton. Press right mouse button !");
-#endif
+	glPane = new Canvas((wxFrame*) frame, args);
+	//glPane = new wxGLCanvas((wxFrame*) frame, wxID_ANY,  wxDefaultPosition, wxDefaultSize, 0, _("GLCanvas"), args);
 
-   	// set up callback functions
-    glutReshapeFunc(reshape);
-    glutKeyboardFunc(keyboard);
-    glutMouseFunc(mouse);
-    glutDisplayFunc(display);
-    glutIdleFunc(idle);
+	sizer->Add(glPane, 1, wxEXPAND);
+	frame->SetSizer(sizer);
+	frame->SetAutoLayout(true);
 
-    // enter main loop (will cause OpenGL to begin calling the callbacks)
-    glutMainLoop();
-    return 0;
-}
+	frame->CreateStatusBar();
+	frame->SetStatusText(_("Developing... - Grudge of the Oblivious"));
+	
+	frame->Show();
+	SetTopWindow(frame);
+	return true;
+};
+
+//----------------------------------------------
