@@ -6,7 +6,7 @@
 #include "games.h"
 #include "lobby.h"
 #include "common.h"
-#include "CrossPlatform.cpp"
+#include "CrossPlatform.h"
 
 using namespace Lobby;
 using namespace Net;
