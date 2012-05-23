@@ -29,10 +29,12 @@ void Object::render()
 
 //------------------------------------------------------------------------------
 
-void Object::draw(){
+void Object::draw()
+{
 	// Nothing to render, but will render its children next
 }
 
+//------------------------------------------------------------------------------
 
 void Object::postRender()
 {

@@ -58,6 +58,7 @@ class BoundedObject: public Object{
 		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
 			: Object(P, R), bb(B) {}
 
+		virtual ~BoundedObject() {}
 
 		//! Checks if a line from origin to direction collides with this object or one of its children.
 		//! If there is a collision, this function returns a handle to the object the line collides with
@@ -65,7 +66,7 @@ class BoundedObject: public Object{
 		ObjectHandle checkCollision(Point<double> origin, Vector<double> direction);
 
 		//! Draws this object
-		void draw();
+		virtual void draw();
 };
 
 
@@ -79,13 +80,17 @@ class World: public BoundedObject{
 		double height;
 
 		//! Constructs a new world
-		World(double _width, double _height) : BoundedObject(Pd(), Qd(), BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0))) {
+		World(double _width, double _height)
+			: BoundedObject(Pd(), Qd(),
+				BoundingBox(Pd(), Pd(_width,0,0),
+					Pd(0,_height,0), Pd(_width,_height,0)))
+		{
 			width = _width;
 			height = _height;
 		}
 
 		//! Draws the world
-		void draw();
+		virtual void draw();
 };
 
 //! Represents the terrain of the game
@@ -95,7 +100,7 @@ class Terrain: public Object{
 		map<Point<double>, Structure> structures;
 
 		//! Draws the terrain
-		void draw();
+		virtual void draw();
 };
 
 //! Represents a structure on the terrain
@@ -118,7 +123,7 @@ class Mine: public Structure{
 			: Structure(P, R, B), maxIncome(_maxIncome) {}
 
 		//! Draws the mine
-		void draw();
+		virtual void draw();
 };
 
 //! Represents a building on the terrain
@@ -146,7 +151,7 @@ class Building: public Structure{
 			  attackPower(_attackPower) {}
 
 		//! Draws the building
-		void draw();
+		virtual void draw();
 
 };
 

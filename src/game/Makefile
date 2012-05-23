@@ -21,19 +21,19 @@ OBJDIR   = ../../obj/
 BINDIR   = ../../bin/
 INCS     =  -I"../common" 
 CXXINCS  =  -I"../common" 
-OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)objects.o  \
+OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
-           $(OBJDIR)video.o $(OBJDIR)netalg.o
+           $(OBJDIR)objects.o  $(OBJDIR)netalg.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS) 
 LIBS     = -lpthread 
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC
-	LIBS     += -lws2_32 -lfreeglut_static -lopengl32 -lgdi32 -lwinmm
+	LIBS     += -lws2_32 -lfreeglut_static -lglu32 -lopengl32 -lgdi32 -lwinmm
 	BIN      := $(BIN).exe
 else
-	LIBS     += -lGL
+	LIBS     += -lGL -lGLU -lglut
 endif
 
 ifeq ($(build),debug)
