@@ -20,17 +20,46 @@ namespace Protocol {
 
 //------------------------------------------------------------------------------
 
+//! TCP 
 struct TextSocket : public Net::TCPSocket
 {
 	TextSocket() : TCPSocket(), buffer() {}
-	
-	TextSocket accept(Net::Address &remote);
+	TextSocket(TextSocket &S) : TCPSocket(S), buffer() {}
+	TextSocket(TCPSocket &S) : TCPSocket(S), buffer() {}
 	
 	bool send(const std::string &msg);
 	std::string recv();
 	
 	private:
 	std::string buffer;	
+};
+
+//------------------------------------------------------------------------------
+
+struct Message;
+struct Argument;
+
+struct MsgSocket : public TextSocket
+{
+	MsgSocket() : TextSocket() {}
+	MsgSocket(MsgSocket &S) : TextSocket(S) {}
+	MsgSocket(TCPSocket &S) : TextSocket(S) {}
+	
+	bool send(const Message &msg);
+	Message recv();
+};
+
+//------------------------------------------------------------------------------
+
+struct Message : public std::vector<Argument>
+{
+	Message() {}
+	Message(const std::string &);
+	
+	bool eof() const;
+	bool empty() const;
+	
+	operator std::string() const;
 };
 
 //------------------------------------------------------------------------------
@@ -44,34 +73,11 @@ struct Argument
 	Argument(double);
 	
 	operator std::string() const;
+	operator int() const;
 	operator long() const;
 	operator double() const;
 	
 	std::string str;
-};
-
-//------------------------------------------------------------------------------
-
-struct Message
-{
-	Message() {}
-	Message(const std::string &);
-	
-	operator std::string() const;
-	void add(const Argument &arg) { args.push_back(arg); }
-	const Argument &operator[](size_t index) { return args[index]; }
-	
-	std::vector<Argument> args;
-};
-
-//------------------------------------------------------------------------------
-
-struct MsgSocket : public TextSocket
-{
-	MsgSocket accept(Net::Address &remote);
-	
-	bool send(const Message &msg);
-	Message recv();
 };
 
 //------------------------------------------------------------------------------

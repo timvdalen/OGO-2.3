@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "common.h"
-#include "net.h"
+#include "games.h"
 
 namespace Lobby {
 
@@ -22,8 +22,18 @@ namespace Lobby {
 
 struct Player
 {
+	typedef unsigned int Id;
+	enum State
+	{
+		stBusy,
+		stReady,
+		stHost
+	};
+	
+	Id id;
+	unsigned char team;
+	State state;
 	std::string name;
-	bool ready;
 };
 
 //------------------------------------------------------------------------------
@@ -31,20 +41,25 @@ struct Player
 class GameLobby
 {
 	public:
-	void (*onConnect) (std::string gameName);
-	void (*onJoin)    (Net::Address player, std::string name);
-	void (*onPart)    (Net::Address player);
-	void (*onChat)    (Net::Address player, std::string line);
-	void (*onReady)   (Net::Address player, bool ready);
+	void (*onConnect) (Player::Id pid, Game game);
+	void (*onPlayer)  (Player player);
+	void (*onJoin)    (Player::Id pid, std::string playerName);
+	void (*onPart)    (Player::Id pid);
+	void (*onTeam)    (Player::Id pid, unsigned char team);
+	void (*onState)   (Player::Id pid, Player::State state);
+	void (*onChat)    (Player::Id pid, std::string line);
 	void (*onClose)   ();
 	void (*onStart)   ();
 	
+	GameLobby();
+	
+	bool team(unsigned char team);
 	bool chat(const std::string &line);
-	bool ready(bool ready);
 	
-	bool valid() { return !!data; }
+	bool valid() const;
+	void close();
 	
-	private:
+	protected:
 	void *data;
 };
 
@@ -55,6 +70,11 @@ class ClientLobby : public GameLobby
 	public:
 	ClientLobby(std::string playerName, const Net::Address &server);
 	~ClientLobby();
+	
+	bool state(bool ready);
+	
+	private:
+	static void *listen(void *);
 };
 
 //------------------------------------------------------------------------------
@@ -65,7 +85,13 @@ class ServerLobby : public GameLobby
 	ServerLobby(std::string gameName, std::string playerName, unsigned int port);
 	~ServerLobby();
 	
-	void start();
+	bool team(unsigned char team);
+	bool chat(const std::string &line);
+	bool start();
+	
+	private:
+	static void *listen(void *);
+	static void *broadcast(void *);
 };
 
 //------------------------------------------------------------------------------
