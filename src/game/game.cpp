@@ -105,7 +105,8 @@ IMPLEMENT_APP(Game)
  
 // This is executed upon startup, like 'main()' in non-wxWidgets programs.
 bool Game::OnInit() {
-	frame = new wxFrame((wxFrame*) NULL, -1, _T("GOTO - Client v0.1"), wxPoint(0,0), wxSize(1600,800));
+	frame = new wxFrame((wxFrame*) NULL, -1, _T("GOTO - Client v0.1"), wxPoint(0,0), wxGetDisplaySize());
+	frame->ShowFullScreen(true);
 	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 	int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
