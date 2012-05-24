@@ -49,16 +49,19 @@ void StopEventLoop();
 
 //------------------------------------------------------------------------------
 
-//! A windows instance
+//! A window instance
 class Window
 {
 	public:
-	std::set<Viewport *> viewports;
+	std::set<Viewport *> viewports; //!< A collection of viewports the window shows
 	
+	//! Creates a new window width and height and window title and position
+	//! \note set the window positions -1 for a default position
 	Window(uword width, uword height,
 	       const char *title, word xpos = -1, word ypos = -1);
 	~Window();
 	
+	//! Renders the assigned viewports
 	void render();
 	
 	friend void Initialize(int argc, char *argv[]);
