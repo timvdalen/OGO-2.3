@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node7" href="$struct_protocol_1_1_msg_socket.html" title="{Protocol::MsgSocket\n||+ MsgSocket()\l+ MsgSocket()\l+ MsgSocket()\l+ send()\l+ recv()\l}" alt="" coords="5,675,149,811"/>
-<area shape="rect" id="node2" href="$struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,248,135,443"/>
-<area shape="rect" id="node4" href="$struct_net_1_1_socket.html" title="Basic internet socket." alt="" coords="11,5,144,200"/>
+<area shape="rect" id="node7" href="$struct_protocol_1_1_msg_socket.html" title="{Protocol::MsgSocket\n||+ MsgSocket()\l+ MsgSocket()\l+ MsgSocket()\l+ send()\l+ recv()\l}" alt="" coords="5,704,149,840"/>
+<area shape="rect" id="node2" href="$struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,277,135,472"/>
+<area shape="rect" id="node4" href="$struct_net_1_1_socket.html" title="Basic internet socket." alt="" coords="11,5,144,229"/>
 </map>

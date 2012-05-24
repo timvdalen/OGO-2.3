@@ -1,5 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$class_objects_1_1_building.html" title="Represents a building on the terrain." alt="" coords="21,360,141,496"/>
-<area shape="rect" id="node4" href="$class_objects_1_1_structure.html" title="Represents a structure on the terrain." alt="" coords="17,235,145,312"/>
-<area shape="rect" id="node6" href="$class_core_1_1_object.html" title="Represents an object in the game." alt="" coords="27,6,135,186"/>
+<area shape="rect" id="node2" href="$class_objects_1_1_building.html" title="Represents a building on the terrain." alt="" coords="26,531,147,682"/>
+<area shape="rect" id="node4" href="$class_objects_1_1_structure.html" title="Represents a structure on the terrain." alt="" coords="23,405,151,483"/>
+<area shape="rect" id="node6" href="$class_objects_1_1_bounded_object.html" title="Represents an object with a bounding box." alt="" coords="5,235,168,357"/>
+<area shape="rect" id="node8" href="$class_core_1_1_object.html" title="Represents an object in the game." alt="" coords="33,6,140,186"/>
 </map>

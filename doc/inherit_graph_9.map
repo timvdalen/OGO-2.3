@@ -1,12 +1,12 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$class_core_1_1_object.html" title="Represents an object in the game." alt="" coords="6,56,101,83"/>
-<area shape="rect" id="node3" href="$class_objects_1_1_bounded_object.html" title="Represents an object with a bounding box." alt="" coords="150,5,314,32"/>
-<area shape="rect" id="node7" href="$class_objects_1_1_structure.html" title="Represents a structure on the terrain." alt="" coords="168,56,296,83"/>
-<area shape="rect" id="node19" href="$class_objects_1_1_terrain.html" title="Represents the terrain of the game." alt="" coords="175,107,289,133"/>
-<area shape="rect" id="node5" href="$class_objects_1_1_world.html" title="Represents the world of the game." alt="" coords="369,5,479,32"/>
-<area shape="rect" id="node9" href="$class_objects_1_1_building.html" title="Represents a building on the terrain." alt="" coords="363,56,485,83"/>
-<area shape="rect" id="node17" href="$class_objects_1_1_mine.html" title="Represents a mine structure on the terrain." alt="" coords="373,107,475,133"/>
-<area shape="rect" id="node11" href="$class_objects_1_1_defense_tower.html" title="Represents a defense tower." alt="" coords="536,5,691,32"/>
-<area shape="rect" id="node13" href="$class_objects_1_1_head_quarters.html" title="Represents a headquarters." alt="" coords="536,56,691,83"/>
-<area shape="rect" id="node15" href="$class_objects_1_1_resource_mine.html" title="Represents a mining tower built over a mine." alt="" coords="534,107,693,133"/>
+<area shape="rect" id="node1" href="$class_core_1_1_object.html" title="Represents an object in the game." alt="" coords="6,132,101,159"/>
+<area shape="rect" id="node3" href="$class_objects_1_1_bounded_object.html" title="Represents an object with a bounding box." alt="" coords="150,107,314,133"/>
+<area shape="rect" id="node19" href="$class_objects_1_1_terrain.html" title="Represents the terrain of the game." alt="" coords="175,157,289,184"/>
+<area shape="rect" id="node5" href="$class_objects_1_1_structure.html" title="Represents a structure on the terrain." alt="" coords="363,81,491,108"/>
+<area shape="rect" id="node17" href="$class_objects_1_1_world.html" title="Represents the world of the game." alt="" coords="372,132,481,159"/>
+<area shape="rect" id="node7" href="$class_objects_1_1_building.html" title="Represents a building on the terrain." alt="" coords="539,56,661,83"/>
+<area shape="rect" id="node15" href="$class_objects_1_1_mine.html" title="Represents a mine structure on the terrain." alt="" coords="549,107,651,133"/>
+<area shape="rect" id="node9" href="$class_objects_1_1_defense_tower.html" title="Represents a defense tower." alt="" coords="712,5,867,32"/>
+<area shape="rect" id="node11" href="$class_objects_1_1_head_quarters.html" title="Represents a headquarters." alt="" coords="712,56,867,83"/>
+<area shape="rect" id="node13" href="$class_objects_1_1_resource_mine.html" title="Represents a mining tower built over a mine." alt="" coords="710,107,869,133"/>
 </map>

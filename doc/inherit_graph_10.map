@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classgame_lobby.html" title="gameLobby" alt="" coords="6,5,95,32"/>
+<area shape="rect" id="node1" href="$class_game.html" title="Game" alt="" coords="6,5,63,32"/>
 </map>

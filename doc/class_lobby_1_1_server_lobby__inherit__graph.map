@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$class_lobby_1_1_game_lobby.html" title="{Lobby::GameLobby\n|+ onConnect\l+ onPlayer\l+ onJoin\l+ onPart\l+ onTeam\l+ onState\l+ onChat\l+ onClose\l+ onStart\l# data\l|+ GameLobby()\l+ team()\l+ chat()\l+ valid()\l}" alt="" coords="5,5,139,259"/>
+<area shape="rect" id="node2" href="$class_lobby_1_1_game_lobby.html" title="{Lobby::GameLobby\n|+ onConnect\l+ onPlayer\l+ onJoin\l+ onPart\l+ onTeam\l+ onState\l+ onChat\l+ onClose\l+ onStart\l# data\l|+ GameLobby()\l+ team()\l+ chat()\l+ valid()\l+ close()\l}" alt="" coords="5,6,139,274"/>
 </map>
