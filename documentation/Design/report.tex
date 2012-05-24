@@ -1,0 +1,68 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx,listings,float,geometry, amsmath}
+%\usepackage[firstpage]{draftwatermark}
+%\SetWatermarkLightness{0.5}
+%\SetWatermarkScale{4}
+\setcounter{tocdepth}{2}
+\usepackage[dutch]{babel}
+\newcommand{\protoref}{PROTOREF!}
+
+\geometry{
+	includeheadfoot,
+	margin=2.54cm
+}
+
+\begin{document}
+	\input{title}
+	
+	\tableofcontents
+	\newpage
+
+	\section{Introductie}
+	\input{introduction}
+	\newpage
+    
+    
+    \section{Beschrijving onderdelen}
+    Wij verdelen de onderdelen op in drie zoveel mogelijk onafhankelijke onderdelen. Hierbij onderscheiden wij:
+    \begin{itemize}
+    	\item Een onderdeel die het communiceren naar andere speler mogelijk maakt;
+	\item Het model van de sc\`ene. Denk hierbij aan de staat, locatie en grafische modellen van gebouwen, spelers en het terrein;
+	\item De gebruikersomgeving die de interactie van de speler met het spel mogelijk maakt en ook het grafische model weergeeft tijdens het spel.
+    \end{itemize}
+    
+    Als uitgangspunt ontwerpen wij de verschillende onderdelen dat elk van de onderdelen zoveel mogelijk zelfstandig ontwikkeld kunnen worden.
+    	
+    \subsection{Protocol module}
+    	De protocol module is het onderdeel die het mogelijk maakt om:
+	\begin{itemize}
+		\item Een nieuw spel, beginnend in de opstart fase, op te starten;
+		\item De lijst van alle spellen, welke in de opstart fase, in het subnet van de computer weer te geven;
+		\item Mee te doen met bestaand spel die in de opstart fase zit.
+		\item Het spel te beginnen;
+		\item Mutaties van het spel te ontvangen of te versturen.
+	\end{itemize}
+	De manier waarop deze communicatie verloopt is beschreven in \protoref. Zodra de protocol module opgestart is, zal de module zijn taken uitvoeren, zonder actieve noodzaak om functie's aan te roepen. Dit betekent, dat het protocol uit zichzelf berichten kan ontvangen en verwerken. Door middel van threads wordt er voor gezorgd dat de protocol de taken onafhankelijk kan uitvoeren.
+	
+	%INSERT KLASSE diagram?
+	
+    \subsection{Model van de sc\`ene}
+    Het model van de sc\`ene houd de huidige staat van het spel lokaal bij en implementeert functies om de huidige staat van het spel grafisch af te beelden. Door middel van twee abstracte klassen: \emph{Object} en \emph{BoundingObject} generaliseren elke grafische modellering. De klasse \emph{Object} kan door gebruik te maken van de functie \emph{draw}, welke door de subklasse ge\"implementeerd moet worden, het object transleren en roteren naar een specifieke plaats in wereldco\"ordinaten. Ook heeft de klasse children, die hij ook op de juiste plek tekent. \emph{BoundingObject} is een abstracte subklasse van \emph{Object}, deze kan bepalen of een bepaalde lijn, gedefinieerd door een punt en een richting, de \emph{BoundingBox} van het object snijdt. De \emph{BoundingBox} is een balk waarin het object compleet bevat moet zijn.
+    
+    De klasse 
+    \subsection{Gebruikersomgeving}
+    
+    \subsubsection{Tijdens de opzet van het spel}
+    
+    \subsubsection{Tijdens het spel}
+    
+    \section{Onderlinge samenhang}
+    
+    \subsection{Gebruikersomgeving en protocol module tijdens de opzet van het spel}
+    
+    \subsection{Model van de sc\'ene en de gebruikersomgeving tijdens het spel}
+    
+    \section{Beschrijving klassen}
+    
+    \subsection{Model van de sc\`ene}
+    \end{document}
