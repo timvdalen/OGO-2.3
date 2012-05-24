@@ -15,7 +15,6 @@
 #include <set>
 
 #include "base.h"
-#include "video.h"
 
 //! Core module
 namespace Core {
@@ -29,9 +28,19 @@ using namespace Base;
 
 template <class type> class Handle;
 class Object; typedef Handle<Object> ObjectHandle;
-class Material; typedef Handle<Material> MaterialHandle;
+struct Material; typedef Handle<Material> MaterialHandle;
 typedef int Resource;
 typedef float Power;
+
+//------------------------------------------------------------------------------
+//                                Material
+
+//! Represents a material
+struct Material
+{
+	virtual void select() {}
+	virtual ~Material() {}
+};
 
 //------------------------------------------------------------------------------
 //                                Object
@@ -75,41 +84,6 @@ class Object
 	virtual void render();
 
 
-};
-
-//------------------------------------------------------------------------------
-//                                Material
-
-//! Represents a material
-class Material
-{
-	public:
-		//! The shininess of this material
-		GLfloat shininess;
-
-		//! The ambient light reflection
-		GLfloat *ambient[4];
-
-		//! The diffuse light reflection
-		GLfloat *diffuse[4];
-
-		//! The specular light reflection
-		GLfloat *specular[4];
-
-		//! The emissive light reflection
-		GLfloat *emissive[4]; 
-
-		//! Constructs an empty Material
-		Material() {}
-
-		//! Constructs a Material based on M
-		Material(Material M) {}
-
-		//! Applies this material to the OpenGL pipeline
-		virtual void select() {}
-
-		//! Destructs this Material
-		virtual ~Material() {}
 };
 
 //------------------------------------------------------------------------------
