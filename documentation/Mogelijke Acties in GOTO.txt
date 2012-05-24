@@ -1,0 +1,29 @@
+Bewegen (Zou onmogelijk kunnen zijn in een bepaalde richting)
+Schieten
+Reloading/Overheat
+Geraakt worden
+Bouwen (Tower/ Mine) (Mogelijk/Onmogelijk (Niet de goede plaats/te weinig gold))
+Gebouw wordt geraakt
+Gebouw wordt vernietigd
+Geld verdienen door jouw mines
+Muntje oppakken (En dus geld toevoegen aan team kas)
+Sterven
+Muntje droppen (En dus geld verliezen uit team kas)
+Dood zijn (wachten op respawn
+Respawnen
+Verliezen
+Winnen
+
+Stats opvragen:
+ - Speler Health
+ - Building Health
+ - Team gold
+ - Mini map
+ - (Speler Kill/Deaths) (Shit onder de streep nodig!)
+
+---------------------------------------------------------
+
+Tegenstander raken
+Gebouw raken
+Tegenstander doden (voor bijv. exp)
+Gebouw vernietigen
