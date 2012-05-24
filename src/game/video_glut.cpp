@@ -99,12 +99,16 @@ void Window::render()
 {
 	PRIV(WindowData, wd)
 	
+	glClear(GL_COLOR_BUFFER_BIT);
+	
 	set<Viewport *>::iterator vit;
 	for (vit = viewports.begin(); vit != viewports.end(); ++vit)
 	{
 		(*vit)->select(this);
 		(*vit)->render();
 	}
+	
+	glutSwapBuffers();
 }
 
 //------------------------------------------------------------------------------
@@ -113,13 +117,7 @@ void Window::display()
 {
 	set<Window *>::iterator wit;
 	for (wit = windows.begin(); wit != windows.end(); ++wit)
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		
 		(*wit)->render();
-			
-		glutSwapBuffers();
-	}
 }
 
 //==============================================================================
@@ -129,8 +127,6 @@ struct ViewportData
 	double x, y;
 	double w, h;
 	double f, a;
-	bool changed;
-	Window *lastwin;
 };
 
 //------------------------------------------------------------------------------
@@ -147,8 +143,7 @@ Viewport::Viewport(double width, double height, double xpos, double ypos,
 	vd->x = xpos;
 	vd->y = ypos;
 	vd->f = fov;
-	vd->changed = true;
-	vd->lastwin = NULL;
+	vd->a = width / height;
 	
 	if (vd->h < 1)
 		vd->h = 1;
@@ -170,7 +165,6 @@ void Viewport::move(double xpos, double ypos)
 	PRIV(ViewportData, vd)
 	vd->x = xpos;
 	vd->y = ypos;
-	vd->changed = true;
 }
 
 //------------------------------------------------------------------------------
@@ -185,7 +179,6 @@ void Viewport::resize(double width, double height)
 	vd->w = width;
 	vd->h = height;
 	vd->a = width / height;
-	vd->changed = true;
 }
 
 //------------------------------------------------------------------------------
@@ -195,7 +188,6 @@ void Viewport::setfov(double fov)
 	PRIV(ViewportData, vd)
 	
 	vd->f = fov;
-	vd->changed = true;
 }
 
 //------------------------------------------------------------------------------
@@ -207,15 +199,11 @@ void Viewport::select(Window *w)
 	
 	WindowData *wd = (WindowData *) w->data;
 	
-	vd->lastwin = w;
-	
 	glViewport((GLint) vd->x * wd->width, (GLint) vd->y * wd->height,
 	           (GLint) vd->w * wd->width, (GLint) vd->h * wd->height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(vd->f, vd->a, 0.1f, 1000.0f);
-	
-	vd->changed = false;
 }
 
 //------------------------------------------------------------------------------
@@ -225,13 +213,9 @@ void Viewport::render()
 	if (!world) return;
 	PRIV(ViewportData, vd)
 	
-	// Reset viewport when parameters changed
-	if (vd->changed)
-		select(vd->lastwin);
-	
 	// Set up render
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity ();
+	glLoadIdentity();
 	
 	glClear(GL_DEPTH_BUFFER_BIT);
 	
@@ -270,35 +254,6 @@ void Viewport::render()
 		const Point<double> &o = camera.origin;
 		glTranslated(-o.x, -o.y, -o.z);
 	}
-	
-	// Set up lights
-	/*if (scene.lights.size())
-	{
-		glEnable(GL_LIGHTING);
-		
-		std::vector<Light>::const_iterator it;
-		int i = GL_LIGHT0;
-		for (it = scene.lights.begin(); it != scene.lights.end(); ++it, ++i)
-		{			
-			GLfloat pos[]  = {it->origin.x, it->origin.y, it->origin.z, 1.0};
-			GLfloat dir[]  = {it->direction.x, it->direction.y, it->direction.z};
-				
-			glLightfv(i, GL_AMBIENT, it->ambient.v);
-			glLightfv(i, GL_DIFFUSE, it->diffuse.v);
-			glLightfv(i, GL_SPECULAR, it->specular.v);
-			glLightfv(i, GL_POSITION, pos);
-			glLightfv(i, GL_SPOT_DIRECTION, dir);
-			glLightf(i, GL_SPOT_EXPONENT, it->exponent);
-			glLightf(i, GL_SPOT_CUTOFF, it->cutoff);
-			glEnable(i);
-		}
-		
-		for (last_light_count -= scene.lights.size(); last_light_count > 0;
-			--last_light_count)
-			glDisable(i++);
-		
-		last_light_count = scene.lights.size();
-	}*/
 	
 	// Render objects
 	std::set<ObjectHandle>::const_iterator it;

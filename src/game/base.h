@@ -60,8 +60,8 @@ TYPE_ASSERT(byte,   sizeof(byte)   == 1);
 TYPE_ASSERT(ubyte,  sizeof(ubyte)  == 1);
 TYPE_ASSERT(word,   sizeof(word)   == 2);
 TYPE_ASSERT(uword,  sizeof(uword)  == 2);
-TYPE_ASSERT(dword,  sizeof(dword)  == 4);
-TYPE_ASSERT(udword, sizeof(udword) == 4);
+TYPE_ASSERT(dword,  sizeof(dword)  >= 4);
+TYPE_ASSERT(udword, sizeof(udword) >= 4);
 
 #define FCLAMP(x) ((x) > 1.0 ? 1.0 : ((x) < 0.0 ? 0.0 : (x)))
 
