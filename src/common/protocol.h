@@ -20,14 +20,16 @@ namespace Protocol {
 
 //------------------------------------------------------------------------------
 
-//! TCP 
+//! Text based stream socket
 struct TextSocket : public Net::TCPSocket
 {
 	TextSocket() : TCPSocket(), buffer() {}
 	TextSocket(TextSocket &S) : TCPSocket(S), buffer() {}
 	TextSocket(TCPSocket &S) : TCPSocket(S), buffer() {}
 	
+	//! Sends a text message
 	bool send(const std::string &msg);
+	//! Receives a text message
 	std::string recv();
 	
 	private:
@@ -39,31 +41,37 @@ struct TextSocket : public Net::TCPSocket
 struct Message;
 struct Argument;
 
+//! Message based socket
 struct MsgSocket : public TextSocket
 {
 	MsgSocket() : TextSocket() {}
 	MsgSocket(MsgSocket &S) : TextSocket(S) {}
 	MsgSocket(TCPSocket &S) : TextSocket(S) {}
 	
+	//! Sends a structured message
 	bool send(const Message &msg);
+	//! Receives a structured message
 	Message recv();
 };
 
 //------------------------------------------------------------------------------
 
+//! A structured textual message
+//! \note Only the last message may contain spaces and may start with a colon.
 struct Message : public std::vector<Argument>
 {
 	Message() {}
 	Message(const std::string &);
 	
-	bool eof() const;
-	bool empty() const;
+	bool eof() const;   //!< Returns whether an end of file(stream) was detected
+	bool empty() const; //!< Returns whether the message is empty
 	
 	operator std::string() const;
 };
 
 //------------------------------------------------------------------------------
 
+//! A message argument
 struct Argument
 {
 	Argument(const std::string &S) : str(S) {}
