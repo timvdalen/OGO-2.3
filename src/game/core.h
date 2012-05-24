@@ -15,6 +15,7 @@
 #include <set>
 
 #include "base.h"
+#include "video.h"
 
 //! Core module
 namespace Core {
@@ -28,7 +29,7 @@ using namespace Base;
 
 template <class type> class Handle;
 class Object; typedef Handle<Object> ObjectHandle;
-struct Material; typedef Handle<Material> MaterialHandle;
+class Material; typedef Handle<Material> MaterialHandle;
 typedef int Resource;
 typedef float Power;
 
@@ -45,18 +46,24 @@ class Object
 	//! The rotation of this object
 	Quaternion<double> rotation;
 
+	//! The \ref Material of this object
+	Material material;
+
 	//! A \ref set of other objects that belong to this object	
 	set<ObjectHandle> children;
 	
 
 	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
-	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>()) : origin(P), rotation(R) {}
+	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), Material M = Material()) : origin(P), rotation(R), material(M) {}
 
 	//! Destroys all children and then terminates
 	virtual ~Object() {}
 
 	//! Sets up translations and rotations
 	virtual void preRender();
+
+	//! Sets up the material for this object
+	virtual void setMaterial();
 
 	//! Draw the object
 	virtual void draw();
@@ -73,10 +80,36 @@ class Object
 //------------------------------------------------------------------------------
 //                                Material
 
-struct Material
+//! Represents a material
+class Material
 {
-	virtual void select() {}
-	virtual ~Material() {}
+	public:
+		//! The shininess of this material
+		GLfloat shininess;
+
+		//! The ambient light reflection
+		GLfloat *ambient[4];
+
+		//! The diffuse light reflection
+		GLfloat *diffuse[4];
+
+		//! The specular light reflection
+		GLfloat *specular[4];
+
+		//! The emissive light reflection
+		GLfloat *emissive[4]; 
+
+		//! Constructs an empty Material
+		Material() {}
+
+		//! Constructs a Material based on M
+		Material(Material M) {}
+
+		//! Applies this material to the OpenGL pipeline
+		virtual void select() {}
+
+		//! Destructs this Material
+		virtual ~Material() {}
 };
 
 //------------------------------------------------------------------------------
