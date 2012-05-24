@@ -33,6 +33,16 @@ typedef int Resource;
 typedef float Power;
 
 //------------------------------------------------------------------------------
+//                                Material
+
+//! Represents a material
+struct Material
+{
+	virtual void select() {}
+	virtual ~Material() {}
+};
+
+//------------------------------------------------------------------------------
 //                                Object
 //! Represents an object in the game
 class Object
@@ -45,18 +55,24 @@ class Object
 	//! The rotation of this object
 	Quaternion<double> rotation;
 
+	//! The \ref Material of this object
+	Material material;
+
 	//! A \ref set of other objects that belong to this object	
 	set<ObjectHandle> children;
 	
 
 	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
-	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>()) : origin(P), rotation(R) {}
+	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), Material M = Material()) : origin(P), rotation(R), material(M) {}
 
 	//! Destroys all children and then terminates
 	virtual ~Object() {}
 
 	//! Sets up translations and rotations
 	virtual void preRender();
+
+	//! Sets up the material for this object
+	virtual void setMaterial();
 
 	//! Draw the object
 	virtual void draw();
@@ -68,15 +84,6 @@ class Object
 	virtual void render();
 
 
-};
-
-//------------------------------------------------------------------------------
-//                                Material
-
-struct Material
-{
-	virtual void select() {}
-	virtual ~Material() {}
 };
 
 //------------------------------------------------------------------------------
