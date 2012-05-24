@@ -20,37 +20,40 @@
 	\section{Introductie}
 	\input{introduction}
 	\newpage
-    
-    
-    \section{Berichtsformaat}
+
+    \section{Het berichtsformaat}
     We zijn nu klaar om het formaat van de berichten formeel te defini\"eren. Hiervoor gebruiken we BNF (Backus-Naur Form):
     \begin{align*}
     <\text{message}> &::= <\text{command}> <\text{args}> <\text{crlf}> \\
     <\text{command}> &::= \text{``A''...``Z''} <\text{command}> | \text{``A''...``Z''} \\
     <\text{args}>    &::= ``\text{ }'' | <\text{string}> | <\text{value}> <\text{args}> \\
     <\text{string}>  &::= ``\text{ }:'' <\text{printable characters}>^{*} \\
-    <\text{value}>   &::= ``\text{ }'' <\text{graphical characters except `:'}> <\text{graphical characters}>* \\
+    <\text{value}>   &::= ``\text{ }''  <\text{graphical characters}>^{*} \\
     <\text{crlf}>    &::= \text{CR LF}
     \end{align*}
 
     Een bericht bestaat uit een commando met argumenten. Na het commando en argumenten komt het einde van de regel: crlf. Met ``A''...``Z'' bedoelen we een willekeurige hoofdletter. Een commando is dus een hoofdletter of een hoofdletter gevolgd door een commando. Hieruit volgt dat een commando een niet-lege reeks van hoofdletters is.
 
-    Het argument van een commando is alleen een spatie of een string of een waarde gevolgd door een argument. Een string begint altijd met een spatie gevolgd door een dubbele punt. Vervolgens volgt een willekeurige reeks van ``printable characters''. Hiermee bedoelen we letters, cijfers en spaties. Een waarde begint ook altijd met een spatie. Deze wordt altijd gevolgd door ``graphical characters''. DAARMEE BEDOELEN WE (GRAFISCH ZONDER : GEEN NUT MET DEZE DEFINITIE.
+    Het argument van een commando is alleen een spatie of een string of een waarde gevolgd door een argument. Een string begint altijd met een spatie gevolgd door een dubbele punt. Vervolgens volgt een willekeurige reeks van ``printable characters''. Hiermee bedoelen we letters, cijfers en spaties. Een waarde begint ook altijd met een spatie. Daarna volgt een reeks van ``graphical characters''. Daarmee bedoelen we letters en cijfers.
 
     We merken nog op dat het mogelijk is om een bericht te sturen zonder argumenten. Dit kan wel degelijk nuttig zijn, aangezien er bijvoorbeeld ook informatie kan worden gehaald uit het commando zelf.
 
     Het onderscheid tussen een value en een string is dus klein. Een string is altijd het laatste onderdeel van een argument. Merk op dat de verschillende argumenten worden onderscheiden door spaties. Aangezien er nog een dubbele punt voor de string staat, mag een string wel spaties bevatten zonder dat hierdoor onze berichten meerdere betekenissen krijgen. Immers, zodra we een spatie gevolgd door een dubbele punt tegenkomen, kunnen we concluderen dat we aan het laatste argument zijn begonnen. Een spatie is dan onderdeel van het argument zelf en betekent dus niet dat een nieuw argument is begonnen. Op deze manier kunnen namen van spelers en de naam van het spel spaties bevatten.
 
-    \section{Berichten}
+    \section{De berichten}
     We zullen nu alle gebruikte berichten afgaan met een korte toelichting. Hierbij kijken we vooral naar het nut van de ontvanger. Hiervoor gebruiken we een aantal conventies. We zullen voor de leesbaarheid komma's plaatsen tussen de verschillende argumenten. Deze zijn dus niet deel van het bericht. Ook zullen we de commando's laten eindigen met een punt, dit moet dan worden gelezen als CR LF.
 
     \subsection{Server detectie}
-    Het \emph{Broadcast} bericht wordt gebruikt voor het detecteren van servers tijdens de initialisatie. Dit bericht word periodiek door servers verstuurd met behulp van broadcast over UDP. Hierdoor kunnen processen in hetzelfde subnet een server vinden (deze server wordt natuurlijk alleen gebruikt voor het opzetten van het spel). Het bericht bevat de versie van het spel en het huidige aantal spelers. Bovendien bevat het de naam van het spel. Het bericht heeft de volgende syntax:
+    Het \emph{Broadcast} bericht wordt gebruikt voor het detecteren van servers tijdens de initialisatie. Dit bericht word periodiek door servers verstuurd met behulp van broadcast over UDP. We hebben ervoor gekozen om dit bericht elke vijf seconden te sturen. De wachttijd voor de gebruikers is dan nog steeds verwaarloosbaar, terwijl het netwerk nauwelijks wordt belast. 
+    
+    Spelers moeten continu voor deze Broadcast berichten scannen. De gevonden servers worden dan in een lijst gezet. De speler kan dan uit deze lijst van servers kiezen. Hierdoor kunnen processen in hetzelfde subnet een server vinden. We geven ook de mogelijkheid om direct het ip van de server op te geven. Dit heeft het grote voordeel dat het mogelijk wordt om ook te spelen met spelers buiten het lokale netwerk. Merk op dat de server natuurlijk alleen wordt gebruikt voor het opzetten van het spel.
+    
+    Het bericht bevat de versie van het spel en het huidige aantal spelers. Bovendien bevat het de naam van het spel. Het bericht heeft de volgende syntax:
     \[
     \text{GOTO, version, numPlayers :gameName.}
     \]
 
-    \subsection{Lobby}
+    \subsection{De lobby}
     Het \emph{Name} bericht wordt gebruikt na de server detectie. Als een speler de lobby van een bepaald spel wil binnengaan, wordt dit gedaan door een Name bericht te sturen. In dit bericht aan de server stuurt de speler zijn gewenste naam mee:
     \[
     \text{NAME :playername.}
@@ -102,15 +105,38 @@
     \text{CHAT, pid :msg.}
     \]
     Merk op dat er soms twee commando's zijn met dezelfde naam. Deze zijn echter zeer eenvoudig van elkaar te onderscheiden. In dit geval is er namelijk voor gezorgd dat \'e\'en commando alleen door de clients wordt verzonden en het andere commando alleen door de server. Hierdoor ontvangt elke speler nooit meer dan \'e\'en van de twee type commando's.
+    
+    % TODO: berichten tijdens het spel.
+    
+    \section{De opbouw van de graaf}
+    Het protocol zal een volledige graaf proberen op te bouwen. Dit wordt gedaan tijdens de lobby fase van het spel. We weten dat er tijdens de lobby fase een server is. Elk proces probeert nu een TCP-connectie te maken met deze server. Zodra deze TCP-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle adressen van processen, waarmee de server nu is verbonden. Het proces is dan zelf verantwoordelijk om een TCP-connectie aan te gaan met elk proces in deze lijst.
+    
+    Dit betekent dat op elk willekeurig moment een aanvraag voor een TCP-connectie kan binnenkomen bij processen, die al een TCP-connectie met de server hebben. Kortom, elk proces zal regelmatig moeten controleren op aanvragen voor een TCP-connectie. Als de volledige graaf is opgebouwd, staan alle processen op gelijke voet. Op dat moment kan het spel beginnen.
+    
+    \section{Het protocol tijdens het spel}
+    De staat van het spel wordt uniek vastgelegd door de waarde van alle variabelen, inclusief de toestand van alle TCP-connecties. Het is echter ondoenlijk om alle waarden van de variabelen voortdurend te versturen over de TCP-connecties. Daarom zal elke speler een replica van het spel hebben. Deze replica's moeten natuurlijk zodanig worden gesynchroniseerd dat spelers niet doorhebben dat hun replica's op kleine details tijdelijk kunnen verschillen.
+    
+    \subsection{Reliable en unreliable variabelen}
+    We maken daarom onderscheid tussen twee soorten variabelen, \emph{reliable} en \emph{unreliable}. Reliable variabelen moeten gelijk zijn voor alle replica's om inconsistentie te voorkomen. Unreliable variabelen mogen wel verschillen tussen de spelers. Deze kunnen dus worden `gesimuleerd' door spelers. Om de reliable variabelen consistent te houden hebben we zogenaamde \emph{mutual exclusion} nodig. Een goed voorbeeld hiervan is het oprapen van een muntje.
+    
+    We pakken dit probleem aan door de notie van autoriteit te introduceren. Op elk moment heeft precies \'e\'en proces autoriteit. Als het proces autoriteit heeft, dan mag reliable variabelen veranderen. Hiervoor wordt een bericht naar elk ander proces gestuurd. Het proces wacht dan totdat iedereen heeft teruggestuurd dat dit bericht is ontvangen. Als het proces alle wijzigingen van reliable variabelen heeft doorgegeven, krijgt een ander proces autoriteit.
+    
+    \subsection{De token ring}
+    De volgende vraag is nu hoe we deze notie van autoriteit gaan verwerken in het protocol. Dit doen we door gebruik te maken van een \emph{token ring}. We bouwen tijdens de lobby fase ook een ring op tussen alle processen. Zodra een proces het token heeft, heeft het proces autoriteit. Het kan dan alle gewenste veranderingen van de reliable variabelen doorsturen over de volledige graaf. De andere processen zullen dan een \emph{acknowledgement} terugsturen dat dit bericht is ontvangen. Zodra alle acknowledgements van de andere processen zijn ontvangen, zal het proces de token zo snel mogelijk doorsturen naar het volgende proces in de ring. Dit zorgt ervoor dat elk proces binnen een eindige hoeveelheid tijd de token krijgt. Er is dus een zekere vorm van \emph{fairness}.
+    
+    % TODO: hoe wordt de ring opgebouwd?
+    
+    \subsection{Simulatie}
+    Sommige acties mogen ook worden uitgevoerd wanneer het desbetreffende proces niet de token heeft. Een speler mag bijvoorbeeld vrij rondlopen zonder dit te vragen aan alle andere spelers. Dit kan ervoor zorgen dat niet alle processen exact dezelfde staat hebben. Het is echter voldoende als alle processen naar dezelfde staat convergeren. We zullen dit verder toelichten aan de hand van een voorbeeld.
+    
+    Een proces zal de positie van alle andere spelers simuleren. Dit wordt gedaan met behulp van de locatie en de looprichting. De actuele locatie en looprichting van de desbetreffende speler zal periodiek over de volledige graaf worden verstuurd. Om eventuele problemen te voorkomen zou deze periode redelijk klein moeten zijn. In de tussentijd zal het proces de huidige locatie en looprichting van de speler benaderen door de speler simpelweg `verder' te laten lopen. Merk op dat op deze manier de speler ten alle tijden de baas blijft over zijn eigen locatie.
 
-    \section{Opbouw van graaf}
-
-    \section{Graaf in werking}
-
-    \subsection{Aannamen}
+    \section{Aannamen}
     We hebben al eerder genoemd dat het \emph{Broadcast} bericht over UDP wordt gestuurd. Hier gebruiken we de broadcast functionaliteit van UDP voor. Het is dus noodzakelijk dat alle spelers zich op hetzelfde subnet bevinden. We weten dat UDP-berichten niet noodzakelijk aan hoeven te komen. We nemen echter aan dat een UDP-bericht uiteindelijk wordt ontvangen binnen een eindige hoeveelheid tijd, als de server periodiek UDP-berichten blijft versturen.
 
     Een speler kan dan een keuze maken tussen alle servers, waarvan een \emph{Broadcast} bericht is ontvangen. De speler gaat dan een TCP-connectie aan met de uitgekozen server. We nemen aan dat deze TCP-connectie succesvol wordt aangemaakt. Bovendien nemen we aan dat TCP inderdaad voldoet aan de FIFO-eigenschap. Verder nemen we aan dat berichten over TCP ook aankomen, eventueel nadat dit bericht een aantal keer opnieuw is verstuurd.
+
+    Verder maken we nog een aantal simpele aannamen over de snelheid van het netwerk en de computers. De gebruikte berichten zijn allemaal zeer klein. We verwachten daarom dat er elke seconde zonder problemen 300 berichten over het netwerk kunnen worden verstuurd. Dit zou ruim voldoende moeten zijn om de replica's goede benaderingen van de werkelijke staat te laten zijn. Hiermee bedoelen we met een goede benadering dat het verschil met de werkelijke staat niet zou moeten opvallen voor de spelers. 
     
-    Verder maken we nog een aantal simpele aannamen over de snelheid van het netwerk en de computers. TODO WELKE?
-\end{document}
+    De helft van de RTT, oftewel de \emph{Round-Trip Time}, is een goede benadering voor hoe lang het duurt om een bericht te versturen. We gaan ervan uit dat de RTT kleiner is dan 200 ms. Deze aanname is zeker realistisch, aangezien de spelers in principe op hetzelfde subnet zitten. Vanwege de aanname op de RTT krijgen we ook een harde grens op hoeveel de replica's kunnen afwijken.
+\end{document} 
