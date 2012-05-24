@@ -121,108 +121,112 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">float</span> Power;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">//                                Object</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html">   38</a></span>&#160;<span class="comment"></span><span class="keyword">class </span><a class="code" href="class_core_1_1_object.html" title="Represents an object in the game.">Object</a></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a36892705492e8f980893649b9b0b8fa5">   43</a></span>&#160;        <a class="code" href="struct_base_1_1_point.html">Point&lt;double&gt;</a> <a class="code" href="class_core_1_1_object.html#a36892705492e8f980893649b9b0b8fa5" title="The origin of this object.">origin</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">//                                Material</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="struct_core_1_1_material.html">   39</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct_core_1_1_material.html" title="Represents a material.">Material</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> select() {}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="struct_core_1_1_material.html" title="Represents a material.">Material</a>() {}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a50eaa182ba31eb59525f80a310cf2a66">   46</a></span>&#160;        <a class="code" href="struct_base_1_1_quaternion.html">Quaternion&lt;double&gt;</a> <a class="code" href="class_core_1_1_object.html#a50eaa182ba31eb59525f80a310cf2a66" title="The rotation of this object.">rotation</a>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a6c627cd7d91858963faebc8b8d65bbba">   49</a></span>&#160;        set&lt;ObjectHandle&gt; <a class="code" href="class_core_1_1_object.html#a6c627cd7d91858963faebc8b8d65bbba" title="A set of other objects that belong to this object.">children</a>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">//                                Object</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html">   48</a></span>&#160;<span class="comment"></span><span class="keyword">class </span><a class="code" href="class_core_1_1_object.html" title="Represents an object in the game.">Object</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a673a902ad5bee1121fb4959ee33a58b2">   53</a></span>&#160;        <a class="code" href="class_core_1_1_object.html#a673a902ad5bee1121fb4959ee33a58b2" title="Creates a new object at Point P with rotation R.">Object</a>(<a class="code" href="struct_base_1_1_point.html">Point&lt;double&gt;</a> P = <a class="code" href="struct_base_1_1_point.html">Point&lt;double&gt;</a>(), <a class="code" href="struct_base_1_1_quaternion.html">Quaternion&lt;double&gt;</a> R = <a class="code" href="struct_base_1_1_quaternion.html">Quaternion&lt;double&gt;</a>()) : origin(P), rotation(R) {}</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a36892705492e8f980893649b9b0b8fa5">   53</a></span>&#160;        <a class="code" href="struct_base_1_1_point.html">Point&lt;double&gt;</a> <a class="code" href="class_core_1_1_object.html#a36892705492e8f980893649b9b0b8fa5" title="The origin of this object.">origin</a>;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#ad8d3b4ca259c2ddc845df4469d23707f">   56</a></span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_core_1_1_object.html#ad8d3b4ca259c2ddc845df4469d23707f" title="Destroys all children and then terminates.">~Object</a>() {}</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a50eaa182ba31eb59525f80a310cf2a66">   56</a></span>&#160;        <a class="code" href="struct_base_1_1_quaternion.html">Quaternion&lt;double&gt;</a> <a class="code" href="class_core_1_1_object.html#a50eaa182ba31eb59525f80a310cf2a66" title="The rotation of this object.">rotation</a>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> preRender();</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a792add23308c95b081219922fa3331ac">   59</a></span>&#160;        <a class="code" href="struct_core_1_1_material.html" title="Represents a material.">Material</a> <a class="code" href="class_core_1_1_object.html#a792add23308c95b081219922fa3331ac" title="The Material of this object.">material</a>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> postRender();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> render();</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a6c627cd7d91858963faebc8b8d65bbba">   62</a></span>&#160;        set&lt;ObjectHandle&gt; <a class="code" href="class_core_1_1_object.html#a6c627cd7d91858963faebc8b8d65bbba" title="A set of other objects that belong to this object.">children</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#a4f3d3405a7350b2bc556e3c7ce35ee14">   66</a></span>&#160;        <a class="code" href="class_core_1_1_object.html#a4f3d3405a7350b2bc556e3c7ce35ee14" title="Creates a new object at Point P with rotation R.">Object</a>(<a class="code" href="struct_base_1_1_point.html">Point&lt;double&gt;</a> P = <a class="code" href="struct_base_1_1_point.html">Point&lt;double&gt;</a>(), <a class="code" href="struct_base_1_1_quaternion.html">Quaternion&lt;double&gt;</a> R = <a class="code" href="struct_base_1_1_quaternion.html">Quaternion&lt;double&gt;</a>(), <a class="code" href="struct_core_1_1_material.html" title="Represents a material.">Material</a> M = <a class="code" href="struct_core_1_1_material.html" title="Represents a material.">Material</a>()) : origin(P), rotation(R), material(M) {}</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="code" href="class_core_1_1_object.html#ad8d3b4ca259c2ddc845df4469d23707f">   69</a></span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_core_1_1_object.html#ad8d3b4ca259c2ddc845df4469d23707f" title="Destroys all children and then terminates.">~Object</a>() {}</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">//                                Material</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="code" href="struct_core_1_1_material.html">   76</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct_core_1_1_material.html">Material</a></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> select() {}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="struct_core_1_1_material.html">Material</a>() {}</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;};</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">//                                Handle</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// Provides basic garbage collection</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> preRender();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> setMaterial();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> postRender();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> render();</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> type&gt;</div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="code" href="class_core_1_1_handle.html">   87</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_core_1_1_handle.html">Handle</a></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">struct </span>Reference</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                type *obj;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                uword count;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; Reference(<span class="keyword">const</span> T &amp;O) : obj(<span class="keyword">new</span> T(O)), count(1) {}</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                ~Reference() { <span class="keyword">delete</span> obj; }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        } *ref;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> clear()</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                <span class="keywordflow">if</span> (!ref) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keywordflow">if</span> (--(ref-&gt;count) &lt; 1) <span class="keyword">delete</span> ref;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                ref = 0;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle</a>() : ref(0) {}</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle</a>(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H) : ref(H.ref) { <span class="keywordflow">if</span> (ref) ++ref-&gt;count; }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">inline</span> ~<a class="code" href="class_core_1_1_handle.html">Handle</a>() { clear(); }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;operator =(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H)</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                <span class="keywordflow">if</span> (&amp;H == <span class="keyword">this</span>) <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                clear();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                ref = H.ref;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                <span class="keywordflow">if</span> (ref) ++ref-&gt;count;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle</a>(<span class="keyword">const</span> T &amp;O) : ref(<span class="keyword">new</span> Reference(O)) {}</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; <span class="keyword">inline</span> type &amp;operator =(<span class="keyword">const</span> T &amp;O)</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                clear();</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                ref = <span class="keyword">new</span> Reference(O);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <span class="keywordflow">return</span> *ref-&gt;obj;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keyword">inline</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !!ref; }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator !()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !ref; }</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">inline</span> type &amp;operator *()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *ref-&gt;obj; }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">inline</span> type *operator -&gt;()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref-&gt;obj; }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator &lt;(const Handle&lt;type&gt; &amp;H) <span class="keyword">const</span> { <span class="keywordflow">return</span> ref &lt; H.ref; }</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator ==(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref == H.ref; }</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator !=(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref != H.ref; }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;};</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;} <span class="comment">// namespace Core</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#endif // _CORE_H</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;};</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">//                                Handle</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// Provides basic garbage collection</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> type&gt;</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="code" href="class_core_1_1_handle.html">   94</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_core_1_1_handle.html">Handle</a></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">struct </span>Reference</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                type *obj;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                uword count;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; Reference(<span class="keyword">const</span> T &amp;O) : obj(<span class="keyword">new</span> T(O)), count(1) {}</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                ~Reference() { <span class="keyword">delete</span> obj; }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        } *ref;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> clear()</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                <span class="keywordflow">if</span> (!ref) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                <span class="keywordflow">if</span> (--(ref-&gt;count) &lt; 1) <span class="keyword">delete</span> ref;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                ref = 0;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle</a>() : ref(0) {}</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle</a>(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H) : ref(H.ref) { <span class="keywordflow">if</span> (ref) ++ref-&gt;count; }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keyword">inline</span> ~<a class="code" href="class_core_1_1_handle.html">Handle</a>() { clear(); }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;operator =(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                <span class="keywordflow">if</span> (&amp;H == <span class="keyword">this</span>) <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                clear();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                ref = H.ref;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                <span class="keywordflow">if</span> (ref) ++ref-&gt;count;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; <span class="keyword">inline</span> <a class="code" href="class_core_1_1_handle.html">Handle</a>(<span class="keyword">const</span> T &amp;O) : ref(<span class="keyword">new</span> Reference(O)) {}</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; <span class="keyword">inline</span> type &amp;operator =(<span class="keyword">const</span> T &amp;O)</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                clear();</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                ref = <span class="keyword">new</span> Reference(O);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                <span class="keywordflow">return</span> *ref-&gt;obj;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keyword">inline</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !!ref; }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator !()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !ref; }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keyword">inline</span> type &amp;operator *()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *ref-&gt;obj; }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keyword">inline</span> type *operator -&gt;()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref-&gt;obj; }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator &lt;(const Handle&lt;type&gt; &amp;H) <span class="keyword">const</span> { <span class="keywordflow">return</span> ref &lt; H.ref; }</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator ==(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref == H.ref; }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator !=(<span class="keyword">const</span> <a class="code" href="class_core_1_1_handle.html">Handle&lt;type&gt;</a> &amp;H)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref != H.ref; }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;};</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;} <span class="comment">// namespace Core</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">#endif // _CORE_H</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 09:55:22 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 24 2012 13:31:43 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>

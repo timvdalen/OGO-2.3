@@ -94,36 +94,122 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Video::Window Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A window instance.  
+ <a href="class_video_1_1_window.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="video_8h_source.html">video.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for Video::Window:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_video_1_1_window__coll__graph.png" border="0" usemap="#_video_1_1_window_coll__map" alt="Collaboration graph"/></div>
-<map name="_video_1_1_window_coll__map" id="_video_1_1_window_coll__map">
-</map>
 </div>
 
 <p><a href="class_video_1_1_window-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab650b4f3caf426410b8def51b85d6a48"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab650b4f3caf426410b8def51b85d6a48"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b> (uword width, uword height, const char *title, word xpos=-1, word ypos=-1)</td></tr>
+<tr class="memitem:ab650b4f3caf426410b8def51b85d6a48"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#ab650b4f3caf426410b8def51b85d6a48">Window</a> (uword width, uword height, const char *title, word xpos=-1, word ypos=-1)</td></tr>
 <tr class="memitem:a1ef4b69b9f4b9f0ae94ec54fd5b6cd22"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1ef4b69b9f4b9f0ae94ec54fd5b6cd22"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>render</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#a1ef4b69b9f4b9f0ae94ec54fd5b6cd22">render</a> ()</td></tr>
+<tr class="memdesc:a1ef4b69b9f4b9f0ae94ec54fd5b6cd22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the assigned viewports. <br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aaa39502ecbe81814814447f6e29b27be"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa39502ecbe81814814447f6e29b27be"></a>
-std::set&lt; <a class="el" href="class_video_1_1_viewport.html">Viewport</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>viewports</b></td></tr>
+std::set&lt; <a class="el" href="class_video_1_1_viewport.html">Viewport</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#aaa39502ecbe81814814447f6e29b27be">viewports</a></td></tr>
+<tr class="memdesc:aaa39502ecbe81814814447f6e29b27be"><td class="mdescLeft">&#160;</td><td class="mdescRight">A collection of viewports the window shows. <br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
+<tr class="memitem:ab3703ea733c8be91191d75b1546bad86"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3703ea733c8be91191d75b1546bad86"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Viewport</b></td></tr>
 <tr class="memitem:a0fed2825f20635f5a80e88d56f5fa352"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0fed2825f20635f5a80e88d56f5fa352"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Initialize</b> (int argc, char *argv[])</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#a0fed2825f20635f5a80e88d56f5fa352">Initialize</a> (int argc, char *argv[])</td></tr>
+<tr class="memdesc:a0fed2825f20635f5a80e88d56f5fa352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the video subsystem. <br/></td></tr>
+<tr class="memitem:abf8992e623d6ff73ecaae6fc975b7d15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#abf8992e623d6ff73ecaae6fc975b7d15">StartEventLoop</a> ()</td></tr>
+<tr class="memitem:ad04f7ed74bca6bdcc25c72fe137d59fd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad04f7ed74bca6bdcc25c72fe137d59fd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#ad04f7ed74bca6bdcc25c72fe137d59fd">StopEventLoop</a> ()</td></tr>
+<tr class="memdesc:ad04f7ed74bca6bdcc25c72fe137d59fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the event loop. <br/></td></tr>
 <tr class="memitem:a9b848654502024dde7e46ab002f2c9dd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b848654502024dde7e46ab002f2c9dd"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html#a9b848654502024dde7e46ab002f2c9dd">Terminate</a> ()</td></tr>
 <tr class="memdesc:a9b848654502024dde7e46ab002f2c9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up networking at the end of the program. <br/></td></tr>
 </table>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>A window instance. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ab650b4f3caf426410b8def51b85d6a48"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Video::Window::Window </td>
+          <td>(</td>
+          <td class="paramtype">uword&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uword&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>title</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>xpos</em> = <code>-1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>ypos</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Creates a new window width and height and window title and position </p>
+<dl class="section note"><dt>Note:</dt><dd>set the window positions -1 for a default position </dd></dl>
+
+</div>
+</div>
+<hr/><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" id="abf8992e623d6ff73ecaae6fc975b7d15"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void StartEventLoop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Enters the event loop </p>
+<dl class="section note"><dt>Note:</dt><dd>Futher program flow is suspended from that point on. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/game/<a class="el" href="video_8h_source.html">video.h</a></li>
 <li>src/game/video_glut.cpp</li>
@@ -131,7 +217,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 09:55:24 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 24 2012 13:31:44 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>

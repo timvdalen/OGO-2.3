@@ -94,30 +94,67 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_window.html">Window</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A window instance.  <a href="class_video_1_1_window.html#details">More...</a><br/></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_video_1_1_camera.html">Camera</a></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_video_1_1_viewport.html">Viewport</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_video_1_1_viewport.html" title="Viewport class, displays on a portion of a window.">Viewport</a> class, displays on a portion of a window.  <a href="class_video_1_1_viewport.html#details">More...</a><br/></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_video_1_1_window_data.html">WindowData</a></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_video_1_1_viewport_data.html">ViewportData</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a2d07ba91958b5ef20809e1677f1af969"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d07ba91958b5ef20809e1677f1af969"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Initialize</b> (int argc, char *argv[])</td></tr>
-<tr class="memitem:a4b341ff3109f6e6114b736b09cb610fd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b341ff3109f6e6114b736b09cb610fd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Terminate</b> ()</td></tr>
-<tr class="memitem:aebbc742f5576a8b842b1fd770932b467"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aebbc742f5576a8b842b1fd770932b467"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>StartEventLoop</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_video.html#a2d07ba91958b5ef20809e1677f1af969">Initialize</a> (int argc, char *argv[])</td></tr>
+<tr class="memdesc:a2d07ba91958b5ef20809e1677f1af969"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the video subsystem. <br/></td></tr>
+<tr class="memitem:a4b341ff3109f6e6114b736b09cb610fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_video.html#a4b341ff3109f6e6114b736b09cb610fd">Terminate</a> ()</td></tr>
+<tr class="memdesc:a4b341ff3109f6e6114b736b09cb610fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminates the video subsystem.  <a href="#a4b341ff3109f6e6114b736b09cb610fd"></a><br/></td></tr>
+<tr class="memitem:aebbc742f5576a8b842b1fd770932b467"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_video.html#aebbc742f5576a8b842b1fd770932b467">StartEventLoop</a> ()</td></tr>
 <tr class="memitem:a12428614a5f935de97ef091ffb54fce5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a12428614a5f935de97ef091ffb54fce5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>StopEventLoop</b> ()</td></tr>
-<tr class="memitem:a5ee4667a507166012039346c7e5b14e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ee4667a507166012039346c7e5b14e1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>idle_event</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_video.html#a12428614a5f935de97ef091ffb54fce5">StopEventLoop</a> ()</td></tr>
+<tr class="memdesc:a12428614a5f935de97ef091ffb54fce5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the event loop. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespace_video.html" title="Video subsystem.">Video</a> subsystem. </p>
-</div></div><!-- contents -->
+</div><hr/><h2>Function Documentation</h2>
+<a class="anchor" id="aebbc742f5576a8b842b1fd770932b467"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Video::StartEventLoop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Enters the event loop </p>
+<dl class="section note"><dt>Note:</dt><dd>Futher program flow is suspended from that point on. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4b341ff3109f6e6114b736b09cb610fd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Video::Terminate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Terminates the video subsystem. </p>
+<p>Cleans up networking at the end of the program. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 09:55:24 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 24 2012 13:31:44 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>

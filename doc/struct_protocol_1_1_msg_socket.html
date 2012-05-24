@@ -92,19 +92,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Protocol::MsgSocket Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="struct_protocol_1_1_message.html">Message</a> based socket.  
+ <a href="struct_protocol_1_1_msg_socket.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="protocol_8h_source.html">protocol.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Protocol::MsgSocket:</div>
 <div class="dyncontent">
 <div class="center"><img src="struct_protocol_1_1_msg_socket__inherit__graph.png" border="0" usemap="#_protocol_1_1_msg_socket_inherit__map" alt="Inheritance graph"/></div>
 <map name="_protocol_1_1_msg_socket_inherit__map" id="_protocol_1_1_msg_socket_inherit__map">
-<area shape="rect" id="node2" href="struct_protocol_1_1_text_socket.html" title="TCP." alt="" coords="6,520,148,656"/><area shape="rect" id="node4" href="struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,277,135,472"/><area shape="rect" id="node6" href="struct_net_1_1_socket.html" title="Basic internet socket." alt="" coords="11,5,144,229"/></map>
+<area shape="rect" id="node2" href="struct_protocol_1_1_text_socket.html" title="Text based stream socket." alt="" coords="6,520,148,656"/><area shape="rect" id="node4" href="struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,277,135,472"/><area shape="rect" id="node6" href="struct_net_1_1_socket.html" title="Basic internet socket." alt="" coords="11,5,144,229"/></map>
 </div>
 <div class="dynheader">
 Collaboration diagram for Protocol::MsgSocket:</div>
 <div class="dyncontent">
 <div class="center"><img src="struct_protocol_1_1_msg_socket__coll__graph.png" border="0" usemap="#_protocol_1_1_msg_socket_coll__map" alt="Collaboration graph"/></div>
 <map name="_protocol_1_1_msg_socket_coll__map" id="_protocol_1_1_msg_socket_coll__map">
-<area shape="rect" id="node2" href="struct_protocol_1_1_text_socket.html" title="TCP." alt="" coords="6,520,148,656"/><area shape="rect" id="node4" href="struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,277,135,472"/><area shape="rect" id="node6" href="struct_net_1_1_socket.html" title="Basic internet socket." alt="" coords="11,5,144,229"/></map>
+<area shape="rect" id="node2" href="struct_protocol_1_1_text_socket.html" title="Text based stream socket." alt="" coords="6,520,148,656"/><area shape="rect" id="node4" href="struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,277,135,472"/><area shape="rect" id="node6" href="struct_net_1_1_socket.html" title="Basic internet socket." alt="" coords="11,5,144,229"/></map>
 </div>
 
 <p><a href="struct_protocol_1_1_msg_socket-members.html">List of all members.</a></p>
@@ -116,16 +121,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab27baedb887fb01580983b91eca3d9e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab27baedb887fb01580983b91eca3d9e6"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>MsgSocket</b> (<a class="el" href="struct_net_1_1_t_c_p_socket.html">TCPSocket</a> &amp;S)</td></tr>
 <tr class="memitem:ad17cb378a001cf3498ba3070ba647db1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad17cb378a001cf3498ba3070ba647db1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>send</b> (const <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_protocol_1_1_msg_socket.html#ad17cb378a001cf3498ba3070ba647db1">send</a> (const <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+<tr class="memdesc:ad17cb378a001cf3498ba3070ba647db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a structured message. <br/></td></tr>
 <tr class="memitem:a8040f7b0998457b95762d0bfab7bed65"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8040f7b0998457b95762d0bfab7bed65"></a>
-<a class="el" href="struct_protocol_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><b>recv</b> ()</td></tr>
+<a class="el" href="struct_protocol_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_protocol_1_1_msg_socket.html#a8040f7b0998457b95762d0bfab7bed65">recv</a> ()</td></tr>
+<tr class="memdesc:a8040f7b0998457b95762d0bfab7bed65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a structured message. <br/></td></tr>
 <tr class="inherit_header pub_methods_struct_protocol_1_1_text_socket"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_protocol_1_1_text_socket')"><img src="closed.png" alt="-"/>&nbsp;Public Member Functions inherited from <a class="el" href="struct_protocol_1_1_text_socket.html">Protocol::TextSocket</a></td></tr>
 <tr class="memitem:a3d7b269774ff2e00e97c4c5f95b3c5ba inherit pub_methods_struct_protocol_1_1_text_socket"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d7b269774ff2e00e97c4c5f95b3c5ba"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TextSocket</b> (<a class="el" href="struct_protocol_1_1_text_socket.html">TextSocket</a> &amp;S)</td></tr>
 <tr class="memitem:a68e191fd863d6fcb623c597cc9418e15 inherit pub_methods_struct_protocol_1_1_text_socket"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68e191fd863d6fcb623c597cc9418e15"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TextSocket</b> (<a class="el" href="struct_net_1_1_t_c_p_socket.html">TCPSocket</a> &amp;S)</td></tr>
 <tr class="memitem:af86c1689d81ac45f6f21cb5ee9104809 inherit pub_methods_struct_protocol_1_1_text_socket"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af86c1689d81ac45f6f21cb5ee9104809"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>send</b> (const std::string &amp;msg)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_protocol_1_1_text_socket.html#af86c1689d81ac45f6f21cb5ee9104809">send</a> (const std::string &amp;msg)</td></tr>
+<tr class="memdesc:af86c1689d81ac45f6f21cb5ee9104809 inherit pub_methods_struct_protocol_1_1_text_socket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a text message. <br/></td></tr>
 <tr class="inherit_header pub_methods_struct_net_1_1_t_c_p_socket"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_net_1_1_t_c_p_socket')"><img src="closed.png" alt="-"/>&nbsp;Public Member Functions inherited from <a class="el" href="struct_net_1_1_t_c_p_socket.html">Net::TCPSocket</a></td></tr>
 <tr class="memitem:af56978840013aa6f37f4b911fc7f2c8f inherit pub_methods_struct_net_1_1_t_c_p_socket"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af56978840013aa6f37f4b911fc7f2c8f"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TCPSocket</b> (<a class="el" href="struct_net_1_1_t_c_p_socket.html">TCPSocket</a> &amp;)</td></tr>
@@ -169,14 +177,16 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 <tr class="memitem:a5655898889b4547cbfb71395e28167e0 inherit pub_methods_struct_net_1_1_socket"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5655898889b4547cbfb71395e28167e0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="struct_net_1_1_socket.html">Socket</a> &amp;)</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following files:<ul>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="struct_protocol_1_1_message.html">Message</a> based socket. </p>
+</div><hr/>The documentation for this struct was generated from the following files:<ul>
 <li>src/common/<a class="el" href="protocol_8h_source.html">protocol.h</a></li>
 <li>src/common/protocol.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 09:55:24 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 24 2012 13:31:44 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
