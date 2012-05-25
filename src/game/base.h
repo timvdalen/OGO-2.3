@@ -49,12 +49,12 @@
 #define TYPE_ASSERT(type, assertion) \
 	typedef int TA_type_ ## type[(assertion)*2 - 1]
 
-typedef signed char byte;
-typedef signed short int word;
-typedef signed long int dword;
-typedef unsigned char ubyte;
-typedef unsigned short int uword;
-typedef unsigned long int udword;
+typedef signed char byte;         //!< Signed integer of 1 byte
+typedef signed short int word;    //!< Signed integer of 2 byte2
+typedef signed long int dword;    //!< Signed integer of at least 4 bytes
+typedef unsigned char ubyte;      //!< Unsigned integer of 1 byte
+typedef unsigned short int uword; //!< Unsigned integer of 2 bytes
+typedef unsigned long int udword; //!< Unsigned integer of at least 4 bytes
 
 TYPE_ASSERT(byte,   sizeof(byte)   == 1);
 TYPE_ASSERT(ubyte,  sizeof(ubyte)  == 1);
@@ -87,6 +87,7 @@ template <typename type> struct Vector;
 //------------------------------------------------------------------------------
 //                                Point
 
+//! A point in 3d space
 template <class type>
 struct Point
 {
@@ -95,7 +96,9 @@ struct Point
 	Point(const Point &P) : x(P.x), y(P.y), z(P.z) {}
 	Point(type X = 0, type Y = 0, type Z = 0) : x(X), y(Y), z(Z) {}
 	
+	//! Vector addition
 	Point operator +(const Vector<type> &V) const { return Point(x+V.x, y+V.y, z+V.z); }
+	//! Vector subtraction
 	Point operator -(const Vector<type> &V) const { return Point(x-V.x, y-V.y, z-V.z); }
 	template <typename T> operator Point<T>() const { return Point<T>((T) x,(T) y,(T) z); }
 	
@@ -107,6 +110,7 @@ BASE_ALIAS(Point, P)
 //------------------------------------------------------------------------------
 //                                Vector
 
+//! A vector in 3d space
 template <typename type>
 struct Vector : public Point<type>
 {
@@ -115,17 +119,25 @@ struct Vector : public Point<type>
 	using Point<type>::z;
 	
 	Vector(type X = 0, type Y = 0, type Z = 0) : Point<type>(X,Y,Z) {}
+	//! Flips the vector
 	Vector operator -() const { return Vector(-x,-y,-z); }
+	//! Scalar multiplication
 	Vector operator *(const type &S) const { return Vector(x*S,y*S,z*S); }
+	//! Scalar division
 	Vector operator /(const type &S) const { return Vector(x/S,y/S,z/S); }
 	
+	//! Vector addition
 	Vector operator +(const Vector<type> &V) const { return Vector(x+V.x, y+V.y, z+V.z); }
+	//! Cross product
 	Vector operator *(const Vector<type> &V) const
 	{ return Vector(y*V.z - z*V.y,
 	                z*V.x - x*V.z,
 	                x*V.y - y*V.x); }
+	//! Dot product
 	type operator ^(const Vector<type> &V) const { return x*V.x + y*V.y + z*V.z; }
+	//! Vector norm
 	type operator !() const { return sqrt(*this ^ *this); }
+	//! Reurns a normalized vector
 	Vector operator ~() const { return *this / (!*this); }
 };
 
@@ -134,6 +146,7 @@ BASE_ALIAS(Vector, V)
 //------------------------------------------------------------------------------
 //                                Quaternion
 
+//! A quaternion
 template <typename type>
 struct Quaternion
 {
@@ -144,17 +157,25 @@ struct Quaternion
 	operator type() const { return a; }
 	operator Vector<type>() const { return Vector<type>(b,c,d); }
 	
+	//! Returns the conjungate
 	Quaternion operator -() const { return Quaternion(a,-b,-c,-d); }
+	//! Scalar multiplication
 	Quaternion operator *(const type &S) const { return Quaternion(a*S,b*S,c*S,d*S); }
+	//! Scalar division
 	Quaternion operator /(const type &S) const { return Quaternion(a/S,b/S,c/S,d/S); }
+	//! Quaternion addition
 	Quaternion operator +(const Quaternion &Q) const { return Quaternion(a+Q.a,b+Q.b,c+Q.c,d+Q.d); }
+	//! Quaternion multiplication
 	Quaternion operator *(const Quaternion &Q) const
 	{ return Quaternion(a*Q.a - b*Q.b - c*Q.c - d*Q.d,
 		                a*Q.b + b*Q.a + c*Q.d - d*Q.c,
 						a*Q.c - b*Q.d + c*Q.a + d*Q.b,
 						a*Q.d + b*Q.c - c*Q.b + d*Q.a); }
+	//! Vector multiplication
 	Vector<type> operator *(const Vector<type> &V) const { return (*this) * Quaternion(0,V) * -(*this); }
+	//! Quaternion norm
 	type operator !() const { return sqrt(a*a + b*b + c*c + d*d); }
+	//! Returns a normalized quaternion
 	Quaternion operator ~() const { return *this / !(*this); }
 	template <typename T> operator Quaternion<T>() const { return Quaternion<T>((T) a,(T) b,(T) c,(T) d); }
 };

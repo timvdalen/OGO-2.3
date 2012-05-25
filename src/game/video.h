@@ -41,10 +41,15 @@ struct Camera;
 
 //------------------------------------------------------------------------------
 
+//! Initializes the video subsystem
 void Initialize(int argc, char *argv[]);
+//! Terminates the video subsystem
 void Terminate();
 
+//! Enters the event loop
+//! \note Futher program flow is suspended from that point on.
 void StartEventLoop();
+//! Stops the event loop
 void StopEventLoop();
 
 //------------------------------------------------------------------------------
@@ -91,7 +96,7 @@ struct Camera
 class Viewport
 {
 	public:
-	Camera camera;      //!< Defined where the viewport view from in the world
+	Camera camera;      //!< Defines where the viewport view from in the world
 	ObjectHandle world; //!< Defines the world the viewport will show
 	
 	//! create a new viewport
