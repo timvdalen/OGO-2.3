@@ -42,14 +42,13 @@
 		\item Het spel te beginnen;
 		\item Mutaties van het spel te ontvangen of te versturen.
 	\end{itemize}
-	De manier waarop deze communicatie verloopt is beschreven in \protoref. Zodra de protocol module opgestart is, zal de module zijn taken uitvoeren, zonder actieve noodzaak om functie's aan te roepen. Dit betekent, dat het protocol uit zichzelf berichten kan ontvangen en verwerken. Door middel van threads wordt er voor gezorgd dat de protocol de taken onafhankelijk kan uitvoeren.
-	
-	%INSERT KLASSE diagram?
+	De manier waarop deze communicatie verloopt is beschreven in \protoref. Zodra de protocol module opgestart is, zal de module zijn taken uitvoeren, zonder actieve noodzaak om functies aan te roepen. Dit betekent, dat het protocol uit zichzelf berichten kan ontvangen en verwerken. Door middel van threads wordt er voor gezorgd dat de protocol de taken onafhankelijk kan uitvoeren.
 	
     \subsection{Model van de sc\`ene}
-    Het model van de sc\`ene houd de huidige staat van het spel lokaal bij en implementeert functies om de huidige staat van het spel grafisch af te beelden. Door middel van twee abstracte klassen: \emph{Object} en \emph{BoundingObject} generaliseren elke grafische modellering. De klasse \emph{Object} kan door gebruik te maken van de functie \emph{draw}, welke door de subklasse ge\"implementeerd moet worden, het object transleren en roteren naar een specifieke plaats in wereldco\"ordinaten. Ook heeft de klasse children, die hij ook op de juiste plek tekent. \emph{BoundingObject} is een abstracte subklasse van \emph{Object}, deze kan bepalen of een bepaalde lijn, gedefinieerd door een punt en een richting, de \emph{BoundingBox} van het object snijdt. De \emph{BoundingBox} is een balk waarin het object compleet bevat moet zijn.
+    Het model van de sc\`ene houd de huidige staat van het spel lokaal bij en implementeert functies om de huidige staat van het spel grafisch af te beelden. Door middel van twee abstracte klassen: \emph{Object} en \emph{BoundingObject} generaliseren elke grafische modellering. De klasse \emph{Object} kan door gebruik te maken van de functie \emph{draw}, welke door de subklasse ge\"implementeerd moet worden, het object transleren en roteren naar een specifieke plaats in wereldco\"ordinaten. Ook heeft de klasse verwijzingen naar zogenaamde \emph{children}. Deze \emph{children} zijn ook weer van de klasse \emph{Object}. De plaats en rotatie die een \emph{child} heeft is relatief naar de plaats en rotatie van het hoofdobject. Door translatie en rotatie plaats het  hoofdobject deze ook op de juiste plek. \emph{BoundingObject} is een abstracte subklasse van \emph{Object}, deze kan bepalen of een bepaalde lijn, gedefinieerd door een punt en een richting, de \emph{BoundingBox} van het object snijdt. De \emph{BoundingBox} is een balk waarin het object compleet bevat moet zijn.
     
     De klasse 
+    
     \subsection{Gebruikersomgeving}
     
     \subsubsection{Tijdens de opzet van het spel}
