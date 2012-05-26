@@ -21,6 +21,7 @@ void Object::preRender()
 void Object::render()
 {
 	preRender();
+	material->select();
 	
 	draw();
 	

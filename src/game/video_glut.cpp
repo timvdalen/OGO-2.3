@@ -10,6 +10,8 @@
 	#include <GL/freeglut.h>
 #endif
 
+#include <set>
+
 #include "objects.h"
 #include "video.h"
 
@@ -18,6 +20,7 @@
 namespace Video {
 
 using namespace std;
+using namespace Base::Alias;
 
 //------------------------------------------------------------------------------
 
@@ -45,6 +48,7 @@ void Terminate()
 void StartEventLoop()
 {
 	glutDisplayFunc(Window::display);
+	glutReshapeFunc(Window::resize);
 	
 	glutMainLoop();
 }
@@ -63,6 +67,7 @@ std::set<Window *> Window::windows;
 struct WindowData
 {
 	uword width, height;
+	double aspect;
 };
 
 //------------------------------------------------------------------------------
@@ -75,6 +80,7 @@ Window::Window(uword width, uword height, const char *title,
 	PRIV(WindowData, wd);
 	wd->width = width;
 	wd->height = height;
+	wd->aspect = (double) width / (double) height;
 	
 	glutInitWindowPosition(xpos, ypos);
 	glutInitWindowSize(width, height);
@@ -101,7 +107,7 @@ void Window::render()
 	
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	set<Viewport *>::iterator vit;
+	vector<Viewport *>::iterator vit;
 	for (vit = viewports.begin(); vit != viewports.end(); ++vit)
 	{
 		(*vit)->select(this);
@@ -118,6 +124,30 @@ void Window::display()
 	set<Window *>::iterator wit;
 	for (wit = windows.begin(); wit != windows.end(); ++wit)
 		(*wit)->render();
+}
+
+//------------------------------------------------------------------------------
+
+void Window::resize(int width, int height)
+{
+	// Currently only sets the first window
+	if (windows.empty()) return;
+	
+	void *data = (*windows.begin())->data;
+	PRIV(WindowData, wd)
+	
+	wd->width = width;
+	wd->height = height;
+	wd->aspect = (double) width / (double) height;
+	(*windows.begin())->render();
+}
+
+//==============================================================================
+
+void Camera::lookAt(const Point<double> &target)
+{
+	Vector<double> dir = ~Vd(target - origin);
+	objective = Rd(Vd(0,1,0),dir);
 }
 
 //==============================================================================
@@ -203,7 +233,7 @@ void Viewport::select(Window *w)
 	           (GLint) vd->w * wd->width, (GLint) vd->h * wd->height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(vd->f, vd->a, 0.1f, 1000.0f);
+	gluPerspective(vd->f, vd->a * wd->aspect, 0.1f, 1000.0f);
 }
 
 //------------------------------------------------------------------------------
@@ -227,15 +257,15 @@ void Viewport::render()
 	// I might as well define the matrix myself...
 	{
 		 // Set up xyz axes how I like them
-		double m1[16] = { 0,  0,  1,  0,
-		                  1,  0,  0,  0,
+		double m1[16] = { 1,  0,  0,  0,
+		                  0,  0, -1,  0,
 					      0,  1,  0,  0,
 					      0,  0,  0,  1};
 		
 		glMultMatrixd(m1);
 		
 		// Camera orientation (quaternion to rotation matrix)
-		const Quaternion<double> &q = camera.objective;
+		const Quaternion<double> &q = -camera.objective;
 		double aa, ab, ac, ad, bb, bc, bd, cc, cd, dd;
 		aa = q.a*q.a; ab = q.a*q.b; ac = q.a*q.c; ad = q.a*q.d;
 		              bb = q.b*q.b; bc = q.b*q.c; bd = q.b*q.d;
@@ -254,6 +284,10 @@ void Viewport::render()
 		const Point<double> &o = camera.origin;
 		glTranslated(-o.x, -o.y, -o.z);
 	}
+	
+	// Enable lighting
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	
 	// Render objects
 	std::set<ObjectHandle>::const_iterator it;
