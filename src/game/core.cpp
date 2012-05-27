@@ -2,6 +2,7 @@
  * Core module -- see header
  */
 
+#include "video.h"
 #include "core.h"
 
 namespace Core {
@@ -17,9 +18,17 @@ void Object::preRender()
 
 //------------------------------------------------------------------------------
 
+void Object::setMaterial(){
+	material.select();
+}
+
+//------------------------------------------------------------------------------
+
 void Object::render()
 {
 	preRender();
+	
+	setMaterial();
 	
 	draw();
 	
@@ -28,10 +37,12 @@ void Object::render()
 
 //------------------------------------------------------------------------------
 
-void Object::draw(){
+void Object::draw()
+{
 	// Nothing to render, but will render its children next
 }
 
+//------------------------------------------------------------------------------
 
 void Object::postRender()
 {

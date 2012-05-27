@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 			msg = line;
 			cmd = (string) msg[0];
 			if ((cmd == "!close") || (cmd == "!exit"))
-				break;
+				lobby->close();
 			
 			else if ((msg.size() > 1) && (cmd == "!team"))
 			{
@@ -253,6 +253,14 @@ void lobby_connect(Player::Id pid, Game game)
 
 void lobby_player(Player player)
 {
+	char state;
+	switch (player.state)
+	{
+		case Player::stBusy: state = 'B'; break;
+		case Player::stReady: state = 'R'; break;
+		case Player::stHost: state = 'H'; break;
+	}
+	printf("   [%d]\t%s\t%c\n", player.team, player.name.c_str(), state);
 	playerlist[player.id] = player.name;
 }
 

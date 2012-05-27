@@ -32,9 +32,9 @@ struct Address
 	//! Creates a copy of an address
 	Address(const Address &);
 	//! Creates an address from raw types
-	Address(unsigned long address, unsigned port = 0);
+	Address(unsigned long address, unsigned short port = 0);
 	//! Creates an addres from a string
-	Address(const char *address, unsigned int port = 0);
+	Address(const char *address, unsigned short port = 0);
 	//! Cleans up the address
 	~Address();
 	
@@ -42,15 +42,18 @@ struct Address
 	bool name(char *str, size_t len) const;
 	//! Gets a textual representation of an address
 	bool string(char *str) const;
-	
+	//! Returns the validity of the address
 	bool valid() const;
 	
+	friend struct Socket;
 	friend struct UDPSocket;
 	friend struct TCPSocket;
 	
 	bool operator ==(const Address &) const;
 	bool operator <(const Address &) const;
 	Address &operator =(const Address &);
+	
+	unsigned short &port();
 	
 	private:
 	size_t length;
@@ -69,6 +72,11 @@ struct Socket
 	
 	bool setBlocking();    //!< Makes operations on this socket block. (default)
 	bool setNonBlocking(); //!< Makes operations on this socket not block.
+	
+	//! Binds the socket to a local address.
+	bool bind(const Address &local);
+	//! Binds this socket to a local address with specified port.
+	bool bind(unsigned short port);
 	
 	void close(); //!< Closes the socket. This will invalidate the instance.
 	//! Returns the validity of the socket.
@@ -98,17 +106,13 @@ struct UDPSocket : public Socket
 	UDPSocket(UDPSocket &);
 	~UDPSocket();
 	
-	//! Binds the socket to a local address.
-	bool bind(const Address &local);
-	//! Binds this socket to a local address with specified port.
-	bool bind(unsigned int port);
 	//! Allows this socket to use broadcast. \sa shout
 	bool broadcast();
 	
 	//! Sends a message to a remote host.
 	bool sendto(const Address &remote, const char *data, size_t &length);
 	//! Send a message to all remote hosts in the subnet.
-	bool shout(unsigned int port, const char *data, size_t &length);
+	bool shout(unsigned short port, const char *data, size_t &length);
 	//! Receives a message (from the local bound address). \sa broadcast
 	bool recvfrom(Address &remote, char *data, size_t &length);
 };
@@ -125,7 +129,7 @@ struct TCPSocket : public Socket
 	//! Connects to a remote host.
 	bool connect(const Address &remote);
 	//! Makes this socket a listening socket to the specified port.
-	bool listen(unsigned int port);
+	bool listen(unsigned short port);
 	//! Makes this socket a listening socket to bound to the specified address.
 	bool listen(const Address &local);
 	//! Accepts a incomming connection (when this is a listening socket). \sa listen
