@@ -65,9 +65,13 @@ int main(int argc, char *argv[])
 	w1.viewports.push_back(&v1);
 	
 	v1.camera.origin = Pd(0,0,0);
-	v1.camera.objective = Rd(0.0,Vd(1,0,0));
+	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 	
-	ObjectHandle cube = Cuboid(Pd(1,2,3));
+	ObjectHandle cube = Cuboid(Pd(1,3,-7));
+	
+	Materials::ShadedMaterial mat = Materials::ShadedMaterial(Cf(1,0,0,1));
+	mat.emissive = Cf(0,.5,0,1);
+	cube->material = mat;
 	
 	v1.world = Objects::World(100,100);
 	v1.world->children.insert(cube);

@@ -30,10 +30,7 @@ void Initialize(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
 	
-	glClearColor(0, 0, 0, 0);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glShadeModel(GL_SMOOTH);
+	
 }
 
 //------------------------------------------------------------------------------
@@ -85,6 +82,13 @@ Window::Window(uword width, uword height, const char *title,
 	glutInitWindowPosition(xpos, ypos);
 	glutInitWindowSize(width, height);
 	glutCreateWindow(title);
+	
+	glClearColor(0, 0, 0, 0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glShadeModel(GL_SMOOTH);
+	
+	glEnable(GL_LIGHTING);
 	
 	windows.insert(this);
 }
@@ -146,8 +150,16 @@ void Window::resize(int width, int height)
 
 void Camera::lookAt(const Point<double> &target)
 {
-	Vector<double> dir = ~Vd(target - origin);
-	objective = Rd(Vd(0,1,0),dir);
+	const Vd def = Vd(0,1,0);
+	Vd dir = ~Vd(target - origin);
+	double dot = dir ^ def;
+	
+	if (dot == 1.0)
+		objective = Rd(0.0, def);
+	else if (dot == -1.0)
+		objective = Rd(Pi, Vd(0,0,1));
+	else
+		objective = Rd(Vd(0,1,0), dir);
 }
 
 //==============================================================================
@@ -286,7 +298,6 @@ void Viewport::render()
 	}
 	
 	// Enable lighting
-	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	
 	// Render objects
