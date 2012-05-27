@@ -18,9 +18,17 @@ void Object::preRender()
 
 //------------------------------------------------------------------------------
 
+void Object::setMaterial(){
+	material.select();
+}
+
+//------------------------------------------------------------------------------
+
 void Object::render()
 {
 	preRender();
+	
+	setMaterial();
 	
 	draw();
 	
