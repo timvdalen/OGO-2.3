@@ -18,7 +18,7 @@
 #include "protocol.h"
 #include "lobby.h"
 
-#define CALL(x) if (x) x
+#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 namespace Lobby {
 
@@ -79,6 +79,17 @@ bool GameLobby::valid() const
 	if (!lobby->sock)
 		return false;
 	return lobby->sock->valid();
+}
+
+//------------------------------------------------------------------------------
+
+void GameLobby::close()
+{
+	if (!data)
+		return;
+	
+	GameLobbyData *lobby = (GameLobbyData *) data;
+	lobby->sock->close();
 }
 
 //------------------------------------------------------------------------------
@@ -231,7 +242,7 @@ void *ClientLobby::listen(void *arg)
 				player.team = (int) msg[2];
 				player.state = (Player::State) (int) msg[3];
 				player.name = (string) msg[4];
-				CALL(lobby->onPlayer)(player);
+				CALL(lobby->onPlayer, player)
 			}
 			else if (cmd == "JOIN")  //------------------------------
 			{
@@ -239,23 +250,23 @@ void *ClientLobby::listen(void *arg)
 					continue;
 				
 				if ((int) msg[1] == client)
-					CALL(lobby->onConnect)(client, game);
+					CALL(lobby->onConnect, client, game)
 				else
-					CALL(lobby->onJoin)((int) msg[1], msg[2]);
+					CALL(lobby->onJoin, (int) msg[1], msg[2])
 			}
 			else if (cmd == "PART") //-------------------------------
 			{
 				if (msg.size() < 2)
 					continue;
 				
-				CALL(lobby->onPart)((int) msg[1]);
+				CALL(lobby->onPart, (int) msg[1])
 			}
 			else if (cmd == "TEAM") //-------------------------------
 			{
 				if (msg.size() < 3)
 					continue;
 				
-				CALL(lobby->onTeam)((int) msg[1], (int) msg[2]);
+				CALL(lobby->onTeam, (int) msg[1], (int) msg[2])
 			}
 			else if ((cmd == "READY") //-----------------------------
 			     ||  (cmd ==  "BUSY"))
@@ -266,7 +277,7 @@ void *ClientLobby::listen(void *arg)
 				Player::State state = (cmd == "BUSY") ? Player::stBusy
 				                                      : Player::stReady;
 				
-				CALL(lobby->onState)((int) msg[1], state);
+				CALL(lobby->onState, (int) msg[1], state)
 				
 			}
 			else if (cmd == "CHAT") //-------------------------------
@@ -274,18 +285,13 @@ void *ClientLobby::listen(void *arg)
 				if (msg.size() < 3)
 					continue;
 				
-				CALL(lobby->onChat)((int) msg[1], msg[2]);
+				CALL(lobby->onChat, (int) msg[1], msg[2])
 			}
-		}
-		
-		if (msg.eof())
-		{
-			p->sock->close();
-			break;
 		}
 	}
 	
-	CALL(lobby->onClose)();
+	CALL(lobby->onClose)
+	
 	pthread_exit(0);
 	return (NULL);
 }
@@ -403,7 +409,7 @@ bool ServerLobby::team(unsigned char team)
 		if (pit->id)
 			pit->sock->send(msg);
 	
-	CALL(onTeam)((int) lobby->host.id, team);
+	CALL(onTeam, (int) lobby->host.id, team)
 	return true;
 }
 
@@ -426,7 +432,7 @@ bool ServerLobby::chat(const string &line)
 		if (pit->id)
 			pit->sock->send(msg);
 	
-	CALL(onChat)(lobby->host.id, line);
+	CALL(onChat, lobby->host.id, line)
 	return true;
 }
 
@@ -452,10 +458,11 @@ void *ServerLobby::listen(void *arg)
 		game.numPlayers = p->players.size() + 1;
 		game.name = p->name;
 		if (!lobby->onConnect) sleep(1);
-		CALL(lobby->onConnect)(p->host.id, game);
+		CALL(lobby->onConnect, p->host.id, game)
 	}
 	
 	Socket::List read, write, error;
+	ServerLobbyData::PlayerSet::iterator pit;
 	while (p->sock->valid())
 	{
 		// Wait for incomming connections or messages
@@ -464,13 +471,32 @@ void *ServerLobby::listen(void *arg)
 		{
 			ServerLobbyData::PlayerSet::iterator it;
 			for (it = p->players.begin(); it != p->players.end(); ++it)
-				read.push_back(it->sock);
+			{
+				if (!it->sock->valid())
+				{
+					const ServerPlayer &player = *it;
+					
+					Message msg_part;
+					msg_part.push_back("PART");
+					msg_part.push_back((int) player.id);
+					
+					if (player.id)
+						for (pit = p->players.begin(); pit != p->players.end(); ++pit)
+							if (pit->id)
+								pit->sock->send(msg_part);
+					
+					CALL(lobby->onPart, player.id)
+					delete player.sock;
+					p->players.erase(it--);
+				}
+				else
+					read.push_back(it->sock);
+			}
 		}
 		Socket::select(read, write, error);
 		
 		// Process incomming connections or messages
 		Socket::List::iterator it;
-		ServerLobbyData::PlayerSet::iterator pit;
 		for (it = read.begin(); it != read.end(); ++it)
 		{
 			if (*it == p->sock)
@@ -551,7 +577,7 @@ void *ServerLobby::listen(void *arg)
 							pit->sock->send(msg_join);
 						}
 						sock->send(msg_join);
-						CALL(lobby->onJoin)(player->id, player->name);
+						CALL(lobby->onJoin, player->id, player->name)
 					}
 					else if (!player->id) //-------------------------
 					{
@@ -574,7 +600,7 @@ void *ServerLobby::listen(void *arg)
 							if (pit->id)
 								pit->sock->send(msg);
 						
-						CALL(lobby->onTeam)(player->id, team);
+						CALL(lobby->onTeam, player->id, team)
 					}
 					else if ((cmd == "READY") //---------------------
 					     ||  (cmd ==  "BUSY"))
@@ -595,7 +621,7 @@ void *ServerLobby::listen(void *arg)
 							if (pit->id)
 								pit->sock->send(msg);
 						
-						CALL(lobby->onState)(player->id, state);
+						CALL(lobby->onState, player->id, state)
 					}
 					else if (cmd == "CHAT") //-----------------------
 					{
@@ -608,35 +634,14 @@ void *ServerLobby::listen(void *arg)
 							if (pit->id)
 								pit->sock->send(msg);
 						
-						CALL(lobby->onChat)(player->id, msg[2]);
+						CALL(lobby->onChat, player->id, msg[2])
 					}
-				}
-				
-				if (msg.eof())
-				{
-					Message msg_part;
-					msg_part.push_back("PART");
-					msg_part.push_back((int) player->id);
-					
-					player->sock->close();
-					p->players.erase(p->players.find(*player));
-					//delete player->sock;
-					//delete player; TODO: find out where the dependency is
-					
-					if (!player->id)
-						continue;
-					
-					for (pit = p->players.begin(); pit != p->players.end(); ++pit)
-						if (pit->id)
-							pit->sock->send(msg_part);
-					
-					CALL(lobby->onPart)(player->id);
 				}
 			}
 		}
 	}
 	
-	CALL(lobby->onClose)();
+	CALL(lobby->onClose)
 	pthread_exit(0);
 	return (NULL);
 }
