@@ -56,6 +56,8 @@ class Clique
 	//! Wait for changes or (when supplied) a timeout, whichever comes first.
 	bool select(int timeout = 0);
 	
+	void debug();
+	
 	private:
 	void *data;
 	static void *process(void *);

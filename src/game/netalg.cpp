@@ -3,6 +3,7 @@
  */
 
 #include <time.h>
+#include <stdio.h>
 #include <pthread.h>
 
 #include <set>
@@ -370,6 +371,17 @@ bool Clique::select(int timeout)
 
 //------------------------------------------------------------------------------
 
+void Clique::debug()
+{
+	VPRIV(CliqueData, qd);
+	CliqueData::NodeList::iterator nit;
+	for (nit = qd->connected.begin(); nit != qd->connected.end(); ++nit)
+		printf("%s ", string(nit->second).c_str());
+	puts("");
+}
+
+//------------------------------------------------------------------------------
+
 void *Clique::process(void *obj)
 {
 	Clique *clique = (Clique *)obj;
@@ -420,7 +432,7 @@ void *Clique::process(void *obj)
 					TCPSocket client;
 					Address remote;
 					if (!sock->accept(client, remote)) continue;
-					
+					//{ char buf[128]; remote.string(buf); printf("debug: %s %d\n", buf, remote.port()); }
 					remote.port(remote.port() - 1);
 					
 					// Socket connected

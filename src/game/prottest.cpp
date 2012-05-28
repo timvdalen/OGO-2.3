@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdarg.h>
 #include <pthread.h>
 
@@ -80,6 +81,8 @@ int main(int argc, char *argv[])
 			string cmd = msg[0];
 			if ((cmd == "!exit") || (cmd == "!close"))
 				cq.close();
+			else if (cmd == "!list")
+				cq.debug();
 			else if ((cmd == "!connect") && (msg.size() > 1))
 				cq.connect(Address(string(msg[1]).c_str()));
 		}
@@ -109,6 +112,7 @@ void *loop(void *data)
 	Address remote;
 	while (cq->connected())
 	{
+		pthread_testcancel();
 		cq->select();
 		
 		while (cq->entry(remote))
