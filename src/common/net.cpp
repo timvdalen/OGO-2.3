@@ -15,6 +15,7 @@
 	#define _WIN32_WINNT 0x0501
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
+	#include <pthread.h>
 	#define ssize_t signed long int
 	#define socklen_t int
 #else
@@ -93,9 +94,23 @@ Address::Address(const char *address, unsigned short port)
 {
 	if (!data) return;
 	memset(data, 0, length);
-
+	
 	addrinfo *result;
-	if (getaddrinfo(address, NULL, NULL, &result))
+	const char *ptr;
+	if (ptr = strchr(address, ':'))
+	{
+		size_t len = ptr - address;
+		
+		char ip[len + 1];
+		memcpy(ip, address, len);
+		ip[len] = 0;
+		
+		if (getaddrinfo(ip, NULL, NULL, &result))
+			return;
+		
+		port = atoi(ptr + 1);
+	}
+	else if (getaddrinfo(address, NULL, NULL, &result))
 		return;
 	
 	if (!result)
@@ -184,10 +199,18 @@ Address &Address::operator =(const Address &addr)
 }
 //------------------------------------------------------------------------------
 
-unsigned short &Address::port()
+unsigned short Address::port()
 {
 	sockaddr_in *addr = (sockaddr_in *) data;
-	return addr->sin_port;
+	return ntohs(addr->sin_port);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+void Address::port(unsigned short port)
+{
+	sockaddr_in *addr = (sockaddr_in *) data;
+	addr->sin_port = htons(port);
 }
 
 //------------------------------------------------------------------------------
@@ -240,6 +263,24 @@ bool Socket::setNonBlocking()
 	#else
 		int x = fcntl((SOCKET) data, F_GETFL, 0);
 		return (fcntl((SOCKET) data, F_SETFL, x | O_NONBLOCK) != -1);
+	#endif
+}
+
+//------------------------------------------------------------------------------
+
+bool Socket::reuse()
+{
+	if ((SOCKET) data == SOCKET_ERROR)
+		return false;
+	
+	#ifdef WIN32
+		const char mode = 1;
+		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_REUSEADDR,
+			&mode, sizeof (mode));
+	#else
+		int mode = 1;
+		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_REUSEADDR,
+			&mode, sizeof (int));
 	#endif
 }
 
@@ -335,6 +376,8 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 		tv.tv_sec = 1;
 		tv.tv_usec = 0;
 		rfds = _rfds, wfds = _wfds, efds = _efds;
+		
+		pthread_testcancel();
 		
 		ret = ::select(maxfd + 1, read.empty() ? NULL : &rfds,
 		                          write.empty() ? NULL : &wfds,

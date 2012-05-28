@@ -17,27 +17,43 @@ namespace Protocol {
 
 //------------------------------------------------------------------------------
 
+//! Clique socket.
+//! A algorithm that maintains a complete connection graph between nodes.
+//! \sa { https://github.com/timvdalen/OGO-2.3/wiki/Dist-Algo%27s }
 class Clique
 {
 	public:
 	typedef Net::Address Address;
 	
+	//! Creates a new clique listening on the specified port
 	Clique(unsigned short port);
+	//! Terminates the clique
 	~Clique();
 	
+	//! Tries to connect to another clique (or till the timeout occurs)
+	//! \note This method will always fail when already connecetd to another clique
 	bool connect(const Address &remote, int timeout = 0);
+	//! Closes the connection. This will invalidate the instance permanently.
 	void close();
 	
+	//! Returns whether this instance is connected to a clique.
 	bool connected() const;
+	//! Returns whether a certain node (by ip address) is connected.
 	bool connected(const Address &node) const;
 	
+	//! Sends a messages to a certain node.
 	bool sendto(const Address &node, const Message &msg);
+	//! Sends a message to all nodes.
 	bool shout(const Message &msg);
 	
+	//! Retrieves new nodes in the supplied address value. Returns success.
 	bool entry(Address &node);
+	//! Retrieves lost nodes in the supplied address value. Returns success.
 	bool loss(Address &node);
+	//! Retrieves messages in the supplied values. Returns success.
 	bool recvfrom(Address &node, Message &msg);
 	
+	//! Wait for changes or (when supplied) a timeout, whichever comes first.
 	bool select(int timeout = 0);
 	
 	private:

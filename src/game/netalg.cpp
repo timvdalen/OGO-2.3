@@ -146,7 +146,8 @@ bool Clique::connect(const Address &remote, int timeout)
 		MsgSocket *sock = new MsgSocket();
 		if (!sock) break;
 		
-		if (!sock->bind(qd->port+1)) break;
+		if (!sock->reuse()) break;
+		if (!sock->bind(qd->port + 1)) break;
 		if (!sock->connect(remote)) break;
 		if (!sock->setNonBlocking()) break;
 		
@@ -170,8 +171,13 @@ bool Clique::connect(const Address &remote, int timeout)
 				ret = pthread_cond_wait(&qd->decided, &qd->lock);
 		
 		success = (qd->connection == CliqueData::cnOpen);
+		if (!success) break;
+		
+		qd->entry.push(remote);
+		pthread_cond_broadcast(&qd->incomming);
 	} while(0);
 	pthread_mutex_unlock(&qd->lock);
+	
 	
 	if (!success) close();
 	return (success);
@@ -415,7 +421,7 @@ void *Clique::process(void *obj)
 					Address remote;
 					if (!sock->accept(client, remote)) continue;
 					
-					--remote.port();
+					remote.port(remote.port() - 1);
 					
 					// Socket connected
 					MsgSocket *node = new MsgSocket(client);
@@ -446,7 +452,6 @@ void *Clique::process(void *obj)
 						string cmd = msg[0];
 						if (cmd == "@>")
 						{
-							bool first = qd->connecting.empty();
 							Message::iterator it;
 							Address remote;
 							for (it = msg.begin() + 1; it != msg.end(); ++it)
@@ -459,10 +464,10 @@ void *Clique::process(void *obj)
 								qd->connecting.insert(remote);
 							}
 							
-							if (!first && qd->connecting.empty() && !DECIDED)
+							if (qd->connecting.empty() && !DECIDED)
 							{
 								qd->connection = CliqueData::cnOpen;
-								pthread_cond_broadcast(&qd->incomming);
+								pthread_cond_broadcast(&qd->decided);
 							}
 							
 							set<Address>::iterator it2;
@@ -471,15 +476,18 @@ void *Clique::process(void *obj)
 							{
 								MsgSocket *sock = new MsgSocket();
 								if (!sock
-								&&  !sock->connect(remote)
-								&&  !sock->setNonBlocking())
+								||  !sock->reuse()
+								||  !sock->bind(qd->port + 1)
+								||  !sock->connect(*it2)
+								||  !sock->setNonBlocking())
 								{
 									valid = false;
 									break;
 								}
 								
-								qd->connected[remote] = CliqueNode(sock, remote);
-								qd->lost.erase(remote);
+								qd->entry.push(*it2);
+								qd->connected[*it2] = CliqueNode(sock, *it2);
+								qd->lost.erase(*it2);
 								qd->connecting.erase(it2--);
 							}
 						}
@@ -552,7 +560,7 @@ void Clique::reset()
 	VPRIV(CliqueData, qd)
 	
 	pthread_cancel(qd->thread);
-		
+	
 	void *status;
 	pthread_join(qd->thread, &status);
 	
