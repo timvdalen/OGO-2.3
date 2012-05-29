@@ -21,7 +21,7 @@ OBJDIR   = ../../obj/
 BINDIR   = ../../bin/
 INCS     =  -I"../common"
 CXXINCS  =  -I"../common"
-OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
+OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)prottest.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
            $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o      \
            $(OBJDIR)materials.o
@@ -71,8 +71,8 @@ $(OBJDIR)base.o: base.cpp
 $(OBJDIR)core.o: core.cpp
 	$(CPP) -c core.cpp -o $(OBJDIR)core.o $(CXXFLAGS)
 
-$(OBJDIR)main.o: main.cpp
-	$(CPP) -c main.cpp -o $(OBJDIR)main.o $(CXXFLAGS)
+$(OBJDIR)prottest.o: prottest.cpp
+	$(CPP) -c prottest.cpp -o $(OBJDIR)prottest.o $(CXXFLAGS)
 
 $(OBJDIR)objects.o: objects.cpp
 	$(CPP) -c objects.cpp -o $(OBJDIR)objects.o $(CXXFLAGS)

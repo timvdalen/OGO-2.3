@@ -53,7 +53,8 @@ struct Address
 	bool operator <(const Address &) const;
 	Address &operator =(const Address &);
 	
-	unsigned short &port();
+	unsigned short port();
+	void port(unsigned short port);
 	
 	private:
 	size_t length;
@@ -72,6 +73,8 @@ struct Socket
 	
 	bool setBlocking();    //!< Makes operations on this socket block. (default)
 	bool setNonBlocking(); //!< Makes operations on this socket not block.
+	//! Allows other sockets to reuse this socket's bound address.
+	bool reuse();
 	
 	//! Binds the socket to a local address.
 	bool bind(const Address &local);

@@ -3,6 +3,7 @@
  */
 
 #include <time.h>
+#include <stdio.h>
 #include <pthread.h>
 
 #include <set>
@@ -27,12 +28,13 @@ void getthetime(timespec *tsp)
 #define VPRIV(T,x) if (!data) return; T *x = (T *) data;
 #define PRIV(T,x) if (!data) return false; T *x = (T *) data;
 
-#define PROBE {printf(__FILE__ ":%d\n", __LINE__);}
+#define PROBE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
 
 namespace Protocol {
 	
 #define DECIDED (qd->connection != CliqueData::cnPending)
 #define INCOMMING (!qd->entry.empty() || !qd->loss.empty() || !qd->msgs.empty())
+#define CONNECTED (qd->connection == CliqueData::cnOpen)
 
 using namespace std;
 using namespace Net;
@@ -62,7 +64,7 @@ struct CliqueData
 	pthread_cond_t incomming;
 	
 	CliqueNode *find(MsgSocket *sock) const;
-	void closed(MsgSocket *sock);
+	void closed(MsgSocket *sock, bool reply = false);
 	void loose(const Address &remote);
 };
 
@@ -146,7 +148,8 @@ bool Clique::connect(const Address &remote, int timeout)
 		MsgSocket *sock = new MsgSocket();
 		if (!sock) break;
 		
-		if (!sock->bind(qd->port+1)) break;
+		if (!sock->reuse()) break;
+		if (!sock->bind(qd->port + 1)) break;
 		if (!sock->connect(remote)) break;
 		if (!sock->setNonBlocking()) break;
 		
@@ -170,8 +173,13 @@ bool Clique::connect(const Address &remote, int timeout)
 				ret = pthread_cond_wait(&qd->decided, &qd->lock);
 		
 		success = (qd->connection == CliqueData::cnOpen);
+		if (!success) break;
+		
+		qd->entry.push(remote);
+		pthread_cond_broadcast(&qd->incomming);
 	} while(0);
 	pthread_mutex_unlock(&qd->lock);
+	
 	
 	if (!success) close();
 	return (success);
@@ -198,6 +206,7 @@ void Clique::close()
 		qd->connection = CliqueData::cnClosed;
 	}
 	pthread_mutex_unlock(&qd->lock);
+	pthread_cond_broadcast(&qd->incomming);
 }
 
 //------------------------------------------------------------------------------
@@ -348,11 +357,11 @@ bool Clique::select(int timeout)
 			getthetime(&ts);
 			ts.tv_sec += timeout;
 			
-			while (!INCOMMING && !ret)
+			while (!INCOMMING && !ret && CONNECTED)
 				ret = pthread_cond_timedwait(&qd->incomming, &qd->lock, &ts);
 		}
 		else
-			while (!INCOMMING && !ret)
+			while (!INCOMMING && !ret && CONNECTED)
 				ret = pthread_cond_wait(&qd->incomming, &qd->lock);
 		
 		success = INCOMMING;
@@ -360,6 +369,27 @@ bool Clique::select(int timeout)
 	pthread_mutex_unlock(&qd->lock);
 	
 	return (success);
+}
+
+//------------------------------------------------------------------------------
+
+void Clique::debug()
+{
+	VPRIV(CliqueData, qd);
+	CliqueData::NodeList::iterator nit;
+	for (nit = qd->connected.begin(); nit != qd->connected.end(); ++nit)
+		printf("%s ", string(nit->second).c_str());
+	puts("");
+}
+
+//------------------------------------------------------------------------------
+
+void Clique::debugClose(Address &node)
+{
+	VPRIV(CliqueData, qd);
+	
+	if (!qd->connected.count(node)) return;
+	qd->connected[node].sock->close();
 }
 
 //------------------------------------------------------------------------------
@@ -391,13 +421,22 @@ void *Clique::process(void *obj)
 			{
 				// Check for liveness
 				if (!nit->second.sock->valid())
-					qd->closed((MsgSocket *) &*nit--);
+					qd->closed(nit--->second.sock);
 				else
 					read.push_back(nit->second.sock); // Add nodes to selection
 			}
 		}
+		
+		// See if half-open connections had a timeout
+		{
+			map<Address, pair<size_t,time_t> >::iterator it;
+			for (it = qd->lost.begin(); it != qd->lost.end(); ++it)
+				if (it->second.second <= time(NULL))
+					qd->loose(it--->first);
+		}
 		pthread_mutex_unlock(&qd->lock);
 		
+		if (read.empty()) break;
 		if (!Socket::select(read, write, error)) break;
 		
 		pthread_testcancel();
@@ -415,7 +454,7 @@ void *Clique::process(void *obj)
 					Address remote;
 					if (!sock->accept(client, remote)) continue;
 					
-					--remote.port();
+					remote.port(remote.port() - 1);
 					
 					// Socket connected
 					MsgSocket *node = new MsgSocket(client);
@@ -446,7 +485,6 @@ void *Clique::process(void *obj)
 						string cmd = msg[0];
 						if (cmd == "@>")
 						{
-							bool first = qd->connecting.empty();
 							Message::iterator it;
 							Address remote;
 							for (it = msg.begin() + 1; it != msg.end(); ++it)
@@ -459,10 +497,10 @@ void *Clique::process(void *obj)
 								qd->connecting.insert(remote);
 							}
 							
-							if (!first && qd->connecting.empty() && !DECIDED)
+							if (qd->connecting.empty() && !DECIDED)
 							{
 								qd->connection = CliqueData::cnOpen;
-								pthread_cond_broadcast(&qd->incomming);
+								pthread_cond_broadcast(&qd->decided);
 							}
 							
 							set<Address>::iterator it2;
@@ -471,21 +509,37 @@ void *Clique::process(void *obj)
 							{
 								MsgSocket *sock = new MsgSocket();
 								if (!sock
-								&&  !sock->connect(remote)
-								&&  !sock->setNonBlocking())
+								||  !sock->reuse()
+								||  !sock->bind(qd->port + 1)
+								||  !sock->connect(*it2)
+								||  !sock->setNonBlocking())
 								{
+									//printf("err: %d\n", WSAGetLastError());
 									valid = false;
 									break;
 								}
 								
-								qd->connected[remote] = CliqueNode(sock, remote);
-								qd->lost.erase(remote);
+								qd->entry.push(*it2);
+								qd->connected[*it2] = CliqueNode(sock, *it2);
+								qd->lost.erase(*it2);
 								qd->connecting.erase(it2--);
 							}
 						}
-						else if (cmd == "@!")
+						else if ((cmd == "@!") || (cmd == "@!!"))
 						{
-							// First update the connection status
+							// A node sent a disconnect request
+							if (msg.size() == 1)
+							{
+								if (qd->find(sock))
+								{
+									sock->close();
+									qd->closed(sock, true);
+									break;
+								}
+								continue;
+							}
+						
+							// Update the connection status
 							for (nit = qd->connected.begin();
 							     nit != qd->connected.end(); ++nit)
 							{
@@ -493,38 +547,36 @@ void *Clique::process(void *obj)
 									continue;
 								
 								// Socket disconnected
-								qd->closed((MsgSocket *) &*nit--);
-							}
-							
-							// A node sent a disconnect request
-							if (msg.size() == 1)
-							{
-								if (qd->find(sock)) sock->close();
-								continue;
+								qd->closed(nit--->second.sock);
 							}
 							
 							// A loss notification has arrived
 							Address remote = Address(string(msg[1]).c_str());
 							if (qd->connected.count(remote))
 							{
-								Message msg;
-								msg.push_back("@>");
-								for (nit = qd->connected.begin();
-								     nit != qd->connected.end(); ++nit)
-									if (&nit->second != node)
-										msg.push_back((string) nit->second);
-								node->sock->send(msg);
+								if (cmd != "@!!")
+								{
+									Message msg;
+									msg.push_back("@>");
+									for (nit = qd->connected.begin();
+									     nit != qd->connected.end(); ++nit)
+										if (&nit->second != node)
+											msg.push_back((string) nit->second);
+									node->sock->send(msg);
+								}
 							}
 							else if (!qd->lost.count(remote))
 							{
-								Message msg;
-								msg.push_back("@!");
-								msg.push_back(msg[1]);
-								for (nit = qd->connected.begin();
-								     nit != qd->connected.end(); ++nit)
-									nit->second.sock->send(msg);
+								if (cmd != "@!!")
+								{
+									msg[0] = "@!!";
+									for (nit = qd->connected.begin();
+									     nit != qd->connected.end(); ++nit)
+										nit->second.sock->send(msg);
+								}
 							}
-							qd->loose(remote);
+							else
+								qd->loose(remote);
 						}
 						else
 						{
@@ -552,7 +604,7 @@ void Clique::reset()
 	VPRIV(CliqueData, qd)
 	
 	pthread_cancel(qd->thread);
-		
+	
 	void *status;
 	pthread_join(qd->thread, &status);
 	
@@ -583,18 +635,18 @@ CliqueNode *CliqueData::find(MsgSocket *sock) const
 
 //------------------------------------------------------------------------------
 
-void CliqueData::closed(MsgSocket *sock)
+void CliqueData::closed(MsgSocket *sock, bool reply)
 {
 	CliqueNode *node = find(sock);
 	if (!node) return;
 	
-	delete sock;
-	connected.erase(node->remote);
-	loose(node->remote);
-	
 	Message msg;
-	msg.push_back("@!");
+	msg.push_back(reply  ? "@!!" : "@!");
 	msg.push_back((string) *node);
+	
+	loose(node->remote);
+	connected.erase(node->remote);
+	delete sock;
 	
 	NodeList::iterator nit;
 	for (nit = connected.begin(); nit != connected.end(); ++nit)
