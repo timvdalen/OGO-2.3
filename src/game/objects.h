@@ -25,6 +25,9 @@ using namespace Base::Alias;
 struct Boundingbox;
 class BoundedObject;
 class World;
+class Team;
+class Player;
+class LaserBeam;
 class Terrain;
 class Structure;
 class Mine;
@@ -32,6 +35,7 @@ class Building;
 class HeadQuarters;
 class DefenseTower;
 class ResourceMine;
+class Droppables;
 
 //! Represents a bounding box. 
 //! Point variables follow xyz where x is l(left) or r(ight), y is t(op) or b(ottom) and z is l(ow) or h(igh).
@@ -91,6 +95,39 @@ class World: public BoundedObject{
 
 		//! Draws the world
 		virtual void draw() {}
+};
+
+//! Represents a team
+class Team: public Object{
+	public:
+		//! The amount of resources this team has
+		Resource resources;
+
+		//! List of players in this team
+		vector<Player> players;
+};
+
+//! Represents a player
+class Player: public BoundedObject{
+	public:
+		//! Maximum health for this player
+		int maxHealth;
+
+		//! Health of this player
+		int health;
+
+		//! The time of the last shot this player fired
+		time_t lastShot;
+}
+
+//! Represents a laser beam
+class LaserBeam: public BoundedObject{
+	public:
+		//! The time this laser was fired
+		time_t fireTime;
+
+		//! The time this laser lives
+		time_t ttl;
 };
 
 //! Represents the terrain of the game
@@ -183,6 +220,22 @@ class ResourceMine: public Building{
 		  0, 0,
 		  0, 0,
 		  0) {}
+};
+
+//! Represents a droppable object
+class Droppable: public BoundedObject{
+	public:
+		//! The worth of this droppable
+		Resource worth;
+
+		//! The time this object was dropped
+		time_t dropped;
+
+		//! The time this object lives
+		time_t ttl;
+
+		//! The event fired when this droppable is picked up
+		void onPickup(World w){}
 };
 
 }
