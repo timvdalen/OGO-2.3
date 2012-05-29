@@ -83,6 +83,11 @@ int main(int argc, char *argv[])
 				cq.close();
 			else if (cmd == "!list")
 				cq.debug();
+			else if ((cmd == "!break") && (msg.size() > 1))
+			{
+				Address node(string(msg[1]).c_str());
+				cq.debugClose(node);
+			}
 			else if ((cmd == "!connect") && (msg.size() > 1))
 				cq.connect(Address(string(msg[1]).c_str()));
 		}

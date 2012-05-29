@@ -57,6 +57,7 @@ class Clique
 	bool select(int timeout = 0);
 	
 	void debug();
+	void debugClose(Address &node);
 	
 	private:
 	void *data;

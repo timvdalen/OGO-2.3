@@ -23,7 +23,8 @@ INCS     =  -I"../common"
 CXXINCS  =  -I"../common"
 OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
-           $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o
+           $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o      \
+           $(OBJDIR)materials.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread
@@ -93,3 +94,6 @@ $(OBJDIR)video.o: video_glut.cpp
 
 $(OBJDIR)netalg.o: netalg.cpp
 	$(CPP) -c netalg.cpp -o $(OBJDIR)netalg.o $(CXXFLAGS) 
+
+$(OBJDIR)materials.o: materials.cpp
+	$(CPP) -c materials.cpp -o $(OBJDIR)materials.o $(CXXFLAGS) 
