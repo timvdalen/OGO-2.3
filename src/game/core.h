@@ -28,7 +28,7 @@ using namespace Base;
 
 template <class type> class Handle;
 class Object; typedef Handle<Object> ObjectHandle;
-struct Material; typedef Handle<Material> MaterialHandle;
+class Material; typedef Handle<Material> MaterialHandle;
 typedef int Resource;
 typedef float Power;
 
@@ -36,8 +36,9 @@ typedef float Power;
 //                                Material
 
 //! Represents a material
-struct Material
+class Material
 {
+	public:
 	virtual void select() {}
 	virtual ~Material() {}
 };
