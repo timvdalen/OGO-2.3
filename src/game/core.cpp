@@ -27,6 +27,7 @@ void Object::setMaterial(){
 void Object::render()
 {
 	preRender();
+	material->select();
 	
 	setMaterial();
 	

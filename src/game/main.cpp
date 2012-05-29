@@ -13,6 +13,7 @@
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
+#include "materials.h"
 #include "video.h"
 
 using namespace Core;
@@ -27,7 +28,8 @@ struct Cuboid : public Object
 	Cuboid(Pd origin = Pd(), double S = 1) : Object(origin),
 	                                         u(Vd(S,0,0)),
 	                                         v(Vd(0,S,0)),
-	                                         w(Vd(0,0,S)) {}
+	                                         w(Vd(0,0,S))
+		{ material = Materials::ShadedMaterial(Cf(1,0,0,1)); }
 	
 	void rotate(Quaternion<double> Q) { Qd q = ~Q; u = q*u ;v = q*v; w = q*w; }
 	
@@ -39,7 +41,6 @@ struct Cuboid : public Object
 		Pd o = Vd(0,0,0);
 		Pd a = o + u + v + w;
 		
-		glColor3f(1.0, 0.0, 0.0);
 		glBegin(GL_QUADS);
 			Norm(u,w); Vert(o); Vert(o+u); Vert(o+u+w); Vert(o+w);
 			Norm(v,u); Vert(o); Vert(o+v); Vert(o+v+u); Vert(o+u);
@@ -60,19 +61,22 @@ int main(int argc, char *argv[])
 {
 	Video::Initialize(argc, argv);
 	Video::Window w1(640, 480, "Game");
+	Video::Viewport v1(1,1);
+	w1.viewports.push_back(&v1);
 	
-	Video::Viewport *v1 = new Video::Viewport(1, 1);
-	v1->camera.origin = Pd(0,2,10);
-	v1->camera.objective = Rd(Vd(0,0,1),90.0);
-	v1->world = Objects::World(100,100);
-	v1->world->children.insert(Cuboid(Pd( 2, 0, 0)));
-	v1->world->children.insert(Cuboid(Pd(-2, 0, 0)));
-	v1->world->children.insert(Cuboid(Pd( 0, 2, 0)));
-	v1->world->children.insert(Cuboid(Pd( 0,-2, 0)));
-	v1->world->children.insert(Cuboid(Pd( 0, 0, 2)));
-	v1->world->children.insert(Cuboid(Pd( 0, 0,-2)));
+	v1.camera.origin = Pd(0,0,0);
+	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 	
-	w1.viewports.insert(v1);
+	ObjectHandle cube = Cuboid(Pd(1,3,-7));
+	
+	Materials::ShadedMaterial mat = Materials::ShadedMaterial(Cf(1,0,0,1));
+	mat.emissive = Cf(0,.5,0,1);
+	cube->material = mat;
+	
+	v1.world = Objects::World(100,100);
+	v1.world->children.insert(cube);
+	
+	v1.camera.lookAt(cube->origin);
 	
 	Video::StartEventLoop();
 	

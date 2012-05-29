@@ -1,37 +1,63 @@
 
+/*
+ * Materials
+ *
+ * Date: 24-5-2012
+ *
+ * Description:
+ *
+ */
+
+#ifndef _MATERIALS_H
+#define _MATERIALS_H
+
+#include "base.h"
 #include "core.h"
-#include "video.h"
+
 
 //! Contains material classes
-namespace Material{
+namespace Materials {
+
+using namespace Core;
+using namespace Base::Alias;
 
 //------------------------------------------------------------------------------
 
-class ShadedMaterial : Material{
+class ShadedMaterial : public Material {
 	public:
-		//! The shininess of this material
-		GLfloat shininess;
+	//! The shininess of this material
+	float shininess;
 
-		//! The ambient light reflection
-		GLfloat *ambient[4];
+	//! The ambient light reflection
+	Color<float> ambient;
 
-		//! The diffuse light reflection
-		GLfloat *diffuse[4];
+	//! The diffuse light reflection
+	Color<float> diffuse;
 
-		//! The specular light reflection
-		GLfloat *specular[4];
+	//! The specular light reflection
+	Color<float> specular;
 
-		//! The emissive light reflection
-		GLfloat *emissive[4]; 
+	//! The emissive light reflection
+	Color<float> emissive; 
 
-		//! Constructs an empty Material
-		ShadedMaterial() {}
+	//! Constructs an empty Material
+	ShadedMaterial(const Cf &C = Cf(1,1,1,1))
+		: shininess(50.0), ambient(C), diffuse(C), specular(C), emissive(Cf(0,0,0,0)) {}
+	ShadedMaterial(const Cf &A, const Cf &D, const Cf &S, const Cf &E, float Y)
+		: shininess(Y), ambient(A), diffuse(D), specular(S), emissive(E) {}
 
-		//! Constructs a Material based on M
-		ShadedMaterial(Material M) {}
+	//! Constructs a Material based on M
+	//ShadedMaterial(Material M) {}
 
-		//! Applies this material to the OpenGL pipeline
-		virtual void select() {}
+	//! Applies this material to the OpenGL pipeline
+	virtual void select();
 };
 
-}
+//------------------------------------------------------------------------------
+
+} // namespace Material
+
+#endif // _MATERIAL_H
+
+//------------------------------------------------------------------------------
+

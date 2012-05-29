@@ -25,7 +25,7 @@
 	#include <GL/glu.h>
 #endif
 
-#include <set>
+#include <vector>
 
 #include "base.h"
 #include "core.h"
@@ -58,7 +58,7 @@ void StopEventLoop();
 class Window
 {
 	public:
-	std::set<Viewport *> viewports; //!< A collection of viewports the window shows
+	std::vector<Viewport *> viewports; //!< A collection of viewports the window shows
 	
 	//! Creates a new window width and height and window title and position
 	//! \note set the window positions -1 for a default position
@@ -80,6 +80,7 @@ class Window
 	
 	static std::set<Window *> windows;
 	static void display();
+	static void resize(int width, int height);
 };
 
 //------------------------------------------------------------------------------
@@ -88,6 +89,9 @@ struct Camera
 {
 	Point<double> origin;         //!< focal point
 	Quaternion<double> objective; //!< direction and focal length^W^W^W
+	
+	//! Rotates the camera so it looks at the specified point
+	void lookAt(const Point<double> &);
 };
 
 //------------------------------------------------------------------------------
