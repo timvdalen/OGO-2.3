@@ -338,11 +338,14 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	tv.tv_sec = timeout;
 	tv.tv_usec = 0;
 
-	fd_set rfds = 0, wfds = 0, efds = 0;
+	fd_set rfds, wfds, efds;
+	
+	FD_ZERO(&rfds);
+	FD_ZERO(&wfds);
+	FD_ZERO(&efds);
 
 	if (!read.empty())
 	{
-		FD_ZERO(&rfds);
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
 		{
 			SOCKET fd = (SOCKET) (*it)->data;
@@ -353,7 +356,6 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 
 	if (!write.empty())
 	{
-		FD_ZERO(&wfds);
 		for (List::iterator it = write.begin(); it != write.end(); ++it)
 		{
 			SOCKET fd = (SOCKET) (*it)->data;
@@ -364,7 +366,6 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 
 	if (!error.empty())
 	{
-		FD_ZERO(&efds);
 		for (List::iterator it = error.begin(); it != error.end(); ++it)
 		{
 			SOCKET fd = (SOCKET) (*it)->data;
