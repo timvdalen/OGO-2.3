@@ -1,0 +1,19 @@
+Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Tijdens het opzetten van het spel proberen we door deze berichten de token ring op te bouwen en ook een volledige graaf tussen alle spelers. De eerste message is het join request:
+\framebox[0.8\textwidth]{\textsc{
+GOOD-DAY, tid :name.
+}}
+
+Met deze message geeft connect de speler met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
+
+\framebox[0.8\textwidth]{\textsc{
+WELCOME, pid , version :iplist.
+}}
+
+Nadat de server een \textsc{GOOD-DAY} bericht heeft ontvangen stuurt de server het bovenstaande bericht als antwoord.
+\textsc{pid} wijst de speler een uniek \textsc{id} toe. \textsc{version} is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een String van alle ip-adressen in de standaard \textsc{cidr} notatie (Dat wil zeggen dat de een adres gerepresenteerd in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elke ip-adres wordt het karakter \emph{e} gebruikt om ip-adressen te onderscheiden.
+
+\framebox[0.8\textwidth]\textsc{
+SUP, pid, version :name.
+}}
+
+Deze message stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler id aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen.
