@@ -117,7 +117,6 @@ class Object
 
 	//! A \ref set of other objects that belong to this object	
 	set<ObjectHandle> children;
-	
 
 	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
 	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), Material M = Material()) : origin(P), rotation(R), material(M) {}

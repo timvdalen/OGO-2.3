@@ -26,7 +26,7 @@ using namespace Protocol;
 string queue = "";
 bool queueing = true;
 char *gets2(char *data, size_t len);
-char *printf2(const char *fmt, ...);
+void printf2(const char *fmt, ...);
 void *loop(void *);
 
 //------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ char *gets2(char *data, size_t len)
 
 //------------------------------------------------------------------------------
 
-char *printf2(const char *fmt, ...)
+void printf2(const char *fmt, ...)
 {
 	char buffer[1024];
 	va_list args;
