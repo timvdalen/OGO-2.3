@@ -5,7 +5,7 @@
 #if defined _WIN32
 	#include <gl\freeglut.h>
 #elif defined __APPLE__
-	#include <GLUT/freeglut.h>
+	#include <GL/freeglut.h>
 #else
 	#include <GL/freeglut.h>
 #endif

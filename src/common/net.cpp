@@ -102,14 +102,18 @@ Address::Address(const char *address, unsigned short port)
 	{
 		size_t len = ptr - address;
 		
-		char ip[len + 1];
+		char *ip = new char[len + 1];
 		memcpy(ip, address, len);
 		ip[len] = 0;
 		
 		if (getaddrinfo(ip, NULL, NULL, &result))
+		{
+			delete[] ip;
 			return;
+		}
 		
 		port = atoi(ptr + 1);
+		delete[] ip;
 	}
 	else if (getaddrinfo(address, NULL, NULL, &result))
 		return;
@@ -335,10 +339,13 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	tv.tv_usec = 0;
 
 	fd_set rfds, wfds, efds;
+	
+	FD_ZERO(&rfds);
+	FD_ZERO(&wfds);
+	FD_ZERO(&efds);
 
 	if (!read.empty())
 	{
-		FD_ZERO(&rfds);
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
 		{
 			SOCKET fd = (SOCKET) (*it)->data;
@@ -349,7 +356,6 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 
 	if (!write.empty())
 	{
-		FD_ZERO(&wfds);
 		for (List::iterator it = write.begin(); it != write.end(); ++it)
 		{
 			SOCKET fd = (SOCKET) (*it)->data;
@@ -360,7 +366,6 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 
 	if (!error.empty())
 	{
-		FD_ZERO(&efds);
 		for (List::iterator it = error.begin(); it != error.end(); ++it)
 		{
 			SOCKET fd = (SOCKET) (*it)->data;

@@ -1,88 +1,60 @@
+
+/*
+ * Materials
+ *
+ * Date: 24-5-2012
+ *
+ * Description:
+ *
+ */
+
 #ifndef _MATERIALS_H
 #define _MATERIALS_H
 
+#include "base.h"
 #include "core.h"
-#include "video.h"
+
 
 //! Contains material classes
-namespace Materials{
+namespace Materials {
+
+using namespace Core;
+using namespace Base::Alias;
 
 //------------------------------------------------------------------------------
 
-//! A material that is used in a lighted environment
 class ShadedMaterial : public Material {
-	private:
-		//! Initialize the material
-		void init(const GLfloat _shininess,
-			       	const GLfloat _ambient[4],
-			       	const GLfloat _diffuse[4],
-			       	const GLfloat _specular[4],
-			       	const GLfloat _emissive[4]);
-
 	public:
-		//! The shininess of this material
-		GLfloat shininess;
+	//! The shininess of this material
+	float shininess;
 
-		//! The ambient light reflection
-		GLfloat ambient[4];
+	//! The ambient light reflection
+	Color<float> ambient;
 
-		//! The diffuse light reflection
-		GLfloat diffuse[4];
+	//! The diffuse light reflection
+	Color<float> diffuse;
 
-		//! The specular light reflection
-		GLfloat specular[4];
+	//! The specular light reflection
+	Color<float> specular;
 
-		//! The emissive light reflection
-		GLfloat emissive[4]; 
+	//! The emissive light reflection
+	Color<float> emissive; 
 
-		//! Constructs a ShadedMaterial based on GLfloats
-		ShadedMaterial(const GLfloat _shininess,
-			       	const GLfloat _ambient1,
-			       	const GLfloat _ambient2,
-			       	const GLfloat _ambient3,
-			       	const GLfloat _ambient4,
-			     	const GLfloat _diffuse1,
-			       	const GLfloat _diffuse2,
-			       	const GLfloat _diffuse3,
-			       	const GLfloat _diffuse4,
-			     	const GLfloat _specular1,
-				const GLfloat _specular2,
-				const GLfloat _specular3,
-				const GLfloat _specular4,
-			     	const GLfloat _emissive1,
-				const GLfloat _emissive2,
-				const GLfloat _emissive3,
-				const GLfloat _emissive4);
+	//! Constructs an empty Material
+	ShadedMaterial(const Cf &C = Cf(1,1,1,1))
+		: shininess(50.0), ambient(C), diffuse(C), specular(C), emissive(Cf(0,0,0,0)) {}
+	ShadedMaterial(const Cf &A, const Cf &D, const Cf &S, const Cf &E, float Y)
+		: shininess(Y), ambient(A), diffuse(D), specular(S), emissive(E) {}
 
-		//! Constructs a ShadedMaterial based on GLfloat arrays
-		ShadedMaterial(const GLfloat _shininess,
-			       	const GLfloat _ambient[4],
-			       	const GLfloat _diffuse[4],
-			       	const GLfloat _specular[4],
-			       	const GLfloat _emissive[4]);
-
-		//! Constructs a ShadedMaterial based on M
-		ShadedMaterial(const ShadedMaterial &M);
-
-		//! Applies this material to the OpenGL pipeline
-		virtual void select();
+	//! Applies this material to the OpenGL pipeline
+	virtual void select();
 };
 
 //------------------------------------------------------------------------------
 
-//! A material that is used to clear the previous material settings
-//! If GL_BLEND is enabled and glBlendFunc GL_SRC_ALPHA is set to 
-//! GL_ONE_MINUS_SRC_ALPHA this will cause objects to be transparent.
-class EmptyMaterial : public ShadedMaterial {
-	public:
-		EmptyMaterial() : ShadedMaterial(0.0f, //Shininess
-				0.0f, 0.0f, 0.0f, 0.0f, //Ambient
-				0.0f, 0.0f, 0.0f, 0.0f, //Diffuse
-				0.0f, 0.0f, 0.0f, 0.0f, //Specular
-				0.0f, 0.0f, 0.0f, 0.0f) //Emissive
-       		{}
-};
+} // namespace Material
 
-}
+#endif // _MATERIAL_H
 
-#endif  /* _MATERIALS_H */
+//------------------------------------------------------------------------------
+
