@@ -102,14 +102,18 @@ Address::Address(const char *address, unsigned short port)
 	{
 		size_t len = ptr - address;
 		
-		char ip[len + 1];
+		char *ip = new char[len + 1];
 		memcpy(ip, address, len);
 		ip[len] = 0;
 		
 		if (getaddrinfo(ip, NULL, NULL, &result))
+		{
+			delete[] ip;
 			return;
+		}
 		
 		port = atoi(ptr + 1);
+		delete[] ip;
 	}
 	else if (getaddrinfo(address, NULL, NULL, &result))
 		return;
