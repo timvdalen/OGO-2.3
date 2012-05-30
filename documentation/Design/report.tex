@@ -54,22 +54,22 @@
 
     \subsubsection{Tijdens het spel}
     Tijdens het spel zal de gebruikersomgeving via \textsc{openGL} de lokale staat van het spel afbeelden op het scherm. Dit wordt gedaan door de \emph{render} methode van het object \emph{World} aan te roepen, die is beschreven in de sectie \ref{sec:model}. De gebruikersomgeving zal daarna alleen nog menu's, mogelijke kaarten en informatie als de sterkte van het harnas en de hoeveelheid geld op het scherm moeten aangeven (zoals beschreven in het document Informele Beschrijving). Door de 2D-modus van openGL te gebruiken kan dit gemakkelijk getekend worden boven op de grafische representatie van de wereld.
-    
+
 	De gebruikersomgeving zal ook het model aanpassen aan de hand van de interactie van de gebruiker met de omgeving. Om dit voor elkaar te krijgen vangt de gebruikersomgeving alle muisbewegingen, klikken en toetsenbord aanslagen op en associeert dit met een actie om het model aan te passen. Een verdere uitleg van de interactie tussen de gebruikersomgeving en het model is gegeven in \ref{sec:interactscenmodel}.
 
     \section{Onderlinge samenhang}
     De drie onderdelen, die wij hierboven beschreven hebben, moeten natuurlijk allemaal met elkaar kunnen communiceren. Deze communicatie zullen we nu beschrijven.
-    
+
     \subsection{Gebruikersomgeving en protocol module tijdens de opzet van het spel}
     De gebruikersomgeving en de protocol module communiceren tijdens de opzet van het spel compleet asymmetrisch. Dat wil zeggen dat het protocol op elk moment een bericht kan sturen naar de gebruikersomgeving en ook andersom. Om dit mogelijk te maken, heeft de protocol module verschillende functies ge\"implementeerd, die aangeroepen kunnen worden door de gebruikersomgeving. Deze kunnen bijvoorbeeld gebruikt worden om een nieuw spel aan te maken of mee te doen aan een bestaand spel. Op deze manier kan de gebruikersomgeving acties van de gebruiker omzetten in een actie van het protocol: de protocol module handelt dit dan af.
 
     De protocol module luistert actief naar binnenkomende berichten. Aangezien het protocol real-time verplichtingen heeft, zal de module gebruik maken van meerdere threads. Zo fungeert de module los van de gebruikersomgeving. Als er een bijzondere gebeurtenis heeft plaatsgevonden, kan het protocol dit doorgeven aan de gebruikersomgeving door middel van zogenaamde \emph{call-backs}. Dit zijn methoden die de gebruikersomgeving implementeert, zodat de protocol module informatie kan doorgeven aan de gebruikersomgeving. De gebruikersomgeving zal deze informatie zodanig moeten afhandelen zodat deze afgebeeld kan worden op het scherm.
 
     Niet alle communicatie van de protocol module en de gebruikersomgeving verloopt via call-backs en methoden, sommige informatie zal de protocol module namelijk niet als een gebeurtenis doorgeven. Deze informatie wordt louter opgeslagen in de protocol module en kan de gebruikersomgeving opvragen. Denk hierbij aan de lijst van spellen op het subnet, spelers in het spel, enzovoorts. Een voorbeeld van interactie van de gebruikersomgeving en protocol module is gegeven in een \textsc{msc} in de appendix \ref{app:MSCLobbyCon}.
-    
+
     \subsection{Model van de sc\`ene en de gebruikersomgeving tijdens het spel}
     Het model van de sc\`ene zal niet actief communiceren met de gebruikersomgeving tijdens het spel. Dat wil zeggen dat er geen asymmetrisch communicatie plaats vindt via call-backs. De gebruikersomgeving zal aan de hand van de invoer van de gebruiker het model aanpassen. De gebruikersomgeving zal ook de grafische representatie van de staat van het spel via het model extraheren. Het model maakt dit mogelijk door de beschreven \emph{render} methode in de interface \emph{object}. Het model zorgt voor enkele globale methoden die in \'e\'en keer een interactie van de gebruiker kan verwerken in het model. Hierdoor hoeft de gebruikersomgeving alleen een paar globale methoden aan te roepen. Hiermee voorkomen wij dat de gebruikersomgeving veel gebruik moet maken van de structuur van het model. Zo wordt de gebruikersomgeving minder afhankelijk van de implementatie van het model.
-    
+
     \section{Gedetailleerde klassenbeschrijving}
     De sc\`ene zullen wij beschrijven aan de hand van een klasse diagram, dit doen we op een \emph{top-down} manier bespreken. Een aantal basisklassen, zoals Point2d, Point3d en Vector3d, zijn hierin voor de overzichtelijkheid niet aangegeven. We maken bovendien de afspraak dat de types Percentage/Power/Time/Duration vrij kunnen worden gebruikt. Deze kunnen bijvoorbeeld reals of integers zijn, afhankelijk van de implementatie.  We zijn nu klaar om de gebruikte interfaces te bespreken.
 
