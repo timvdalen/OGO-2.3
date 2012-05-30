@@ -23,7 +23,7 @@ using namespace Video;
 class Controller
 {
 	public:
-	Camera &camera; //! Assigned camera
+	Camera &camera; //!< Assigned camera
 	
 	enum Direction
 	{
