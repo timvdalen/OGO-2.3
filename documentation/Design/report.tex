@@ -21,68 +21,79 @@
 	\section{Introductie}
 	\input{introduction}
 	\newpage
-    
-    
+
     \section{Beschrijving onderdelen}
     Wij verdelen de onderdelen op in drie zoveel mogelijk onafhankelijke onderdelen. Hierbij onderscheiden wij:
     \begin{itemize}
-    	\item Een onderdeel die het communiceren naar andere speler mogelijk maakt;
+    \item Een onderdeel die het communiceren naar andere speler mogelijk maakt;
 	\item Het model van de sc\`ene. Denk hierbij aan de staat, locatie en grafische modellen van gebouwen, spelers en het terrein;
 	\item De gebruikersomgeving die de interactie van de speler met het spel mogelijk maakt en ook het grafische model weergeeft tijdens het spel.
     \end{itemize}
-    
-    Als uitgangspunt ontwerpen wij de verschillende onderdelen dat elk van de onderdelen zoveel mogelijk zelfstandig ontwikkeld kunnen worden.
+
+    Als uitgangspunt ontwerpen wij de verschillende onderdelen zodanig dat elk van de onderdelen zo onafhankelijk mogelijk ontwikkeld kunnen worden.
     	
     \subsection{Protocol module}
-    	De protocol module is het onderdeel die het mogelijk maakt om:
+    De protocol module is het onderdeel die het mogelijk maakt om:
 	\begin{itemize}
-		\item Een nieuw spel, beginnend in de opstart fase, op te starten;
-		\item De lijst van alle spellen, welke in de opstart fase, in het subnet van de computer weer te geven;
-		\item Mee te doen met bestaand spel die in de opstart fase zit.
-		\item Het spel te beginnen;
-		\item Mutaties van het spel te ontvangen of te versturen.
+	\item Een nieuw spel op te starten. Het spel komt dan in de zogenaamde opstart fase. Andere spelers kunnen dan aan dit spel meedoen, ze komen dan in de lobby van dat spel;
+	\item De lijst van alle spellen, die nog in de opstart fase zijn, in het subnet van de computer weer te geven;
+	\item Mee te doen met een bestaand spel dat nog in de opstart fase zit;
+	\item Het spel te beginnen;
+	\item Mutaties van de staat van het spel te ontvangen en te versturen.
 	\end{itemize}
-	De manier waarop deze communicatie verloopt is beschreven in \protoref. Zodra de protocol module opgestart is, zal de module zijn taken uitvoeren, zonder actieve noodzaak om functies aan te roepen. Dit betekent, dat het protocol uit zichzelf berichten kan ontvangen en verwerken. Door middel van threads wordt er voor gezorgd dat de protocol de taken onafhankelijk kan uitvoeren.
-	    
-    \subsection{Het model van de sc\`ene}
-    Het model van de sc\`ene vervult twee rollen. Het houdt de huidige staat van het spel bij en zorgt ervoor dat de huidige staat van het spel afgebeeld kan worden op het scherm. Het idee is dat de protocol module en de gebruikersomgeving het model bijwerken naar de correcte staat. Hierdoor kan je het model als een passief element zien, het zal niet uit zichzelf acties uitvoeren (uitzonderingen daargelaten). Een diepgaande beschrijving van het model kan gevonden worden in sectie \ref{sec:model}
-    
-    \subsection{Gebruikersomgeving}
-   	Het onderdeel gebruikersomgeving moet zowel het grafische model van het spel afbeelden op het scherm als de interactie van de speler via het toetsenbord en muis afhandelen. Ook moet het onderdeel gebruikersomgeving het mogelijk maken voor de gebruiker om een spel in te starten of mee te doen aan een spel in de opstartfase.
-    
-    \subsubsection{Tijdens de opzet van het spel}
-    Tijdens het opzet van het spel zal de gebruikersomgeving een venster weer moeten geven met alle spellen in het subnet van de computer. De gebruiker kan dan kiezen om mee te doen aan het spel of zijn eigen spel te starten. Als de gebruiker het spel start kan kunnen andere gebruikers in hetzelfde subnet ook mee doen aan dit spel. Deze kunnen dan praten via een chat venster en aangeven of zei klaar zijn. Zodra iedereen heeft aangegeven dat iedereen klaar is om het spel te beginnen, kan de gebruiker het spel starten.
-    
-    \subsubsection{Tijdens het spel}
-    Tijdens het spel zal de gebruikersomgeving via \textsc{openGL} de (lokale) staat van het spel afbeelden op het scherm. Dit wordt gedaan door de \emph{render} methode van het object \emph{World} aan te roepen, welke beschreven is in sectie \ref{sec:model}. De gebruikersomgeving zal daarna alleen nog menu's, mogelijke kaarten en informatie als hoeveelheid leven en geld op het scherm moeten aangeven (zoals beschreven in het document Informele Beschrijving). Door de 2D-modus van opengl te gebruiken kan dit gemakkelijk getekend worden op boven op de grafische representatie van de wereld.
-	De gebruikersomgeving zal ook het model aanpassen aan de hand van de interactie van de gebruiker met de omgeving. Om dit voor elkaar te krijgen vangt de gebruikersomgeving alle muisbewegingen, klikken en toetsenbord aanslagen op en associeert dit met een actie om het model aan te passen. Een verdere uitleg van interactie van de gebruikersomgeving en het model is gegeven in \ref{sec:interactscenmodel}.
-    
+	De manier, waarop deze communicatie verloopt, is beschreven in \protoref. De gebruikersomgeving kan de protocol module een opdracht geven. Deze opdracht zal dan asynchroon worden uitgevoerd door de protocol module. Dit betekent dat het protocol uit zichzelf berichten kan ontvangen en verwerken. Door middel van threads wordt er voor gezorgd dat het protocol de taken onafhankelijk kan uitvoeren.
 	
-\section{Gedetailleerde klassenbeschrijving}
+    \subsection{Het model van de sc\`ene}
+    Het model van de sc\`ene vervult twee rollen. Het houdt de huidige staat van het spel bij en zorgt ervoor dat de huidige staat van het spel afgebeeld kan worden op het scherm. Het model is dus in principe een passief element, het zal niet uit zichzelf acties uitvoeren (uitzonderingen daargelaten). Een diepgaande beschrijving van het model kan gevonden worden in sectie \ref{sec:model}
 
-    De scene zullen wij beschrijven aan de hand van een klasse diagram, dit doen we op een \emph{top-down} manier bespreken. Een aantal basisklassen, zoals Point2d, Point3d en Vector3d,  zijn hierin voor de overzichtelijkheid niet aangegeven. We maken bovendien de afspraak dat de types Percentage/Power/Time/Duration vrij kunnen worden gebruikt. Deze kunnen bijvoorbeeld reals of integers zijn, afhankelijk van de implementatie.  We zijn nu klaar om de gebruikte interfaces te bespreken.
+    \subsection{Gebruikersomgeving}
+   	De gebruikersomgeving moet zowel het grafische model van het spel afbeelden op het scherm als de interactie van de speler via het toetsenbord en muis afhandelen. Ook moet de gebruikersomgeving het mogelijk maken voor de gebruiker om een spel op te starten of mee te doen aan een spel in de opstart fase.
+
+    \subsubsection{Tijdens de opzet van het spel}
+    Tijdens de opzet van het spel zal de gebruikersomgeving een venster weer moeten geven met alle spellen in het subnet van de computer. De gebruiker kan dan kiezen om mee te doen aan een van deze spellen of zijn eigen spel te openen. Als de gebruiker zelf een spel opent, kunnen andere gebruikers in hetzelfde subnet ook meedoen aan dit spel. Deze spelers kunnen dan met elkaar communiceren in een lobby. Hierin kunnen zij ook aangeven of zij klaar zijn om het spel te starten. Zodra alle gebruikers hebben aangegeven dat zij klaar zijn, kan spel worden gestart. De keuze om het spel te starten is dan aan de gebruiker, die ook het spel heeft geopend.
+
+    \subsubsection{Tijdens het spel}
+    Tijdens het spel zal de gebruikersomgeving via \textsc{openGL} de lokale staat van het spel afbeelden op het scherm. Dit wordt gedaan door de \emph{render} methode van het object \emph{World} aan te roepen, die is beschreven in de sectie \ref{sec:model}. De gebruikersomgeving zal daarna alleen nog menu's, mogelijke kaarten en informatie als de sterkte van het harnas en de hoeveelheid geld op het scherm moeten aangeven (zoals beschreven in het document Informele Beschrijving). Door de 2D-modus van openGL te gebruiken kan dit gemakkelijk getekend worden boven op de grafische representatie van de wereld.
+
+	De gebruikersomgeving zal ook het model aanpassen aan de hand van de interactie van de gebruiker met de omgeving. Om dit voor elkaar te krijgen vangt de gebruikersomgeving alle muisbewegingen, klikken en toetsenbord aanslagen op en associeert dit met een actie om het model aan te passen. Een verdere uitleg van de interactie tussen de gebruikersomgeving en het model is gegeven in \ref{sec:interactscenmodel}.
+
+    \section{Onderlinge samenhang}
+    De drie onderdelen, die wij hierboven beschreven hebben, moeten natuurlijk allemaal met elkaar kunnen communiceren. Deze communicatie zullen we nu beschrijven.
+
+    \subsection{Gebruikersomgeving en protocol module tijdens de opzet van het spel}
+    De gebruikersomgeving en de protocol module communiceren tijdens de opzet van het spel compleet asymmetrisch. Dat wil zeggen dat het protocol op elk moment een bericht kan sturen naar de gebruikersomgeving en ook andersom. Om dit mogelijk te maken, heeft de protocol module verschillende functies ge\"implementeerd, die aangeroepen kunnen worden door de gebruikersomgeving. Deze kunnen bijvoorbeeld gebruikt worden om een nieuw spel aan te maken of mee te doen aan een bestaand spel. Op deze manier kan de gebruikersomgeving acties van de gebruiker omzetten in een actie van het protocol: de protocol module handelt dit dan af.
+
+    De protocol module luistert actief naar binnenkomende berichten. Aangezien het protocol real-time verplichtingen heeft, zal de module gebruik maken van meerdere threads. Zo fungeert de module los van de gebruikersomgeving. Als er een bijzondere gebeurtenis heeft plaatsgevonden, kan het protocol dit doorgeven aan de gebruikersomgeving door middel van zogenaamde \emph{call-backs}. Dit zijn methoden die de gebruikersomgeving implementeert, zodat de protocol module informatie kan doorgeven aan de gebruikersomgeving. De gebruikersomgeving zal deze informatie zodanig moeten afhandelen zodat deze afgebeeld kan worden op het scherm.
+
+    Niet alle communicatie van de protocol module en de gebruikersomgeving verloopt via call-backs en methoden, sommige informatie zal de protocol module namelijk niet als een gebeurtenis doorgeven. Deze informatie wordt louter opgeslagen in de protocol module en kan de gebruikersomgeving opvragen. Denk hierbij aan de lijst van spellen op het subnet, spelers in het spel, enzovoorts. Een voorbeeld van interactie van de gebruikersomgeving en protocol module is gegeven in een \textsc{msc} in de appendix \ref{app:MSCLobbyCon}.
+
+    \subsection{Model van de sc\`ene en de gebruikersomgeving tijdens het spel}
+    Het model van de sc\`ene zal niet actief communiceren met de gebruikersomgeving tijdens het spel. Dat wil zeggen dat er geen asymmetrisch communicatie plaats vindt via call-backs. De gebruikersomgeving zal aan de hand van de invoer van de gebruiker het model aanpassen. De gebruikersomgeving zal ook de grafische representatie van de staat van het spel via het model extraheren. Het model maakt dit mogelijk door de beschreven \emph{render} methode in de interface \emph{object}. Het model zorgt voor enkele globale methoden die in \'e\'en keer een interactie van de gebruiker kan verwerken in het model. Hierdoor hoeft de gebruikersomgeving alleen een paar globale methoden aan te roepen. Hiermee voorkomen wij dat de gebruikersomgeving veel gebruik moet maken van de structuur van het model. Zo wordt de gebruikersomgeving minder afhankelijk van de implementatie van het model.
+
+    \section{Gedetailleerde klassenbeschrijving}
+    De sc\`ene zullen wij beschrijven aan de hand van een klasse diagram, dit doen we op een \emph{top-down} manier bespreken. Een aantal basisklassen, zoals Point2d, Point3d en Vector3d, zijn hierin voor de overzichtelijkheid niet aangegeven. We maken bovendien de afspraak dat de types Percentage/Power/Time/Duration vrij kunnen worden gebruikt. Deze kunnen bijvoorbeeld reals of integers zijn, afhankelijk van de implementatie.  We zijn nu klaar om de gebruikte interfaces te bespreken.
 
 \subsection{Interfaces}
-Er zijn twee interfaces in het klassediagram: de zogenaamde Object interface en BoundingObject interface. We geven het implementeren van een interface aan door $\langle\langle$ interface naam$\rangle \rangle$ voor de naam van de klasse, die de interface implementeert.  De klasse Object bevat een aantal standaard attributen om de conversie tussen globale en lokale co\"ordinaten te bewerkstelligen. Dit zijn origin, yaw, patch en roll. Hier zijn de hoeken yaw, pitch en roll in graden tussen 0 en 360. 0 is in dit geval inclusief, 360 is exclusief. 
+Er zijn twee interfaces in het klassendiagram: de zogenaamde Object interface en BoundingObject interface. We geven het implementeren van een interface aan door $\langle\langle$ interface naam$\rangle \rangle$ voor de naam van de klasse, die de interface implementeert.  De klasse Object bevat een aantal standaard attributen om de conversie tussen globale en lokale co\"ordinaten te bewerkstelligen. Dit zijn origin, yaw, patch en roll. Hier zijn de hoeken yaw, pitch en roll in graden tussen 0 en 360. 0 is in dit geval inclusief, 360 is exclusief.
 
-Bovendien bevat Object nog het attribuut children, dit is een array van Objects. De reden hiervoor is dat dit hi\"erarchisch modelleren mogelijk maakt. Vervolgens bevat Object nog een aantal methoden: draw, render, prerender en postrender. De prerender methode zorgt voor de transformatie van globale co\"ordinaten naar lokale co\"ordinaten. De postrender methode zorgt voor de transformatie van lokale co\"ordinaten naar globale co\"ordinaten. 
+Bovendien bevat Object nog het attribuut children, dit is een array van Objects. De reden hiervoor is dat dit hi\"erarchisch modelleren mogelijk maakt. Vervolgens bevat Object nog een aantal methoden: draw, render, prerender en postrender. De prerender methode zorgt voor de transformatie van globale co\"ordinaten naar lokale co\"ordinaten. De postrender methode zorgt voor de transformatie van lokale co\"ordinaten naar globale co\"ordinaten.
 
 De draw methode zorgt voor het tekenen zelf. Deze methode is natuurlijk abstract gemaakt. De render methode combineert alle voorgaande methoden: het roept eerst prerender aan. Vervolgens wordt draw aangeroepen. Daarna wordt ook de draw functie van de Objects in de children array aangeroepen. Als laatste wordt nog postrender aangeroepen.
 
-De interface BoundingObject is een subklasse van Object. De aard van deze type objecten is zodanig dat ze begrensd zijn. Hier hoort dus een corresponderende \emph{bounding box} bij. De bounding box staat in het attribuut bBox van het type BoundingBox. Ook in dit geval geldt dat de klasse BoundingBox niet in het klassediagram is opgenomen voor de overzichtelijkheid. 
+De interface BoundingObject is een subklasse van Object. De aard van deze type objecten is zodanig dat ze begrensd zijn. Hier hoort dus een corresponderende \emph{bounding box} bij. De bounding box staat in het attribuut bBox van het type BoundingBox. Ook in dit geval geldt dat de klasse BoundingBox niet in het klassendiagram is opgenomen voor de overzichtelijkheid.
 
 De bounding box is niet alleen handig voor het tekenen. Het is namelijk ook mogelijk met deze bounding box te testen voor \emph{collisions}. Hier wordt getest of er een collision plaatsvindt van het object met de lijn gegeven door het startpunt origin en met richting direction. Het object zelf of een van de children wordt teruggeven in het geval van een collision. Als er geen collision is, dan zullen we \emph{null} teruggeven. Dit kan bijvoorbeeld gebruikt worden bij het schieten.
 
 \subsection{Model van de sc\`ene}
     \label{sec:model}
-We zijn nu klaar om de klassen, die worden gebruikt om de sc\`ene te modelleren, te bespreken.  Al deze klassen implementeren de interface BoundedObject. Merk op dat de klasse Object dus niet gebruikt wordt, behalve dat BoundedObject een subklasse hiervan is. Deze klasse kan echter nuttig zijn voor verdere uitbreiding van het spel. We beginnen met de World klasse. Deze bevat een attribuut homePlayer van het type Player. Dit attribuut wordt gebruikt om de speler zelf te identificeren. 
+We zijn nu klaar om de klassen, die worden gebruikt om de sc\`ene te modelleren, te bespreken.  Al deze klassen implementeren de interface BoundedObject. Merk op dat de klasse Object dus niet gebruikt wordt, behalve dat BoundedObject een subklasse hiervan is. Deze klasse kan echter nuttig zijn voor verdere uitbreiding van het spel. We beginnen met de World klasse. Deze bevat een attribuut homePlayer van het type Player. Dit attribuut wordt gebruikt om de speler zelf te identificeren.
 
 De walkHomePlayer wordt gebruikt door de speler om rond te lopen door de wereld. Er wordt dan periodiek een bericht naar alle andere spelers gestuurd om dit door te geven. Verder wordt de walk functie van Player aangeroepen, deze functie wordt verderop nog besproken. De yesno boolean wordt gebruikt om aan te geven of de speler moet lopen of stoppen met lopen. De shootHomePlayer heeft een vergelijkbare interpretatie.
 
-De buildBuilding wordt gebruikt door de speler om een nieuw gebouw neer te zetten. Hiervoor moet natuurlijk een punt worden aangegeven op de grond en het gewenste gebouw. Het gewenste gebouw is dan van het type Building. Als laatste is er nog de functie pickup. Deze wordt gebruikt als een speler een object, zoals een muntje, opraapt. Merk op dat dit niet noodzakelijk de speler zelf hoeft te zijn. Opraapbare objecten zijn van het type Droppable. 
+De buildBuilding wordt gebruikt door de speler om een nieuw gebouw neer te zetten. Hiervoor moet natuurlijk een punt worden aangegeven op de grond en het gewenste gebouw. Het gewenste gebouw is dan van het type Building. Als laatste is er nog de functie pickup. Deze wordt gebruikt als een speler een object, zoals een muntje, opraapt. Merk op dat dit niet noodzakelijk de speler zelf hoeft te zijn. Opraapbare objecten zijn van het type Droppable.
 
 \subsubsection{Het terrein}
-World heeft een Terrain, die het terrein van de sc\'ene voorstelt. Het terrein wordt gemodelleerd door een grid. De methode groundCollision wordt gebruikt bij het bouwen van een gebouw. In deze methode wordt berekend welke cel van de grid is aangeklikt. Merk op dat de cellen van de grid worden aangeklikt met behulp van het vizier en dat het vizier altijd in de huidige kijkrichting staat. Voor groundCollision kan dus de huidige locatie en kijkrichting worden gebruikt. 
+World heeft een Terrain, die het terrein van de sc\'ene voorstelt. Het terrein wordt gemodelleerd door een grid. De methode groundCollision wordt gebruikt bij het bouwen van een gebouw. In deze methode wordt berekend welke cel van de grid is aangeklikt. Merk op dat de cellen van de grid worden aangeklikt met behulp van het vizier en dat het vizier altijd in de huidige kijkrichting staat. Voor groundCollision kan dus de huidige locatie en kijkrichting worden gebruikt.
 
 De methode getHeight geeft de hoogte van het terrein voor een zekere cel terug. Op dit moment is ons terrein in principe nog vlak, maar dit willen we later nog uitbreiden. Als we het terrein hoogte willen geven, is een mogelijke optie om dit in de grid op te slaan. Dit staat op dit moment nog niet in het klassendiagram: het is immers ook mogelijk om deze elke keer te berekenen bij eenvoudige terreinen.
 
@@ -91,7 +102,7 @@ Terrain heeft een array van Droppables en een matrix van Structures. Droppable s
 
 De klasse Structure is abstract: de klassen Mine en Building zijn de subklassen. In de klasse Mine wordt opgeslagen hoeveel inkomen deze mijn genereert in een zekere periode. Deze periode is vast voor alle mijnen. Hiervoor kunnen we dus een constante defini\"eren. De klasse Building is ook weer abstract. Een Building heeft altijd \'e\'en corresponderend team. Het heeft de attributen cost, income, buildTime, buildDuration, attackPower en health.
 
-Het attribuut cost staat voor de totale kosten van het gebouw. Income representeert het inkomen dat het gebouw genereert. Ook hier geldt dat de tijdseenheid vast is. BuildTime representeert het moment waarop de speler de opdracht heeft gegeven het gebouw neer te zetten, BuildDuration vertelt hoelang het bouwen duurt. Dit wordt gebruikt door de animatie van het gebouw. Het wordt verder gebruikt om te bepalen wanneer het neerzetten van het gebouw voltooid is. 
+Het attribuut cost staat voor de totale kosten van het gebouw. Income representeert het inkomen dat het gebouw genereert. Ook hier geldt dat de tijdseenheid vast is. BuildTime representeert het moment waarop de speler de opdracht heeft gegeven het gebouw neer te zetten, BuildDuration vertelt hoelang het bouwen duurt. Dit wordt gebruikt door de animatie van het gebouw. Het wordt verder gebruikt om te bepalen wanneer het neerzetten van het gebouw voltooid is.
 
 AttackPower geeft aan hoe ernstig het harnas wordt beschadigd, als het gebouw een speler neerschiet. Health geeft de sterkte van het gebouw aan: als de health nul wordt, gaat het gebouw kapot. We merken op dat de attributen income en attackPower geen betekenis hebben voor alle gebouwen. Zo heeft attackPower geen betekenis voor de resourceMine. Als dit het geval is, zal altijd de waarde 0 moeten worden gekozen voor dit attribuut.
 
@@ -109,10 +120,9 @@ Als laatste heeft de World nog een Camera. We laten het nog open voor de impleme
 
 \subsection{Statische objecten}
 Er is nog \'e\'en cruciaal statisch object voor de implementatie van het spel, waarvan de functies door alle andere klassen kunnen worden gebruikt. Dit is de klasse Communicator, die de communicatie met andere spelers verzorgt.  Voor een uitgebreide beschrijving van het protocol, zie \protoref. Met een boolean in deze klasse wordt aangegeven of dit proces de token heeft. Verder wordt opgeslagen wanneer de token voor het laatst wordt ontvangen. Hiervoor gebruiken we het type Date, die de huidige tijd representeert.
-% INSERT REFERENCE
 % methode uitleg van Communicator, ging veranderen toch?
 
-De klasse Communicator maakt gebruik van de klasse Message. De klasse Message representeert het bericht dat moet worden verzonden. Het heeft een attribuut type, die het soort bericht aangeeft. Dit attribuut is van het type MessageType, dat voor de overzichtelijkheid is weggelaten uit het klassediagram. MessageType is immers een simpele enumeratie.
+De klasse Communicator maakt gebruik van de klasse Message. De klasse Message representeert het bericht dat moet worden verzonden. Het heeft een attribuut type, die het soort bericht aangeeft. Dit attribuut is van het type MessageType, dat voor de overzichtelijkheid is weggelaten uit het klassendiagram. MessageType is immers een simpele enumeratie.
 
 Verder heeft Message nog een boolean requiresToken, die aangeeft of de token vereist is om dit soort bericht te mogen versturen.  Als laatste heeft het message nog een array van argumenten. Het type Argument hangt af van de implementatie, hiervoor kan bijvoorbeeld string of byte worden gekozen. Verder zijn er nog de methoden addInteger, addReal, addString, addIntegers en addReals. Deze methoden voegen de type in de naam van de methode toe aan het bericht.
 
@@ -140,10 +150,10 @@ Verder heeft Message nog een boolean requiresToken, die aangeeft of de token ver
     We zullen nu alle gebruikte berichten afgaan met een korte toelichting. Hierbij kijken we vooral naar het nut van de ontvanger. Hiervoor gebruiken we een aantal conventies. We zullen voor de leesbaarheid komma's plaatsen tussen de verschillende argumenten. Deze zijn dus niet deel van het bericht. Ook zullen we de commando's laten eindigen met een punt, dit moet dan worden gelezen als CR LF.
 
     \subsection{Server detectie}
-    Het \emph{Broadcast} bericht wordt gebruikt voor het detecteren van servers tijdens de initialisatie. Dit bericht word periodiek door servers verstuurd met behulp van broadcast over UDP. We hebben ervoor gekozen om dit bericht elke vijf seconden te sturen. De wachttijd voor de gebruikers is dan nog steeds verwaarloosbaar, terwijl het netwerk nauwelijks wordt belast. 
-    
+    Het \emph{Broadcast} bericht wordt gebruikt voor het detecteren van servers tijdens de initialisatie. Dit bericht word periodiek door servers verstuurd met behulp van broadcast over UDP. We hebben ervoor gekozen om dit bericht elke vijf seconden te sturen. De wachttijd voor de gebruikers is dan nog steeds verwaarloosbaar, terwijl het netwerk nauwelijks wordt belast.
+
     Spelers moeten continu voor deze Broadcast berichten scannen. De gevonden servers worden dan in een lijst gezet. De speler kan dan uit deze lijst van servers kiezen. Hierdoor kunnen processen in hetzelfde subnet een server vinden. We geven ook de mogelijkheid om direct het ip van de server op te geven. Dit heeft het grote voordeel dat het mogelijk wordt om ook te spelen met spelers buiten het lokale netwerk. Merk op dat de server natuurlijk alleen wordt gebruikt voor het opzetten van het spel.
-    
+
     Het bericht bevat de versie van het spel en het huidige aantal spelers. Bovendien bevat het de naam van het spel. Het bericht heeft de volgende syntax:
     \[
     \text{GOTO, version, numPlayers :gameName.}
@@ -201,36 +211,36 @@ Verder heeft Message nog een boolean requiresToken, die aangeeft of de token ver
     \text{CHAT, pid :msg.}
     \]
     Merk op dat er soms twee commando's zijn met dezelfde naam. Deze zijn echter zeer eenvoudig van elkaar te onderscheiden. In dit geval is er namelijk voor gezorgd dat \'e\'en commando alleen door de clients wordt verzonden en het andere commando alleen door de server. Hierdoor ontvangt elke speler nooit meer dan \'e\'en van de twee type commando's.
-    
+
     % TODO: berichten tijdens het spel.
-    
+
     \section{De opbouw van de graaf}
-    Het protocol zal een volledige graaf proberen op te bouwen. Dit wordt gedaan tijdens de lobby fase van het spel. We weten dat er tijdens de lobby fase een server is. Elk proces probeert nu een TCP-connectie te maken met deze server. Zodra deze TCP-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle adressen van processen, waarmee de server nu is verbonden. Het proces is dan zelf verantwoordelijk om een TCP-connectie aan te gaan met elk proces in deze lijst.
-    
+    Het protocol zal een volledige graaf proberen op te bouwen. Dit wordt gedaan tijdens de lobby fase van het spel. We weten dat er tijdens de lobby fase een server is. Elk proces probeert nu een TCP-connectie te maken met deze server. Zodra deze TCP-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle adressen van processen, waarmee de server nu is verbonden. Verbindingen uit de lobby fase tellen hierbij dus niet mee. Het proces is dan zelf verantwoordelijk om een TCP-connectie aan te gaan met elk proces in deze lijst.
+
     Dit betekent dat op elk willekeurig moment een aanvraag voor een TCP-connectie kan binnenkomen bij processen, die al een TCP-connectie met de server hebben. Kortom, elk proces zal regelmatig moeten controleren op aanvragen voor een TCP-connectie. Als de volledige graaf is opgebouwd, staan alle processen op gelijke voet. Op dat moment kan het spel beginnen.
-    
+
     \section{Het protocol tijdens het spel}
     De staat van het spel wordt uniek vastgelegd door de waarde van alle variabelen, inclusief de toestand van alle TCP-connecties. Het is echter ondoenlijk om alle waarden van de variabelen voortdurend te versturen over de TCP-connecties. Daarom zal elke speler een replica van het spel hebben. Deze replica's moeten natuurlijk zodanig worden gesynchroniseerd dat spelers niet doorhebben dat hun replica's op kleine details tijdelijk kunnen verschillen.
-    
+
     \subsection{Reliable en unreliable variabelen}
     We maken daarom onderscheid tussen twee soorten variabelen, \emph{reliable} en \emph{unreliable}. Reliable variabelen moeten gelijk zijn voor alle replica's om inconsistentie te voorkomen. Unreliable variabelen mogen wel verschillen tussen de spelers. Deze kunnen dus worden `gesimuleerd' door spelers. Om de reliable variabelen consistent te houden hebben we zogenaamde \emph{mutual exclusion} nodig. Een goed voorbeeld hiervan is het oprapen van een muntje.
-    
+
     We pakken dit probleem aan door de notie van autoriteit te introduceren. Op elk moment heeft precies \'e\'en proces autoriteit. Als het proces autoriteit heeft, dan mag reliable variabelen veranderen. Hiervoor wordt een bericht naar elk ander proces gestuurd. Het proces wacht dan totdat iedereen heeft teruggestuurd dat dit bericht is ontvangen. Als het proces alle wijzigingen van reliable variabelen heeft doorgegeven, krijgt een ander proces autoriteit.
-    
+
     \subsection{De token ring}
-    De volgende vraag is nu hoe we deze notie van autoriteit gaan verwerken in het protocol. Dit doen we door gebruik te maken van een \emph{token ring}. We bouwen tijdens de lobby fase ook een ring op tussen alle processen. Dit doen we pas nadat de volledige graaf al is opgebouwd. Een mogelijke aanpak om dan een ring op te bouwen is om aan ieder proces een verschillend element uit een totaal geordend domein toe te kennen. 
-    
+    De volgende vraag is nu hoe we deze notie van autoriteit gaan verwerken in het protocol. Dit doen we door gebruik te maken van een \emph{token ring}. We bouwen tijdens de lobby fase (opstart fase) ook een ring op tussen alle processen. Dit doen we pas nadat de volledige graaf al is opgebouwd. Een mogelijke aanpak om dan een ring op te bouwen is om aan ieder proces een verschillend element uit een totaal geordend domein toe te kennen.
+
     We kunnen dit beschouwen als een injectieve functie $f$ van de verzameling processen $P$ naar een totaal geordende domein. Aangezien er sprake is van een totaal geordend domein, kunnen we deze waarden sorteren. Stel nu dat $P = \{ p_1, \ldots p_n\}$. Dit geeft ons een permutatie $\sigma$ zodanig dat:
     \[
     f(p_{\sigma(1)}) < f(p_{\sigma(2)}) < \ldots < f(p_{\sigma(n)})
     \]
     We verbinden nu $p_{\sigma(1)}$ met $p_{\sigma(2)}$, $p_{\sigma(2)}$ met $p_{\sigma(3)}$ enzovoorts. Bovendien verbinden we $p_{\sigma(n)}$ met $p_{\sigma(1)}$. We zijn er nu dus in geslaagd om de ring te construeren. Voor het totaal geordende domein kunnen we ip-processen gebruiken, zodat uniciteit is gegarandeerd.
-    
+
     Zodra een proces het token heeft, heeft het proces autoriteit. Het kan dan alle gewenste veranderingen van de reliable variabelen doorsturen over de volledige graaf. De andere processen zullen dan een \emph{acknowledgement} terugsturen dat dit bericht is ontvangen. Zodra alle acknowledgements van de andere processen zijn ontvangen, zal het proces de token zo snel mogelijk doorsturen naar het volgende proces in de ring. Dit zorgt ervoor dat elk proces binnen een eindige hoeveelheid tijd de token krijgt. Er is dus een zekere vorm van \emph{fairness}.
-        
+
     \subsection{Simulatie}
     Sommige acties mogen ook worden uitgevoerd wanneer het desbetreffende proces niet de token heeft. Een speler mag bijvoorbeeld vrij rondlopen zonder dit te vragen aan alle andere spelers. Dit kan ervoor zorgen dat niet alle processen exact dezelfde staat hebben. Het is echter voldoende als alle processen naar dezelfde staat convergeren. We zullen dit verder toelichten aan de hand van een voorbeeld.
-    
+
     Een proces zal de positie van alle andere spelers simuleren. Dit wordt gedaan met behulp van de locatie en de looprichting. De actuele locatie en looprichting van de desbetreffende speler zal periodiek over de volledige graaf worden verstuurd. Om eventuele problemen te voorkomen zou deze periode redelijk klein moeten zijn. In de tussentijd zal het proces de huidige locatie en looprichting van de speler benaderen door de speler simpelweg `verder' te laten lopen. Merk op dat op deze manier de speler ten alle tijden de baas blijft over zijn eigen locatie.
 
     \section{Aannamen}
@@ -238,31 +248,19 @@ Verder heeft Message nog een boolean requiresToken, die aangeeft of de token ver
 
     Een speler kan dan een keuze maken tussen alle servers, waarvan een \emph{Broadcast} bericht is ontvangen. De speler gaat dan een TCP-connectie aan met de uitgekozen server. We nemen aan dat deze TCP-connectie succesvol wordt aangemaakt. Bovendien nemen we aan dat TCP inderdaad voldoet aan de FIFO-eigenschap. Verder nemen we aan dat berichten over TCP ook aankomen, eventueel nadat dit bericht een aantal keer opnieuw is verstuurd.
 
-    Verder maken we nog een aantal simpele aannamen over de snelheid van het netwerk en de computers. De gebruikte berichten zijn allemaal zeer klein. We verwachten daarom dat er elke seconde zonder problemen 300 berichten over het netwerk kunnen worden verstuurd. Dit zou ruim voldoende moeten zijn om de replica's goede benaderingen van de werkelijke staat te laten zijn. Hiermee bedoelen we met een goede benadering dat het verschil met de werkelijke staat niet zou moeten opvallen voor de spelers. 
-    
-    De helft van de RTT, oftewel de \emph{Round-Trip Time}, is een goede benadering voor hoe lang het duurt om een bericht te versturen. We gaan ervan uit dat de RTT kleiner is dan 200 ms. Deze aanname is zeker realistisch, aangezien de spelers in principe op hetzelfde subnet zitten. Vanwege de aanname op de RTT krijgen we ook een harde grens op hoeveel de replica's kunnen afwijken.
-        
-    \section{Onderlinge samenhang}
-    De drie onderdelen die wij hierboven beschreven hebben communiceren allemaal op een bepaalde manier manier met elkaar. Dit verschilt per onderdeel.
-    \subsection{Gebruikersomgeving en protocol module tijdens de opzet van het spel}
-    De gebruikersomgeving en de protocol module communiceren tijdens de opzet van het spel compleet assymmetrisch. Dat wil zeggen, dat de protocol op elk moment een bericht kan sturen naar de gebruikersomgeving en ook andersom. Om dit mogelijk te maken, heeft de protocol module functie ge\"implementeerd die aangeroepen kunnen worden door de gebruikersomgeving. Deze kunnen bijvoorbeeld gebruikt worden om een nieuw spel aan te maken of mee te doen aan een bestaand spel. Op deze manier kan de gebruikersomgeving de interactie van de gebruiker omzetten in een actie van het protocol en zo communiceren met andere gebruikers.
-    
-    De protocol module luistert actief naar zijn poorten. Aangezien het protocol real-time verplichtingen oplegt zal de module gebruik maken van meerdere threads. Zo fungeert de module los van de gebruikersomgeving. Als er een bijzondere gebeurtenis heeft plaatsgevonden, kan het protocol dit door geven aan de gebruikersomgeving door middel van zogenaamde \emph{call-backs}. Dit zijn methoden die gebruikersomgeving implementeert, zodat de protocol module informatie kan door geven aan de gebruikersomgeving. De gebruikersomgeving zal deze informatie zodanig moeten afhandelen zodat deze afgebeeld kan worden op het scherm.
-    
-    Niet alle communicatie van de protocol module en de gebruikersomgeving verloopt via call-backs en methoden, sommige informatie zal de protocol module namelijk niet als een gebeurtenis door geven. Deze informatie wordt louter op geslagen in de protocol module en kan de gebruikersomgeving op vragen. Denk hierbij aan de lijst van spellen op het subnet, spelers in het spel, enzovoort. Een voorbeeld van interactie van de gebruikersomgeving en protocol module is gegeven in een \textsc{msc} in appendix \ref{app:MSCLobbyCon}.
-    \subsection{Model van de sc\'ene en de gebruikersomgeving tijdens het spel}
-    Het model van de sc\`ene zal niet actief communiceren met de gebruikersomgeving tijdens het spel. Dat wil zeggen dat er geen assymmetrisch communicatie plaats vindt via call-backs en dergelijken. De gebruikersomgeving zal aan de hand van de invoer van de gebruiker het model aanpassen. De gebruikersomgeving zal ook de grafische representatie van de staat van het spel via het model extraheren. Het model faciliteert dit door de beschreven \emph{render} methode in de interface \emph{object}. Het model zorgt voor veel globale methoden die in \'e\'en keer een interactie van de gebruiker af kan verwerken in het model. Hierdoor hoeft de gebruikersomgeving alleen een paar globale methoden aan te roepen. Hier mee voorkomen wij dat de gebruikersomgeving veel gebruik moet maken van de structuur van het model. Zo wordt de gebruikersomgeving minder afhankelijk van de implementatie van het model.
-    
-    
+    Verder maken we nog een aantal simpele aannamen over de snelheid van het netwerk en de computers. De gebruikte berichten zijn allemaal zeer klein. We verwachten daarom dat er elke seconde zonder problemen 300 berichten over het netwerk kunnen worden verstuurd. Dit zou ruim voldoende moeten zijn om de replica's goede benaderingen van de werkelijke staat te laten zijn. Hiermee bedoelen we met een goede benadering dat het verschil met de werkelijke staat niet zou moeten opvallen voor de spelers.
+
+    De helft van de RTT, oftewel de \emph{Round-Trip Time}, is een goede benadering voor hoe lang het duurt om een bericht te versturen. We gaan ervan uit dat de RTT kleiner is dan 200 ms. Deze aanname is zeker realistisch, aangezien de spelers in principe op hetzelfde subnet zitten. Vanwege deze aanname krijgen we ook een harde grens op de maximale afwijking van de replica's.
+
     \label{sec:interactscenmodel}
     \newpage
     \appendix
-    \section{Klasse-diagrammen (UML)}
+    \section{Klassendiagrammen (UML)}
     \subsection{Interfaces}
     \begin{figure}[h]
     \centering
     	\includegraphics{../Class-diagram/Interfaces.pdf}
-    	\caption{De verscheidene interfaces welke ge\"implementeerd wordt door klassen in het model van de sc\`ene}
+    	\caption{De verscheidene interfaces die ge\"implementeerd worden door klassen in het model van de sc\`ene}
     \end{figure}
     \label{app:Interfaces}
     \FloatBarrier
@@ -279,7 +277,7 @@ Verder heeft Message nog een boolean requiresToken, die aangeeft of de token ver
     \begin{figure}[h]
         \centering
     	\includegraphics{../Class-diagram/SceneModel.pdf}
-	\caption{Het klasse diagram van de modellering van de sc\`enes.}
+	\caption{Het klassendiagram voor het model van de sc\`ene.}
     \end{figure}
     \label{app:Scene}
     \FloatBarrier
