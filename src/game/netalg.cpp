@@ -37,8 +37,8 @@
 		host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
 		clock_get_time(cclock, &mts);
 		mach_port_deallocate(mach_task_self(), cclock);
-		tsp.tv_sec = mts.tv_sec;
-		tsp.tv_nsec = mts.tv_nsec;
+		tsp->tv_sec = mts.tv_sec;
+		tsp->tv_nsec = mts.tv_nsec;
 	}
 #else
 	#define getthetime(tsp) clock_gettime(CLOCK_REALTIME, tsp)
