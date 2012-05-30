@@ -120,7 +120,6 @@ Als laatste heeft de World nog een Camera. We laten het nog open voor de impleme
 
 \subsection{Statische objecten}
 Er is nog \'e\'en cruciaal statisch object voor de implementatie van het spel, waarvan de functies door alle andere klassen kunnen worden gebruikt. Dit is de klasse Communicator, die de communicatie met andere spelers verzorgt.  Voor een uitgebreide beschrijving van het protocol, zie \protoref. Met een boolean in deze klasse wordt aangegeven of dit proces de token heeft. Verder wordt opgeslagen wanneer de token voor het laatst wordt ontvangen. Hiervoor gebruiken we het type Date, die de huidige tijd representeert.
-% INSERT REFERENCE
 % methode uitleg van Communicator, ging veranderen toch?
 
 De klasse Communicator maakt gebruik van de klasse Message. De klasse Message representeert het bericht dat moet worden verzonden. Het heeft een attribuut type, die het soort bericht aangeeft. Dit attribuut is van het type MessageType, dat voor de overzichtelijkheid is weggelaten uit het klassendiagram. MessageType is immers een simpele enumeratie.
