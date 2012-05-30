@@ -338,7 +338,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	tv.tv_sec = timeout;
 	tv.tv_usec = 0;
 
-	fd_set rfds, wfds, efds;
+	fd_set rfds = 0, wfds = 0, efds = 0;
 
 	if (!read.empty())
 	{
