@@ -10,7 +10,7 @@ namespace Objects {
 
 ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
 {
-	return (0);
+	return (Object());
 }
 
 //------------------------------------------------------------------------------
