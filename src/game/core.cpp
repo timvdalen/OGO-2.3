@@ -18,18 +18,11 @@ void Object::preRender()
 
 //------------------------------------------------------------------------------
 
-void Object::setMaterial(){
-	material.select();
-}
-
-//------------------------------------------------------------------------------
-
 void Object::render()
 {
 	preRender();
-	material.select();
 	
-	setMaterial();
+	material->select();
 	
 	draw();
 	

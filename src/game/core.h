@@ -34,61 +34,6 @@ typedef int Resource;
 typedef float Power;
 
 //------------------------------------------------------------------------------
-//                                Material
-
-//! Represents a material
-class Material
-{
-	public:
-	virtual void select() {}
-	virtual ~Material() {}
-};
-
-//------------------------------------------------------------------------------
-//                                Object
-//! Represents an object in the game
-class Object
-{
-	public:
-
-	//! The origin of this object
-	Point<double> origin;
-
-	//! The rotation of this object
-	Quaternion<double> rotation;
-
-	//! The \ref Material of this object
-	Material material;
-
-	//! A \ref set of other objects that belong to this object	
-	set<ObjectHandle> children;
-	
-
-	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
-	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), Material M = Material()) : origin(P), rotation(R), material(M) {}
-
-	//! Destroys all children and then terminates
-	virtual ~Object() {}
-
-	//! Sets up translations and rotations
-	virtual void preRender();
-
-	//! Sets up the material for this object
-	virtual void setMaterial();
-
-	//! Draw the object
-	virtual void draw();
-
-	//! Draws the objects children and pop the translations and rotations
-	virtual void postRender();
-
-	//! Renders the object. This calls preRender(), draw() and postRender() in that order
-	virtual void render();
-
-
-};
-
-//------------------------------------------------------------------------------
 //                                Handle
 // Provides basic garbage collection
 
@@ -141,6 +86,58 @@ class Handle
 	inline bool operator <(const Handle<type> &H) const { return ref < H.ref; }
 	inline bool operator ==(const Handle<type> &H) const { return ref == H.ref; }
 	inline bool operator !=(const Handle<type> &H) const { return ref != H.ref; }
+};
+
+//------------------------------------------------------------------------------
+//                                Material
+
+//! Represents a material
+class Material
+{
+	public:
+	virtual void select() {}
+	virtual ~Material() {}
+};
+
+//------------------------------------------------------------------------------
+//                                Object
+//! Represents an object in the game
+class Object
+{
+	public:
+
+	//! The origin of this object
+	Point<double> origin;
+
+	//! The rotation of this object
+	Quaternion<double> rotation;
+
+	//! The \ref Material of this object
+	MaterialHandle material;
+
+	//! A \ref set of other objects that belong to this object	
+	set<ObjectHandle> children;
+	
+
+	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
+	Object(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), Material M = Material()) : origin(P), rotation(R), material(M) {}
+
+	//! Destroys all children and then terminates
+	virtual ~Object() {}
+
+	//! Sets up translations and rotations
+	virtual void preRender();
+
+	//! Draw the object
+	virtual void draw();
+
+	//! Draws the objects children and pop the translations and rotations
+	virtual void postRender();
+
+	//! Renders the object. This calls preRender(), draw() and postRender() in that order
+	virtual void render();
+
+
 };
 
 //------------------------------------------------------------------------------

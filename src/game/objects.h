@@ -10,9 +10,12 @@
 #ifndef _OBJECTS_H
 #define _OBJECTS_H
 
-#include "core.h"
-#include <map>
 #include <time.h>
+
+#include <map>
+#include <vector>
+
+#include "core.h"
 
 //------------------------------------------------------------------------------
 
@@ -118,7 +121,7 @@ class Player: public BoundedObject{
 
 		//! The time of the last shot this player fired
 		time_t lastShot;
-}
+};
 
 //! Represents a laser beam
 class LaserBeam: public BoundedObject{
