@@ -1,10 +1,10 @@
 var searchData=
 [
   ['object',['Object',['../class_core_1_1_object.html',1,'Core']]],
-  ['object',['Object',['../class_loader_1_1_object.html',1,'Loader']]],
   ['object',['Object',['../class_core_1_1_object.html#a4f3d3405a7350b2bc556e3c7ce35ee14',1,'Core::Object']]],
   ['objective',['objective',['../struct_video_1_1_camera.html#a1a8b6ce6913d3e7cccadf0cb0d07f268',1,'Video::Camera']]],
   ['objects',['Objects',['../namespace_objects.html',1,'']]],
+  ['onpickup',['onPickup',['../class_objects_1_1_droppable.html#ae9b1d8d7a926c67a7b6c6151325c9396',1,'Objects::Droppable']]],
   ['operator_21',['operator!',['../struct_base_1_1_vector.html#ae179e73b345dd52b27077c061cbadddd',1,'Base::Vector::operator!()'],['../struct_base_1_1_quaternion.html#ac22a0313d2f6dd4521e5bf631861f4ad',1,'Base::Quaternion::operator!()']]],
   ['operator_2a',['operator*',['../struct_base_1_1_vector.html#a7208e265a5e6172405fdf8b83ac520bb',1,'Base::Vector::operator*(const type &amp;S) const '],['../struct_base_1_1_vector.html#a7fad2713652b05de6fd0d76c5dbe05b1',1,'Base::Vector::operator*(const Vector&lt; type &gt; &amp;V) const '],['../struct_base_1_1_quaternion.html#a86ac897ca780f9cfea0049df906bff8e',1,'Base::Quaternion::operator*(const type &amp;S) const '],['../struct_base_1_1_quaternion.html#ab3d025b80c55a803df3163f49ccb4b43',1,'Base::Quaternion::operator*(const Quaternion &amp;Q) const '],['../struct_base_1_1_quaternion.html#abdce64c15bc88836c7dfe92976998029',1,'Base::Quaternion::operator*(const Vector&lt; type &gt; &amp;V) const ']]],
   ['operator_2b',['operator+',['../struct_base_1_1_point.html#adc79c911cb4ac0e35cbd1e6329585d67',1,'Base::Point::operator+()'],['../struct_base_1_1_vector.html#ac02e96d0bf7dcef519815d7efed5ece0',1,'Base::Vector::operator+()'],['../struct_base_1_1_quaternion.html#ae3ef875f29657da38ddae6c0f879d0ab',1,'Base::Quaternion::operator+()']]],

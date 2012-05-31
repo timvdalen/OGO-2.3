@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['emissive',['emissive',['../class_material_1_1_shaded_material.html#a5bf122ecd3bed6d8a621542f55434866',1,'Material::ShadedMaterial']]]
+  ['emissive',['emissive',['../class_materials_1_1_shaded_material.html#a05a2504a876c81dbcb1b948f82d95775',1,'Materials::ShadedMaterial']]]
 ];

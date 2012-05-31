@@ -1,6 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,277,135,472"/>
-<area shape="rect" id="node9" href="$struct_net_1_1_u_d_p_socket.html" title="A message based connectionless internet socket." alt="" coords="159,292,277,457"/>
-<area shape="rect" id="node5" href="$struct_protocol_1_1_text_socket.html" title="Text based stream socket." alt="" coords="6,520,148,656"/>
-<area shape="rect" id="node7" href="$struct_protocol_1_1_msg_socket.html" title="Message based socket." alt="" coords="5,704,149,840"/>
+<area shape="rect" id="node3" href="$struct_net_1_1_t_c_p_socket.html" title="A stream based connection internet socket." alt="" coords="19,293,135,488"/>
+<area shape="rect" id="node9" href="$struct_net_1_1_u_d_p_socket.html" title="A message based connectionless internet socket." alt="" coords="159,308,277,473"/>
+<area shape="rect" id="node5" href="$struct_protocol_1_1_text_socket.html" title="Text based stream socket." alt="" coords="6,536,148,672"/>
+<area shape="rect" id="node7" href="$struct_protocol_1_1_msg_socket.html" title="Message based socket." alt="" coords="5,720,149,856"/>
 </map>

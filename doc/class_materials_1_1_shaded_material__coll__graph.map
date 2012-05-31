@@ -1,2 +1,4 @@
 <map id="G" name="G">
+<area shape="rect" id="node2" href="$class_core_1_1_material.html" title="Represents a material." alt="" coords="5,57,107,149"/>
+<area shape="rect" id="node4" href="$struct_base_1_1_color.html" title="{Base::Color\&lt; float \&gt;\n|+ v\l+ r\l+ g\l+ b\l+ a\l+ @1\l|+ Color()\l+ operator*()\l+ operator/()\l+ operator float *()\l}" alt="" coords="132,5,271,200"/>
 </map>

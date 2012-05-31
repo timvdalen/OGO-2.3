@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$struct_core_1_1_material.html" title="Represents a material." alt="" coords="6,5,109,32"/>
+<area shape="rect" id="node1" href="$class_core_1_1_material.html" title="Represents a material." alt="" coords="6,5,109,32"/>
+<area shape="rect" id="node3" href="$class_materials_1_1_shaded_material.html" title="Materials::ShadedMaterial" alt="" coords="157,5,331,32"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$struct_video_1_1_camera.html" title="{Video::Camera\n||+ lookAt()\l}" alt="" coords="155,368,263,445"/>
+<area shape="rect" id="node4" href="$struct_base_1_1_point.html" title="{Base::Point\&lt; double \&gt;\n|+ x\l+ y\l+ z\l|+ Point()\l+ Point()\l+ operator+()\l+ operator&#45;()\l+ operator Point\&lt; T \&gt;()\l+ operator Vector\&lt; double \&gt;()\l}" alt="" coords="5,65,197,245"/>
+<area shape="rect" id="node6" href="$struct_base_1_1_quaternion.html" title="{Base::Quaternion\&lt; double \&gt;\n|+ a\l+ b\l+ c\l+ d\l|+ Quaternion()\l+ Quaternion()\l+ operator double()\l+ operator Vector\&lt; double \&gt;()\l+ operator&#45;()\l+ operator*()\l+ operator*()\l+ operator*()\l+ operator/()\l+ operator+()\l+ operator!()\l+ operator~()\l+ operator Quaternion\&lt; T \&gt;()\l}" alt="" coords="222,6,415,303"/>
+</map>

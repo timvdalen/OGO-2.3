@@ -88,37 +88,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;core.h&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;video.h&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="code" href="namespace_material.html">    6</a></span>&#160;<span class="keyword">namespace </span>Material{</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_material_1_1_shaded_material.html">ShadedMaterial</a> : Material{</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a04fd3f0990e29042b527a33ec1197f63">   13</a></span>&#160;                GLfloat <a class="code" href="class_material_1_1_shaded_material.html#a04fd3f0990e29042b527a33ec1197f63" title="The shininess of this material.">shininess</a>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#ab355e5cb363e8163a2800b0a67061156">   16</a></span>&#160;                GLfloat *<a class="code" href="class_material_1_1_shaded_material.html#ab355e5cb363e8163a2800b0a67061156" title="The ambient light reflection.">ambient</a>[4];</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Materials</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Date: 24-5-2012</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * Description:</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#ifndef _MATERIALS_H</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _MATERIALS_H</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;base.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;core.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a897f894fa8872bd617499c55024c0358">   19</a></span>&#160;                GLfloat *<a class="code" href="class_material_1_1_shaded_material.html#a897f894fa8872bd617499c55024c0358" title="The diffuse light reflection.">diffuse</a>[4];</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">namespace </span>Materials {</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a34fb3f414daf6892d0a7c9bbbc2c0681">   22</a></span>&#160;                GLfloat *<a class="code" href="class_material_1_1_shaded_material.html#a34fb3f414daf6892d0a7c9bbbc2c0681" title="The specular light reflection.">specular</a>[4];</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">using namespace </span>Core;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">using namespace </span>Base::Alias;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a5bf122ecd3bed6d8a621542f55434866">   25</a></span>&#160;                GLfloat *<a class="code" href="class_material_1_1_shaded_material.html#a5bf122ecd3bed6d8a621542f55434866" title="The emissive light reflection.">emissive</a>[4]; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a2c65beaf35c71b481ca31cf9b65ab895">   28</a></span>&#160;                <a class="code" href="class_material_1_1_shaded_material.html#a2c65beaf35c71b481ca31cf9b65ab895" title="Constructs an empty Material.">ShadedMaterial</a>() {}</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a40646d7fcf8f9516de427704b034d49e">   31</a></span>&#160;                <a class="code" href="class_material_1_1_shaded_material.html#a40646d7fcf8f9516de427704b034d49e" title="Constructs a Material based on M.">ShadedMaterial</a>(Material M) {}</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="code" href="class_material_1_1_shaded_material.html#a723d2b67a2f9459cd84837cc1b95d775">   34</a></span>&#160;                <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_material_1_1_shaded_material.html#a723d2b67a2f9459cd84837cc1b95d775" title="Applies this material to the OpenGL pipeline.">select</a>() {}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html">   26</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_materials_1_1_shaded_material.html">ShadedMaterial</a> : <span class="keyword">public</span> <a class="code" href="class_core_1_1_material.html" title="Represents a material.">Material</a> {</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html#a5df68089a61cb13dfa7b0e079dec54d4">   29</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_materials_1_1_shaded_material.html#a5df68089a61cb13dfa7b0e079dec54d4" title="The shininess of this material.">shininess</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html#a7eadfb94f3987d9984010a5dd1eb1403">   32</a></span>&#160;        <a class="code" href="struct_base_1_1_color.html">Color&lt;float&gt;</a> <a class="code" href="class_materials_1_1_shaded_material.html#a7eadfb94f3987d9984010a5dd1eb1403" title="The ambient light reflection.">ambient</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html#ae6f3613ea300e21cfd0691ed107c95ff">   35</a></span>&#160;        <a class="code" href="struct_base_1_1_color.html">Color&lt;float&gt;</a> <a class="code" href="class_materials_1_1_shaded_material.html#ae6f3613ea300e21cfd0691ed107c95ff" title="The diffuse light reflection.">diffuse</a>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html#ae6ed458b3ee8b4709487fed0bb8e1904">   38</a></span>&#160;        <a class="code" href="struct_base_1_1_color.html">Color&lt;float&gt;</a> <a class="code" href="class_materials_1_1_shaded_material.html#ae6ed458b3ee8b4709487fed0bb8e1904" title="The specular light reflection.">specular</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html#a05a2504a876c81dbcb1b948f82d95775">   41</a></span>&#160;        <a class="code" href="struct_base_1_1_color.html">Color&lt;float&gt;</a> <a class="code" href="class_materials_1_1_shaded_material.html#a05a2504a876c81dbcb1b948f82d95775" title="The emissive light reflection.">emissive</a>; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="code" href="class_materials_1_1_shaded_material.html#a2afd38cbb583d17e5ca185c2237f1b9a">   44</a></span>&#160;        <a class="code" href="class_materials_1_1_shaded_material.html">ShadedMaterial</a>(<span class="keyword">const</span> Cf &amp;C = Cf(1,1,1,1))</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                : shininess(50.0), ambient(C), diffuse(C), specular(C), emissive(Cf(0,0,0,0)) {}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="class_materials_1_1_shaded_material.html">ShadedMaterial</a>(<span class="keyword">const</span> Cf &amp;A, <span class="keyword">const</span> Cf &amp;D, <span class="keyword">const</span> Cf &amp;S, <span class="keyword">const</span> Cf &amp;E, <span class="keywordtype">float</span> Y)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                : shininess(Y), ambient(A), diffuse(D), specular(S), emissive(E) {}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> select();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;} <span class="comment">// namespace Material</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif // _MATERIAL_H</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 13:31:43 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 31 2012 10:38:56 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>

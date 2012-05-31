@@ -93,6 +93,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Protocol::Clique Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="netalg_8h_source.html">netalg.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for Protocol::Clique:</div>
 <div class="dyncontent">
@@ -109,28 +111,76 @@ typedef <a class="el" href="struct_net_1_1_address.html">Net::Address</a>&#160;<
 <tr class="heading"><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1e5aed3ec05bcba240c8978da58464fd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e5aed3ec05bcba240c8978da58464fd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Clique</b> (unsigned short port)</td></tr>
-<tr class="memitem:a4b3bbe99acfb23c47bfbdaefa8282633"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b3bbe99acfb23c47bfbdaefa8282633"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>connect</b> (const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;remote, int timeout=0)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a1e5aed3ec05bcba240c8978da58464fd">Clique</a> (unsigned short port)</td></tr>
+<tr class="memdesc:a1e5aed3ec05bcba240c8978da58464fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new clique listening on the specified port. <br/></td></tr>
+<tr class="memitem:add8325e452fc7276b1ab59e40aed027c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add8325e452fc7276b1ab59e40aed027c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#add8325e452fc7276b1ab59e40aed027c">~Clique</a> ()</td></tr>
+<tr class="memdesc:add8325e452fc7276b1ab59e40aed027c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminates the clique. <br/></td></tr>
+<tr class="memitem:a4b3bbe99acfb23c47bfbdaefa8282633"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a4b3bbe99acfb23c47bfbdaefa8282633">connect</a> (const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;remote, int timeout=0)</td></tr>
 <tr class="memitem:aa9fa61268c3e4172bcd4b79ffeefe121"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa9fa61268c3e4172bcd4b79ffeefe121"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>close</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#aa9fa61268c3e4172bcd4b79ffeefe121">close</a> ()</td></tr>
+<tr class="memdesc:aa9fa61268c3e4172bcd4b79ffeefe121"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the connection. This will invalidate the instance permanently. <br/></td></tr>
 <tr class="memitem:a793b708212b5f9545dfe82e7d2755264"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a793b708212b5f9545dfe82e7d2755264"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>connected</b> () const </td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a793b708212b5f9545dfe82e7d2755264">connected</a> () const </td></tr>
+<tr class="memdesc:a793b708212b5f9545dfe82e7d2755264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether this instance is connected to a clique. <br/></td></tr>
 <tr class="memitem:aac561b216f7dd951453db80cffc6a18b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac561b216f7dd951453db80cffc6a18b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>connected</b> (const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node) const </td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#aac561b216f7dd951453db80cffc6a18b">connected</a> (const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node) const </td></tr>
+<tr class="memdesc:aac561b216f7dd951453db80cffc6a18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether a certain node (by ip address) is connected. <br/></td></tr>
 <tr class="memitem:a05935b6b3882220b1fa99feb293fdf1b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05935b6b3882220b1fa99feb293fdf1b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sendto</b> (const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node, const <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a05935b6b3882220b1fa99feb293fdf1b">sendto</a> (const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node, const <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+<tr class="memdesc:a05935b6b3882220b1fa99feb293fdf1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a messages to a certain node. <br/></td></tr>
 <tr class="memitem:a5510ec1b0352cab350f9b43a7cb7f69e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5510ec1b0352cab350f9b43a7cb7f69e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>shout</b> (const <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a5510ec1b0352cab350f9b43a7cb7f69e">shout</a> (const <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+<tr class="memdesc:a5510ec1b0352cab350f9b43a7cb7f69e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a message to all nodes. <br/></td></tr>
 <tr class="memitem:a3c28c3e471e605cb9376dfba2c1d8b58"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c28c3e471e605cb9376dfba2c1d8b58"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>entry</b> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a3c28c3e471e605cb9376dfba2c1d8b58">entry</a> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node)</td></tr>
+<tr class="memdesc:a3c28c3e471e605cb9376dfba2c1d8b58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves new nodes in the supplied address value. Returns success. <br/></td></tr>
 <tr class="memitem:ab6e462115a6d6bfe0ab03ff5c08f55af"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab6e462115a6d6bfe0ab03ff5c08f55af"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>loss</b> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#ab6e462115a6d6bfe0ab03ff5c08f55af">loss</a> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node)</td></tr>
+<tr class="memdesc:ab6e462115a6d6bfe0ab03ff5c08f55af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves lost nodes in the supplied address value. Returns success. <br/></td></tr>
 <tr class="memitem:a1feefbe35bb33331f204116ed57a6335"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1feefbe35bb33331f204116ed57a6335"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>recvfrom</b> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node, <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a1feefbe35bb33331f204116ed57a6335">recvfrom</a> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node, <a class="el" href="struct_protocol_1_1_message.html">Message</a> &amp;msg)</td></tr>
+<tr class="memdesc:a1feefbe35bb33331f204116ed57a6335"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves messages in the supplied values. Returns success. <br/></td></tr>
 <tr class="memitem:a0b5bd12c29787b47de847811a5da34d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b5bd12c29787b47de847811a5da34d1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>select</b> (int timeout=0)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol_1_1_clique.html#a0b5bd12c29787b47de847811a5da34d1">select</a> (int timeout=0)</td></tr>
+<tr class="memdesc:a0b5bd12c29787b47de847811a5da34d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for changes or (when supplied) a timeout, whichever comes first. <br/></td></tr>
+<tr class="memitem:ac47b7df6269d09ad251cbe68d8adc01e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac47b7df6269d09ad251cbe68d8adc01e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b> ()</td></tr>
+<tr class="memitem:aecd19d817c64317edcbf358dd0b24386"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecd19d817c64317edcbf358dd0b24386"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>debugClose</b> (<a class="el" href="struct_net_1_1_address.html">Address</a> &amp;node)</td></tr>
 </table>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="class_protocol_1_1_clique.html">Clique</a> socket. A algorithm that maintains a complete connection graph between nodes. </p>
+<dl class="section see"><dt>See also:</dt><dd>{ <a href="https://github.com/timvdalen/OGO-2.3/wiki/Dist-Algo%27s">https://github.com/timvdalen/OGO-2.3/wiki/Dist-Algo%27s</a> } </dd></dl>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a4b3bbe99acfb23c47bfbdaefa8282633"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Protocol::Clique::connect </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_net_1_1_address.html">Address</a> &amp;&#160;</td>
+          <td class="paramname"><em>remote</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Tries to connect to another clique (or till the timeout occurs) </p>
+<dl class="section note"><dt>Note:</dt><dd>This method will always fail when already connecetd to another clique </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/game/<a class="el" href="netalg_8h_source.html">netalg.h</a></li>
 <li>src/game/netalg.cpp</li>
@@ -138,7 +188,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>select</b> (int timeo
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 13:31:44 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 31 2012 10:38:58 for Ogo2.3 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
