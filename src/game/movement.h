@@ -43,6 +43,18 @@ class Controller
 	void lookX(Direction); //! Look (rotate camera) left and right
 	void lookY(Direction); //! Zoom in and out
 	void lookZ(Direction); //! Look (rotate camera) up and down
+
+	private:
+	double xCPos; //! x coordinate of camera
+	double yCPos; //! y coordinate of camera
+	double zCPos; //! z coordinate of camera
+
+	double xLPos; //! x coordinate of look point
+	double yLPos; //! y coordinate of look point
+	double zLPos; //! z coordinate of look point
+
+	double pitch;
+	double yaw;
 };
 
 //------------------------------------------------------------------------------
