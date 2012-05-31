@@ -52,6 +52,7 @@ class Input
 	void (*onMouseMove) (word x, word y); //!< Callback: the mouse was moved
 	
 	private:
+	Window &window;
 	void *data;
 };
 

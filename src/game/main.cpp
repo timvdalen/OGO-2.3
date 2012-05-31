@@ -15,9 +15,22 @@
 #include "objects.h"
 #include "materials.h"
 #include "video.h"
+#include "input.h"
+#include "movement.h"
 
 using namespace Core;
 using namespace Base::Alias;
+using namespace Movement;
+
+Window *window = NULL;
+Controller *controller = NULL;
+map<Input::Button,Controller::Direction> movebind;
+map<Input::Button,Controller::Direction> lookbind;
+
+void Frame();
+void KeyUp(Input::Button btn);
+void KeyDown(Input::Button btn);
+void MouseMove(word x, word y);
 
 //------------------------------------------------------------------------------
 
@@ -60,14 +73,15 @@ struct Cuboid : public Object
 int main(int argc, char *argv[])
 {
 	Video::Initialize(argc, argv);
-	Video::Window w1(640, 480, "Game");
+	window = new Video::Window(640, 480, "Game");
 	Video::Viewport v1(1,1);
-	w1.viewports.push_back(&v1);
+	window->viewports.push_back(&v1);
 	
 	v1.camera.origin = Pd(0,0,0);
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 	
-	ObjectHandle cube = Cuboid(Pd(1,3,-7));
+	ObjectHandle cube = Cuboid(Pd(0,3,0));
+	ObjectHandle player = Objects::Player();
 	
 	Materials::ShadedMaterial mat = Materials::ShadedMaterial(Cf(1,0,0,1));
 	mat.emissive = Cf(0,.5,0,1);
@@ -78,11 +92,77 @@ int main(int argc, char *argv[])
 	
 	v1.camera.lookAt(cube->origin);
 	
+	controller = new Controller(v1.camera, player);
+	Input input(*window);
+	input.onKeyUp = KeyUp;
+	input.onKeyDown = KeyDown;
+	input.onMouseMove = MouseMove;
+	
+	movebind[Input::btnKeyA] = Controller::dirLeft;
+	movebind[Input::btnKeyD] = Controller::dirRight;
+	movebind[Input::btnKeyW] = Controller::dirForward;
+	movebind[Input::btnKeyS] = Controller::dirBackward;
+	
+	movebind[Input::btnKeyArrowLeft] = Controller::dirLeft;
+	movebind[Input::btnKeyArrowRight] = Controller::dirRight;
+	movebind[Input::btnKeyArrowUp] = Controller::dirForward;
+	movebind[Input::btnKeyArrowDown] = Controller::dirBackward;
+	
+	movebind[Input::btnKeySpace] = Controller::dirUp;
+	movebind[Input::btnKeyC] = Controller::dirDown;
+	
+	OnFrame = Frame;
+	
 	Video::StartEventLoop();
 	
 	puts("Press any key...");
 	getchar();
 	return (EXIT_SUCCESS);
+}
+
+//------------------------------------------------------------------------------
+
+void Frame()
+{
+	if (!window) return;
+	if (!controller) return;
+	
+	controller->frame();
+	window->render();
+}
+
+//------------------------------------------------------------------------------
+
+void KeyUp(Input::Button btn)
+{
+	printf("key up: %d\n", btn);
+	if (!controller) return;
+	
+	if (movebind.count(btn))
+		controller->move[movebind[btn]] = false;
+	
+	if (lookbind.count(btn))
+		controller->look[lookbind[btn]] = false;
+}
+
+//------------------------------------------------------------------------------
+
+void KeyDown(Input::Button btn)
+{
+	printf("key down: %d\n", btn);
+	if (!controller) return;
+	
+	if (movebind.count(btn))
+		controller->move[movebind[btn]] = true;
+	
+	if (lookbind.count(btn))
+		controller->look[lookbind[btn]] = true;
+}
+
+//------------------------------------------------------------------------------
+
+void MouseMove(word x, word y)
+{
 }
 
 //------------------------------------------------------------------------------

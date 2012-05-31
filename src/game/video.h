@@ -52,6 +52,9 @@ void StartEventLoop();
 //! Stops the event loop
 void StopEventLoop();
 
+//! Callback: a frame has passed
+extern void(*OnFrame) ();
+
 //------------------------------------------------------------------------------
 
 //! A window instance
@@ -84,6 +87,7 @@ class Window
 	static std::set<Window *> windows;
 	static void display();
 	static void resize(int width, int height);
+	static void idle();
 };
 
 //------------------------------------------------------------------------------

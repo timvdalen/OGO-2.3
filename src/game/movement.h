@@ -28,8 +28,8 @@ using namespace Objects;
 class Controller
 {
 	public:
-	Camera &camera;  //!< Assigned camera
-	Player &player;  //!< Assigned player
+	Camera &camera;      //!< Assigned camera
+	ObjectHandle player; //!< Assigned player
 	
 	//! Movement directions
 	enum Direction
@@ -47,7 +47,7 @@ class Controller
 	bitset<dirLast> look; //!< Current camera target movement
 	
 	//! Construct controller by assigning a player and camera
-	Controller(Camera &C, Player &P);
+	Controller(Camera &C, ObjectHandle P);
 	
 	void frame();          //!< Called everytime a frame passes in game
 	

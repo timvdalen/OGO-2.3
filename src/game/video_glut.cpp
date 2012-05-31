@@ -15,12 +15,16 @@
 #include "objects.h"
 #include "video.h"
 
+#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
+
 #define PRIV(T,x) T *x = (T *) data;
 
 namespace Video {
 
 using namespace std;
 using namespace Base::Alias;
+
+void(*OnFrame) () = NULL;
 
 //------------------------------------------------------------------------------
 
@@ -44,6 +48,7 @@ void StartEventLoop()
 {
 	glutDisplayFunc(Window::display);
 	glutReshapeFunc(Window::resize);
+	glutIdleFunc(Window::idle);
 	
 	glutMainLoop();
 }
@@ -154,6 +159,13 @@ void Window::resize(int width, int height)
 	wd->height = height;
 	wd->aspect = (double) width / (double) height;
 	(*windows.begin())->render();
+}
+
+//------------------------------------------------------------------------------
+
+void Window::idle()
+{
+	CALL(OnFrame);
 }
 
 //==============================================================================
