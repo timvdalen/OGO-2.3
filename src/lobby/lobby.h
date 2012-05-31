@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "common.h"
+#include "net.h"
 #include "games.h"
 
 namespace Lobby {
@@ -49,7 +50,7 @@ class GameLobby
 	void (*onState)   (Player::Id pid, Player::State state);
 	void (*onChat)    (Player::Id pid, std::string line);
 	void (*onClose)   ();
-	void (*onStart)   ();
+	void (*onStart)   (Net::Address addr);
 	
 	GameLobby();
 	
