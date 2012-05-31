@@ -10,6 +10,15 @@ namespace Movement {
 
 Controller::Controller(Camera &C, Player &P) : camera(C), player(P)
 {
+	pos.x = player.origin.x;
+	pos.y = player.origin.y;
+	pos.z = player.origin.z;
+
+	Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+	~vec;
+
+	camera.origin = pos - (vec * 10);
+	camera.lookAt(pos);
 }
 
 //------------------------------------------------------------------------------
@@ -18,9 +27,25 @@ void Controller::moveX(Direction dir)
 {
 	if (dir == dirLeft)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(-1,0,0);
+		~vec;
+
+		pos = pos + vec;
+		camera.origin = camera.origin + vec;
+
+		//test
+		player.origin = pos;
 	}
 	else if (dir == dirRight)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(1,0,0);
+		~vec;
+
+		pos = pos + vec;
+		camera.origin = camera.origin + vec;
+
+		//test
+		player.origin = pos;
 	}
 	else // Key released
 	{
@@ -33,9 +58,25 @@ void Controller::moveY(Direction dir)
 {
 	if (dir == dirForward)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+
+		pos = pos + vec;
+		camera.origin = camera.origin + vec;
+
+		//test
+		player.origin = pos;
 	}
 	else if (dir == dirBackward)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(0,-1,0);
+		~vec;
+
+		pos = pos + vec;
+		camera.origin = camera.origin + vec;
+
+		//test
+		player.origin = pos;
 	}
 	else // Key released
 	{
@@ -48,9 +89,25 @@ void Controller::moveZ(Direction dir)
 {
 	if (dir == dirUp)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(0,0,1);
+		~vec;
+
+		pos = pos + vec;
+		camera.origin = camera.origin + vec;
+
+		//test
+		player.origin = pos;
 	}
 	else if (dir == dirDown)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(0,0,-1);
+		~vec;
+
+		pos = pos + vec;
+		camera.origin = camera.origin + vec;
+
+		//test
+		player.origin = pos;
 	}
 	else // Key released
 	{
