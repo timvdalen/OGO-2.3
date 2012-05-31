@@ -29,8 +29,6 @@ void Initialize(int argc, char *argv[])
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
-	
-	
 }
 
 //------------------------------------------------------------------------------
@@ -65,6 +63,7 @@ struct WindowData
 {
 	uword width, height;
 	double aspect;
+	int wid;
 };
 
 //------------------------------------------------------------------------------
@@ -90,6 +89,7 @@ Window::Window(uword width, uword height, const char *title,
 	
 	glEnable(GL_LIGHTING);
 	
+	wd->wid = glutGetWindow();
 	windows.insert(this);
 }
 
@@ -105,9 +105,19 @@ Window::~Window()
 
 //------------------------------------------------------------------------------
 
+void Window::select()
+{
+	PRIV(WindowsData, wd)
+	glutSetWindow(wd->wid);
+}
+
+//------------------------------------------------------------------------------
+
 void Window::render()
 {
 	PRIV(WindowData, wd)
+	
+	select();
 	
 	glClear(GL_COLOR_BUFFER_BIT);
 	

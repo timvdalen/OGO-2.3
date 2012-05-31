@@ -1,416 +1,481 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg height="1404" version="1.1" width="3172" xmlns="http://www.w3.org/2000/svg">
-<rect fill="#ffffff" height="177" stroke="#ffffff" stroke-width="1" width="200" x="518" y="1182"/>
-<rect fill="none" height="177" stroke="#000000" stroke-width="1" width="200" x="518" y="1182"/>
-<text font-family="Lucida Grande" font-size="13" x="591" y="1196">
+<svg height="1404" version="1.1" width="3204" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#ffffff" height="177" stroke="#ffffff" stroke-width="1" width="200" x="550" y="1182"/>
+<rect fill="none" height="177" stroke="#000000" stroke-width="1" width="200" x="550" y="1182"/>
+<text font-family="Lucida Grande" font-size="13" x="623" y="1196">
 Message</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="518" y="1206"/>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1221">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="550" y="1206"/>
+<text font-family="Lucida Grande" font-size="13" x="554" y="1221">
 -type : MessageType</text>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1238">
+<text font-family="Lucida Grande" font-size="13" x="554" y="1238">
 -requiresToken : bool</text>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1255">
+<text font-family="Lucida Grande" font-size="13" x="554" y="1255">
 -Arguments[*] : Arguments</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="518" y="1265"/>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1280">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="550" y="1265"/>
+<text font-family="Lucida Grande" font-size="13" x="554" y="1280">
 +addInteger(I : Integer)</text>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1297">
+<text font-family="Lucida Grande" font-size="13" x="554" y="1297">
 +addReal(r : Real)</text>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1314">
+<text font-family="Lucida Grande" font-size="13" x="554" y="1314">
 +addString(s : String)</text>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1331">
+<text font-family="Lucida Grande" font-size="13" x="554" y="1331">
 +addIntegers(I[*] : Integer)</text>
-<text font-family="Lucida Grande" font-size="13" x="522" y="1348">
+<text font-family="Lucida Grande" font-size="13" x="554" y="1348">
 +addReals(r[*] : Real)</text>
-<polygon fill="#ffffff" points="766,1214 1049,1214 1059,1224 1059,1283 766,1283 766,1214" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="766,1214 1049,1214 1059,1224 1059,1283 766,1283 766,1214" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="1049,1214 1059,1224 1049,1224 1049,1214" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="1049,1214 1059,1224 1049,1224 1049,1214" stroke="#000000" stroke-width="1"/>
-<text font-family="Lucida Grande" font-size="13" x="769" y="1230">
+<polygon fill="#ffffff" points="798,1214 1081,1214 1091,1224 1091,1283 798,1283 798,1214" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="798,1214 1081,1214 1091,1224 1091,1283 798,1283 798,1214" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="1081,1214 1091,1224 1081,1224 1081,1214" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="1081,1214 1091,1224 1081,1224 1081,1214" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="801" y="1230">
 Arguments is an abstract object,</text>
-<text font-family="Lucida Grande" font-size="13" x="769" y="1246">
+<text font-family="Lucida Grande" font-size="13" x="801" y="1246">
 which is implementation specific.</text>
-<text font-family="Lucida Grande" font-size="13" x="769" y="1262">
+<text font-family="Lucida Grande" font-size="13" x="801" y="1262">
 Can be implemented using String,</text>
-<text font-family="Lucida Grande" font-size="13" x="769" y="1278">
+<text font-family="Lucida Grande" font-size="13" x="801" y="1278">
 byte[*] or any other smart implementation.</text>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="766" x2="761" y1="1244" y2="1244"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="756" x2="751" y1="1244" y2="1244"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="746" x2="741" y1="1244" y2="1244"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="736" x2="731" y1="1244" y2="1244"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="726" x2="721" y1="1244" y2="1244"/>
-<rect fill="#ffffff" height="160" stroke="#ffffff" stroke-width="1" width="392" x="14" y="1230"/>
-<rect fill="none" height="160" stroke="#000000" stroke-width="1" width="392" x="14" y="1230"/>
-<text font-family="Lucida Grande" font-size="13" x="163" y="1244">
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="798" x2="793" y1="1244" y2="1244"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="788" x2="783" y1="1244" y2="1244"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="778" x2="773" y1="1244" y2="1244"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="768" x2="763" y1="1244" y2="1244"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="758" x2="753" y1="1244" y2="1244"/>
+<rect fill="#ffffff" height="160" stroke="#ffffff" stroke-width="1" width="392" x="46" y="1230"/>
+<rect fill="none" height="160" stroke="#000000" stroke-width="1" width="392" x="46" y="1230"/>
+<text font-family="Lucida Grande" font-size="13" x="195" y="1244">
 Communicator</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="392" x="14" y="1254"/>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1269">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="392" x="46" y="1254"/>
+<text font-family="Lucida Grande" font-size="13" x="50" y="1269">
 -hasToken : bool</text>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1286">
+<text font-family="Lucida Grande" font-size="13" x="50" y="1286">
 -tokenReceived : Date</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="392" x="14" y="1296"/>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1311">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="392" x="46" y="1296"/>
+<text font-family="Lucida Grande" font-size="13" x="50" y="1311">
 +broadcastMessage(m : Message) : bool</text>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1328">
+<text font-family="Lucida Grande" font-size="13" x="50" y="1328">
 +lockToken(BlockingWait : bool) : bool</text>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1345">
+<text font-family="Lucida Grande" font-size="13" x="50" y="1345">
 +unlockToken() : void</text>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1362">
+<text font-family="Lucida Grande" font-size="13" x="50" y="1362">
 +broadcastTeamMessage(t : Team,m : Message) : bool</text>
-<text font-family="Lucida Grande" font-size="13" x="18" y="1379">
+<text font-family="Lucida Grande" font-size="13" x="50" y="1379">
 &lt;&lt;create&gt;&gt; Communicator(connections[*] : TCPSocket)</text>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="406" x2="411" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="416" x2="421" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="426" x2="431" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="436" x2="441" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="446" x2="451" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="456" x2="461" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="466" x2="471" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="476" x2="481" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="486" x2="491" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="496" x2="501" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="506" x2="511" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="516" x2="518" y1="1319" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="506" x2="518" y1="1326" y2="1319"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="506" x2="518" y1="1312" y2="1319"/>
-<text font-family="Lucida Grande" font-size="13" x="423" y="1306">
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="438" x2="443" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="448" x2="453" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="458" x2="463" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="468" x2="473" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="478" x2="483" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="488" x2="493" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="498" x2="503" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="508" x2="513" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="518" x2="523" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="528" x2="533" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="538" x2="543" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="548" x2="550" y1="1319" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="538" x2="550" y1="1326" y2="1319"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="538" x2="550" y1="1312" y2="1319"/>
+<text font-family="Lucida Grande" font-size="13" x="455" y="1306">
 &lt;&lt;uses&gt;&gt;</text>
-<rect fill="#ffffff" height="228" stroke="#ffffff" stroke-width="1" width="488" x="2462" y="62"/>
-<rect fill="none" height="228" stroke="#000000" stroke-width="1" width="488" x="2462" y="62"/>
-<text font-family="Lucida Grande" font-size="13" x="2685" y="76">
+<rect fill="#ffffff" height="228" stroke="#ffffff" stroke-width="1" width="488" x="2494" y="62"/>
+<rect fill="none" height="228" stroke="#000000" stroke-width="1" width="488" x="2494" y="62"/>
+<text font-family="Lucida Grande" font-size="13" x="2717" y="76">
 Object</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="488" x="2462" y="86"/>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="101">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="488" x="2494" y="86"/>
+<text font-family="Lucida Grande" font-size="13" x="2498" y="101">
 -origin : Point3d</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="118">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="118">
 -yaw : Angle</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="135">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="135">
 -pitch : Angle</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="152">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="152">
 -roll : Angle</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="169">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="169">
 children : Object</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="488" x="2462" y="196"/>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="2466" y="211">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="488" x="2494" y="196"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="2498" y="211">
 draw()</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="228">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="228">
 +render()</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="245">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="245">
 +preRender()</text>
-<text font-family="Lucida Grande" font-size="13" x="2466" y="262">
+<text font-family="Lucida Grande" font-size="13" x="2498" y="262">
 +postRender()</text>
-<polygon fill="#ffffff" points="2966,70 3090,70 3100,80 3100,128 2966,128 2966,70" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="2966,70 3090,70 3100,80 3100,128 2966,128 2966,70" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="3090,70 3100,80 3090,80 3090,70" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="3090,70 3100,80 3090,80 3090,70" stroke="#000000" stroke-width="1"/>
-<text font-family="Lucida Grande" font-size="13" x="2969" y="86">
+<polygon fill="#ffffff" points="2998,70 3122,70 3132,80 3132,128 2998,128 2998,70" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="2998,70 3122,70 3132,80 3132,128 2998,128 2998,70" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="3122,70 3132,80 3122,80 3122,70" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="3122,70 3132,80 3122,80 3122,70" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="3001" y="86">
 Angles are </text>
-<text font-family="Lucida Grande" font-size="13" x="2969" y="102">
+<text font-family="Lucida Grande" font-size="13" x="3001" y="102">
 between 0 and 360</text>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="2966" x2="2961" y1="118" y2="118"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="2956" x2="2951" y1="118" y2="118"/>
-<rect fill="#ffffff" height="197" stroke="#ffffff" stroke-width="1" width="200" x="614" y="670"/>
-<rect fill="none" height="197" stroke="#000000" stroke-width="1" width="200" x="614" y="670"/>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="688" y="704">
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="2998" x2="2993" y1="118" y2="118"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="2988" x2="2983" y1="118" y2="118"/>
+<rect fill="#ffffff" height="197" stroke="#ffffff" stroke-width="1" width="200" x="646" y="670"/>
+<rect fill="none" height="197" stroke="#000000" stroke-width="1" width="200" x="646" y="670"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="720" y="704">
 Building</text>
-<text font-family="Lucida Grande" font-size="13" x="644" y="685">
+<text font-family="Lucida Grande" font-size="13" x="676" y="685">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="614" y="714"/>
-<text font-family="Lucida Grande" font-size="13" x="618" y="729">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="646" y="714"/>
+<text font-family="Lucida Grande" font-size="13" x="650" y="729">
 -cost : Integer</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="746">
+<text font-family="Lucida Grande" font-size="13" x="650" y="746">
 -income : Integer</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="763">
+<text font-family="Lucida Grande" font-size="13" x="650" y="763">
 -buildTime : Time</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="780">
+<text font-family="Lucida Grande" font-size="13" x="650" y="780">
 -buildDuration : Duration</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="797">
+<text font-family="Lucida Grande" font-size="13" x="650" y="797">
 -attackPower : Power</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="814">
+<text font-family="Lucida Grande" font-size="13" x="650" y="814">
 -health : Integer</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="614" y="832"/>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="618" y="847">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="200" x="646" y="832"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="650" y="847">
 draw()</text>
-<polygon fill="#ffffff" points="1190,14 1492,14 1502,24 1502,91 1190,91 1190,14" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="1190,14 1492,14 1502,24 1502,91 1190,91 1190,14" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="1492,14 1502,24 1492,24 1492,14" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="1492,14 1502,24 1492,24 1492,14" stroke="#000000" stroke-width="1"/>
-<text font-family="Lucida Grande" font-size="13" x="1193" y="30">
+<polygon fill="#ffffff" points="1222,14 1524,14 1534,24 1534,91 1222,91 1222,14" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="1222,14 1524,14 1534,24 1534,91 1222,91 1222,14" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="1524,14 1534,24 1524,24 1524,14" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="1524,14 1534,24 1524,24 1524,14" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="1225" y="30">
 Percentage/Power/Time/Duration is an object, </text>
-<text font-family="Lucida Grande" font-size="13" x="1193" y="46">
+<text font-family="Lucida Grande" font-size="13" x="1225" y="46">
 which is implementation specific,</text>
-<text font-family="Lucida Grande" font-size="13" x="1193" y="62">
+<text font-family="Lucida Grande" font-size="13" x="1225" y="62">
 time could be implemented </text>
-<text font-family="Lucida Grande" font-size="13" x="1193" y="78">
+<text font-family="Lucida Grande" font-size="13" x="1225" y="78">
 using reals or integers</text>
-<rect fill="#ffffff" height="91" stroke="#ffffff" stroke-width="1" width="150" x="790" y="934"/>
-<rect fill="none" height="91" stroke="#000000" stroke-width="1" width="150" x="790" y="934"/>
-<text font-family="Lucida Grande" font-size="13" x="855" y="968">
+<rect fill="#ffffff" height="91" stroke="#ffffff" stroke-width="1" width="150" x="822" y="934"/>
+<rect fill="none" height="91" stroke="#000000" stroke-width="1" width="150" x="822" y="934"/>
+<text font-family="Lucida Grande" font-size="13" x="887" y="968">
 HQ</text>
-<text font-family="Lucida Grande" font-size="13" x="795" y="949">
+<text font-family="Lucida Grande" font-size="13" x="827" y="949">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="150" x="790" y="978"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="150" x="790" y="999"/>
-<text font-family="Lucida Grande" font-size="13" x="794" y="1014">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="150" x="822" y="978"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="150" x="822" y="999"/>
+<text font-family="Lucida Grande" font-size="13" x="826" y="1014">
 draw()</text>
-<rect fill="#ffffff" height="95" stroke="#ffffff" stroke-width="1" width="174" x="422" y="934"/>
-<rect fill="none" height="95" stroke="#000000" stroke-width="1" width="174" x="422" y="934"/>
-<text font-family="Lucida Grande" font-size="13" x="465" y="968">
+<rect fill="#ffffff" height="95" stroke="#ffffff" stroke-width="1" width="174" x="454" y="934"/>
+<rect fill="none" height="95" stroke="#000000" stroke-width="1" width="174" x="454" y="934"/>
+<text font-family="Lucida Grande" font-size="13" x="497" y="968">
 ResourceMine</text>
-<text font-family="Lucida Grande" font-size="13" x="439" y="949">
+<text font-family="Lucida Grande" font-size="13" x="471" y="949">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="174" x="422" y="978"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="174" x="422" y="1001"/>
-<text font-family="Lucida Grande" font-size="13" x="426" y="1016">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="174" x="454" y="978"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="174" x="454" y="1001"/>
+<text font-family="Lucida Grande" font-size="13" x="458" y="1016">
 draw()</text>
-<rect fill="#ffffff" height="91" stroke="#ffffff" stroke-width="1" width="160" x="614" y="934"/>
-<rect fill="none" height="91" stroke="#000000" stroke-width="1" width="160" x="614" y="934"/>
-<text font-family="Lucida Grande" font-size="13" x="649" y="968">
+<rect fill="#ffffff" height="91" stroke="#ffffff" stroke-width="1" width="160" x="646" y="934"/>
+<rect fill="none" height="91" stroke="#000000" stroke-width="1" width="160" x="646" y="934"/>
+<text font-family="Lucida Grande" font-size="13" x="681" y="968">
 DefenseTower</text>
-<text font-family="Lucida Grande" font-size="13" x="624" y="949">
+<text font-family="Lucida Grande" font-size="13" x="656" y="949">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="160" x="614" y="978"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="160" x="614" y="999"/>
-<text font-family="Lucida Grande" font-size="13" x="618" y="1014">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="160" x="646" y="978"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="160" x="646" y="999"/>
+<text font-family="Lucida Grande" font-size="13" x="650" y="1014">
 draw()</text>
-<polyline fill="none" points="830,934 830,894 814,867" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="814,867 826,873 814,880" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="814,867 826,873 814,880" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="686,934 686,867" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="686,867 693,879 679,879" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="686,867 693,879 679,879" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="558,934 558,894 614,867" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="614,867 606,878 600,865" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="614,867 606,878 600,865" stroke="#000000" stroke-width="1"/>
-<rect fill="#ffffff" height="215" stroke="#ffffff" stroke-width="1" width="456" x="614" y="14"/>
-<rect fill="none" height="215" stroke="#000000" stroke-width="1" width="456" x="614" y="14"/>
-<text font-family="Lucida Grande" font-size="13" x="824" y="48">
+<polyline fill="none" points="862,934 862,894 846,867" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="846,867 858,873 846,880" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="846,867 858,873 846,880" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="718,934 718,867" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="718,867 725,879 711,879" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="718,867 725,879 711,879" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="590,934 590,894 646,867" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="646,867 638,878 632,865" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="646,867 638,878 632,865" stroke="#000000" stroke-width="1"/>
+<rect fill="#ffffff" height="215" stroke="#ffffff" stroke-width="1" width="456" x="646" y="14"/>
+<rect fill="none" height="215" stroke="#000000" stroke-width="1" width="456" x="646" y="14"/>
+<text font-family="Lucida Grande" font-size="13" x="856" y="48">
 World</text>
-<text font-family="Lucida Grande" font-size="13" x="772" y="29">
+<text font-family="Lucida Grande" font-size="13" x="804" y="29">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="456" x="614" y="58"/>
-<text font-family="Lucida Grande" font-size="13" x="618" y="73">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="456" x="646" y="58"/>
+<text font-family="Lucida Grande" font-size="13" x="650" y="73">
 -homePlayer : Player</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="456" x="614" y="117"/>
-<text font-family="Lucida Grande" font-size="13" x="618" y="132">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="456" x="646" y="117"/>
+<text font-family="Lucida Grande" font-size="13" x="650" y="132">
 +walkHomePlayer(yesno : bool)</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="149">
+<text font-family="Lucida Grande" font-size="13" x="650" y="149">
 +shootHomePlayer()</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="166">
+<text font-family="Lucida Grande" font-size="13" x="650" y="166">
 +buildBuilding(p : Point2d,b : Building)</text>
-<text font-family="Lucida Grande" font-size="13" x="618" y="183">
+<text font-family="Lucida Grande" font-size="13" x="650" y="183">
 +pickup(p : Player,d : Droppable)</text>
-<rect fill="#ffffff" height="181" stroke="#ffffff" stroke-width="1" width="328" x="1190" y="454"/>
-<rect fill="none" height="181" stroke="#000000" stroke-width="1" width="328" x="1190" y="454"/>
-<text font-family="Lucida Grande" font-size="13" x="1335" y="488">
+<rect fill="#ffffff" height="181" stroke="#ffffff" stroke-width="1" width="328" x="1222" y="454"/>
+<rect fill="none" height="181" stroke="#000000" stroke-width="1" width="328" x="1222" y="454"/>
+<text font-family="Lucida Grande" font-size="13" x="1367" y="488">
 Player</text>
-<text font-family="Lucida Grande" font-size="13" x="1284" y="469">
+<text font-family="Lucida Grande" font-size="13" x="1316" y="469">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="328" x="1190" y="498"/>
-<text font-family="Lucida Grande" font-size="13" x="1194" y="513">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="328" x="1222" y="498"/>
+<text font-family="Lucida Grande" font-size="13" x="1226" y="513">
 -health : Percentage</text>
-<text font-family="Lucida Grande" font-size="13" x="1194" y="530">
+<text font-family="Lucida Grande" font-size="13" x="1226" y="530">
 -lastShoot : Time</text>
-<text font-family="Lucida Grande" font-size="13" x="1194" y="547">
+<text font-family="Lucida Grande" font-size="13" x="1226" y="547">
 -connection : TCPSocket</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="328" x="1190" y="566"/>
-<text font-family="Lucida Grande" font-size="13" x="1194" y="581">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="328" x="1222" y="566"/>
+<text font-family="Lucida Grande" font-size="13" x="1226" y="581">
 +fireLaser(start : Point3d,direction : Vector3d)</text>
-<text font-family="Lucida Grande" font-size="13" x="1194" y="598">
+<text font-family="Lucida Grande" font-size="13" x="1226" y="598">
 draw()</text>
-<text font-family="Lucida Grande" font-size="13" x="1194" y="615">
+<text font-family="Lucida Grande" font-size="13" x="1226" y="615">
 +walk(yesno : Bool)</text>
-<rect fill="#ffffff" height="130" stroke="#ffffff" stroke-width="1" width="184" x="1582" y="454"/>
-<rect fill="none" height="130" stroke="#000000" stroke-width="1" width="184" x="1582" y="454"/>
-<text font-family="Lucida Grande" font-size="13" x="1640" y="488">
+<rect fill="#ffffff" height="130" stroke="#ffffff" stroke-width="1" width="184" x="1734" y="454"/>
+<rect fill="none" height="130" stroke="#000000" stroke-width="1" width="184" x="1734" y="454"/>
+<text font-family="Lucida Grande" font-size="13" x="1792" y="488">
 Laserbeam</text>
-<text font-family="Lucida Grande" font-size="13" x="1604" y="469">
+<text font-family="Lucida Grande" font-size="13" x="1756" y="469">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="184" x="1582" y="498"/>
-<text font-family="Lucida Grande" font-size="13" x="1586" y="513">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="184" x="1734" y="498"/>
+<text font-family="Lucida Grande" font-size="13" x="1738" y="513">
 -fireTime : Time</text>
-<text font-family="Lucida Grande" font-size="13" x="1586" y="530">
+<text font-family="Lucida Grande" font-size="13" x="1738" y="530">
 -fireDuration : Duration</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="184" x="1582" y="549"/>
-<text font-family="Lucida Grande" font-size="13" x="1586" y="564">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="184" x="1734" y="549"/>
+<text font-family="Lucida Grande" font-size="13" x="1738" y="564">
 draw()</text>
-<polyline fill="none" points="1518,478 1582,478" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="1518,478 1528,473 1538,478 1528,483" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="1518,478 1528,473 1538,478 1528,483" stroke="#000000" stroke-width="1"/>
-<rect fill="#ffffff" height="105" stroke="#ffffff" stroke-width="1" width="216" x="1286" y="134"/>
-<rect fill="none" height="105" stroke="#000000" stroke-width="1" width="216" x="1286" y="134"/>
-<text font-family="Lucida Grande" font-size="13" x="1370" y="148">
+<polyline fill="none" points="1550,478 1734,478" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="1550,478 1560,473 1570,478 1560,483" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="1550,478 1560,473 1570,478 1560,483" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="1609" y="473">
+-lasers</text>
+<text font-family="Lucida Grande" font-size="13" x="1708" y="473">
+0..*</text>
+<rect fill="#ffffff" height="105" stroke="#ffffff" stroke-width="1" width="216" x="1318" y="134"/>
+<rect fill="none" height="105" stroke="#000000" stroke-width="1" width="216" x="1318" y="134"/>
+<text font-family="Lucida Grande" font-size="13" x="1402" y="148">
 Camera</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1286" y="158"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1286" y="179"/>
-<text font-family="Lucida Grande" font-size="13" x="1290" y="194">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1318" y="158"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1318" y="179"/>
+<text font-family="Lucida Grande" font-size="13" x="1322" y="194">
 +look()</text>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="1290" y="211">
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="1322" y="211">
 directionVector() : Vector3d</text>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="1290" y="228">
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="1322" y="228">
 upVector() : Vector3d</text>
-<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="216" x="1326" y="294"/>
-<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="216" x="1326" y="294"/>
-<text font-family="Lucida Grande" font-size="13" x="1392" y="308">
+<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="216" x="1358" y="294"/>
+<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="216" x="1358" y="294"/>
+<text font-family="Lucida Grande" font-size="13" x="1424" y="308">
 PlayerCamera</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1326" y="318"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1326" y="339"/>
-<text font-family="Lucida Grande" font-size="13" x="1330" y="354">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1358" y="318"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="216" x="1358" y="339"/>
+<text font-family="Lucida Grande" font-size="13" x="1362" y="354">
 +directionVector() : Vector3d</text>
-<text font-family="Lucida Grande" font-size="13" x="1330" y="371">
+<text font-family="Lucida Grande" font-size="13" x="1362" y="371">
 +upVector() : Vector3d</text>
-<polyline fill="none" points="1382,294 1382,239" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="1382,239 1389,251 1375,251" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="1382,239 1389,251 1375,251" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="1398,382 1398,454" stroke="#000000" stroke-width="1"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1391" x2="1398" y1="442" y2="454"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1405" x2="1398" y1="442" y2="454"/>
-<polyline fill="none" points="1070,187 1286,187" stroke="#000000" stroke-width="1"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1274" x2="1286" y1="194" y2="187"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1274" x2="1286" y1="180" y2="187"/>
-<rect fill="#ffffff" height="95" stroke="#ffffff" stroke-width="1" width="152" x="798" y="302"/>
-<rect fill="none" height="95" stroke="#000000" stroke-width="1" width="152" x="798" y="302"/>
-<text font-family="Lucida Grande" font-size="13" x="857" y="336">
+<polyline fill="none" points="1414,294 1414,239" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="1414,239 1421,251 1407,251" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="1414,239 1421,251 1407,251" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="1430,382 1430,454" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1423" x2="1430" y1="442" y2="454"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1437" x2="1430" y1="442" y2="454"/>
+<text font-family="Lucida Grande" font-size="13" x="1433" y="423">
+-player</text>
+<text font-family="Lucida Grande" font-size="13" x="1448" y="443">
+1</text>
+<polyline fill="none" points="1102,187 1318,187" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1306" x2="1318" y1="194" y2="187"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1306" x2="1318" y1="180" y2="187"/>
+<text font-family="Lucida Grande" font-size="13" x="1169" y="180">
+-camera</text>
+<text font-family="Lucida Grande" font-size="13" x="1293" y="182">
+1</text>
+<rect fill="#ffffff" height="95" stroke="#ffffff" stroke-width="1" width="152" x="830" y="302"/>
+<rect fill="none" height="95" stroke="#000000" stroke-width="1" width="152" x="830" y="302"/>
+<text font-family="Lucida Grande" font-size="13" x="889" y="336">
 Team</text>
-<text font-family="Lucida Grande" font-size="13" x="804" y="317">
+<text font-family="Lucida Grande" font-size="13" x="836" y="317">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="152" x="798" y="346"/>
-<text font-family="Lucida Grande" font-size="13" x="802" y="361">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="152" x="830" y="346"/>
+<text font-family="Lucida Grande" font-size="13" x="834" y="361">
 -resources : Integer</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="152" x="798" y="371"/>
-<text font-family="Lucida Grande" font-size="13" x="802" y="386">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="152" x="830" y="371"/>
+<text font-family="Lucida Grande" font-size="13" x="834" y="386">
 draw()</text>
-<polyline fill="none" points="862,229 862,302" stroke="#000000" stroke-width="1"/>
-<polygon fill="#000000" points="862,229 867,239 862,249 857,239" stroke="#000000" stroke-width="1"/>
-<polygon fill="none" points="862,229 867,239 862,249 857,239" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="950,350 1006,350 1190,454" stroke="#000000" stroke-width="1"/>
-<polygon fill="#000000" points="950,350 960,345 970,350 960,355" stroke="#000000" stroke-width="1"/>
-<polygon fill="none" points="950,350 960,345 970,350 960,355" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="990,454 1131,454 1141,464 1141,539 990,539 990,454" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="990,454 1131,454 1141,464 1141,539 990,539 990,454" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="1131,454 1141,464 1131,464 1131,454" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="1131,454 1141,464 1131,464 1131,454" stroke="#000000" stroke-width="1"/>
-<text font-family="Lucida Grande" font-size="13" x="993" y="470">
+<polyline fill="none" points="894,229 894,302" stroke="#000000" stroke-width="1"/>
+<polygon fill="#000000" points="894,229 899,239 894,249 889,239" stroke="#000000" stroke-width="1"/>
+<polygon fill="none" points="894,229 899,239 894,249 889,239" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="896" y="274">
+-teams</text>
+<text font-family="Lucida Grande" font-size="13" x="901" y="298">
+2..*</text>
+<polyline fill="none" points="982,350 1038,350 1222,454" stroke="#000000" stroke-width="1"/>
+<polygon fill="#000000" points="982,350 992,345 1002,350 992,355" stroke="#000000" stroke-width="1"/>
+<polygon fill="none" points="982,350 992,345 1002,350 992,355" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="1110" y="386">
+-players</text>
+<text font-family="Lucida Grande" font-size="13" x="1200" y="434">
+1..*</text>
+<polygon fill="#ffffff" points="1022,454 1163,454 1173,464 1173,539 1022,539 1022,454" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="1022,454 1163,454 1173,464 1173,539 1022,539 1022,454" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="1163,454 1173,464 1163,464 1163,454" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="1163,454 1173,464 1163,464 1163,454" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="1025" y="470">
 Walk() is a method,</text>
-<text font-family="Lucida Grande" font-size="13" x="993" y="486">
+<text font-family="Lucida Grande" font-size="13" x="1025" y="486">
 which triggers the</text>
-<text font-family="Lucida Grande" font-size="13" x="993" y="502">
+<text font-family="Lucida Grande" font-size="13" x="1025" y="502">
 player to walk in the</text>
-<text font-family="Lucida Grande" font-size="13" x="993" y="518">
+<text font-family="Lucida Grande" font-size="13" x="1025" y="518">
 direction specified by</text>
-<text font-family="Lucida Grande" font-size="13" x="993" y="534">
+<text font-family="Lucida Grande" font-size="13" x="1025" y="534">
  the angle.</text>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1142" x2="1147" y1="464" y2="464"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1152" x2="1157" y1="464" y2="464"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1162" x2="1167" y1="464" y2="464"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1172" x2="1177" y1="464" y2="464"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1182" x2="1187" y1="464" y2="464"/>
-<polygon fill="#ffffff" points="2958,150 3147,150 3157,160 3157,221 2958,221 2958,150" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="2958,150 3147,150 3157,160 3157,221 2958,221 2958,150" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="3147,150 3157,160 3147,160 3147,150" stroke="#ffffff" stroke-width="1"/>
-<polyline fill="none" points="3147,150 3157,160 3147,160 3147,150" stroke="#000000" stroke-width="1"/>
-<text font-family="Lucida Grande" font-size="13" x="2961" y="166">
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1174" x2="1179" y1="464" y2="464"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1184" x2="1189" y1="464" y2="464"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1194" x2="1199" y1="464" y2="464"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1204" x2="1209" y1="464" y2="464"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1214" x2="1219" y1="464" y2="464"/>
+<polygon fill="#ffffff" points="2990,150 3179,150 3189,160 3189,221 2990,221 2990,150" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="2990,150 3179,150 3189,160 3189,221 2990,221 2990,150" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="3179,150 3189,160 3179,160 3179,150" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="3179,150 3189,160 3179,160 3179,150" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="2993" y="166">
 Implementing the interface</text>
-<text font-family="Lucida Grande" font-size="13" x="2961" y="182">
+<text font-family="Lucida Grande" font-size="13" x="2993" y="182">
 Object or BoundingObject is</text>
-<text font-family="Lucida Grande" font-size="13" x="2961" y="198">
-denoted by  &lt;&lt;Drawable&gt;&gt;</text>
-<rect fill="#ffffff" height="126" stroke="#ffffff" stroke-width="1" width="440" x="302" y="294"/>
-<rect fill="none" height="126" stroke="#000000" stroke-width="1" width="440" x="302" y="294"/>
-<text font-family="Lucida Grande" font-size="13" x="500" y="328">
+<text font-family="Lucida Grande" font-size="13" x="2993" y="198">
+denoted by  &lt;&lt;Object&gt;&gt; or</text>
+<text font-family="Lucida Grande" font-size="13" x="2993" y="214">
+&lt;&lt;BoundingObject&gt;&gt;</text>
+<rect fill="#ffffff" height="126" stroke="#ffffff" stroke-width="1" width="440" x="334" y="294"/>
+<rect fill="none" height="126" stroke="#000000" stroke-width="1" width="440" x="334" y="294"/>
+<text font-family="Lucida Grande" font-size="13" x="532" y="328">
 Terrain</text>
-<text font-family="Lucida Grande" font-size="13" x="452" y="309">
+<text font-family="Lucida Grande" font-size="13" x="484" y="309">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="440" x="302" y="338"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="440" x="302" y="368"/>
-<text font-family="Lucida Grande" font-size="13" x="306" y="383">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="440" x="334" y="338"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="440" x="334" y="368"/>
+<text font-family="Lucida Grande" font-size="13" x="338" y="383">
 +groundCollision(start : Point3d,direction : Vector3d) : Point2d</text>
-<text font-family="Lucida Grande" font-size="13" x="306" y="400">
+<text font-family="Lucida Grande" font-size="13" x="338" y="400">
 +getHeight(x : Integer,y : Integer) : Real</text>
-<polyline fill="none" points="678,229 678,294" stroke="#000000" stroke-width="1"/>
-<polygon fill="#000000" points="678,229 683,239 678,249 673,239" stroke="#000000" stroke-width="1"/>
-<polygon fill="none" points="678,229 683,239 678,249 673,239" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="1190,598 758,598 758,670" stroke="#000000" stroke-width="1"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="751" x2="758" y1="658" y2="670"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="765" x2="758" y1="658" y2="670"/>
-<text font-family="Lucida Grande" font-size="13" x="867" y="593">
-ownedBuildings</text>
-<rect fill="#ffffff" height="129" stroke="#ffffff" stroke-width="1" width="176" x="222" y="454"/>
-<rect fill="none" height="129" stroke="#000000" stroke-width="1" width="176" x="222" y="454"/>
-<text font-family="Lucida Grande" font-size="13" x="277" y="488">
+<polyline fill="none" points="710,229 710,294" stroke="#000000" stroke-width="1"/>
+<polygon fill="#000000" points="710,229 715,239 710,249 705,239" stroke="#000000" stroke-width="1"/>
+<polygon fill="none" points="710,229 715,239 710,249 705,239" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="712" y="265">
+-terrain</text>
+<text font-family="Lucida Grande" font-size="13" x="723" y="286">
+1</text>
+<rect fill="#ffffff" height="129" stroke="#ffffff" stroke-width="1" width="176" x="246" y="478"/>
+<rect fill="none" height="129" stroke="#000000" stroke-width="1" width="176" x="246" y="478"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="301" y="512">
 Droppable</text>
-<text font-family="Lucida Grande" font-size="13" x="240" y="469">
+<text font-family="Lucida Grande" font-size="13" x="264" y="493">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="176" x="222" y="498"/>
-<text font-family="Lucida Grande" font-size="13" x="226" y="513">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="176" x="246" y="522"/>
+<text font-family="Lucida Grande" font-size="13" x="250" y="537">
 -worth : Integer</text>
-<text font-family="Lucida Grande" font-size="13" x="226" y="530">
+<text font-family="Lucida Grande" font-size="13" x="250" y="554">
 -dieTime : Time</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="176" x="222" y="540"/>
-<text font-family="Lucida Grande" font-size="13" x="226" y="555">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="176" x="246" y="564"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="250" y="579">
 +onPickup(w : World)</text>
-<text font-family="Lucida Grande" font-size="13" x="226" y="572">
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="250" y="596">
 draw()</text>
-<rect fill="#ffffff" height="135" stroke="#ffffff" stroke-width="1" width="240" x="446" y="446"/>
-<rect fill="none" height="135" stroke="#000000" stroke-width="1" width="240" x="446" y="446"/>
-<text font-family="Lucida Grande" font-size="13" x="537" y="480">
+<rect fill="#ffffff" height="135" stroke="#ffffff" stroke-width="1" width="240" x="478" y="486"/>
+<rect fill="none" height="135" stroke="#000000" stroke-width="1" width="240" x="478" y="486"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="569" y="520">
 Structure</text>
-<text font-family="Lucida Grande" font-size="13" x="496" y="461">
+<text font-family="Lucida Grande" font-size="13" x="528" y="501">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="240" x="446" y="490"/>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="240" x="446" y="533"/>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="450" y="548">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="240" x="478" y="530"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="240" x="478" y="573"/>
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="482" y="588">
 draw()</text>
-<rect fill="#ffffff" height="152" stroke="#ffffff" stroke-width="1" width="248" x="174" y="678"/>
-<rect fill="none" height="152" stroke="#000000" stroke-width="1" width="248" x="174" y="678"/>
-<text font-family="Lucida Grande" font-size="13" x="283" y="712">
+<rect fill="#ffffff" height="152" stroke="#ffffff" stroke-width="1" width="248" x="206" y="678"/>
+<rect fill="none" height="152" stroke="#000000" stroke-width="1" width="248" x="206" y="678"/>
+<text font-family="Lucida Grande" font-size="13" x="315" y="712">
 Mine</text>
-<text font-family="Lucida Grande" font-size="13" x="228" y="693">
+<text font-family="Lucida Grande" font-size="13" x="260" y="693">
 &lt;&lt;BoundingObject&gt;&gt;</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="248" x="174" y="722"/>
-<text font-family="Lucida Grande" font-size="13" x="178" y="737">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="248" x="206" y="722"/>
+<text font-family="Lucida Grande" font-size="13" x="210" y="737">
 -income : Integer</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="248" x="174" y="775"/>
-<text font-family="Lucida Grande" font-size="13" x="178" y="790">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="248" x="206" y="775"/>
+<text font-family="Lucida Grande" font-size="13" x="210" y="790">
 draw()</text>
-<polyline fill="none" points="694,670 694,638 566,614 566,581" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="566,581 573,593 559,593" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="566,581 573,593 559,593" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="326,678 326,646 566,614 566,581" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="566,581 573,593 559,593" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="566,581 573,593 559,593" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="566,420 566,446" stroke="#000000" stroke-width="1"/>
-<polygon fill="#000000" points="566,420 571,430 566,440 561,430" stroke="#000000" stroke-width="1"/>
-<polygon fill="none" points="566,420 571,430 566,440 561,430" stroke="#000000" stroke-width="1"/>
-<text font-family="Lucida Grande" font-size="13" x="570" y="442">
-grid[x][y]</text>
-<polyline fill="none" points="734,670 734,470 838,470 838,397" stroke="#000000" stroke-width="1"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="845" x2="838" y1="409" y2="397"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="831" x2="838" y1="409" y2="397"/>
-<text font-family="Lucida Grande" font-size="13" x="736" y="514">
+<polyline fill="none" points="726,670 726,646 598,646 598,621" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="598,621 605,633 591,633" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="598,621 605,633 591,633" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="358,678 358,646 598,646 598,621" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="598,621 605,633 591,633" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="598,621 605,633 591,633" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="597,420 597,486" stroke="#000000" stroke-width="1"/>
+<polygon fill="#000000" points="597,420 602,430 597,440 592,430" stroke="#000000" stroke-width="1"/>
+<polygon fill="none" points="597,420 602,430 597,440 592,430" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="599" y="463">
+-grid[x][y]</text>
+<text font-family="Lucida Grande" font-size="13" x="603" y="484">
+0..*</text>
+<polyline fill="none" points="766,670 766,470 870,470 870,397" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="877" x2="870" y1="409" y2="397"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="863" x2="870" y1="409" y2="397"/>
+<text font-family="Lucida Grande" font-size="13" x="768" y="514">
 -team</text>
-<polyline fill="none" points="1230,454 1230,318 950,318" stroke="#000000" stroke-width="1"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="962" x2="950" y1="311" y2="318"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="962" x2="950" y1="325" y2="318"/>
-<text font-family="Lucida Grande" font-size="13" x="1122" y="309">
+<text font-family="Lucida Grande" font-size="13" x="883" y="415">
+1</text>
+<polyline fill="none" points="1262,454 1262,318 982,318" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="994" x2="982" y1="311" y2="318"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="994" x2="982" y1="325" y2="318"/>
+<text font-family="Lucida Grande" font-size="13" x="1154" y="309">
 -team</text>
-<rect fill="#ffffff" height="96" stroke="#ffffff" stroke-width="1" width="387" x="2582" y="358"/>
-<rect fill="none" height="96" stroke="#000000" stroke-width="1" width="387" x="2582" y="358"/>
-<text font-family="Lucida Grande" font-size="13" x="2725" y="372">
+<text font-family="Lucida Grande" font-size="13" x="1003" y="310">
+1</text>
+<rect fill="#ffffff" height="96" stroke="#ffffff" stroke-width="1" width="388" x="2614" y="358"/>
+<rect fill="none" height="96" stroke="#000000" stroke-width="1" width="388" x="2614" y="358"/>
+<text font-family="Lucida Grande" font-size="13" x="2758" y="372">
 BoundingObject</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="387" x="2582" y="382"/>
-<text font-family="Lucida Grande" font-size="13" x="2586" y="397">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="388" x="2614" y="382"/>
+<text font-family="Lucida Grande" font-size="13" x="2618" y="397">
 -bBox : BoundingBox</text>
-<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="387" x="2582" y="409"/>
-<text font-family="Lucida Grande" font-size="13" x="2586" y="424">
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="388" x="2614" y="409"/>
+<text font-family="Lucida Grande" font-size="13" x="2618" y="424">
 checkCollision(origin : Point3d,direction : Vector3d) : Object</text>
-<text font-family="Lucida Grande" font-size="13" font-style="italic" x="2586" y="441">
+<text font-family="Lucida Grande" font-size="13" font-style="italic" x="2618" y="441">
 draw()</text>
-<polyline fill="none" points="2615,358 2615,290" stroke="#000000" stroke-width="1"/>
-<polygon fill="#ffffff" points="2615,290 2622,302 2608,302" stroke="#ffffff" stroke-width="1"/>
-<polygon fill="none" points="2615,290 2622,302 2608,302" stroke="#000000" stroke-width="1"/>
-<polyline fill="none" points="314,420 314,454" stroke="#000000" stroke-width="1"/>
-<polygon fill="#000000" points="314,420 319,430 314,440 309,430" stroke="#000000" stroke-width="1"/>
-<polygon fill="none" points="314,420 319,430 314,440 309,430" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="2647,358 2647,290" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="2647,290 2654,302 2640,302" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="2647,290 2654,302 2640,302" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="398,420 398,478" stroke="#000000" stroke-width="1"/>
+<polygon fill="#000000" points="398,420 403,430 398,440 393,430" stroke="#000000" stroke-width="1"/>
+<polygon fill="none" points="398,420 403,430 398,440 393,430" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="401" y="454">
+-droppables</text>
+<text font-family="Lucida Grande" font-size="13" x="405" y="472">
+0..*</text>
+<polyline fill="none" points="1222,598 846,598 846,670" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="839" x2="846" y1="658" y2="670"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="853" x2="846" y1="658" y2="670"/>
+<text font-family="Lucida Grande" font-size="13" x="951" y="589">
+-ownedBuildings</text>
+<text font-family="Lucida Grande" font-size="13" x="859" y="656">
+1</text>
+<ellipse cx="998" cy="596" fill="#000000" rx="0.5" ry="0.5" stroke="#000000" stroke-width="1"/>
+<ellipse cx="999" cy="597" fill="#ffffff" rx="-0.5" ry="-0.5" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="#ffffff" points="934,630 1153,630 1163,640 1163,693 934,693 934,630" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="934,630 1153,630 1163,640 1163,693 934,693 934,630" stroke="#000000" stroke-width="1"/>
+<polygon fill="#b2b2b2" points="1153,630 1163,640 1153,640 1153,630" stroke="#b2b2b2" stroke-width="1"/>
+<polyline fill="none" points="1153,630 1163,640 1153,640 1153,630" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="937" y="646">
+The ownedBuildings relation from</text>
+<text font-family="Lucida Grande" font-size="13" x="937" y="662">
+Player to Building is a one to one </text>
+<text font-family="Lucida Grande" font-size="13" x="937" y="678">
+relation.</text>
+<rect fill="#ffffff" height="108" stroke="#ffffff" stroke-width="1" width="150" x="14" y="654"/>
+<rect fill="none" height="108" stroke="#000000" stroke-width="1" width="150" x="14" y="654"/>
+<text font-family="Lucida Grande" font-size="13" x="74" y="688">
+Coin</text>
+<text font-family="Lucida Grande" font-size="13" x="19" y="669">
+&lt;&lt;BoundingObject&gt;&gt;</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="150" x="14" y="698"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="150" x="14" y="719"/>
+<text font-family="Lucida Grande" font-size="13" x="18" y="734">
++onPickup(w : World)</text>
+<text font-family="Lucida Grande" font-size="13" x="18" y="751">
+draw()</text>
+<polyline fill="none" points="94,654 94,582 246,582" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="246,582 234,589 234,575" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="246,582 234,589 234,575" stroke="#000000" stroke-width="1"/>
 </svg>
