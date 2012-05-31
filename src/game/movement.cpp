@@ -10,6 +10,8 @@ namespace Movement {
 
 Controller::Controller(Camera &C, Player &P) : camera(C), player(P)
 {
+	fps = false;
+
 	pos.x = player.origin.x;
 	pos.y = player.origin.y;
 	pos.z = player.origin.z;
@@ -118,8 +120,16 @@ void Controller::lookX()
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
 
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		if (fps == true)
+		{
+			camera.origin = player.origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
 	}
 	else if (look[dirRight])
 	{
@@ -128,8 +138,16 @@ void Controller::lookX()
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
 
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		if (fps == true)
+		{
+			camera.origin = player.origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
 	}
 }
 
@@ -142,26 +160,51 @@ void Controller::lookY()
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
 
-		if (zoom >= 5.0)
+		if (zoom > 5.0)
 		{
 			zoom -= 0.1;
 		}
+		else if (zoom <= 5.0)
+		{
+			fps = true;
+		}
 
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		if (fps == true)
+		{
+			camera.origin = player.origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
 	}
 	else if (look[dirBackward]) // Zoom out
 	{
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
 
-		if (zoom <= 15.0) 
+		if (zoom < 15.0) 
 		{
 			zoom += 0.1;
 		}
+		
+		if (fps == true)
+		{
+			zoom = 5.0;
+		}
 
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		if (fps == true)
+		{
+			camera.origin = player.origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
 	}
 }
 
@@ -176,8 +219,16 @@ void Controller::lookZ()
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
 
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		if (fps == true)
+		{
+			camera.origin = player.origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
 	}
 	else if (look[dirDown])
 	{
@@ -186,8 +237,16 @@ void Controller::lookZ()
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
 
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		if (fps == true)
+		{
+			camera.origin = player.origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
 	}
 }
 

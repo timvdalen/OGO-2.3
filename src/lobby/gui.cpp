@@ -487,15 +487,25 @@ static void lobbyOnStart(){
 	char *serverAddr;
 	server.string(serverAddr);
 	//I would use exec_*, but Windows does not support that
-	char command[27];
-	strcat(command, "./Game ");
-	strcat(command, serverAddr);
-	strcat(command, " &");
+	#if (defined WIN32 || defined _MSC_VER)
+		char command[28];
+		strcat(command, "start Game ");
+		strcat(command, serverAddr);
+	#else
+		char command[27];
+		strcat(command, "./Game ");
+		strcat(command, serverAddr);
+		strcat(command, " &");
+	#endif
 	system(command);
 	exit(EXIT_SUCCESS);
 }
 
 static void serverLobbyOnStart(){
-	system("./Game &");
+	#if (defined WIN32 || defined _MSC_VER)
+		system("start Game");
+	#else
+		system("./Game &");
+	#endif
 	exit(EXIT_SUCCESS);
 }
