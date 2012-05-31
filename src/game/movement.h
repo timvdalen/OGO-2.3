@@ -24,6 +24,7 @@ class Controller
 {
 	public:
 	Camera &camera; //!< Assigned camera
+	Player &player; //!< Assigned player
 	
 	enum Direction
 	{
@@ -32,7 +33,8 @@ class Controller
 		dirUp      =  1, dirRight =  1, dirForward  =  1
 	};
 	
-	Controller(Camera &C) : camera(C) {}
+	//! Construct controller by assigning a player and camera
+	Controller(Camera &C, Player &P);
 	
 	void moveX(Direction); //! Move camera left and right
 	void moveY(Direction); //! Move camera forward and backwards
@@ -41,6 +43,12 @@ class Controller
 	void lookX(Direction); //! Look (rotate camera) left and right
 	void lookY(Direction); //! Zoom in and out
 	void lookZ(Direction); //! Look (rotate camera) up and down
+
+	private:
+	Point<double> pos;
+
+	double pitch;
+	double yaw;
 };
 
 //------------------------------------------------------------------------------
