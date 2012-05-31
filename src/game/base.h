@@ -68,14 +68,15 @@ TYPE_ASSERT(udword, sizeof(udword) >= 4);
 #define BASE_ALIAS(x,y) namespace Alias { typedef x<double> y ## d; \
                                           typedef x<float>  y ## f; \
 										  typedef x<dword>  y ## l; }
-
+//! Base module
+//! Contains useful mathematical entities
 namespace Base {
 
-const double Pi = 3.14159265358979323846264338327950288419716939937510;
-const double Rad = 2.0 * Pi;
-const double Deg = 360.0;
-const double Rad2Deg = Deg / Rad;
-const double Deg2Rad = Rad / Deg;
+const double Pi = 3.14159265358979323846264338327950288419716939937510; //!< Pi
+const double Rad = 2.0 * Pi;      //!< A circle in radian
+const double Deg = 360.0;         //!< A circle in degrees
+const double Rad2Deg = Deg / Rad; //!< Multiply to convert radians to degrees
+const double Deg2Rad = Rad / Deg; //!< Multiply to convert degrees to radians
 
 //------------------------------------------------------------------------------
 
