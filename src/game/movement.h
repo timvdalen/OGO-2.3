@@ -11,6 +11,7 @@
 
 #include <bitset>
 
+#include "objects.h"
 #include "video.h"
 
 //! Movement module
@@ -19,6 +20,7 @@ namespace Movement {
 
 using namespace std;
 using namespace Video;
+using namespace Objects;
 
 //------------------------------------------------------------------------------
 

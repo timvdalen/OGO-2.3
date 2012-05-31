@@ -107,7 +107,7 @@ Window::~Window()
 
 void Window::select()
 {
-	PRIV(WindowsData, wd)
+	PRIV(WindowData, wd)
 	glutSetWindow(wd->wid);
 }
 

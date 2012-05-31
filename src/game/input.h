@@ -15,6 +15,8 @@
 
 namespace Movement {
 
+using namespace Video;
+
 //------------------------------------------------------------------------------
 
 //! Input module
@@ -32,7 +34,7 @@ class Input
 		btnKeySpace = 32,
 		
 		btnKey0 = 48, btnKey1, btnKey2, btnKey3, btnKey4, btnKey5, btnKey6,
-		btnKey7, btnKey8, btnKey9
+		btnKey7, btnKey8, btnKey9,
 		
 		btnKeyA = 65, btnKeyB, btnKeyC, btnKeyD, btnKeyE, btnKeyF, btnKeyG,
 		btnKeyH, btnKeyI, btnKeyJ, btnKeyK, btnKeyL, btnKeyM, btnKeyN, btnKeyO,
@@ -57,6 +59,6 @@ class Input
 
 } // namespace Movement
 
-#end if // _INPUT_H
+#endif // _INPUT_H
 
 //------------------------------------------------------------------------------
