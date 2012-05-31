@@ -48,6 +48,9 @@ class Input
 	void (*onKeyUp) (Button);             //!< Callback: a key was released
 	void (*onKeyDown) (Button);           //!< Callback: a key was pressed
 	void (*onMouseMove) (word x, word y); //!< Callback: the mouse was moved
+	
+	private:
+	void *data;
 };
 
 //------------------------------------------------------------------------------
