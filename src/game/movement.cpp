@@ -25,6 +25,7 @@ Controller::Controller(Camera &C, Player &P) : camera(C), player(P)
 
 //------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void Controller::moveX(Direction dir)
 {
 	if (dir == dirLeft)
@@ -168,6 +169,8 @@ void Controller::lookZ(Direction dir)
 
 //------------------------------------------------------------------------------
 
+=======
+>>>>>>> 71e1b24a7b74fd631c35c2ae134f0d4060dc2438
 void Controller::frame()
 {
 }
