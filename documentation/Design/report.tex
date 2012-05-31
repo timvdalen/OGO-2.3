@@ -200,13 +200,16 @@ De methode $broadcastTeamMessage$ doet hetzelfde als $broadcastMessage$ behalve 
 
 \subsection{Berichten om het spel op te zetten}
 Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Met behulp van deze berichten proberen we een volledige graaf en een token ring op te bouwen De eerste message is het join request. Met een \emph{Good-day} bericht maakt de speler contact met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
-\bericht{GOOD-DAY, tid :name.}
+\bericht{GOODDAY, tid :name.}
 
 Nadat de server een \emph{Good-day} bericht heeft ontvangen, stuurt de server een \emph{Welcome} bericht als antwoord. \textsc{pid} wijst de speler een uniek \textsc{id} toe. \textsc{version} is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een string van alle ip-adressen in de standaard \textsc{cidr} notatie (dat wil zeggen dat een adres gerepresenteerd wordt in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elk ip-adres wordt het karakter \emph{e} gebruikt om ip-adressen te onderscheiden.
 \bericht{WELCOME, pid , version :iplist.}
 
-Het \emph{Sup} bericht stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler ID aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen.
+Het \emph{Sup} bericht stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler ID van de speler die het bericht verstuurt aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen. \textsc{name} geeft de naam van de speler aan.
 \bericht{SUP, pid, version :name.}
+
+Het \emph{Gladtomeetyou} bericht is een bevestiging om het \emph{Sup} bericht. Hiermee geeft de speler, welke het \emph{Sup} bericht ontving, aan wat zijn naam en speler ID is. \textsc{pid} is dan weer het speler ID en \textsc{name} de naam van de speler.
+\bericht{GLADTOMEETYOU, pid :name}
 
     % TODO: berichten tijdens het spel.
 
