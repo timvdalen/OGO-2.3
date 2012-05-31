@@ -289,10 +289,7 @@ void *ClientLobby::listen(void *arg)
 			}
 			else if (cmd == "START") //------------------------------
 			{
-				if (msg.size() < 2)
-					continue;
-				
-				CALL(lobby->onStart, Address(msg[1]))
+				CALL(lobby->onStart)
 			}
 		}
 	}
@@ -454,14 +451,13 @@ bool ServerLobby::start()
 	
 	Message msg;
 	msg.push_back("START");
-	msg.push_back((string) lobby->addr);
 	
 	ServerLobbyData::PlayerSet::iterator pit;
 	for (pit = lobby->players.begin(); pit != lobby->players.end(); ++pit)
 		if (pit->id)
 			pit->sock->send(msg);
 	
-	CALL(onStart, lobby->addr)
+	CALL(onStart)
 	return true;
 }
 

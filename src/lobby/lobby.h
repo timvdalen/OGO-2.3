@@ -50,7 +50,7 @@ class GameLobby
 	void (*onState)   (Player::Id pid, Player::State state);
 	void (*onChat)    (Player::Id pid, std::string line);
 	void (*onClose)   ();
-	void (*onStart)   (Net::Address addr);
+	void (*onStart)   ();
 	
 	GameLobby();
 	
