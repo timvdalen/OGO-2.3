@@ -51,10 +51,10 @@ void lobby_team(Player::Id pid, unsigned char team);
 void lobby_state(Player::Id pid, Player::State state);
 void lobby_chat(Player::Id pid, string line);
 void lobby_close();
-void lobby_start();
+void lobby_start(Net::Address server);
 
 char *gets2(char *data, size_t len);
-char *printf2(const char *fmt, ...);
+void printf2(const char *fmt, ...);
 
 //------------------------------------------------------------------------------
 
@@ -311,7 +311,7 @@ void lobby_close()
 
 //------------------------------------------------------------------------------
 
-void lobby_start()
+void lobby_start(Net::Address server)
 {
 }
 
@@ -328,7 +328,7 @@ char *gets2(char *data, size_t len)
 
 //------------------------------------------------------------------------------
 
-char *printf2(const char *fmt, ...)
+void printf2(const char *fmt, ...)
 {
 	char buffer[1024];
 	va_list args;
