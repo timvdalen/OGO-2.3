@@ -8,7 +8,7 @@
 \usepackage{xspace, color,mdframed}
 \usepackage[usenames,dvipsnames]{xcolor}
 \newcommand{\protoref}{sectie \ref{sec:protocol}}
-\newcommand{\bericht}[1]{ 
+\newcommand{\bericht}[1]{
 {\begin{center}
 
 \colorbox{YellowGreen!20}{\makebox[\textwidth][c]{{
@@ -142,7 +142,7 @@ De methode $broadcastTeamMessage$ doet hetzelfde als $broadcastMessage$ behalve 
     \section{Het berichtsformaat}
     \label{sec:protocol}
     We zijn nu klaar om het formaat van de berichten formeel te defini\"eren. Hiervoor gebruiken we BNF (\emph{Backus-Naur Form}):
-	 
+	
 	\begin{center} \boxed{\begin{aligned}
     <\textsc{message}> &::= <\textsc{command}> <\textsc{args}> <\textsc{crlf}> \\
     <\textsc{command}> &::= \text{``A''...``Z''} <\textsc{command}> | \text{``A''...``Z''} \\
@@ -199,21 +199,14 @@ De methode $broadcastTeamMessage$ doet hetzelfde als $broadcastMessage$ behalve 
     Merk op dat er soms twee commando's zijn met dezelfde naam. Deze zijn echter zeer eenvoudig van elkaar te onderscheiden. In dit geval is er namelijk voor gezorgd dat \'e\'en commando alleen door de clients wordt verzonden en het andere commando alleen door de server. Hierdoor ontvangt elke speler nooit meer dan \'e\'en van de twee type commando's.
 
 \subsection{Berichten om het spel op te zetten}
-Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Tijdens het opzetten van het spel proberen we door deze berichten de token ring op te bouwen en ook een volledige graaf tussen alle spelers. De eerste message is het join request:
-\bericht{
-GOOD-DAY, tid :name.
-}
+Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Met behulp van deze berichten proberen we een volledige graaf en een token ring op te bouwen De eerste message is het join request. Met een \emph{Good-day} bericht maakt de speler contact met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
+\bericht{GOOD-DAY, tid :name.}
 
-Met deze message geeft connect de speler met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
-\bericht{
-WELCOME, pid , version :iplist.
-}
+Nadat de server een \emph{Good-day} bericht heeft ontvangen, stuurt de server een \emph{Welcome} bericht als antwoord. \textsc{pid} wijst de speler een uniek \textsc{id} toe. \textsc{version} is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een string van alle ip-adressen in de standaard \textsc{cidr} notatie (dat wil zeggen dat een adres gerepresenteerd wordt in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elk ip-adres wordt het karakter \emph{e} gebruikt om ip-adressen te onderscheiden.
+\bericht{WELCOME, pid , version :iplist.}
 
-Nadat de server een \emph{Good-day} bericht heeft ontvangen stuurt de server het bovenstaande bericht als antwoord.
-\textsc{pid} wijst de speler een uniek \textsc{id} toe. \textsc{version} is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een String van alle ip-adressen in de standaard \textsc{cidr} notatie (Dat wil zeggen dat de een adres gerepresenteerd in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elke ip-adres wordt het karakter \emph{e} gebruikt om ip-adressen te onderscheiden.
+Het \emph{Sup} bericht stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler ID aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen.
 \bericht{SUP, pid, version :name.}
-
-Deze message stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler id aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen.
 
     % TODO: berichten tijdens het spel.
 
