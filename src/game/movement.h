@@ -45,13 +45,7 @@ class Controller
 	void lookZ(Direction); //! Look (rotate camera) up and down
 
 	private:
-	double xCPos; //! x coordinate of camera
-	double yCPos; //! y coordinate of camera
-	double zCPos; //! z coordinate of camera
-
-	double xLPos; //! x coordinate of look point
-	double yLPos; //! y coordinate of look point
-	double zLPos; //! z coordinate of look point
+	Point<double> pos;
 
 	double pitch;
 	double yaw;
