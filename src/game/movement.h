@@ -26,6 +26,7 @@ class Controller
 	Camera &camera; //!< Assigned camera
 	Player &player; //!< Assigned player
 	
+	//! Movement direction
 	enum Direction
 	{
 		dirDown    = -1, dirLeft  = -1, dirBackward = -1,
@@ -36,14 +37,16 @@ class Controller
 	//! Construct controller by assigning a player and camera
 	Controller(Camera &C, Player &P);
 	
-	void moveX(Direction); //! Move camera left and right
-	void moveY(Direction); //! Move camera forward and backwards
-	void moveZ(Direction); //! Move camera up and down
+	void moveX(Direction); //!< Move camera left and right
+	void moveY(Direction); //!< Move camera forward and backwards
+	void moveZ(Direction); //!< Move camera up and down
 	
-	void lookX(Direction); //! Look (rotate camera) left and right
-	void lookY(Direction); //! Zoom in and out
-	void lookZ(Direction); //! Look (rotate camera) up and down
-
+	void lookX(Direction); //!< Look (rotate camera) left and right
+	void lookY(Direction); //!< Zoom in and out
+	void lookZ(Direction); //!< Look (rotate camera) up and down
+	
+	void frame();          //!< Called everytime a frame passes in game
+	
 	private:
 	Point<double> pos;
 
