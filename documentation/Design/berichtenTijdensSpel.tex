@@ -14,16 +14,16 @@ De spelers houden lokaal de totale hoeveelheid goud van het team bij. Spelers zu
 \bericht{TEAM, tid, teamGold.}
 
 Verder is er nog een \emph{Respawn} bericht. Dit bericht wordt verstuurd nadat een speler is dood gegaan. In dit bericht wordt de nieuwe locatie meegestuurd, dit zal in principe het commandocentrum van het bijbehorende team zijn:
-\bericht{R RESPAWN, x, y, z.} 
+\bericht{R RESPAWN, x, y, z.}
 
-Na een schot zal een speler berekenen of een speler van het andere team is geraakt. Als dit het geval is, dan zal de geraakte speler en de hoeveelheid schade worden verstuurd. Merk op dat dit lokaal wordt berekend. De geraakte speler en de hoeveelheid schade wordt doorgegeven in het \emph{Hit}:
+Na een schot zal een speler berekenen of een speler van het andere team is geraakt. Als dit het geval is, dan zal de geraakte speler en de hoeveelheid schade worden verstuurd. Merk op dat dit lokaal wordt berekend. Het hoeft niet noodzakelijk te zijn dat het schot van de speler zelf komt, het kan ook komen van een gebouw in het bezit van een speler. De geraakte speler en de hoeveelheid schade wordt doorgegeven in het bericht \emph{Hit}:
 \bericht{R HIT, pid, damage.}
-% GEBOUWEN KUNNEN OOK SCHIETEN!
+
 Als een speler is doodgegaan, zal hij dit kenbaar maken aan alle andere spelers. Dit wordt gedaan door het \emph{Died} bericht, waarin ook de dader is opgenomen. Op zich is de informatie over de dader irrelevant voor het spel, maar dit kan wel worden gebruikt om het spel verder uit te breiden.
 \bericht{R DIED, pid.}
 
 Een speler zal een voorwerp achterlaten bij het doodgaan. In het huidige ontwerp zal dit altijd een muntje zijn. Dit muntje krijgt meteen ook een unieke ID en een zekere waarde. Verder zal nog de lokatie van het muntje worden meegestuurd. Als laatste zal nog het type voorwerp worden meegestuurd, dit argument kan worden gebruikt voor verdere uitbreiding. Samen geeft dit het \emph{Drop} bericht:
-\bericht{R DROP, id, x, y, z, value, type.} 
+\bericht{R DROP, id, x, y, z, value, type.}
 
 Als een speler een voorwerp opraapt, zal er een \emph{Take} bericht worden verstuurd. Hierbij zal natuurlijk ook de ID van het opgeraapte voorwerp worden meegestuurd.
 \bericht{R TAKE, id.}
@@ -37,4 +37,5 @@ Als een speler een gebouw heeft geraakt met een schot, dan zal de ID van het geb
 Op een gegeven moment kan het ook gebeuren dat het gebouw is vernietigd. De eigenaar van het gebouw heeft de verantwoordelijkheid om dit te controleren. Als het gebouw is vernietigd, dan wordt de ID van het gebouw verstuurd. Bovendien zal de dader hierbij worden verstuurd net zoals in het geval dat een speler is doodgegaan. Hiertoe wordt het \emph{Destroy} bericht gebruikt:
 \bericht{R DESTROY, id, pid.}
 
-% WINNEN.
+Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra een team heeft gewonnen: oftewel als het commandocentrum van het andere team is vernietigd. In dit bericht wordt het winnende team meegestuurd:
+\bericht{R END, tid.}
