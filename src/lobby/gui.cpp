@@ -47,6 +47,7 @@ static void lobbyOnPart(Player::Id pid);
 static void lobbyOnChat(Player::Id pid, string line);
 static void lobbyOnClose();
 static void lobbyOnState(Player::Id pid, Player::State state);
+static void lobbyOnStart();
 
 static void lobbyAddPlayer(Player player);
 
@@ -454,4 +455,11 @@ static void lobbyOnState(Player::Id pid, Player::State state){
 
 	//TODO: Yet again
 	playerList[(int) pid] = player;	
+}
+
+static void lobbyOnStart(){
+	char *serverAddr;
+	server.string(serverAddr);
+	system(strcat("Game ", serverAddr));
+	exit(EXIT_SUCCESS);
 }
