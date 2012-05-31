@@ -7,6 +7,7 @@
 #include "base.h"
 
 #include <3ds/lib3ds.h>
+#include <string>
 
 //--------------------------------------------
 
@@ -23,8 +24,8 @@ class ModelObject : public Object {
 	void displaylist(Lib3dsMesh * mesh);
 	void render(Lib3dsNode * n);
 public:
-	ModelObject(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>());
-	virtual ~ModelObject() {};
+	ModelObject(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), string path = "");
+	virtual ~ModelObject();
 	virtual void render();
 };
 
