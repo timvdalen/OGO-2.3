@@ -8,6 +8,12 @@ namespace Movement {
 
 //------------------------------------------------------------------------------
 
+Controller::Controller(Camera &C, Player &P) : camera(C), player(P)
+{
+}
+
+//------------------------------------------------------------------------------
+
 void Controller::moveX(Direction dir)
 {
 	if (dir == dirLeft)
