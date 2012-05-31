@@ -17,7 +17,9 @@ Controller::Controller(Camera &C, Player &P) : camera(C), player(P)
 	Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 	~vec;
 
-	camera.origin = pos - (vec * 10);
+	zoom = 10.0;
+
+	camera.origin = pos - (vec * zoom);
 	camera.lookAt(pos);
 }
 
@@ -120,6 +122,11 @@ void Controller::lookX(Direction dir)
 {
 	if (dir == dirLeft)
 	{
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+		camera.origin = camera.origin + (vec * zoom);
+
+		player.rotation = player.rotation * Rotation<double>(0.001, Vector<double>(0,0,-1));
 	}
 	else if (dir == dirRight)
 	{
