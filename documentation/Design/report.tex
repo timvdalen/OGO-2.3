@@ -8,7 +8,7 @@
 \usepackage{xspace, color,mdframed}
 \usepackage[usenames,dvipsnames]{xcolor}
 \newcommand{\protoref}{sectie \ref{sec:protocol}}
-\newcommand{\bericht}[1]{ 
+\newcommand{\bericht}[1]{
 {\begin{center}
 
 \colorbox{YellowGreen!20}{\makebox[\textwidth][c]{{
@@ -64,7 +64,7 @@
     Tijdens de opzet van het spel zal de gebruikersomgeving een venster weer moeten geven met alle spellen in het subnet van de computer. De gebruiker kan dan kiezen om mee te doen aan een van deze spellen of zijn eigen spel te openen. Als de gebruiker zelf een spel opent, kunnen andere gebruikers in hetzelfde subnet ook meedoen aan dit spel. Deze spelers kunnen dan met elkaar communiceren in een lobby. Hierin kunnen zij ook aangeven of zij klaar zijn om het spel te starten. Zodra alle gebruikers hebben aangegeven dat zij klaar zijn, kan spel worden gestart. De keuze om het spel te starten is dan aan de gebruiker, die ook het spel heeft geopend.
 
     \subsubsection{Tijdens het spel}
-    Tijdens het spel zal de gebruikersomgeving via \textsc{openGL} de lokale staat van het spel afbeelden op het scherm. Dit wordt gedaan door de \emph{render} methode van het object \emph{World} aan te roepen, die is beschreven in de sectie \ref{sec:model}. De gebruikersomgeving zal daarna alleen nog menu's, mogelijke kaarten en informatie als de sterkte van het harnas en de hoeveelheid geld op het scherm moeten aangeven (zoals beschreven in het document Informele Beschrijving). Door de 2D-modus van openGL te gebruiken kan dit gemakkelijk getekend worden boven op de grafische representatie van de wereld.
+    Tijdens het spel zal de gebruikersomgeving via \textsc{openGL} de lokale staat van het spel afbeelden op het scherm. Dit wordt gedaan door de \emph{render} methode van het object \emph{World} aan te roepen, die is beschreven in sectie \ref{sec:model}. De gebruikersomgeving zal daarna alleen nog menu's, mogelijke kaarten en informatie als de sterkte van het harnas en de hoeveelheid geld op het scherm moeten aangeven (zoals beschreven in het document Informele Beschrijving). Door de 2D-modus van openGL te gebruiken kan dit gemakkelijk getekend worden boven op de grafische representatie van de wereld.
 
 	De gebruikersomgeving zal ook het model aanpassen aan de hand van de interactie van de gebruiker met de omgeving. Om dit voor elkaar te krijgen vangt de gebruikersomgeving alle muisbewegingen, klikken en toetsenbord aanslagen op en associeert dit met een actie om het model aan te passen. Een verdere uitleg van de interactie tussen de gebruikersomgeving en het model is gegeven in \ref{sec:interactscenmodel}.
 
@@ -142,7 +142,7 @@ De methode $broadcastTeamMessage$ doet hetzelfde als $broadcastMessage$ behalve 
     \section{Het berichtsformaat}
     \label{sec:protocol}
     We zijn nu klaar om het formaat van de berichten formeel te defini\"eren. Hiervoor gebruiken we BNF (\emph{Backus-Naur Form}):
-	 
+	
 	\begin{center} \boxed{\begin{aligned}
     <\textsc{message}> &::= <\textsc{command}> <\textsc{args}> <\textsc{crlf}> \\
     <\textsc{command}> &::= \text{``A''...``Z''} <\textsc{command}> | \text{``A''...``Z''} \\
@@ -191,7 +191,7 @@ De methode $broadcastTeamMessage$ doet hetzelfde als $broadcastMessage$ behalve 
     \bericht{BUSY.}
     Nadat een speler van team is gewisseld, maakt de server dit kenbaar aan de andere spelers. Dit wordt gedaan door de ID van de speler mee te sturen:
     \bericht{READY, pid.}
-   \bericht{BUSY, pid.}
+    \bericht{BUSY, pid.}
     Een speler kan chatten met de andere spelers. Dit wordt gedaan door een \emph{Chat request} bericht te sturen naar de server. Dit bericht bevat dan het chatbericht:
     \bericht{CHAT :msg.}
     Zodra de server een Chat request bericht ontvangt, stuurt de server een \emph{Chat} bericht naar alle andere spelers. Dit bericht bevat de ID van de speler en het chatbericht:
@@ -199,23 +199,57 @@ De methode $broadcastTeamMessage$ doet hetzelfde als $broadcastMessage$ behalve 
     Merk op dat er soms twee commando's zijn met dezelfde naam. Deze zijn echter zeer eenvoudig van elkaar te onderscheiden. In dit geval is er namelijk voor gezorgd dat \'e\'en commando alleen door de clients wordt verzonden en het andere commando alleen door de server. Hierdoor ontvangt elke speler nooit meer dan \'e\'en van de twee type commando's.
 
 \subsection{Berichten om het spel op te zetten}
-Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Tijdens het opzetten van het spel proberen we door deze berichten de token ring op te bouwen en ook een volledige graaf tussen alle spelers. De eerste message is het join request:
-\bericht{
-GOOD-DAY, tid :name.
-}
+Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Met behulp van deze berichten proberen we een volledige graaf en een token ring op te bouwen De eerste message is het join request. Met een \emph{Good-day} bericht maakt de speler contact met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
+\bericht{GOODDAY, tid :name.}
 
-Met deze message geeft connect de speler met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
-\bericht{
-WELCOME, pid , version :iplist.
-}
+Nadat de server een \emph{Good-day} bericht heeft ontvangen, stuurt de server een \emph{Welcome} bericht als antwoord. \textsc{pid} wijst de speler een uniek \textsc{id} toe. \textsc{version} is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een string van alle ip-adressen in de standaard \textsc{cidr} notatie (dat wil zeggen dat een adres gerepresenteerd wordt in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elk ip-adres wordt het karakter \emph{e} gebruikt om ip-adressen te onderscheiden.
+\bericht{WELCOME, pid , version :iplist.}
 
-Nadat de server een \emph{Good-day} bericht heeft ontvangen stuurt de server het bovenstaande bericht als antwoord.
-\textsc{pid} wijst de speler een uniek \textsc{id} toe. \textsc{version} is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een String van alle ip-adressen in de standaard \textsc{cidr} notatie (Dat wil zeggen dat de een adres gerepresenteerd in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elke ip-adres wordt het karakter \emph{e} gebruikt om ip-adressen te onderscheiden.
+Het \emph{Sup} bericht stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler ID van de speler die het bericht verstuurt aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen. \textsc{name} geeft de naam van de speler aan.
 \bericht{SUP, pid, version :name.}
 
-Deze message stuurt een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler id aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen.
+Het \emph{Gladtomeetyou} bericht is een bevestiging om het \emph{Sup} bericht. Hiermee geeft de speler, welke het \emph{Sup} bericht ontving, aan wat zijn naam en speler ID is. \textsc{pid} is dan weer het speler ID en \textsc{name} de naam van de speler.
+\bericht{GLADTOMEETYOU, pid :name}
 
-    % TODO: berichten tijdens het spel.
+\subsection{Berichten tijdens het spel}
+De volgende berichten worden gebruikt voor communicatie tijdens het spel. Deze berichten worden dan naar alle andere spelers gestuurd. Sommige berichten zijn hierbij aangegeven met een R. Deze berichten krijgen een speciale behandeling, zoals wordt besproken in sectie \ref{sec:tijdensspel}. Als eerste is er een zogenaamd \emph{GameChat} bericht. Dit bericht vervult een vergelijkbare taak als het Chat bericht in de lobby. Het GameChat bericht heeft de volgende syntax:
+\bericht{GAMECHAT, message.}
+
+Een speler zal periodiek zijn huidige positie doorsturen. Bovendien wordt hierbij de huidige richting meegegeven. Hiervoor wordt het \emph{Move} bericht verstuurd:
+\bericht{MOVE, x, y, z, vx, vy, vz.}
+
+Als een speler heeft geschoten, dan wordt dit naar alle andere spelers gestuurd. Hierbij wordt de oorsprong van het schot en de richting van het schot meegestuurd. Merk op dat deze overeenkomen met respectievelijk de positie van de speler en de kijkrichting. De bedoeling van dit bericht is enkel om de bijbehorende animatie weer te geven: eventuele schade aan het harnas wordt apart afgehandeld.
+\bericht{FIRE, x, y, z, vx, vy, vz.}
+
+De spelers houden lokaal de totale hoeveelheid goud van het team bij. Spelers zullen deze waarde periodiek versturen. Als deze waarden tussen verschillende spelers van hetzelfde team niet overeenkomen, zullen we deze waarden middelen. Het bericht \emph{Team} verstuurt de ID van het team en de hoeveelheid goud:
+\bericht{TEAM, tid, teamGold.}
+
+Verder is er nog een \emph{Respawn} bericht. Dit bericht wordt verstuurd nadat een speler is dood gegaan. In dit bericht wordt de nieuwe locatie meegestuurd, dit zal in principe het commandocentrum van het bijbehorende team zijn:
+\bericht{R RESPAWN, x, y, z.}
+
+Na een schot zal een speler berekenen of een speler van het andere team is geraakt. Als dit het geval is, dan zal de geraakte speler en de hoeveelheid schade worden verstuurd. Merk op dat dit lokaal wordt berekend. Het hoeft niet noodzakelijk te zijn dat het schot van de speler zelf komt, het kan ook komen van een gebouw in het bezit van een speler. De geraakte speler en de hoeveelheid schade wordt doorgegeven in het bericht \emph{Hit}:
+\bericht{R HIT, pid, damage.}
+
+Als een speler is doodgegaan, zal hij dit kenbaar maken aan alle andere spelers. Dit wordt gedaan door het \emph{Died} bericht, waarin ook de dader is opgenomen. Op zich is de informatie over de dader irrelevant voor het spel, maar dit kan wel worden gebruikt om het spel verder uit te breiden.
+\bericht{R DIED, pid.}
+
+Een speler zal een voorwerp achterlaten bij het doodgaan. In het huidige ontwerp zal dit altijd een muntje zijn. Dit muntje krijgt meteen ook een unieke ID en een zekere waarde. Verder zal nog de lokatie van het muntje worden meegestuurd. Als laatste zal nog het type voorwerp worden meegestuurd, dit argument kan worden gebruikt voor verdere uitbreiding. Samen geeft dit het \emph{Drop} bericht:
+\bericht{R DROP, id, x, y, z, value, type.}
+
+Als een speler een voorwerp opraapt, zal er een \emph{Take} bericht worden verstuurd. Hierbij zal natuurlijk ook de ID van het opgeraapte voorwerp worden meegestuurd.
+\bericht{R TAKE, id.}
+
+Een speler kan natuurlijk ook een gebouw bouwen. Het spel heeft de lokale verantwoordelijkheid dat de bouwplaats toegestaan is. In het \emph{Build} bericht wordt naast de lokatie ook nog een uniek ID en het type van het gebouw meegestuurd:
+\bericht{R BUILD, id, x, y, z, type.}
+
+Als een speler een gebouw heeft geraakt met een schot, dan zal de ID van het gebouw worden verstuurd en de hoeveelheid schade. Dit wordt gedaan in het \emph{Attack} bericht:
+\bericht{R ATTACK, id, damage.}
+
+Op een gegeven moment kan het ook gebeuren dat het gebouw is vernietigd. De eigenaar van het gebouw heeft de verantwoordelijkheid om dit te controleren. Als het gebouw is vernietigd, dan wordt de ID van het gebouw verstuurd. Bovendien zal de dader hierbij worden verstuurd net zoals in het geval dat een speler is doodgegaan. Hiertoe wordt het \emph{Destroy} bericht gebruikt:
+\bericht{R DESTROY, id, pid.}
+
+Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra een team heeft gewonnen: oftewel als het commandocentrum van het andere team is vernietigd. In dit bericht wordt het winnende team meegestuurd:
+\bericht{R END, tid.}
 
     \section{De opbouw van de graaf}
     Het protocol zal een volledige graaf proberen op te bouwen. Dit wordt gedaan tijdens de lobby fase van het spel. We weten dat er tijdens de lobby fase een server is. Elk proces probeert nu een \tcp-connectie te maken met deze server. Zodra deze \tcp-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle adressen van processen, waarmee de server nu is verbonden. Verbindingen uit de lobby fase tellen hierbij dus niet mee. Het proces is dan zelf verantwoordelijk om een \tcp-connectie aan te gaan met elk proces in deze lijst.
@@ -223,6 +257,7 @@ Deze message stuurt een speler zodra hij een verbinding met een andere speler aa
     Dit betekent dat op elk willekeurig moment een aanvraag voor een \tcp-connectie kan binnenkomen bij processen, die al een \tcp-connectie met de server hebben. Kortom, elk proces zal regelmatig moeten controleren op aanvragen voor een \tcp-connectie. Als de volledige graaf is opgebouwd, staan alle processen op gelijke voet. Op dat moment kan het spel beginnen.
 
     \section{Het protocol tijdens het spel}
+    \label{sec:tijdensspel}
     De staat van het spel wordt uniek vastgelegd door de waarde van alle variabelen, inclusief de toestand van alle \tcp-connecties. Het is echter ondoenlijk om alle waarden van de variabelen voortdurend te versturen over de \tcp-connecties. Daarom zal elke speler een replica van het spel hebben. Deze replica's moeten natuurlijk zodanig worden gesynchroniseerd dat spelers niet doorhebben dat hun replica's op kleine details tijdelijk kunnen verschillen.
 
     \subsection{Reliable en unreliable variabelen}
@@ -258,7 +293,7 @@ Deze message stuurt een speler zodra hij een verbinding met een andere speler aa
     \label{sec:interactscenmodel}
     \newpage
     \appendix
-    \section{Klassendiagrammen (UML)}
+    \section{Klassendiagrammen in UML}
     \subsection{Interfaces}
     \begin{figure}[h]
     \centering
@@ -276,7 +311,7 @@ Deze message stuurt een speler zodra hij een verbinding met een andere speler aa
     \label{app:Comm}
     \FloatBarrier
     \newpage
-    \subsection{Klasse-diagram van de modellering van de sc\`enes}
+    \subsection{Klassendiagram voor de sc\`ene}
     \begin{figure}[h]
         \centering
     	\includegraphics{../Class-diagram/SceneModel.pdf}
@@ -285,7 +320,7 @@ Deze message stuurt een speler zodra hij een verbinding met een andere speler aa
     \label{app:Scene}
     \FloatBarrier
     \newpage
-    \section{Voorbeeld van een mogelijk verloop van de interactie van de gebruikersomgeving en de protocolmodule}
+    \section{Voorbeeld van de interactie tussen de gebruikersomgeving en de protocolmodule}
     \begin{figure}[h]
     	\centering
 	\includegraphics[height=0.7\textheight]{../Class-diagram/MSCLobby-console.eps}
