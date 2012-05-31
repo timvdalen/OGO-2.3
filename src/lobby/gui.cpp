@@ -47,6 +47,8 @@ static void lobbyOnPart(Player::Id pid);
 static void lobbyOnChat(Player::Id pid, string line);
 static void lobbyOnClose();
 static void lobbyOnState(Player::Id pid, Player::State state);
+static void lobbyOnStart();
+static void serverLobbyOnStart();
 
 static void lobbyAddPlayer(Player player);
 
@@ -186,11 +188,15 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 
 	wxString seltemp = wxGetTextFromUser(_("Please enter a game name"), _("Game name"));
 	if(seltemp != _("")){
+		joining = false;
+		
+		delete games;
+
 		selected = seltemp;
 		joining = false;
-		this->Close();
-		gameLobbyFrame *lobby = new gameLobbyFrame( _("Hosting: ") + selected, wxPoint(49, 50), wxSize(900, 300));
-		lobby->Show(true);
+		frame->Close();
+		lobbyFrame = new gameLobbyFrame( _("Hosting: ") + selected, wxPoint(49, 50), wxSize(900, 300));
+		lobbyFrame->Show(true);
 	}else{
 		wxMessageBox(_("Please enter a game name"), _("No text"), wxOK | wxICON_EXCLAMATION);
 	}
@@ -269,14 +275,21 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	}
 	wxButton *btnReady = new wxButton(panelRightBottom, ID_READY, readyTxt, wxPoint(5, 5), wxSize(289, 40));
 	if(!joining){
-		btnReady->Enable(false);
+		//btnReady->Enable(false);
 	}
 
 	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnReadyClick));
 	
-
-	//Wait for lobby to connect
-	lobby = new ClientLobby(string(playerName.mb_str()), server);
+	if(joining){
+		//Create new ClientLobby
+		//Wait for lobby to connect
+		lobby = new ClientLobby(string(playerName.mb_str()), server);
+		lobby->onStart = lobbyOnStart;
+	}else{
+		//Create new ServerLobby
+		lobby = new ServerLobby(string(selected.mb_str()), string(playerName.mb_str()), LOBBY_PORT);
+		lobby->onStart = serverLobbyOnStart;
+	}
 	lobby->onConnect = lobbyOnConnect;
 	lobby->onPlayer = lobbyOnPlayer;
 	lobby->onJoin = lobbyOnJoin;
@@ -290,7 +303,12 @@ void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
 	wxTextCtrl *textInput = (wxTextCtrl*) this->FindWindowById(ID_TXTSEND);
 	wxString message = textInput->GetValue();
 	textInput->ChangeValue(_(""));
-	lobby->chat(string(message.mb_str()));
+	if(joining){
+		lobby->chat(string(message.mb_str()));
+	}else{
+		ServerLobby *server = reinterpret_cast<ServerLobby *> (lobby);
+		server->chat(string(message.mb_str()));
+	}
 }
 
 void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
@@ -324,7 +342,11 @@ void gameLobbyFrame::OnReadyClick(wxCommandEvent& WXUNUSED(event)){
 		//TODO: Again, do I need to do this?
 		playerList[playnum] = me;
 	}else{
-		wxMessageBox(_("Starting game"), _("Starting game"), wxOK);
+		ServerLobby *server = reinterpret_cast<ServerLobby *> (lobby);
+		server->start();
+
+		//Netcode should call this, but for now call it from here:
+		serverLobbyOnStart();
 	}
 }
 
@@ -341,6 +363,7 @@ void gameLobbyFrame::SetupPlayerList(){
 }
 
 void gameLobbyFrame::AddToPlayerList(Player player, int i = playerList.size()){
+	panelRightTop->SetFocus();
 	wxCheckBox *chk = new wxCheckBox(panelRightTop, wxID_ANY, _("")	, wxPoint(10, (15*i)));
 	chk->Enable(false);
 	chk->SetValue(gameLobbyFrame::GetState(player.state));
@@ -400,7 +423,11 @@ static void lobbyOnConnect(Player::Id pid, Game game){
 	playnum = pid;
 	Player me;
 	me.id = pid;
-	me.state = Player::stBusy;
+	if(joining){
+		me.state = Player::stBusy;
+	}else{
+		me.state = Player::stHost;
+	}
 	me.name = string(playerName.mb_str());	
 	
 	lobbyAddPlayer(me);
@@ -413,7 +440,7 @@ static void lobbyOnJoin(Player::Id pid, string _playername){
 	newplayer.id = pid;
 	newplayer.state = Player::stBusy;
 	newplayer.name = _playername;
-	
+
 	lobbyAddPlayer(newplayer);
 }
 
@@ -454,4 +481,21 @@ static void lobbyOnState(Player::Id pid, Player::State state){
 
 	//TODO: Yet again
 	playerList[(int) pid] = player;	
+}
+
+static void lobbyOnStart(){
+	char *serverAddr;
+	server.string(serverAddr);
+	//I would use exec_*, but Windows does not support that
+	char command[27];
+	strcat(command, "./Game ");
+	strcat(command, serverAddr);
+	strcat(command, " &");
+	system(command);
+	exit(EXIT_SUCCESS);
+}
+
+static void serverLobbyOnStart(){
+	system("./Game &");
+	exit(EXIT_SUCCESS);
 }
