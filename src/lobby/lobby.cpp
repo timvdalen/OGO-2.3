@@ -287,6 +287,13 @@ void *ClientLobby::listen(void *arg)
 				
 				CALL(lobby->onChat, (int) msg[1], msg[2])
 			}
+			else if (cmd == "START") //------------------------------
+			{
+				if (msg.size() < 2)
+					continue;
+				
+				CALL(lobby->onStart, Address(msg[1]))
+			}
 		}
 	}
 	
@@ -440,6 +447,21 @@ bool ServerLobby::chat(const string &line)
 
 bool ServerLobby::start()
 {
+	if (!data)
+		return false;
+	
+	ServerLobbyData *lobby = (ServerLobbyData *) data;
+	
+	Message msg;
+	msg.push_back("START");
+	msg.push_back((string) lobby->addr);
+	
+	ServerLobbyData::PlayerSet::iterator pit;
+	for (pit = lobby->players.begin(); pit != lobby->players.end(); ++pit)
+		if (pit->id)
+			pit->sock->send(msg);
+	
+	CALL(onStart, lobby->addr)
 	return true;
 }
 

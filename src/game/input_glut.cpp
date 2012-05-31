@@ -6,6 +6,8 @@
 
 #define PRIV(T,x) if (!data) return; T *x = (T *) data;
 
+#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
+
 namespace Movement {
 
 //------------------------------------------------------------------------------
