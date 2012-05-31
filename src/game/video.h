@@ -66,6 +66,9 @@ class Window
 	       const char *title, word xpos = -1, word ypos = -1);
 	~Window();
 	
+	//! Selects the window
+	void select();
+	
 	//! Renders the assigned viewports
 	void render();
 	
