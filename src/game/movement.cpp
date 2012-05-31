@@ -25,10 +25,9 @@ Controller::Controller(Camera &C, Player &P) : camera(C), player(P)
 
 //------------------------------------------------------------------------------
 
-<<<<<<< HEAD
-void Controller::moveX(Direction dir)
+void Controller::moveX()
 {
-	if (dir == dirLeft)
+	if (move[dirLeft])
 	{
 		Vector<double> vec = player.rotation * Vector<double>(-1,0,0);
 		~vec;
@@ -39,7 +38,7 @@ void Controller::moveX(Direction dir)
 		//test
 		player.origin = pos;
 	}
-	else if (dir == dirRight)
+	else if (move[dirRight])
 	{
 		Vector<double> vec = player.rotation * Vector<double>(1,0,0);
 		~vec;
@@ -50,16 +49,13 @@ void Controller::moveX(Direction dir)
 		//test
 		player.origin = pos;
 	}
-	else // Key released
-	{
-	}
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::moveY(Direction dir)
+void Controller::moveY()
 {
-	if (dir == dirForward)
+	if (move[dirForward])
 	{
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
@@ -70,7 +66,7 @@ void Controller::moveY(Direction dir)
 		//test
 		player.origin = pos;
 	}
-	else if (dir == dirBackward)
+	else if (move[dirBackward])
 	{
 		Vector<double> vec = player.rotation * Vector<double>(0,-1,0);
 		~vec;
@@ -81,16 +77,13 @@ void Controller::moveY(Direction dir)
 		//test
 		player.origin = pos;
 	}
-	else // Key released
-	{
-	}
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::moveZ(Direction dir)
+void Controller::moveZ()
 {
-	if (dir == dirUp)
+	if (move[dirUp])
 	{
 		Vector<double> vec = player.rotation * Vector<double>(0,0,1);
 		~vec;
@@ -101,7 +94,7 @@ void Controller::moveZ(Direction dir)
 		//test
 		player.origin = pos;
 	}
-	else if (dir == dirDown)
+	else if (move[dirDown])
 	{
 		Vector<double> vec = player.rotation * Vector<double>(0,0,-1);
 		~vec;
@@ -112,67 +105,126 @@ void Controller::moveZ(Direction dir)
 		//test
 		player.origin = pos;
 	}
-	else // Key released
+}
+
+//------------------------------------------------------------------------------
+
+void Controller::lookX()
+{
+	if (look[dirLeft])
 	{
+		player.rotation = player.rotation * Rotation<double>(0.001, Vector<double>(0,0,-1));
+
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+
+		camera.origin = pos - (vec * zoom);
+		camera.lookAt(pos);
+	}
+	else if (look[dirRight])
+	{
+		player.rotation = player.rotation * Rotation<double>(0.001, Vector<double>(0,0,1));
+
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+
+		camera.origin = pos - (vec * zoom);
+		camera.lookAt(pos);
 	}
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::lookX(Direction dir)
+void Controller::lookY()
 {
-	if (dir == dirLeft)
+	if (look[dirForward]) // Zoom in
 	{
 		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
 		~vec;
-		camera.origin = camera.origin + (vec * zoom);
 
-		player.rotation = player.rotation * Rotation<double>(0.001, Vector<double>(0,0,-1));
+		if (zoom >= 5.0)
+		{
+			zoom -= 0.1;
+		}
+
+		camera.origin = pos - (vec * zoom);
+		camera.lookAt(pos);
 	}
-	else if (dir == dirRight)
+	else if (look[dirBackward]) // Zoom out
 	{
-	}
-	else // Key released
-	{
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+
+		if (zoom <= 15.0) 
+		{
+			zoom += 0.1;
+		}
+
+		camera.origin = pos - (vec * zoom);
+		camera.lookAt(pos);
 	}
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::lookY(Direction dir)
+void Controller::lookZ()
 {
-	if (dir == dirForward) // Zoom in
+	if (look[dirUp])
 	{
+		player.rotation = player.rotation * Rotation<double>(0.001, Vector<double>(1,0,0));
+
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+
+		camera.origin = pos - (vec * zoom);
+		camera.lookAt(pos);
 	}
-	else if (dir == dirBackward) // Zoom out
+	else if (look[dirDown])
 	{
-	}
-	else // Key released
-	{
+		player.rotation = player.rotation * Rotation<double>(0.001, Vector<double>(-1,0,0));
+
+		Vector<double> vec = player.rotation * Vector<double>(0,1,0);
+		~vec;
+
+		camera.origin = pos - (vec * zoom);
+		camera.lookAt(pos);
 	}
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::lookZ(Direction dir)
-{
-	if (dir == dirUp)
-	{
-	}
-	else if (dir == dirDown)
-	{
-	}
-	else // Key released
-	{
-	}
-}
-
-//------------------------------------------------------------------------------
-
-=======
->>>>>>> 71e1b24a7b74fd631c35c2ae134f0d4060dc2438
 void Controller::frame()
 {
+	if (move[dirLeft] || move[dirRight])
+	{
+		moveX();
+	}
+
+	if (move[dirForward] || move[dirBackward])
+	{
+		moveY();
+	}
+
+	if (move[dirUp] || move[dirDown])
+	{
+		moveZ();
+	}
+
+
+	if (look[dirLeft] || look[dirRight])
+	{
+		lookX();
+	}
+
+	if (look[dirForward] || look[dirBackward])
+	{
+		lookY();
+	}
+
+	if (look[dirUp] || look[dirDown])
+	{
+		lookZ();
+	}
 }
 
 //------------------------------------------------------------------------------

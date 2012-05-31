@@ -51,9 +51,15 @@ class Controller
 	
 	private:
 	Point<double> pos;
+	double zoom;
 
-	double pitch;
-	double yaw;
+	void moveX();
+	void moveY();
+	void moveZ();
+
+	void lookX();
+	void lookY();
+	void lookZ();
 };
 
 //------------------------------------------------------------------------------
