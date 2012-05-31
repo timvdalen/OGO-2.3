@@ -52,6 +52,7 @@ class Controller
 	private:
 	Point<double> pos;
 	double zoom;
+	bool fps;
 
 	void moveX();
 	void moveY();
