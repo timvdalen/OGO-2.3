@@ -249,7 +249,7 @@ Op een gegeven moment kan het ook gebeuren dat het gebouw is vernietigd. De eige
 \bericht{R DESTROY, id, pid.}
 
 Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra een team heeft gewonnen: oftewel als het commandocentrum van het andere team is vernietigd. In dit bericht wordt het winnende team meegestuurd:
-\bericht{R END, tid.} 
+\bericht{R END, tid.}
 
     \section{De opbouw van de graaf}
     Het protocol zal een volledige graaf proberen op te bouwen. Dit wordt gedaan tijdens de lobby fase van het spel. We weten dat er tijdens de lobby fase een server is. Elk proces probeert nu een \tcp-connectie te maken met deze server. Zodra deze \tcp-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle adressen van processen, waarmee de server nu is verbonden. Verbindingen uit de lobby fase tellen hierbij dus niet mee. Het proces is dan zelf verantwoordelijk om een \tcp-connectie aan te gaan met elk proces in deze lijst.
@@ -293,7 +293,7 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
     \label{sec:interactscenmodel}
     \newpage
     \appendix
-    \section{Klassendiagrammen (UML)}
+    \section{Klassendiagrammen in UML}
     \subsection{Interfaces}
     \begin{figure}[h]
     \centering
@@ -311,7 +311,7 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
     \label{app:Comm}
     \FloatBarrier
     \newpage
-    \subsection{Klasse-diagram van de modellering van de sc\`enes}
+    \subsection{Klassendiagram voor de sc\`ene}
     \begin{figure}[h]
         \centering
     	\includegraphics{../Class-diagram/SceneModel.pdf}
@@ -320,7 +320,7 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
     \label{app:Scene}
     \FloatBarrier
     \newpage
-    \section{Voorbeeld van een mogelijk verloop van de interactie van de gebruikersomgeving en de protocolmodule}
+    \section{Voorbeeld van de interactie tussen de gebruikersomgeving en de protocolmodule}
     \begin{figure}[h]
     	\centering
 	\includegraphics[height=0.7\textheight]{../Class-diagram/MSCLobby-console.eps}
