@@ -81,13 +81,16 @@ class Window
 	friend void Terminate();
 	friend class Viewport;
 	
+	//! Gets/sets window size \note leave width and height zero to get
+	void size(uword &width, uword &height);
+	
 	private:
 	void *data;
 	
 	static std::set<Window *> windows;
 	static void display();
 	static void resize(int width, int height);
-	static void idle();
+	static void timer(int);
 };
 
 //------------------------------------------------------------------------------
@@ -130,6 +133,25 @@ class Viewport
 	
 	private:
 	void *data;
+};
+
+//------------------------------------------------------------------------------
+
+//! FPS counter
+class FPS
+{
+	public:
+	FPS() : frames(0), time(0), fps(0.0) {}
+	
+	//! Register new frame. \returns current fps
+	double operator()();
+	
+	//! Type cast to numeric gives the current frames-per-second value
+	operator double() { return fps; }
+	
+	private:
+	int frames, time;
+	double fps;
 };
 
 //------------------------------------------------------------------------------
