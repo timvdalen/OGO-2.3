@@ -24,6 +24,20 @@ using namespace Objects;
 
 //------------------------------------------------------------------------------
 
+//! Movement directions
+enum Direction
+{
+	dirUp,   
+	dirDown,
+	dirLeft,
+	dirRight,
+	dirBackward,
+	dirForward,
+	dirLast
+};
+
+//------------------------------------------------------------------------------
+
 //! Camera controller
 class Controller
 {
@@ -31,25 +45,13 @@ class Controller
 	Camera &camera;      //!< Assigned camera
 	ObjectHandle player; //!< Assigned player
 	
-	//! Movement directions
-	enum Direction
-	{
-		dirUp,   
-		dirDown,
-		dirLeft,
-		dirRight,
-		dirBackward,
-		dirForward,
-		dirLast
-	};
-	
 	bitset<dirLast> move; //!< Current comera movement
 	bitset<dirLast> look; //!< Current camera target movement
 	
 	//! Construct controller by assigning a player and camera
 	Controller(Camera &C, ObjectHandle P);
 	
-	void frame();          //!< Called everytime a frame passes in game
+	void frame();         //!< Called everytime a frame passes in game
 	
 	private:
 	Point<double> pos;

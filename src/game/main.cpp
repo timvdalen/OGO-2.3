@@ -24,12 +24,16 @@ using namespace Movement;
 
 Window *window = NULL;
 Controller *controller = NULL;
-map<Input::Button,Controller::Direction> movebind;
-map<Input::Button,Controller::Direction> lookbind;
+Input *input = NULL;
+map<Button,Direction> movebind;
+map<Button,Direction> lookbind;
+map<Button,word> lookcount;
+FPS fps;
+ObjectHandle cube;
 
 void Frame();
-void KeyUp(Input::Button btn);
-void KeyDown(Input::Button btn);
+void KeyUp(Button btn);
+void KeyDown(Button btn);
 void MouseMove(word x, word y);
 
 //------------------------------------------------------------------------------
@@ -77,10 +81,10 @@ int main(int argc, char *argv[])
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
 	
-	v1.camera.origin = Pd(0,0,0);
+	v1.camera.origin = Pd(0,0.1,0);
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 	
-	ObjectHandle cube = Cuboid(Pd(0,3,0));
+	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
 	
 	Materials::ShadedMaterial mat = Materials::ShadedMaterial(Cf(1,0,0,1));
@@ -93,23 +97,31 @@ int main(int argc, char *argv[])
 	v1.camera.lookAt(cube->origin);
 	
 	controller = new Controller(v1.camera, player);
-	Input input(*window);
-	input.onKeyUp = KeyUp;
-	input.onKeyDown = KeyDown;
-	input.onMouseMove = MouseMove;
+	input = new Input(*window);
+	input->onKeyUp = KeyUp;
+	input->onKeyDown = KeyDown;
+	input->onMouseMove = MouseMove;
 	
-	movebind[Input::btnKeyA] = Controller::dirLeft;
-	movebind[Input::btnKeyD] = Controller::dirRight;
-	movebind[Input::btnKeyW] = Controller::dirForward;
-	movebind[Input::btnKeyS] = Controller::dirBackward;
+	movebind[btnKeyA] = dirLeft;
+	movebind[btnKeyD] = dirRight;
+	movebind[btnKeyW] = dirForward;
+	movebind[btnKeyS] = dirBackward;
 	
-	movebind[Input::btnKeyArrowLeft] = Controller::dirLeft;
-	movebind[Input::btnKeyArrowRight] = Controller::dirRight;
-	movebind[Input::btnKeyArrowUp] = Controller::dirForward;
-	movebind[Input::btnKeyArrowDown] = Controller::dirBackward;
+	movebind[btnKeyArrowLeft] = dirLeft;
+	movebind[btnKeyArrowRight] = dirRight;
+	movebind[btnKeyArrowUp] = dirForward;
+	movebind[btnKeyArrowDown] = dirBackward;
 	
-	movebind[Input::btnKeySpace] = Controller::dirUp;
-	movebind[Input::btnKeyC] = Controller::dirDown;
+	movebind[btnKeySpace] = dirUp;
+	movebind[btnKeyC] = dirDown;
+	
+	lookbind[btnMouseMoveLeft] = dirLeft;
+	lookbind[btnMouseMoveRight] = dirRight;
+	lookbind[btnMouseMoveUp] = dirUp;
+	lookbind[btnMouseMoveDown] = dirDown;
+	
+	lookbind[btnMouseScrollUp] = dirForward;
+	lookbind[btnMouseScrollDown] = dirBackward;
 	
 	OnFrame = Frame;
 	
@@ -124,45 +136,67 @@ int main(int argc, char *argv[])
 
 void Frame()
 {
+	if (!input) return;
 	if (!window) return;
 	if (!controller) return;
 	
+	input->frame();
+	
+	/**/
 	controller->frame();
+	/** /
+	if (controller->look[dirLeft])     cube->origin.x -= 0.1;
+	if (controller->look[dirRight])    cube->origin.x += 0.1;
+	if (controller->look[dirBackward]) cube->origin.y -= 0.5;
+	if (controller->look[dirForward])  cube->origin.y += 0.5;
+	if (controller->look[dirUp])       cube->origin.z -= 0.1;
+	if (controller->look[dirDown])     cube->origin.z += 0.1;
+	/**/
+	
+	controller->look.reset();
 	window->render();
+	fps();
 }
 
 //------------------------------------------------------------------------------
 
-void KeyUp(Input::Button btn)
+void KeyUp(Button btn)
 {
-	printf("key up: %d\n", btn);
+	//printf("key up: %d\n", btn);
 	if (!controller) return;
 	
-	if (movebind.count(btn))
-		controller->move[movebind[btn]] = false;
+	if ((btn >= btnMouseScrollUp) && (btn <= btnMouseMoveDown)) return;
 	
-	if (lookbind.count(btn))
-		controller->look[lookbind[btn]] = false;
+	if (movebind.count(btn)) controller->move[movebind[btn]] = false;
+	if (lookbind.count(btn)) controller->look[lookbind[btn]] = false;
+	
+	if (btn == btnMouseLeft) input->grabMouse();
 }
 
 //------------------------------------------------------------------------------
 
-void KeyDown(Input::Button btn)
+void KeyDown(Button btn)
 {
-	printf("key down: %d\n", btn);
+	//printf("key down: %d\n", btn);
 	if (!controller) return;
+	if (!input) return;
 	
-	if (movebind.count(btn))
-		controller->move[movebind[btn]] = true;
+	if (movebind.count(btn)) controller->move[movebind[btn]] = true;
+	if (lookbind.count(btn)) controller->look[lookbind[btn]] = true;
 	
-	if (lookbind.count(btn))
-		controller->look[lookbind[btn]] = true;
+	switch (btn)
+	{
+		case btnKeyEscape: Video::StopEventLoop();
+		case btnKeyF: printf("FPS: %2.f\n", (double) fps); break;
+		case btnMouseRight: input->releaseMouse();
+	}
 }
 
 //------------------------------------------------------------------------------
 
 void MouseMove(word x, word y)
 {
+	//printf("mouse move: %d %d\n", x, y);
 }
 
 //------------------------------------------------------------------------------
