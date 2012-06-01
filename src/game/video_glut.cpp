@@ -48,7 +48,7 @@ void StartEventLoop()
 {
 	glutDisplayFunc(Window::display);
 	glutReshapeFunc(Window::resize);
-	glutIdleFunc(Window::idle);
+	glutTimerFunc(16, Window::timer, 0);
 	
 	glutMainLoop();
 }
@@ -57,7 +57,7 @@ void StartEventLoop()
 
 void StopEventLoop()
 {
-	// Todo: only freeglut can do this, find documentation
+	glutLeaveMainLoop();
 }
 
 //==============================================================================
@@ -86,6 +86,7 @@ Window::Window(uword width, uword height, const char *title,
 	glutInitWindowPosition(xpos, ypos);
 	glutInitWindowSize(width, height);
 	glutCreateWindow(title);
+	wd->wid = glutGetWindow();
 	
 	glClearColor(0, 0, 0, 0);
 	glEnable(GL_DEPTH_TEST);
@@ -94,7 +95,6 @@ Window::Window(uword width, uword height, const char *title,
 	
 	glEnable(GL_LIGHTING);
 	
-	wd->wid = glutGetWindow();
 	windows.insert(this);
 }
 
@@ -138,6 +138,26 @@ void Window::render()
 
 //------------------------------------------------------------------------------
 
+void Window::size(uword &width, uword &height)
+{
+	PRIV(WindowData, wd)
+	
+	select();
+	
+	if (width || height)
+	{
+		if (!width)  width = wd->width;
+		if (!height) height = wd->height;
+		glutReshapeWindow(width, height);
+		return;
+	}
+	
+	width = wd->width;
+	height = wd->height;
+}
+
+//------------------------------------------------------------------------------
+
 void Window::display()
 {
 	set<Window *>::iterator wit;
@@ -163,9 +183,11 @@ void Window::resize(int width, int height)
 
 //------------------------------------------------------------------------------
 
-void Window::idle()
+void Window::timer(int state)
 {
 	CALL(OnFrame);
+	
+	glutTimerFunc(16, Window::timer, 0);
 }
 
 //==============================================================================
@@ -327,6 +349,24 @@ void Viewport::render()
 	for (it = world->children.begin(); it != world->children.end(); ++it)
 		(*it)->render();
 	
+}
+
+//==============================================================================
+
+double FPS::operator()()
+{
+	frames++;
+	
+	int ct = glutGet(GLUT_ELAPSED_TIME);
+	int dt = ct - time;
+	if (dt > 1000)
+	{
+		fps = ((double)frames / (double)dt) * 1000.0;
+		time = ct;
+		frames = 0;
+	}
+	
+	return fps;
 }
 
 //------------------------------------------------------------------------------
