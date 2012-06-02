@@ -238,6 +238,9 @@ void mainFrame::ProcessCallbacks(wxIdleEvent &event){
 		}
 		//Release lock
 		pthread_mutex_unlock(&mainFrameLock);
+
+		//Ask wx for more events
+		event.RequestMore();
 	}
 }
 
@@ -498,7 +501,11 @@ void gameLobbyFrame::ProcessCallbacks(wxIdleEvent &event){
 				break;
 		}
 
+		//Release lock
 		pthread_mutex_unlock(&lobbyFrameLock);
+
+		//Ask wx for more events
+		event.RequestMore();
 	}
 }
 
