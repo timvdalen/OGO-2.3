@@ -154,9 +154,9 @@ void Frame()
 	
 	input->frame();
 	
-	/** /
-	controller->frame();
 	/**/
+	controller->frame();
+	/** /
 	if (controller->look[dirLeft])     cube->origin.x -= 0.5;
 	if (controller->look[dirRight])    cube->origin.x += 0.5;
 	if (controller->look[dirBackward]) cube->origin.y -= 0.5;
