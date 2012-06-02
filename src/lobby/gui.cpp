@@ -2,11 +2,15 @@
 #include <wx/statline.h>
 #include <string>
 #include <map>
+#include <queue>
+#include <pthread.h>
 #include "ConfigFile.h"
 #include "games.h"
 #include "lobby.h"
 #include "common.h"
 #include "CrossPlatform.h"
+
+#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 using namespace Lobby;
 using namespace Net;
@@ -30,13 +34,17 @@ map<Address, GameNo> gameMap;
 GameLobby *lobby;
 Game activeGame;
 Address server;
+pthread_mutex_t mainFrameLock;
 
 
 GameList *games;
 
 //Gamelist listeners
+static void onJoinGameCall(Address _server, Game _game);
 static void onJoinGame(Address _server, Game _game);
+static void onChangeGameCall(Address _server, Game _game);
 static void onChangeGame(Address _server, Game _game);
+static void onPartGameCall(Address _server);
 static void onPartGame(Address _server);
 
 //Lobby listeners
@@ -57,10 +65,16 @@ class LobbyGUI: public wxApp{
 };
 
 class mainFrame: public wxFrame{
-		wxListBox *listbox;
-
+		wxListBox *listbox;	
 	public:
+		queue<string> functions;
+		//Casting from void became a problem
+		queue<Address> addrArgs;
+		queue<Game> gameArgs;
+
 		mainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+
+		void ProcessCallbacks(wxIdleEvent &event);
 
 		void OnJoinClick(wxCommandEvent& event);
 		void OnCreateClick(wxCommandEvent& event);
@@ -106,6 +120,7 @@ enum{
 };
 
 BEGIN_EVENT_TABLE(mainFrame, wxFrame)
+	EVT_IDLE(mainFrame::ProcessCallbacks)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(gameLobbyFrame, wxFrame)
@@ -143,11 +158,37 @@ mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 	CreateStatusBar();
 	SetStatusText(_("Waiting for broadcast...."));
 
+	if(!(pthread_mutex_init(&mainFrameLock, NULL) == 0)) exit(EXIT_FAILURE);
+
 	games = new GameList(LOBBY_PORT);
 
-	games->onJoin = onJoinGame;
-	games->onChange = onChangeGame;
-	games->onPart = onPartGame;
+	games->onJoin = onJoinGameCall;
+	games->onChange = onChangeGameCall;
+	games->onPart = onPartGameCall;
+}
+
+void mainFrame::ProcessCallbacks(wxIdleEvent &event){
+	if(functions.size() != 0){
+		//Achieve lock on functions and arguments queues
+		pthread_mutex_lock(&mainFrameLock);
+		//Handle event on the queue
+		string function = functions.front();
+		functions.pop();
+		if(function == "join"){
+			Address server = addrArgs.front(); addrArgs.pop();
+			Game game = gameArgs.front(); gameArgs.pop();
+			onJoinGame(server, game);
+		}else if(function == "change"){
+			Address server = addrArgs.front(); addrArgs.pop();
+			Game game = gameArgs.front(); gameArgs.pop();
+			onChangeGame(server, game);
+		}else if(function == "part"){
+			Address server = addrArgs.front(); addrArgs.pop();
+			onPartGame(server);
+		}
+		//Release lock
+		pthread_mutex_unlock(&mainFrameLock);
+	}
 }
 
 void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
@@ -203,6 +244,18 @@ void mainFrame::OnCreateClick(wxCommandEvent& WXUNUSED(event)){
 }
 
 /* Game list listeners */
+static void onJoinGameCall(Address _server, Game _game){
+	//Achieve lock
+	pthread_mutex_lock(&mainFrameLock);
+
+	frame->functions.push("join");
+	frame->addrArgs.push(_server);
+	frame->gameArgs.push(_game);
+
+	//Release lock
+	pthread_mutex_unlock(&mainFrameLock);
+}
+
 static void onJoinGame(Address _server, Game _game){
 	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
 	int newid = gameList->GetCount(); 
@@ -215,6 +268,18 @@ static void onJoinGame(Address _server, Game _game){
 
 	gameList->Append(gamename);
 }
+
+static void onPartGameCall(Address _server){
+	//Achieve lock
+	pthread_mutex_lock(&mainFrameLock);
+
+	frame->functions.push("part");
+	frame->addrArgs.push(_server);
+
+	//Release lock
+	pthread_mutex_unlock(&mainFrameLock);
+}
+
 
 static void onPartGame(Address _server){
 	wxListBox *gameList = (wxListBox*) frame->FindWindowById(ID_LISTBOX);
@@ -231,6 +296,19 @@ static void onPartGame(Address _server){
 	wxString gamename(gameno.game.name.c_str(), wxConvUTF8);
 	frame->SetStatusText(_("Game left: " + gamename));
 }
+
+static void onChangeGameCall(Address _server, Game _game){
+	//Achieve lock
+	pthread_mutex_lock(&mainFrameLock);
+
+	frame->functions.push("change");
+	frame->addrArgs.push(_server);
+	frame->gameArgs.push(_game);
+
+	//Release lock
+	pthread_mutex_unlock(&mainFrameLock);
+}
+
 
 static void onChangeGame(Address _server, Game _game){
 	//TODO: This could be better
