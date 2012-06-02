@@ -113,9 +113,6 @@ class mainFrame: public wxFrame{
 mainFrame *frame;
 
 class gameLobbyFrame: public wxFrame{
-	private:
-		static bool GetState(Player::State);
-
 	public:
 		queue<gamelobby_function_t> functions;
 		queue<Game> gameArgs;
@@ -139,9 +136,11 @@ class gameLobbyFrame: public wxFrame{
 		void RemoveCheckboxes();
 		void CloseLobby();
 
+		static bool GetState(Player::State);
 
 		wxPanel *panelRightTop;
 		wxTextCtrl *txtChat;
+		wxButton *btnReady;
 
 		DECLARE_EVENT_TABLE()
 };
@@ -403,9 +402,9 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 	}else{
 		readyTxt = _("Start");
 	}
-	wxButton *btnReady = new wxButton(panelRightBottom, ID_READY, readyTxt, wxPoint(5, 5), wxSize(289, 40));
+	btnReady = new wxButton(panelRightBottom, ID_READY, readyTxt, wxPoint(5, 5), wxSize(289, 40));
 	if(!joining){
-		//btnReady->Enable(false);
+		btnReady->Enable(false);
 	}
 
 	Connect(ID_READY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(gameLobbyFrame::OnReadyClick));
@@ -766,7 +765,20 @@ static void lobbyOnState(Player::Id pid, Player::State state){
 	lobbyFrame->UpdatePlayerList(player);
 
 	//TODO: Yet again
-	playerList[(int) pid] = player;	
+	playerList[(int) pid] = player;
+
+	int ready = true;
+	for(int i=0; i < 6; i++){
+		if(playerList.find(i) != playerList.end()){
+			if(!gameLobbyFrame::GetState(playerList[i].state))
+				ready = false;
+		}
+	}
+	if(ready){
+		lobbyFrame->btnReady->Enable(true);
+	}else{
+		lobbyFrame->btnReady->Enable(false);
+	}
 }
 
 static void lobbyOnStartCall(){
