@@ -779,12 +779,10 @@ static void lobbyOnStart(){
 	server.string(serverAddr);
 	//I would use exec_*, but Windows does not support that
 	#if (defined WIN32 || defined _MSC_VER)
-		char command[28];
-		strcat(command, "start Game ");
+		char command[28] = "start Game ";
 		strcat(command, serverAddr);
 	#else
-		char command[27];
-		strcat(command, "./Game ");
+		char command[27] = "./Game ";
 		strcat(command, serverAddr);
 		strcat(command, " &");
 	#endif
