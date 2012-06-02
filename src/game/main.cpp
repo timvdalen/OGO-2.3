@@ -54,21 +54,29 @@ struct Cuboid : public Object
 	{
 		#define Vert(v) { Pd vt = (v); glVertex3d(vt.x,vt.y,vt.z); }
 		#define Norm(u,v) { Vd n = ~((u)*(v)); glNormal3d(n.x,n.y,n.z); }
+		#define A { glTexCoord2d(0.0,0.0); }
+		#define B { glTexCoord2d(1.0,0.0); }
+		#define C { glTexCoord2d(1.0,1.0); }
+		#define D { glTexCoord2d(0.0,1.0); }
 		
 		Pd o = Vd(0,0,0);
 		Pd a = o + u + v + w;
 		
 		glBegin(GL_QUADS);
-			Norm(u,w); Vert(o); Vert(o+u); Vert(o+u+w); Vert(o+w);
-			Norm(v,u); Vert(o); Vert(o+v); Vert(o+v+u); Vert(o+u);
-			Norm(w,v); Vert(o); Vert(o+w); Vert(o+w+v); Vert(o+v);
-			Norm(u,v); Vert(a); Vert(a-u); Vert(a-u-v); Vert(a-v);
-			Norm(v,w); Vert(a); Vert(a-v); Vert(a-v-w); Vert(a-w);
-			Norm(w,u); Vert(a); Vert(a-w); Vert(a-w-u); Vert(a-u);
+			Norm(u,w); A Vert(o); B Vert(o+u); C Vert(o+u+w); D Vert(o+w);
+			Norm(v,u); A Vert(o); B Vert(o+v); C Vert(o+v+u); D Vert(o+u);
+			Norm(w,v); A Vert(o); B Vert(o+w); C Vert(o+w+v); D Vert(o+v);
+			Norm(u,v); A Vert(a); B Vert(a-u); C Vert(a-u-v); D Vert(a-v);
+			Norm(v,w); A Vert(a); B Vert(a-v); C Vert(a-v-w); D Vert(a-w);
+			Norm(w,u); A Vert(a); B Vert(a-w); C Vert(a-w-u); D Vert(a-u);
 		glEnd();
 		
 		#undef Vert
 		#undef Norm
+		#undef A
+		#undef B
+		#undef C
+		#undef D
 	}
 };
 
@@ -87,9 +95,13 @@ int main(int argc, char *argv[])
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
 	
-	Materials::ShadedMaterial mat = Materials::ShadedMaterial(Cf(1,0,0,1));
-	mat.emissive = Cf(0,.5,0,1);
-	cube->material = mat;
+	{
+		using namespace Materials;
+		
+		ShadedMaterial shade(Cf(1,0,0,1));
+		shade.emissive = Cf(0,.5,0,1);
+		cube->material = TwinMaterial(shade, TexturedMaterial("test.png"));
+	}
 	
 	v1.world = Objects::World(100,100);
 	v1.world->children.insert(cube);
@@ -145,12 +157,17 @@ void Frame()
 	/**/
 	controller->frame();
 	/** /
-	if (controller->look[dirLeft])     cube->origin.x -= 0.1;
-	if (controller->look[dirRight])    cube->origin.x += 0.1;
+	if (controller->look[dirLeft])     cube->origin.x -= 0.5;
+	if (controller->look[dirRight])    cube->origin.x += 0.5;
 	if (controller->look[dirBackward]) cube->origin.y -= 0.5;
 	if (controller->look[dirForward])  cube->origin.y += 0.5;
 	if (controller->look[dirUp])       cube->origin.z -= 0.1;
 	if (controller->look[dirDown])     cube->origin.z += 0.1;
+	
+	Camera &cam = window->viewports[0]->camera;
+	Vd dir = cube->origin + Vd(.5,.5,.5) - cam.origin;
+	dir.z = 0;
+	cam.objective = Rd(Vd(0,1,0), ~dir);
 	/**/
 	
 	controller->look.reset();
@@ -169,8 +186,6 @@ void KeyUp(Button btn)
 	
 	if (movebind.count(btn)) controller->move[movebind[btn]] = false;
 	if (lookbind.count(btn)) controller->look[lookbind[btn]] = false;
-	
-	if (btn == btnMouseLeft) input->grabMouse();
 }
 
 //------------------------------------------------------------------------------
@@ -186,9 +201,10 @@ void KeyDown(Button btn)
 	
 	switch (btn)
 	{
-		case btnKeyEscape: Video::StopEventLoop();
-		case btnKeyF: printf("FPS: %2.f\n", (double) fps); break;
-		case btnMouseRight: input->releaseMouse();
+		case btnKeyEscape:  Video::StopEventLoop();              break;
+		case btnKeyF:       printf("FPS: %2.f\n", (double) fps); break;
+		case btnMouseRight: input->releaseMouse();               break;
+		case btnMouseLeft:  input->grabMouse();                  break;
 	}
 }
 
