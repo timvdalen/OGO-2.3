@@ -238,10 +238,9 @@ void mainFrame::ProcessCallbacks(wxIdleEvent &event){
 		}
 		//Release lock
 		pthread_mutex_unlock(&mainFrameLock);
-
-		//Ask wx for more events
-		event.RequestMore();
 	}
+	//Ask wx for more events
+	event.RequestMore();
 }
 
 void mainFrame::OnJoinClick(wxCommandEvent& WXUNUSED(event)){
@@ -503,10 +502,9 @@ void gameLobbyFrame::ProcessCallbacks(wxIdleEvent &event){
 
 		//Release lock
 		pthread_mutex_unlock(&lobbyFrameLock);
-
-		//Ask wx for more events
-		event.RequestMore();
 	}
+	//Ask wx for more events
+	event.RequestMore();
 }
 
 void gameLobbyFrame::OnSendClick(wxCommandEvent& WXUNUSED(event)){
