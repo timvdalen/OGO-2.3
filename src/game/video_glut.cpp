@@ -95,6 +95,8 @@ Window::Window(uword width, uword height, const char *title,
 	
 	glEnable(GL_LIGHTING);
 	
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	
 	windows.insert(this);
 }
 
