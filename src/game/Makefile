@@ -24,7 +24,7 @@ CXXINCS  =  -I"../common"
 OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
            $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o      \
-           $(OBJDIR)materials.o $(OBJDIR)movement.0 $(OBJDIR)input.o
+           $(OBJDIR)materials.o $(OBJDIR)movement.o $(OBJDIR)input.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread
