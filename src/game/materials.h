@@ -102,6 +102,22 @@ class TwinMaterial : public Material
 
 //------------------------------------------------------------------------------
 
+//! A material that is used to clear the previous material settings.
+
+//! If GL_BLEND is enabled and glBlendFunc GL_SRC_ALPHA is set to 
+//! GL_ONE_MINUS_SRC_ALPHA this will cause objects to be transparent.
+class EmptyMaterial : public ShadedMaterial {
+	public:
+		EmptyMaterial() : ShadedMaterial(C(0,0,0,0), 	//Ambient
+						 C(0,0,0,0), 	//Diffuse
+						 C(0,0,0,0), 	//Specular
+						 C(0,0,0,0), 	//Emissive,
+						 0.0)		//Shininess
+       		{}
+};
+
+//------------------------------------------------------------------------------
+
 } // namespace Material
 
 #endif // _MATERIAL_H
