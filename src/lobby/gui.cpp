@@ -21,6 +21,25 @@ struct GameNo{
 	int id;
 };
 
+enum gamelist_function_t {
+	glJOIN,
+	glCHANGE,
+	glPART
+};
+
+enum gamelobby_function_t{
+	CONNECT,
+	PLAYER,
+	JOIN,
+	PART,
+	TEAM,
+	STATE,
+	CHAT,
+	CLOSE,
+	START,
+	SERVERSTART
+};
+
 /* Globals */
 //TODO: This is very ugly, need a way to pass messages between frames.
 wxString selected;
@@ -36,7 +55,6 @@ Game activeGame;
 Address server;
 pthread_mutex_t mainFrameLock;
 pthread_mutex_t lobbyFrameLock;
-
 
 GameList *games;
 
@@ -77,7 +95,7 @@ class LobbyGUI: public wxApp{
 class mainFrame: public wxFrame{
 		wxListBox *listbox;	
 	public:
-		queue<string> functions;
+		queue<gamelist_function_t> functions;
 		//Casting from void became a problem
 		queue<Address> addrArgs;
 		queue<Game> gameArgs;
@@ -99,7 +117,7 @@ class gameLobbyFrame: public wxFrame{
 		static bool GetState(Player::State);
 
 	public:
-		queue<string> functions;
+		queue<gamelobby_function_t> functions;
 		queue<Game> gameArgs;
 		//Next three could be merged but this might make things harder to understand
 		queue<Player> playArgs;
@@ -194,19 +212,29 @@ void mainFrame::ProcessCallbacks(wxIdleEvent &event){
 		//Achieve lock on functions and arguments queues
 		pthread_mutex_lock(&mainFrameLock);
 		//Handle event on the queue
-		string function = functions.front();
+		gamelist_function_t function = functions.front();
 		functions.pop();
-		if(function == "join"){
-			Address server = addrArgs.front(); addrArgs.pop();
-			Game game = gameArgs.front(); gameArgs.pop();
-			onJoinGame(server, game);
-		}else if(function == "change"){
-			Address server = addrArgs.front(); addrArgs.pop();
-			Game game = gameArgs.front(); gameArgs.pop();
-			onChangeGame(server, game);
-		}else if(function == "part"){
-			Address server = addrArgs.front(); addrArgs.pop();
-			onPartGame(server);
+		switch(function){
+			case glJOIN:
+				{
+					Address server = addrArgs.front(); addrArgs.pop();
+					Game game = gameArgs.front(); gameArgs.pop();
+					onJoinGame(server, game);
+				}
+				break;
+			case glCHANGE:
+				{
+					Address server = addrArgs.front(); addrArgs.pop();
+					Game game = gameArgs.front(); gameArgs.pop();
+					onChangeGame(server, game);
+				}
+				break;
+			case glPART:
+				{
+					Address server = addrArgs.front(); addrArgs.pop();
+					onPartGame(server);
+				}
+				break;
 		}
 		//Release lock
 		pthread_mutex_unlock(&mainFrameLock);
@@ -270,7 +298,7 @@ static void onJoinGameCall(Address _server, Game _game){
 	//Achieve lock
 	pthread_mutex_lock(&mainFrameLock);
 
-	frame->functions.push("join");
+	frame->functions.push(glJOIN);
 	frame->addrArgs.push(_server);
 	frame->gameArgs.push(_game);
 
@@ -295,7 +323,7 @@ static void onPartGameCall(Address _server){
 	//Achieve lock
 	pthread_mutex_lock(&mainFrameLock);
 
-	frame->functions.push("part");
+	frame->functions.push(glPART);
 	frame->addrArgs.push(_server);
 
 	//Release lock
@@ -323,7 +351,7 @@ static void onChangeGameCall(Address _server, Game _game){
 	//Achieve lock
 	pthread_mutex_lock(&mainFrameLock);
 
-	frame->functions.push("change");
+	frame->functions.push(glCHANGE);
 	frame->addrArgs.push(_server);
 	frame->gameArgs.push(_game);
 
@@ -406,42 +434,68 @@ void gameLobbyFrame::ProcessCallbacks(wxIdleEvent &event){
 		//Achieve lock on functions and arguments queues
 		pthread_mutex_lock(&lobbyFrameLock);
 		//Handle event on the queue
-		string function = functions.front();
+		gamelobby_function_t function = functions.front();
 		functions.pop();
 
-		if(function == "connect"){
-			Player::Id pid = pidArgs.front(); pidArgs.pop();
-			Game game = gameArgs.front(); gameArgs.pop();
-			lobbyOnConnect(pid, game);
-		}else if(function == "player"){
-			Player player = playArgs.front(); playArgs.pop();
-			lobbyOnPlayer(player);
-		}else if(function == "join"){
-			Player::Id pid = pidArgs.front(); pidArgs.pop();
-			string playerName = strArgs.front(); strArgs.pop();
-			lobbyOnJoin(pid, playerName);
-		}else if(function == "part"){
-			Player::Id pid = pidArgs.front(); pidArgs.pop();
-			lobbyOnPart(pid);
-		/* Not implemented yet
-		}else if(function == "team"){
-			Player::Id pid = pidArgs.front(); pidArgs.pop();
-			unsigned char team = ucharArgs.front(); ucharArgs.pop();
-			lobbyOnTeam(pid, team);
-		*/
-		}else if(function == "state"){
-			Player::Id pid = pidArgs.front(); pidArgs.pop();
-			Player::State state = stateArgs.front(); stateArgs.pop();
-		}else if(function == "chat"){
-			Player::Id pid = pidArgs.front(); pidArgs.pop();
-			string line = strArgs.front(); strArgs.pop();
-			lobbyOnChat(pid, line);
-		}else if(function == "close"){
-			lobbyOnClose();
-		}else if(function == "start"){
-			lobbyOnStart();
-		}else if(function == "serverstart"){
-			serverLobbyOnStart();
+		switch(function){
+			case CONNECT:
+				{
+					Player::Id pid = pidArgs.front(); pidArgs.pop();
+					Game game = gameArgs.front(); gameArgs.pop();
+					lobbyOnConnect(pid, game);
+				}
+				break;
+			case PLAYER:
+				{
+					Player player = playArgs.front(); playArgs.pop();
+					lobbyOnPlayer(player);
+				}
+				break;
+			case JOIN:
+				{
+					Player::Id pid = pidArgs.front(); pidArgs.pop();
+					string playerName = strArgs.front(); strArgs.pop();
+					lobbyOnJoin(pid, playerName);
+				}
+				break;
+			case PART:
+				{
+					Player::Id pid = pidArgs.front(); pidArgs.pop();
+					lobbyOnPart(pid);
+				}
+				break;
+			/* Not implemented yet
+			case TEAM:
+				{
+					Player::Id pid = pidArgs.front(); pidArgs.pop();
+					unsigned char team = ucharArgs.front(); ucharArgs.pop();
+					lobbyOnTeam(pid, team);
+				}
+				break;
+			*/
+			case STATE:
+				{
+					Player::Id pid = pidArgs.front(); pidArgs.pop();
+					Player::State state = stateArgs.front(); stateArgs.pop();
+					lobbyOnState(pid, state);
+				}
+				break;
+			case CHAT:
+				{
+					Player::Id pid = pidArgs.front(); pidArgs.pop();
+					string line = strArgs.front(); strArgs.pop();
+					lobbyOnChat(pid, line);
+				}
+				break;
+			case CLOSE:
+				lobbyOnClose();
+				break;
+			case START:
+				lobbyOnStart();
+				break;
+			case SERVERSTART:
+				serverLobbyOnStart();
+				break;
 		}
 
 		pthread_mutex_unlock(&lobbyFrameLock);
@@ -572,7 +626,7 @@ static void lobbyOnConnectCall(Player::Id pid, Game game){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("connect");
+	lobbyFrame->functions.push(CONNECT);
 	lobbyFrame->pidArgs.push(pid);
 	lobbyFrame->gameArgs.push(game);
 
@@ -598,7 +652,7 @@ static void lobbyOnJoinCall(Player::Id pid, string _playername){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("join");
+	lobbyFrame->functions.push(JOIN);
 	lobbyFrame->pidArgs.push(pid);
 	lobbyFrame->strArgs.push(_playername);
 
@@ -621,7 +675,7 @@ static void lobbyOnPlayerCall(Player player){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("player");
+	lobbyFrame->functions.push(PLAYER);
 	lobbyFrame->playArgs.push(player);
 
 	//Release lock
@@ -644,7 +698,7 @@ static void lobbyOnPartCall(Player::Id pid){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("part");
+	lobbyFrame->functions.push(PART);
 	lobbyFrame->pidArgs.push(pid);
 
 	//Release lock
@@ -661,7 +715,7 @@ static void lobbyOnChatCall(Player::Id pid, string line){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("chat");
+	lobbyFrame->functions.push(CHAT);
 	lobbyFrame->pidArgs.push(pid);
 	lobbyFrame->strArgs.push(line);
 
@@ -678,7 +732,7 @@ static void lobbyOnCloseCall(){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("close");
+	lobbyFrame->functions.push(CLOSE);
 
 	//Release lock
 	pthread_mutex_unlock(&lobbyFrameLock);
@@ -692,7 +746,7 @@ static void lobbyOnStateCall(Player::Id pid, Player::State state){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("state");
+	lobbyFrame->functions.push(STATE);
 	lobbyFrame->pidArgs.push(pid);
 	lobbyFrame->stateArgs.push(state);
 
@@ -714,7 +768,7 @@ static void lobbyOnStartCall(){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("start");
+	lobbyFrame->functions.push(START);
 
 	//Release lock
 	pthread_mutex_unlock(&lobbyFrameLock);
@@ -742,7 +796,7 @@ static void serverLobbyOnStartCall(){
 	//Achieve lock
 	pthread_mutex_lock(&lobbyFrameLock);
 
-	lobbyFrame->functions.push("serverstart");
+	lobbyFrame->functions.push(SERVERSTART);
 
 	//Release lock
 	pthread_mutex_unlock(&lobbyFrameLock);
