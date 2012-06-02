@@ -13,16 +13,18 @@
 
 #include "base.h"
 #include "core.h"
-
+#include "image.h"
 
 //! Contains material classes
 namespace Materials {
 
 using namespace Core;
 using namespace Base::Alias;
+using namespace Loader;
 
 //------------------------------------------------------------------------------
 
+//! Blinn shaded material base class
 class ShadedMaterial : public Material {
 	public:
 	//! The shininess of this material
@@ -48,6 +50,54 @@ class ShadedMaterial : public Material {
 
 	//! Applies this material to the OpenGL pipeline
 	virtual void select();
+};
+
+//------------------------------------------------------------------------------
+
+//! Textured material base class
+class TexturedMaterial : public Material
+{
+	public:
+	//! Constructs a material with supplied texture file
+	//! \note Currently only supports PNG files
+	TexturedMaterial(const char *filename);
+	
+	//! Constructs a material with supplied texture image
+	//! \note The texture data is stored in video memory, so it is save to
+	//!       destroy the image after construction the material
+	TexturedMaterial(const Image &);
+	
+	//! Cleans up the texture data
+	virtual ~TexturedMaterial();
+	
+	//! Applies this material to the OpenGL pipeline
+	virtual void select();
+	
+	private:
+	struct Texture
+	{
+		udword id;
+		Texture() : id(0) {}
+		~Texture();
+		void load(const Image &);
+	};
+	Handle<Texture> texture;
+};
+
+//------------------------------------------------------------------------------
+
+//! Material that allows two materials to be combined
+class TwinMaterial : public Material
+{
+	public:
+	MaterialHandle first;  //!< First material that will be applied
+	MaterialHandle second; //!< Second material that will be applied
+	
+	//! Constructs the material from two other materials
+	TwinMaterial(MaterialHandle F, MaterialHandle S) : first(F), second(S) {}
+	
+	//! Applies the materials to the OpenGL pipeline
+	virtual void select() { first->select(); second->select(); }
 };
 
 //------------------------------------------------------------------------------

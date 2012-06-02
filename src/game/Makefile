@@ -24,10 +24,11 @@ CXXINCS  =  -I"../common"
 OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
            $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o      \
-           $(OBJDIR)materials.o $(OBJDIR)movement.o $(OBJDIR)input.o
+           $(OBJDIR)materials.o $(OBJDIR)movement.o $(OBJDIR)input.o           \
+           $(OBJDIR)image.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
-LIBS     = -lpthread
+LIBS     = -lpthread -lpng -lz 
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC
@@ -107,3 +108,6 @@ $(OBJDIR)netalg.o: netalg.cpp
 
 $(OBJDIR)materials.o: materials.cpp
 	$(CPP) -c materials.cpp -o $(OBJDIR)materials.o $(CXXFLAGS) 
+
+$(OBJDIR)image.o: image.cpp
+	$(CPP) -c image.cpp -o $(OBJDIR)image.o $(CXXFLAGS) 
