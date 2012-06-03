@@ -346,11 +346,8 @@ void Viewport::render()
 	// Enable lighting
 	glEnable(GL_LIGHT0);
 	
-	// Render objects
-	std::set<ObjectHandle>::const_iterator it;
-	for (it = world->children.begin(); it != world->children.end(); ++it)
-		(*it)->render();
-	
+	// Render the world and everything in it
+	world->render();	
 }
 
 //==============================================================================
