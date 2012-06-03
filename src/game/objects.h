@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "core.h"
+#include "materials.h"
 
 //------------------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ namespace Objects{
 
 using namespace Core;
 using namespace Base::Alias;
+using namespace Materials;
 
 struct Boundingbox;
 class BoundedObject;
@@ -62,8 +64,8 @@ class BoundedObject: public Object{
 		BoundingBox bb;
 	
 		//! Constructs a new bounded object
-		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-			: Object(P, R), bb(B) {}
+		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(), Material M = Material())
+			: Object(P, R, M), bb(B) {}
 
 		virtual ~BoundedObject() {}
 
@@ -90,14 +92,15 @@ class World: public BoundedObject{
 		World(double _width, double _height)
 			: BoundedObject(Pd(), Qd(),
 				BoundingBox(Pd(), Pd(_width,0,0),
-					Pd(0,_height,0), Pd(_width,_height,0)))
+					Pd(0,_height,0), Pd(_width,_height,0)),
+				TexturedMaterial("assets/textures/world/cloud.png"))
 		{
 			width = _width;
 			height = _height;
 		}
 
 		//! Draws the world
-		virtual void draw() {}
+		virtual void draw();	
 };
 
 //! Represents a team
