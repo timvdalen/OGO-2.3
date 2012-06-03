@@ -107,19 +107,11 @@ class TwinMaterial : public Material
 
 //! If GL_BLEND is enabled and glBlendFunc GL_SRC_ALPHA is set to 
 //! GL_ONE_MINUS_SRC_ALPHA this will cause objects to be transparent.
-class EmptyMaterial : public ShadedMaterial {
+class EmptyMaterial : public Material {
 	public:
-		EmptyMaterial() : ShadedMaterial(Cf(0,0,0,0), 	//Ambient
-						 Cf(0,0,0,0), 	//Diffuse
-						 Cf(0,0,0,0), 	//Specular
-						 Cf(0,0,0,0), 	//Emissive,
-						 0.0)		//Shininess
-       		{}
+		EmptyMaterial() {}
 
-		virtual void select(){
-			ShadedMaterial::select();
-			glLineWidth(1);
-		}
+		virtual void select();
 };
 
 //------------------------------------------------------------------------------
