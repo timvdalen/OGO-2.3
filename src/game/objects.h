@@ -97,7 +97,7 @@ class Terrain: public Object{
 
 		//! Constructs a new Terrain
 		Terrain(double _width, double _height):
-			Object(Pd(), Qd(), TexturedMaterial("assets/textures/terrain/grass.png"))
+			Object(Pd(), Qd(), TwinMaterial(TexturedMaterial("assets/textures/terrain/grass.png"), ShadedMaterial(Cf(1, 1, 1, 1))))
 		{
 			width = _width;
 			height = _height;
