@@ -114,6 +114,10 @@ class Terrain: public Object{
 		{
 			width = _width;
 			height = _height;
+
+			showGrid = false;
+			selected.x = -1;
+			selected.y = -1;
 		}
 
 		//! Draws the terrain
