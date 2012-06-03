@@ -108,10 +108,10 @@ class TwinMaterial : public Material
 //! GL_ONE_MINUS_SRC_ALPHA this will cause objects to be transparent.
 class EmptyMaterial : public ShadedMaterial {
 	public:
-		EmptyMaterial() : ShadedMaterial(C(0,0,0,0), 	//Ambient
-						 C(0,0,0,0), 	//Diffuse
-						 C(0,0,0,0), 	//Specular
-						 C(0,0,0,0), 	//Emissive,
+		EmptyMaterial() : ShadedMaterial(Cf(0,0,0,0), 	//Ambient
+						 Cf(0,0,0,0), 	//Diffuse
+						 Cf(0,0,0,0), 	//Specular
+						 Cf(0,0,0,0), 	//Emissive,
 						 0.0)		//Shininess
        		{}
 };
