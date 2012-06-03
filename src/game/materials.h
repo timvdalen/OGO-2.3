@@ -132,6 +132,22 @@ class GridMaterial : public ShadedMaterial {
 		}
 };
 
+//! A material for a selected grid.
+class SelectedGridMaterial : public ShadedMaterial {
+	public:
+		SelectedGridMaterial() : ShadedMaterial(Cf(0.01,0.31,0.58,1), 	//Ambient
+						Cf(0.01,0.31,0.58,1) , 	//Diffuse
+						Cf(0.01,0.31,0.58,1),	//Specular
+						Cf(0.49,0.97,1,1), 	//Emissive,
+						 100.0)		//Shininess
+       		{}
+
+		virtual void select(){
+			ShadedMaterial::select();
+			glLineWidth(5);
+		}
+};
+
 //------------------------------------------------------------------------------
 
 } // namespace Material
