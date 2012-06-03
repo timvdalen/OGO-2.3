@@ -208,8 +208,10 @@ mainFrame::mainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 
 void mainFrame::ProcessCallbacks(wxIdleEvent &event){
 	if(functions.size() != 0){
-		//Achieve lock on functions and arguments queues
-		pthread_mutex_lock(&mainFrameLock);
+		//Try to achieve lock on functions and arguments queues
+		//If it's busy, skip an event
+		if(pthread_mutex_lock(&mainFrameLock) != 0) //TODO: This could also mean an error
+			return;
 		//Handle event on the queue
 		gamelist_function_t function = functions.front();
 		functions.pop();
@@ -432,8 +434,10 @@ gameLobbyFrame::gameLobbyFrame(const wxString& title, const wxPoint& pos, const 
 
 void gameLobbyFrame::ProcessCallbacks(wxIdleEvent &event){
 	if(functions.size() != 0){
-		//Achieve lock on functions and arguments queues
-		pthread_mutex_lock(&lobbyFrameLock);
+		//Try to achieve lock on functions and arguments queues
+		//If it's busy, skip an event
+		if(pthread_mutex_lock(&lobbyFrameLock) != 0) //TODO: This could also mean an error
+			return;
 		//Handle event on the queue
 		gamelobby_function_t function = functions.front();
 		functions.pop();
