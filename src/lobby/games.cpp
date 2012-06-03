@@ -2,6 +2,18 @@
  * Games module -- see header file
  */
 
+#if (defined WIN32 || defined _MSC_VER)
+	#define WIN32_LEAN_AND_MEAN 1
+	#include <windows.h>
+	#define sleep(x) Sleep((x)*1000)
+#else
+	#include <unistd.h>
+#endif
+
+#ifdef NETDEBUG
+	#include <stdio.h>
+#endif
+
 #include <time.h>
 #include <pthread.h>
 
@@ -10,7 +22,7 @@
 #include "protocol.h"
 #include "games.h"
 
-#define CALL(x) if (x) x
+#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 namespace Lobby {
 	
@@ -114,7 +126,10 @@ void *GameList::listen(void *arg)
 			
 			if (ttl <= now)
 			{
-				CALL(gamelist->onPart)(it->first);
+				CALL(gamelist->onPart, it->first);
+				#ifdef NETDEBUG
+				{ char buf[128]; it->first.string(buf); printf("Part %s\n", buf); }
+				#endif
 				p->list.erase(it--);
 			}
 			else if ((!min) || (ttl < min))
@@ -152,12 +167,19 @@ void *GameList::listen(void *arg)
 				
 				if (!p->list.count(remote))
 				{
-					CALL(gamelist->onJoin)(remote, game);
+					if (!gamelist->onJoin) sleep(1);
+					CALL(gamelist->onJoin, remote, game);
+					#ifdef NETDEBUG
+					{ char buf[128]; remote.string(buf); printf("Join %s\n", buf); }
+					#endif
 				}
 				else if ((p->list[remote].numPlayers != game.numPlayers)
 				     || (p->list[remote].name != game.name))
 				{
-					CALL(gamelist->onChange)(remote, game);
+					CALL(gamelist->onChange, remote, game);
+					#ifdef NETDEBUG
+					{ char buf[128]; remote.string(buf); printf("Change %s\n", buf); }
+					#endif
 				}
 				
 				p->list[remote] = game;
