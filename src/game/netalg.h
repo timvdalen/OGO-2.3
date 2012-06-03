@@ -67,6 +67,38 @@ class Clique
 
 //------------------------------------------------------------------------------
 
+class TokenRing
+{
+	public:
+	typedef Net::Address Address;
+	typedef unsigned long NodeID;
+	
+	TokenRing(unsigned short port);
+	~TokenRing();
+	
+	NodeID connect(const Address &remote, int timeout = 0);
+	void close();
+	
+	bool connected() const;
+	bool authorized() const;
+	
+	bool shout(const Message &msg, bool reliable);
+	bool pass();
+	
+	bool entry(NodeID &node);
+	bool loss(NodeID &node);
+	bool recvfrom(NodeID &node, Message &msg, bool &reliable);
+	
+	bool select(int timeout = 0);
+	
+	private:
+	Clique *clique;
+	void *data;
+	static void *process(void *);
+};
+
+//------------------------------------------------------------------------------
+
 } // namespace Protocol
 
 #endif // NETALG_H

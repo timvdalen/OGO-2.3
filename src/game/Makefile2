@@ -21,7 +21,8 @@ OBJDIR   = ../../obj/
 BINDIR   = ../../bin/
 INCS     =  -I"../common"
 CXXINCS  =  -I"../common"
-OBJ      = $(OBJDIR)prottest.o $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o $(OBJDIR)netalg.o
+OBJ      = $(OBJDIR)prottest.o $(OBJDIR)ConfigFile.o $(OBJDIR)net.o            \
+           $(OBJDIR)protocol.o $(OBJDIR)clique.o $(OBJDIR)tokenring.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread
@@ -78,5 +79,8 @@ $(OBJDIR)net.o: ../common/net.cpp
 $(OBJDIR)protocol.o: ../common/protocol.cpp
 	$(CPP) -c ../common/protocol.cpp -o $(OBJDIR)protocol.o $(CXXFLAGS)
 
-$(OBJDIR)netalg.o: netalg.cpp
-	$(CPP) -c netalg.cpp -o $(OBJDIR)netalg.o $(CXXFLAGS) 
+$(OBJDIR)clique.o: clique.cpp
+	$(CPP) -c clique.cpp -o $(OBJDIR)clique.o $(CXXFLAGS) 
+
+$(OBJDIR)tokenring.o: tokenring.cpp
+	$(CPP) -c tokenring.cpp -o $(OBJDIR)tokenring.o $(CXXFLAGS) 
