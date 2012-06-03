@@ -29,9 +29,9 @@ cd $target
 #---------Create symbolic link to applications for easy install
 ln -s /Applications
 #---------Make an lose approximation for the size
-local sizestring=`du -sm Lobby.app`
-local sizesplit=( $sizestring )
-local size=$((${sizesplit[0]} + 1))
+sizestring=`du -sm Lobby.app`
+sizesplit=( $sizestring )
+size=$((${sizesplit[0]} + 1))
 cd ../
 #---------Remove any leftover dmgs--------------
 rm -f pack.temp.dmg
@@ -57,5 +57,3 @@ hdiutil convert "pack.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${finalD
 rm -f pack.temp.dmg 
 #--------Return to original location-----------
 popd
-}
-main
