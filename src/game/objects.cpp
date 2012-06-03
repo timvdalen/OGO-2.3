@@ -2,7 +2,6 @@
  * Objects -- see header
  */
 
-#include <stdio.h>
 #include "objects.h"
 #include "video.h"
 
