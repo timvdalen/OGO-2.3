@@ -89,7 +89,12 @@ void Terrain::draw(){
 				glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
 			glEnd();
 			if(showGrid){
-				Materials::GridMaterial *gridMat = new Materials::GridMaterial();
+				Material *gridMat;
+				if(selected.x == i && selected.y == j){
+					gridMat = new Materials::SelectedGridMaterial();
+				}else{
+					gridMat = new Materials::GridMaterial();
+				}
 				gridMat->select();
 				glBegin(GL_LINES);
 					glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
