@@ -1,0 +1,61 @@
+#--------variables--------------------------
+target="../../../bin"
+title="Lobby"
+finalDMGName="Lobby.dmg"
+#---------Local script-----------------------
+pushd "$(cd "$(dirname "$BASH_SOURCE[0]")"; pwd)"
+#---------clean------------------------------
+unlink $target/Applications
+rm -r -f $target
+mkdir $target
+make clean 
+#-----------build----------------------------
+make gui "CPP = g++ -arch i386" 
+#-----------remove app-bundle----------------
+rm -r "$target/Lobby.app"
+#-----------create app-bundle----------------
+mkdir "$target/Lobby.app"
+mkdir "$target/Lobby.app/Contents"
+mkdir "$target/Lobby.app/Contents/MacOS"
+mkdir "$target/Lobby.app/Contents/Resources"
+#-everything in bin is resource except lobby--
+cp -r "../../bin/" "$target/Lobby.app/Contents/Resources"
+#----------replace lobby name from foo to kay-
+cat "$target/Lobby.app/Contents/Resources/game.conf" | sed "s/foo/kay/" | tee "$target/Lobby.app/Contents/Resources/game.conf"
+#----------Move lobby to contents--------------
+mv "$target/Lobby.app/Contents/Resources/Lobby" "$target/Lobby.app/Contents/MacOS/Lobby"
+#----------Build dmg --------------------------
+cd $target
+#---------Create symbolic link to applications for easy install
+ln -s /Applications
+#---------Make an lose approximation for the size
+local sizestring=`du -sm Lobby.app`
+local sizesplit=( $sizestring )
+local size=$((${sizesplit[0]} + 1))
+cd ../
+#---------Remove any leftover dmgs--------------
+rm -f pack.temp.dmg
+rm -f Lobby.dmg
+echo "creating dmgs"
+#---------Create temporary dmg -----------------
+hdiutil create -srcfolder "bin" -volname "${title}" -fs HFS+ \
+      -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}M pack.temp.dmg
+#--------open dmg ------------------------------
+local device=$(hdiutil attach -readwrite -noverify -noautoopen "pack.temp.dmg" | \
+         egrep '^/dev/' | sed 1q | awk '{print $1}')
+#--------make dmg read-only --------------------
+echo "Need su permissions to chmod the dmg --- Requesting!"
+sudo chmod -Rf go-w /Volumes/"${title}"
+#--------synchronize to ensure files are written
+sync
+sync
+#--------unload dmg ----------------------------
+hdiutil detach ${device}
+#--------compress dmg --------------------------
+hdiutil convert "pack.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${finalDMGName}"
+#--------remove temporary dmg -----------------
+rm -f pack.temp.dmg 
+#--------Return to original location-----------
+popd
+}
+main
