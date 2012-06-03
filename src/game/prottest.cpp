@@ -138,6 +138,7 @@ void *loop(void *data)
 
 char *gets2(char *data, size_t len)
 {
+	data[0] = 0;
 	fgets(data, len, stdin);
 	char *ptr = data + strlen(data) - 1;
 	if (*ptr == '\n') *ptr-- = 0;
