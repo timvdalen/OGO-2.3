@@ -78,14 +78,45 @@ class BoundedObject: public Object{
 		virtual void draw() {}
 };
 
+//! Represents the terrain of the game
+class Terrain: public Object{
+	public:
+		//! Size of the world in the X direction.
+		//! Needs to be a multiple GRID_SIZE
+		double width;
+
+		//! Size of the world in the Y direction.
+		//! Needs to be a multiple GRID_SIZE
+		double height;
+
+		//! Whether or not to draw a grid on this terrain
+		bool showGrid;
+
+		//! Represents the \ref Structure "Structure" on the grid of the terrain
+		map<Point<double>, Structure> structures;
+
+		//! Constructs a new Terrain
+		Terrain(double _width, double _height):
+			Object(Pd(), Qd(), TexturedMaterial("assets/textures/terrain/grass.png"))
+		{
+			width = _width;
+			height = _height;
+			showGrid = false;
+		}
+
+		//! Draws the terrain
+		virtual void draw();
+};
 
 //! Represents the world of the game
 class World: public BoundedObject{
 	public:
-		//! Size of the world in the X direction
+		//! Size of the world in the X direction.
+		//! Needs to be a multiple of GRID_SIZE
 		double width;
 
-		//! Size of the world in the Y direction
+		//! Size of the world in the Y direction.
+		//! Needs to be a multiple of GRID_SIZE
 		double height;
 
 		//! Constructs a new world
@@ -97,6 +128,7 @@ class World: public BoundedObject{
 		{
 			width = _width;
 			height = _height;
+			children.insert(Terrain(width, height));
 		}
 
 		//! Draws the world
@@ -134,16 +166,6 @@ class LaserBeam: public BoundedObject{
 
 		//! The time this laser lives
 		time_t ttl;
-};
-
-//! Represents the terrain of the game
-class Terrain: public Object{
-	public:
-		//! Represents the \ref Structure "Structure" on the grid of the terrain
-		map<Point<double>, Structure> structures;
-
-		//! Draws the terrain
-		virtual void draw();
 };
 
 //! Represents a structure on the terrain

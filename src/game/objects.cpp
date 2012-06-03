@@ -57,6 +57,31 @@ void World::draw(){
 	#undef HIGH
 }
 
+//------------------------------------------------------------------------------
+
+void Terrain::draw(){
+	int noX = (int) width/GRID_SIZE;
+	int noY = (int) height/GRID_SIZE;
+
+	//Draw all columns
+	for(int i=0; i < noX; i++){
+		//Draw all cells in this column
+		for(int j=0; j < noY; j++){
+			double halfWidth = width/2;
+			double halfHeight = height/2;
+			glBegin(GL_QUADS);
+				glTexCoord2d(0, 0);
+				glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
+				glTexCoord2d(1, 0);
+				glVertex3f(((i+1) * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
+				glTexCoord2d(1, 1);
+				glVertex3f(((i+1) * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
+				glTexCoord2d(0, 1);
+				glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
+			glEnd();
+		}
+	}
+}
 
 //------------------------------------------------------------------------------
 
