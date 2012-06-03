@@ -14,6 +14,7 @@
 #include "base.h"
 #include "core.h"
 #include "image.h"
+#include "video.h"
 
 //! Contains material classes
 namespace Materials {
@@ -114,6 +115,29 @@ class EmptyMaterial : public ShadedMaterial {
 						 Cf(0,0,0,0), 	//Emissive,
 						 0.0)		//Shininess
        		{}
+
+		virtual void select(){
+			ShadedMaterial::select();
+			glLineWidth(1);
+		}
+};
+
+//------------------------------------------------------------------------------
+
+//! A material for the grid.
+class GridMaterial : public ShadedMaterial {
+	public:
+		GridMaterial() : ShadedMaterial(Cf(0.2,0.8,0.2,1), 	//Ambient
+						 Cf(0.2,0.8,0.2,1), 	//Diffuse
+						 Cf(0.2,0.8,0.2,1), 	//Specular
+						 Cf(0.8,1,0,1), 	//Emissive,
+						 100.0)		//Shininess
+       		{}
+
+		virtual void select(){
+			ShadedMaterial::select();
+			glLineWidth(5);
+		}
 };
 
 //------------------------------------------------------------------------------
