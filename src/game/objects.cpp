@@ -2,6 +2,7 @@
  * Objects -- see header
  */
 
+#include <stdio.h>
 #include "objects.h"
 #include "video.h"
 
@@ -55,6 +56,14 @@ void World::draw(){
 	glEnd();
 
 	#undef HIGH
+}
+
+//------------------------------------------------------------------------------
+
+void World::postRender(){
+	terrain.render();
+
+	Object::postRender();
 }
 
 //------------------------------------------------------------------------------
