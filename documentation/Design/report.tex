@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,11pt, twoside]{article}
 \usepackage{graphicx,listings,float,geometry, amsmath,placeins}
 %\usepackage[firstpage]{draftwatermark}
 %\SetWatermarkLightness{0.5}
@@ -297,13 +297,11 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
     \begin{figure}[h]
     \centering
     	\includegraphics[width=0.9\textwidth]{../Class-diagram/Interfaces.pdf}
-    	\caption{De verscheidene interfaces die ge\"implementeerd worden door klassen in het model van de sc\`ene}
-    \end{figure}
-    \label{app:Interfaces}
-    \FloatBarrier
+    	\caption{De verscheidene interfaces die ge\"implementeerd worden door klassen in het model van de sc\`ene.}
+    \end{figure}\FloatBarrier    \label{app:Interfaces}
     \begin{samepage}
     \subsection{Communicatie klassen} \begin{figure}[h]
-        \centering  	\includegraphics[width=\textwidth]{../Class-diagram/NetCommunication.pdf}
+        \centering  	\includegraphics[width=1.05\textwidth]{../Class-diagram/NetCommunication.pdf}
 	\caption{De globale klasse die methoden verschaft om te kunnen communiceren met de medespelers.}
     \end{figure}
     \label{app:Comm}
@@ -316,13 +314,15 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
     \subsection{Klassendiagram voor de sc\`ene}
     \begin{figure}[h]
         \centering
-    	\includegraphics[angle = 90, height=0.95\textheight]{../Class-diagram/SceneModel.pdf}
+    	\includegraphics[height=0.72\textheight]{../Class-diagram/ClassDiagram1.pdf}
 	\caption{Het klassendiagram voor het model van de sc\`ene.}
     \end{figure}
     \label{app:Scene}
     \FloatBarrier
     \newpage
-    
+     \ \\[5mm]
+    \includegraphics[height=0.6\textheight]{../Class-diagram/ClassDiagram2.pdf}
+    \newpage
     \section{Voorbeeld van de interactie tussen de gebruikersomgeving en de protocolmodule}
     \label{sec:interactscenmodel}
     \begin{figure}[h]
