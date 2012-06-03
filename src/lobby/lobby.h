@@ -20,58 +20,72 @@
 namespace Lobby {
 
 //------------------------------------------------------------------------------
-
+//! Representation of a player in a lobby session
 struct Player
 {
-	typedef unsigned int Id;
+	typedef unsigned int Id; //!< Player Id type
+	//! Player state definition
 	enum State
 	{
-		stBusy,
-		stReady,
-		stHost
+		stBusy,  //!< Player is not ready
+		stReady, //!< Player is ready
+		stHost   //!< Player is hosting the lobby session
 	};
 	
-	Id id;
-	unsigned char team;
-	State state;
-	std::string name;
+	Id id;              //!< Player id
+	unsigned char team; //!< Team id of the team  the player is in
+	State state;        //!< Player's state
+	std::string name;   //!< PLayer's name
 };
 
 //------------------------------------------------------------------------------
-
+//! A lobby session
 class GameLobby
 {
 	public:
+	//! Callback: Successfully connected to a lobby session
 	void (*onConnect) (Player::Id pid, Game game);
+	//! Callback: Recieved player info
 	void (*onPlayer)  (Player player);
+	//! Callback: A player has joined the lobby
 	void (*onJoin)    (Player::Id pid, std::string playerName);
+	//! Callback: A player has left the lobby
 	void (*onPart)    (Player::Id pid);
+	//! Callback: A player has switched teams
 	void (*onTeam)    (Player::Id pid, unsigned char team);
+	//! Callback: A player has changed its ready state
 	void (*onState)   (Player::Id pid, Player::State state);
+	//! Callback: A player sent a chat message
 	void (*onChat)    (Player::Id pid, std::string line);
+	//! Callback: Lobby session was terminated
 	void (*onClose)   ();
+	//! Callback: The host wants to start the game
 	void (*onStart)   ();
 	
 	GameLobby();
 	
+	//! Sends a request to change the local player's team
 	bool team(unsigned char team);
+	//! Lets the local player send a chat message
 	bool chat(const std::string &line);
 	
-	bool valid() const;
-	void close();
+	bool valid() const; //!< Returns the validity of the lobby session
+	void close();       //!< Closes the lobby session
 	
 	protected:
 	void *data;
 };
 
 //------------------------------------------------------------------------------
-
+//! A joining lobby session
 class ClientLobby : public GameLobby
 {
 	public:
+	//! Tries to join the lobby session at the specified server address
 	ClientLobby(std::string playerName, const Net::Address &server);
 	~ClientLobby();
 	
+	//! Sends a request to change the state of the local player
 	bool state(bool ready);
 	
 	private:
@@ -79,15 +93,19 @@ class ClientLobby : public GameLobby
 };
 
 //------------------------------------------------------------------------------
-
+//! A hosting lobby session
 class ServerLobby : public GameLobby
 {
 	public:
+	//! Creates a new lobby session listening for clients on specified port
 	ServerLobby(std::string gameName, std::string playerName, unsigned int port);
 	~ServerLobby();
 	
+	//! Changes the local player's team
 	bool team(unsigned char team);
+	//! Lets the local player send a chat message
 	bool chat(const std::string &line);
+	//! Sends a start game notification
 	bool start();
 	
 	private:
