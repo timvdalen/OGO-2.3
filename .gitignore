@@ -197,3 +197,5 @@ src/lobby/lobby.cbp.cbTemp
 src/lobby/lobby.layout.cbTemp
 
 src/lobby/KayMake
+
+bin/game.conf
