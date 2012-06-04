@@ -11,6 +11,9 @@ namespace Materials {
 
 void ShadedMaterial::select()
 {
+	EmptyMaterial *empty = new EmptyMaterial();
+	empty->select();
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
@@ -91,6 +94,16 @@ void TexturedMaterial::Texture::load(const Image &image)
 }
 
 //------------------------------------------------------------------------------
+
+void EmptyMaterial::select(){
+	GLfloat empty[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	glMaterialfv(GL_FRONT, GL_AMBIENT, empty);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, empty);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, empty);
+	glMaterialfv(GL_FRONT, GL_EMISSION, empty);
+	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+	glLineWidth(1);
+}
 
 } // namespace Materials
 

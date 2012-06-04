@@ -14,6 +14,7 @@
 #include "base.h"
 #include "core.h"
 #include "image.h"
+#include "video.h"
 
 //! Contains material classes
 namespace Materials {
@@ -106,14 +107,45 @@ class TwinMaterial : public Material
 
 //! If GL_BLEND is enabled and glBlendFunc GL_SRC_ALPHA is set to 
 //! GL_ONE_MINUS_SRC_ALPHA this will cause objects to be transparent.
-class EmptyMaterial : public ShadedMaterial {
+class EmptyMaterial : public Material {
 	public:
-		EmptyMaterial() : ShadedMaterial(Cf(0,0,0,0), 	//Ambient
-						 Cf(0,0,0,0), 	//Diffuse
-						 Cf(0,0,0,0), 	//Specular
-						 Cf(0,0,0,0), 	//Emissive,
-						 0.0)		//Shininess
+		EmptyMaterial() {}
+
+		virtual void select();
+};
+
+//------------------------------------------------------------------------------
+
+//! A material for the grid.
+class GridMaterial : public ShadedMaterial {
+	public:
+		GridMaterial() : ShadedMaterial(Cf(0.2,0.8,0.2,1), 	//Ambient
+						 Cf(0.2,0.8,0.2,1), 	//Diffuse
+						 Cf(0.2,0.8,0.2,1), 	//Specular
+						 Cf(0.8,1,0,1), 	//Emissive,
+						 100.0)		//Shininess
        		{}
+
+		virtual void select(){
+			ShadedMaterial::select();
+			glLineWidth(5);
+		}
+};
+
+//! A material for a selected grid.
+class SelectedGridMaterial : public ShadedMaterial {
+	public:
+		SelectedGridMaterial() : ShadedMaterial(Cf(0.01,0.31,0.58,1), 	//Ambient
+						Cf(0.01,0.31,0.58,1) , 	//Diffuse
+						Cf(0.01,0.31,0.58,1),	//Specular
+						Cf(0.49,0.97,1,1), 	//Emissive,
+						 100.0)		//Shininess
+       		{}
+
+		virtual void select(){
+			ShadedMaterial::select();
+			glLineWidth(5);
+		}
 };
 
 //------------------------------------------------------------------------------

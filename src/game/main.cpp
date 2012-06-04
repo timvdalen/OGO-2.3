@@ -103,9 +103,14 @@ int main(int argc, char *argv[])
 		cube->material = TwinMaterial(shade, TexturedMaterial("test.png"));
 	}
 	
-	v1.world = Objects::World(100,100);
-	v1.world->children.insert(cube);
+	Objects::World world = Objects::World(100, 100);
+	world.terrain.showGrid = true;
+	world.terrain.selected.x = 4;
+	world.terrain.selected.y = 4;
+	world.children.insert(cube);
 	
+	v1.world = world;
+
 	v1.camera.lookAt(cube->origin);
 	
 	controller = new Controller(v1.camera, player);

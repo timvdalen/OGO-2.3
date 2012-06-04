@@ -43,6 +43,7 @@ class ResourceMine;
 class Droppables;
 
 //! Represents a bounding box. 
+
 //! Point variables follow xyz where x is l(left) or r(ight), y is t(op) or b(ottom) and z is l(ow) or h(igh).
 struct BoundingBox{
 	Point<double> lbl, rbl, ltl, rtl, lbh, rbh, lth, rth;
@@ -55,6 +56,11 @@ struct BoundingBox{
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl), 
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
+};
+
+//! Represents a point on a grid
+struct GridPoint{
+	int x,y;
 };
 
 //! Represents an object with a bounding box
@@ -78,29 +84,79 @@ class BoundedObject: public Object{
 		virtual void draw() {}
 };
 
+//! Represents the terrain of the game
+class Terrain: public Object{
+	public:
+		//! Size of the world in the X direction.
+		
+		//! Needs to be a multiple GRID_SIZE
+		double width;
+
+		//! Size of the world in the Y direction.
+
+		//! Needs to be a multiple GRID_SIZE
+		double height;
+
+		//! Selected square of the grid.
+		
+		//! If this is not on the grid, it will not show up.
+		GridPoint selected;
+
+		//! Whether or not to draw a grid on this terrain
+		bool showGrid;
+
+		//! Represents the \ref Structure "Structure" on the grid of the terrain
+		map<Point<double>, Structure> structures;
+
+		//! Constructs a new Terrain
+		Terrain(double _width, double _height):
+			Object(Pd(), Qd(), TwinMaterial(TexturedMaterial("assets/textures/terrain/grass.png"), ShadedMaterial(Cf(1, 1, 1, 1))))
+		{
+			width = _width;
+			height = _height;
+
+			showGrid = false;
+			selected.x = -1;
+			selected.y = -1;
+		}
+
+		//! Draws the terrain
+		virtual void draw();
+};
 
 //! Represents the world of the game
 class World: public BoundedObject{
 	public:
-		//! Size of the world in the X direction
+		//! Size of the world in the X direction.
+		
+		//! Needs to be a multiple of GRID_SIZE
 		double width;
 
-		//! Size of the world in the Y direction
+		//! Size of the world in the Y direction.
+		
+		//! Needs to be a multiple of GRID_SIZE
 		double height;
+
+		//! Terrain associated with this World
+		Terrain terrain;
 
 		//! Constructs a new world
 		World(double _width, double _height)
 			: BoundedObject(Pd(), Qd(),
 				BoundingBox(Pd(), Pd(_width,0,0),
 					Pd(0,_height,0), Pd(_width,_height,0)),
-				TexturedMaterial("assets/textures/world/cloud.png"))
+				TexturedMaterial("assets/textures/world/cloud.png")),
+			terrain(_width, _height)
 		{
 			width = _width;
 			height = _height;
 		}
 
 		//! Draws the world
-		virtual void draw();	
+		virtual void draw();
+
+		//! Renders the worlds children
+		virtual void postRender();
 };
 
 //! Represents a team
@@ -134,16 +190,6 @@ class LaserBeam: public BoundedObject{
 
 		//! The time this laser lives
 		time_t ttl;
-};
-
-//! Represents the terrain of the game
-class Terrain: public Object{
-	public:
-		//! Represents the \ref Structure "Structure" on the grid of the terrain
-		map<Point<double>, Structure> structures;
-
-		//! Draws the terrain
-		virtual void draw();
 };
 
 //! Represents a structure on the terrain
