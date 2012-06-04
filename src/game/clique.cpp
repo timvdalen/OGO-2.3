@@ -615,7 +615,7 @@ void *Clique::process(void *obj)
 						else
 						{
 							bool cond = INCOMMING;
-							qd->msgs.push(pair<Address,Message>(node->remote, msg));
+							qd->msgs.push(make_pair(node->remote, msg));
 							if (!cond) pthread_cond_broadcast(&qd->incomming);
 						}
 					}

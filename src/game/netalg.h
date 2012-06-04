@@ -80,7 +80,7 @@ class TokenRing
 	bool connect(const Address &remote, int timeout = 0);
 	void close();
 	
-	bool connected() const;
+	bool connected() const; // Check for entries after connect succeeded
 	bool authorized() const;
 	NodeID id() const;
 	
