@@ -11,9 +11,6 @@ namespace Materials {
 
 void ShadedMaterial::select()
 {
-	EmptyMaterial *empty = new EmptyMaterial();
-	empty->select();
-
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
