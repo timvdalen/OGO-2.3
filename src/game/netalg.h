@@ -67,20 +67,22 @@ class Clique
 
 //------------------------------------------------------------------------------
 
+typedef unsigned long NodeID;
+
 class TokenRing
 {
 	public:
 	typedef Net::Address Address;
-	typedef unsigned long NodeID;
 	
 	TokenRing(unsigned short port);
 	~TokenRing();
 	
-	NodeID connect(const Address &remote, int timeout = 0);
+	bool connect(const Address &remote, int timeout = 0);
 	void close();
 	
 	bool connected() const;
 	bool authorized() const;
+	NodeID id() const;
 	
 	bool shout(const Message &msg, bool reliable);
 	bool pass();
