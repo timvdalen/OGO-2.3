@@ -23,9 +23,10 @@ INCS     =  -I"../common"
 CXXINCS  =  -I"../common"
 OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)ConfigFile.o $(OBJDIR)net.o $(OBJDIR)protocol.o            \
-           $(OBJDIR)objects.o  $(OBJDIR)netalg.o $(OBJDIR)CrossPlatform.o      \
-           $(OBJDIR)materials.o $(OBJDIR)movement.o $(OBJDIR)input.o           \
-           $(OBJDIR)image.o
+           $(OBJDIR)objects.o  $(OBJDIR)clique.o $(OBJDIR)tokenring.o          \
+           $(OBJDIR)CrossPlatform.o $(OBJDIR)materials.o $(OBJDIR)movement.o   \
+           $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
+           $(OBJDIR)netcode.o $(OBJDIR)game.o 
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz 
@@ -103,11 +104,23 @@ $(OBJDIR)input.o: input_glut.cpp
 $(OBJDIR)movement.o: movement.cpp
 	$(CPP) -c movement.cpp -o $(OBJDIR)movement.o $(CXXFLAGS)
 
-$(OBJDIR)netalg.o: netalg.cpp
-	$(CPP) -c netalg.cpp -o $(OBJDIR)netalg.o $(CXXFLAGS) 
+$(OBJDIR)clique.o: clique.cpp
+	$(CPP) -c clique.cpp -o $(OBJDIR)clique.o $(CXXFLAGS) 
+
+$(OBJDIR)tokenring.o: tokenring.cpp
+	$(CPP) -c tokenring.cpp -o $(OBJDIR)tokenring.o $(CXXFLAGS) 
 
 $(OBJDIR)materials.o: materials.cpp
 	$(CPP) -c materials.cpp -o $(OBJDIR)materials.o $(CXXFLAGS) 
 
 $(OBJDIR)image.o: image.cpp
 	$(CPP) -c image.cpp -o $(OBJDIR)image.o $(CXXFLAGS) 
+
+$(OBJDIR)assets.o: assets.cpp
+	$(CPP) -c assets.cpp -o $(OBJDIR)assets.o $(CXXFLAGS) 
+
+$(OBJDIR)netcode.o: netcode.cpp
+	$(CPP) -c netcode.cpp -o $(OBJDIR)netcode.o $(CXXFLAGS) 
+
+$(OBJDIR)game.o: game.cpp
+	$(CPP) -c game.cpp -o $(OBJDIR)game.o $(CXXFLAGS) 
