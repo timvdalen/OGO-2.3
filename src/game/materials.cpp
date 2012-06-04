@@ -53,7 +53,15 @@ void TexturedMaterial::select()
 	if (!texture->id) return;
 	
 	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, texture->id);
+}
+
+//------------------------------------------------------------------------------
+
+void TexturedMaterial::unselect()
+{
+	glDisable(GL_TEXTURE_2D);
 }
 
 //------------------------------------------------------------------------------

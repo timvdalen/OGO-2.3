@@ -74,6 +74,9 @@ class TexturedMaterial : public Material
 	//! Applies this material to the OpenGL pipeline
 	virtual void select();
 	
+	//! Cleans up the texture binding
+	virtual void unselect();
+	
 	private:
 	struct Texture
 	{
@@ -99,6 +102,9 @@ class TwinMaterial : public Material
 	
 	//! Applies the materials to the OpenGL pipeline
 	virtual void select() { first->select(); second->select(); }
+	
+	//! Cleans up the material from the OpenGL pipeline
+	virtual void unselect() { second->unselect(); first->unselect(); }
 };
 
 //------------------------------------------------------------------------------
