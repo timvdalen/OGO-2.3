@@ -26,6 +26,8 @@ void Object::render()
 	
 	draw();
 	
+	material->unselect();
+	
 	postRender();
 }
 

@@ -48,19 +48,19 @@ int main(int argc, char *argv[])
 	printf("port> ");
 	line = gets2(buffer, sizeof(buffer));
 	msg = line;
-	Clique cq((int) msg[0]);
+	TokenRing tr((int) msg[0]);
 	
 	pthread_t thread;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	
-	if (pthread_create(&thread, &attr, loop, (void *) &cq))
+	if (pthread_create(&thread, &attr, loop, (void *) &tr))
 		puts("Warning: could not create a thread!");
 	
 	pthread_attr_destroy(&attr);
 	
-	while (cq.connected())
+	while (tr.connected())
 	{
 		if (queueing)
 			printf("> ");
@@ -80,19 +80,19 @@ int main(int argc, char *argv[])
 		{
 			string cmd = msg[0];
 			if ((cmd == "!exit") || (cmd == "!close"))
-				cq.close();
-			else if (cmd == "!list")
-				cq.debug();
-			else if ((cmd == "!break") && (msg.size() > 1))
-			{
-				Address node(string(msg[1]).c_str());
-				cq.debugClose(node);
-			}
+				tr.close();
+			//else if (cmd == "!list")
+			//	tr.debug();
 			else if ((cmd == "!connect") && (msg.size() > 1))
-				cq.connect(Address(string(msg[1]).c_str()));
+				tr.connect(Address(string(msg[1]).c_str()));
+		}
+		else if (line[0] == '#')
+		{
+			msg[0].str.erase(0,1);
+			tr.shout(msg, true);
 		}
 		else
-			cq.shout(msg);
+			tr.shout(msg, false);
 	}
 	
 	pthread_cancel(thread);
@@ -111,23 +111,24 @@ int main(int argc, char *argv[])
 
 void *loop(void *data)
 {
-	Clique *cq = (Clique *)data;
+	TokenRing *tr = (TokenRing *)data;
 	
 	Message msg;
-	Address remote;
-	while (cq->connected())
+	NodeID id;
+	bool reliable;
+	while (tr->connected())
 	{
 		pthread_testcancel();
-		cq->select();
+		tr->select();
 		
-		while (cq->entry(remote))
-			printf2("*** Node #%d entered.\n", id[remote] = last++);
+		while (tr->entry(id))
+			printf2("*** Node #%d entered.\n", id);
 		
-		while (cq->loss(remote))
-			printf2("*** Node #%d left.\n", id[remote]);
+		while (tr->loss(id))
+			printf2("*** Node #%d left.\n", id);
 		
-		while(cq->recvfrom(remote, msg))
-			printf2("<%d> %s\n", id[remote], string(msg).c_str());
+		while(tr->recvfrom(id, msg, reliable))
+			printf2("%c<%d> %s\n", reliable ? '#' : ' ', id, string(msg).c_str());
 	}
 	
 	pthread_exit(0);

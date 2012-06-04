@@ -47,7 +47,8 @@
 #define VPRIV(T,x) if (!data) return; T *x = (T *) data;
 #define PRIV(T,x) if (!data) return false; T *x = (T *) data;
 
-#define PROBE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
+#define PRO\
+BE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
 
 namespace Protocol {
 	
@@ -133,7 +134,7 @@ Clique::~Clique()
 {
 	VPRIV(CliqueData, qd)
 	
-	pthread_mutex_lock(&qd->lock);
+	//pthread_mutex_lock(&qd->lock); <-- select will lock, just cancel it
 	{
 		pthread_cancel(qd->thread);
 		
@@ -436,22 +437,33 @@ void *Clique::process(void *obj)
 		pthread_mutex_lock(&qd->lock);
 		{
 			read.push_back(qd->sock);  // Add listening socket to selection
-			for (nit = qd->connected.begin(); nit != qd->connected.end(); ++nit)
+			for (nit = qd->connected.begin(); nit != qd->connected.end();)
 			{
 				// Check for liveness
 				if (!nit->second.sock->valid())
-					qd->closed(nit--->second.sock);
-				else
-					read.push_back(nit->second.sock); // Add nodes to selection
+				{
+					qd->closed(nit->second.sock);
+					read.clear();
+					nit = qd->connected.begin();
+				}
+				else // Add nodes to selection
+					read.push_back((nit++)->second.sock);
 			}
 		}
 		
 		// See if half-open connections had a timeout
 		{
 			map<Address, pair<size_t,time_t> >::iterator it;
-			for (it = qd->lost.begin(); it != qd->lost.end(); ++it)
+			for (it = qd->lost.begin(); it != qd->lost.end();)
+			{
 				if (it->second.second <= time(NULL))
-					qd->loose(it--->first);
+				{
+					qd->loose(it->first);
+					it = qd->lost.begin(); 
+				}
+				else
+					++it;
+			}
 		}
 		pthread_mutex_unlock(&qd->lock);
 		
@@ -541,8 +553,8 @@ void *Clique::process(void *obj)
 								qd->entry.push(*it2);
 								qd->connected[*it2] = CliqueNode(sock, *it2);
 								qd->lost.erase(*it2);
-								qd->connecting.erase(it2--);
 							}
+							qd->connecting.clear();
 						}
 						else if ((cmd == "@!") || (cmd == "@!!"))
 						{
@@ -560,13 +572,16 @@ void *Clique::process(void *obj)
 						
 							// Update the connection status
 							for (nit = qd->connected.begin();
-							     nit != qd->connected.end(); ++nit)
+							     nit != qd->connected.end();)
 							{
-								if (nit->second.sock->valid())
-									continue;
-								
-								// Socket disconnected
-								qd->closed(nit--->second.sock);
+								if (!nit->second.sock->valid())
+								{
+									// Socket disconnected
+									qd->closed(nit->second.sock);
+									nit = qd->connected.begin();
+								}
+								else
+									++nit;
 							}
 							
 							// A loss notification has arrived
@@ -701,8 +716,6 @@ CliqueNode::operator string() const
 	remote.string(buffer);
 	return string(buffer);
 }
-
-//==============================================================================
 
 //------------------------------------------------------------------------------
 
