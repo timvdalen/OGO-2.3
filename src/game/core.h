@@ -97,7 +97,10 @@ class Handle
 class Material
 {
 	public:
+	//! Selects this material for the next drawing operation
 	virtual void select() {}
+	//! Clears up the material selection after drawing
+	virtual void unselect() {}
 	virtual ~Material() {}
 };
 
