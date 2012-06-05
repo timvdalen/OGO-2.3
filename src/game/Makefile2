@@ -34,10 +34,9 @@ ifeq ($(platform),win32)
 	BIN      := $(BIN).exe
 else
 	LIBS     += 
-endif
-
 ifneq ($(platform),macos)
     LIBS     += -lrt
+endif
 endif
 
 ifeq ($(build),debug)

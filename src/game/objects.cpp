@@ -32,7 +32,7 @@ World::World(double _width, double _height)
 
 void World::draw(){
 	#define HIGH 500
-
+	return;
 	double halfWidth = width/2;
 	double halfHeight = height/2;
 
@@ -86,7 +86,9 @@ Terrain::Terrain(double _width, double _height)
 
 //------------------------------------------------------------------------------
 
-void Terrain::draw(){
+void Terrain::draw()
+{
+	return;
 	int noX = (int) width/GRID_SIZE;
 	int noY = (int) height/GRID_SIZE;
 
