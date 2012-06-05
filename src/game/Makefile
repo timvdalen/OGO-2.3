@@ -39,6 +39,8 @@ else
 	LIBS     += -lGL -lGLU -lglut
 endif
 
+LIBS += -lglu32 -lopengl32 -lglut32
+
 ifneq ($(platform),macos)
     LIBS     += -lrt
 endif

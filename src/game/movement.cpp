@@ -113,7 +113,7 @@ void Controller::lookX()
 {
 	if (look[dirLeft])
 	{
-		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(0,0,-1));
+		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(0,0,1));
 
 		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
 		~vec;
@@ -131,7 +131,7 @@ void Controller::lookX()
 	}
 	else if (look[dirRight])
 	{
-		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(0,0,1));
+		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(0,0,-1));
 
 		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
 		~vec;
@@ -190,6 +190,7 @@ void Controller::lookY()
 		
 		if (fps == true)
 		{
+			fps = false;
 			zoom = 5.0;
 		}
 
@@ -212,7 +213,7 @@ void Controller::lookZ()
 {
 	if (look[dirUp])
 	{
-		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(1,0,0));
+		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(0,1,0));
 
 		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
 		~vec;
@@ -230,7 +231,7 @@ void Controller::lookZ()
 	}
 	else if (look[dirDown])
 	{
-		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(-1,0,0));
+		player->rotation = player->rotation * Rotation<double>(0.001, Vector<double>(0,-1,0));
 
 		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
 		~vec;

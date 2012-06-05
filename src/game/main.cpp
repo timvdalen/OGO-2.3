@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
 	
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
+	player->children.insert(Cuboid(Pd(0,-3,0)));
 	
 	{
 		using namespace Materials;
