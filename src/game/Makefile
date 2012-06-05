@@ -26,7 +26,7 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)objects.o  $(OBJDIR)clique.o $(OBJDIR)tokenring.o          \
            $(OBJDIR)CrossPlatform.o $(OBJDIR)materials.o $(OBJDIR)movement.o   \
            $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
-           $(OBJDIR)netcode.o $(OBJDIR)game.o 
+           $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz 
@@ -123,3 +123,6 @@ $(OBJDIR)netcode.o: netcode.cpp
 
 $(OBJDIR)game.o: game.cpp
 	$(CPP) -c game.cpp -o $(OBJDIR)game.o $(CXXFLAGS) 
+
+$(OBJDIR)hud.o: hud.cpp
+	$(CPP) -c hud.cpp -o $(OBJDIR)hud.o $(CXXFLAGS) 

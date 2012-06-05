@@ -2,6 +2,8 @@
  * Materials -- see header file for more info
  */
 
+#include <stdio.h>
+
 #include "video.h"
 #include "materials.h"
 
