@@ -150,7 +150,7 @@ bool TokenRing::connect(const Address &remote, int timeout)
 	{
 		success = clique->connect(remote, timeout);
 		
-		qt->deciding = true;
+		td->deciding = true;
 		
 		// Build token ring
 		if (success) success = clique->sendto(remote, msg);
@@ -408,7 +408,8 @@ void *TokenRing::process(void *obj)
 		return (NULL);
 	}
 	
-	Message msg, cmd;
+	Message msg;
+	string cmd;
 	Address addr;
 	size_t size;
 	while (CONNECTED)
@@ -422,7 +423,7 @@ void *TokenRing::process(void *obj)
 		// Parse incomming messages
 		while (clique->recvfrom(addr,msg))
 		{
-			cmd = msg[0];
+			cmd = msg[0].str;
 			size = msg.size();
 			if ((cmd == "#>") && (size == 1))      // Connection request
 			{
@@ -435,7 +436,7 @@ void *TokenRing::process(void *obj)
 				td->token = td->lookup[addr];
 				
 				td->deciding = false;
-				pthread_cond_broadcast(&qd->decided);
+				pthread_cond_broadcast(&td->decided);
 			}
 			else if ((cmd == "#+") && (size == 2)) // Connection notification (requestee)
 			{
@@ -447,7 +448,7 @@ void *TokenRing::process(void *obj)
 				td->lookup[addr] = id;
 				
 				td->entry.push(id);
-				pthread_cond_broadcast(&qd->incomming);
+				pthread_cond_broadcast(&td->incomming);
 			}
 			else if ((cmd == "#+") && (size > 2))  // Connection notification (others)
 			{
@@ -462,7 +463,7 @@ void *TokenRing::process(void *obj)
 				td->topId++;
 				bool cond = INCOMMING;
 				td->entry.push(id);
-				pthread_cond_broadcast(&qd->incomming);
+				pthread_cond_broadcast(&td->incomming);
 			}
 			else if ((cmd == "##") && (size > 1))  // Token pass message
 			{
@@ -471,17 +472,17 @@ void *TokenRing::process(void *obj)
 			else if ((cmd == "#!") && (size > 1))  // Token pass and leave message
 			{
 			}
-			else if (cmd[0] == "#")                // Reliable message
+			else if (cmd[0] == '#')                // Reliable message
 			{
-				if (lookup.count(addr))
+				if (td->lookup.count(addr))
 				{
-					NodeID id = lookup[addr];
+					NodeID id = td->lookup[addr];
 					
 					msg[0].str.erase(0, 1);
 					if (td->token == id)
 					{
-						td->msgs.push(makepair(id,makepair(msg,true)));
-						pthread_cond_broadcast(&qd->incomming);
+						td->msgs.push(make_pair(id,make_pair(msg,true)));
+						pthread_cond_broadcast(&td->incomming);
 					}
 					else
 						td->nodes[id].buffer.push(msg);
@@ -489,10 +490,10 @@ void *TokenRing::process(void *obj)
 			}
 			else                                   // Unrealiable message
 			{
-				if (lookup.count(addr))
+				if (td->lookup.count(addr))
 				{
-					td->msgs.push(makepair(lookup[addr],makepair(msg,false)));
-					pthread_cond_broadcast(&qd->incomming);
+					td->msgs.push(make_pair(td->lookup[addr],make_pair(msg,false)));
+					pthread_cond_broadcast(&td->incomming);
 				}
 			}
 		}
@@ -533,7 +534,7 @@ NodeID TokenRingData::nextId() const
 
 //------------------------------------------------------------------------------
 
-void TokenRingData::arrival
+void TokenRingData::arrival()
 {
 }
 
