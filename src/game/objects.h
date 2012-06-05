@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "core.h"
+#include "assets.h"
 #include "materials.h"
 
 //------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ class BoundedObject: public Object{
 		BoundingBox bb;
 	
 		//! Constructs a new bounded object
-		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(), Material M = Material())
+		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(), MaterialHandle M = Material())
 			: Object(P, R, M), bb(B) {}
 
 		virtual ~BoundedObject() {}
@@ -109,16 +110,7 @@ class Terrain: public Object{
 		map<Point<double>, Structure> structures;
 
 		//! Constructs a new Terrain
-		Terrain(double _width, double _height):
-			Object(Pd(), Qd(), TwinMaterial(TexturedMaterial("assets/textures/terrain/grass.png"), ShadedMaterial(Cf(1, 1, 1, 1))))
-		{
-			width = _width;
-			height = _height;
-
-			showGrid = false;
-			selected.x = -1;
-			selected.y = -1;
-		}
+		Terrain(double _width, double _height);
 
 		//! Draws the terrain
 		virtual void draw();
@@ -138,25 +130,13 @@ class World: public BoundedObject{
 		double height;
 
 		//! Terrain associated with this World
-		Terrain terrain;
+		Terrain *terrain;
 
 		//! Constructs a new world
-		World(double _width, double _height)
-			: BoundedObject(Pd(), Qd(),
-				BoundingBox(Pd(), Pd(_width,0,0),
-					Pd(0,_height,0), Pd(_width,_height,0)),
-				TexturedMaterial("assets/textures/world/cloud.png")),
-			terrain(_width, _height)
-		{
-			width = _width;
-			height = _height;
-		}
+		World(double _width, double _height);
 
 		//! Draws the world
 		virtual void draw();
-
-		//! Renders the worlds children
-		virtual void postRender();
 };
 
 //! Represents a team

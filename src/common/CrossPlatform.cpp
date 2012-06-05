@@ -2,7 +2,7 @@
  * Lobby module -- see header file
  */
 
-#ifdef __APPLE__
+/*#ifdef __APPLE__
 	#include "CoreFoundation/CoreFoundation.h"
 #endif
 #include <stdio.h>
@@ -42,5 +42,6 @@ void init(){
 }
 
 } // namespace CrossPlatform
+*/
 
 //------------------------------------------------------------------------------
