@@ -7,8 +7,10 @@
 //! Contains HUD objects
 namespace HUD_objects{
 
+using namespace Core;
+
 //! Main class for the Heads-up display
-class HUD: public Core::Object{
+class HUD: public Object{
 	public:
 
 	//! Width of the screen in pixels
