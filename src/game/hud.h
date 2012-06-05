@@ -5,7 +5,7 @@
 #include "video.h"
 
 //! Contains HUD objects
-namespace hud_object{
+namespace HUD_objects{
 
 //! Main class for the Heads-up display
 class HUD: public Object{

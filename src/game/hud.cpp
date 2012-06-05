@@ -1,4 +1,4 @@
-namespace hud_objects{
+namespace HUD_objects{
 
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
