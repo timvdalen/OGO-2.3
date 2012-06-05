@@ -95,11 +95,7 @@ int main(int argc, char *argv[])
 	
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
-<<<<<<< HEAD
 	player->children.insert(Cuboid(Pd(0,-3,0)));
-=======
-	player->children.insert(Cuboid());
->>>>>>> 5d96c7247d44d7d8bcfa055d8605f5df1c5c5d47
 	
 	cube->material = Assets::Test;
 	

@@ -37,13 +37,6 @@ ifeq ($(platform),win32)
 	BIN      := $(BIN).exe
 else
 	LIBS     += -lGL -lGLU -lglut
-<<<<<<< HEAD
-endif
-
-LIBS += -lglu32 -lopengl32 -lglut32
-
-=======
->>>>>>> 5d96c7247d44d7d8bcfa055d8605f5df1c5c5d47
 ifneq ($(platform),macos)
     LIBS     += -lrt
 endif
