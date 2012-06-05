@@ -36,9 +36,11 @@ ifeq ($(platform),win32)
 	LIBS     += -lws2_32 -lfreeglut_static -lglu32 -lopengl32 -lgdi32 -lwinmm
 	BIN      := $(BIN).exe
 else
-	LIBS     += -lGL -lGLU -lglut
+	LIBS     += -lGL -lGLU
 ifneq ($(platform),macos)
-    LIBS     += -lrt
+    LIBS     += -lrt -lglut
+else
+    LIBS 	+= -lfreeglut
 endif
 endif
 

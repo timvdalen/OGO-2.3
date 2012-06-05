@@ -3,14 +3,24 @@ target="../../../bin"
 title="Lobby"
 finalDMGName="Lobby.dmg"
 background="background.png"
+protocolbin="protocol"
 #---------Local script-----------------------
 pushd `dirname "$BASH_SOURCE[0]"`
 #---------clean------------------------------
 rm -r -f $target
 mkdir $target
+#-----------Lobby----------------------------
+cd lobby
+echo "±±±±±±±±±±±±±±±±BuildingLobby±±±±±±±±±±±±±±"
 make clean 
-#-----------build----------------------------
-make gui "CPP = g++ -arch i386" 
+make gui "CPP = g++ -arch i386"
+cd ../
+#-----------Game-----------------------------
+cd game
+echo "±±±±±±±±±±±±±±±±BuildingGame±±±±±±±±±±±±±±"
+make clean
+#make -f Makefile2 platform=macos
+make platform=macos
 #-----------remove app-bundle----------------
 rm -r "$target/Lobby.app"
 #-----------create app-bundle----------------
