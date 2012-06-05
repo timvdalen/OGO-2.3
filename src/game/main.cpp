@@ -96,6 +96,7 @@ int main(int argc, char *argv[])
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
 	player->children.insert(Cuboid(Pd(0,-3,0)));
+	player->rotation = Rd(0,Vd(0,0,1));
 	
 	cube->material = Assets::Test;
 	
