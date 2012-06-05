@@ -10,9 +10,21 @@
 #ifndef _ASSETS_H
 #define _ASSETS_H
 
+#include "core.h"
+
 namespace Assets {
 
+using namespace Core;
+
 //------------------------------------------------------------------------------
+
+void Initialize();
+void Terminate();
+
+extern MaterialHandle Test;
+
+extern MaterialHandle Cloud;
+extern MaterialHandle Grass;
 
 //------------------------------------------------------------------------------
 

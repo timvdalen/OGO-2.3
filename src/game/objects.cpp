@@ -17,9 +17,22 @@ ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> 
 
 //------------------------------------------------------------------------------
 
+World::World(double _width, double _height)
+	: BoundedObject(Pd(), Qd(),
+	  BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0)),
+	  Assets::Cloud)
+{
+	children.insert(Terrain(_width, _height));
+	terrain = dynamic_cast<Terrain *>(&**children.begin());
+	width = _width;
+	height = _height;
+}
+
+//------------------------------------------------------------------------------
+
 void World::draw(){
 	#define HIGH 500
-
+	
 	double halfWidth = width/2;
 	double halfHeight = height/2;
 
@@ -60,15 +73,21 @@ void World::draw(){
 
 //------------------------------------------------------------------------------
 
-void World::postRender(){
-	terrain.render();
+Terrain::Terrain(double _width, double _height) 
+	: Object(Pd(), Qd(), Assets::Grass)
+{
+	width = _width;
+	height = _height;
 
-	Object::postRender();
+	showGrid = false;
+	selected.x = -1;
+	selected.y = -1;
 }
 
 //------------------------------------------------------------------------------
 
-void Terrain::draw(){
+void Terrain::draw()
+{
 	int noX = (int) width/GRID_SIZE;
 	int noY = (int) height/GRID_SIZE;
 

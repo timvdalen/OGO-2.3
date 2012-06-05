@@ -84,6 +84,7 @@ struct Cuboid : public Object
 
 int main(int argc, char *argv[])
 {
+	Assets::Initialize();
 	Video::Initialize(argc, argv);
 	window = new Video::Window(640, 480, "Game");
 	Video::Viewport v1(1,1);
@@ -94,21 +95,25 @@ int main(int argc, char *argv[])
 	
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
+<<<<<<< HEAD
 	player->children.insert(Cuboid(Pd(0,-3,0)));
+=======
+	player->children.insert(Cuboid());
+>>>>>>> 5d96c7247d44d7d8bcfa055d8605f5df1c5c5d47
 	
+	cube->material = Assets::Test;
+	
+	ObjectHandle world = Objects::World(100, 100);
+
 	{
-		using namespace Materials;
-		
-		ShadedMaterial shade(Cf(1,0,0,1));
-		shade.emissive = Cf(0,.5,0,1);
-		cube->material = TwinMaterial(shade, TexturedMaterial("test.png"));
+		World *w = dynamic_cast<World *> (&*world);
+		w->terrain->showGrid = false;
+		w->terrain->selected.x = 4;
+		w->terrain->selected.y = 4;
+		w->children.insert(cube);
+		w->material = Assets::Test;
+		w->terrain->material = Assets::Test;
 	}
-	
-	Objects::World world = Objects::World(100, 100);
-	world.terrain.showGrid = true;
-	world.terrain.selected.x = 4;
-	world.terrain.selected.y = 4;
-	world.children.insert(cube);
 	
 	v1.world = world;
 
