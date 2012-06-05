@@ -9,6 +9,8 @@ namespace HUD_objects{
 
 //! Main class for the Heads-up display
 class HUD: public Object{
+	public:
+
 	//! Width of the screen in pixels
 	int width;
 
