@@ -17,6 +17,7 @@
 #include "video.h"
 #include "input.h"
 #include "movement.h"
+#include "hud.h"
 
 using namespace Core;
 using namespace Base::Alias;
@@ -98,6 +99,8 @@ int main(int argc, char *argv[])
 	player->children.insert(Cuboid(Pd(0,-3,0)));
 	
 	cube->material = Assets::Test;
+
+	ObjectHandle hud = HUD_objects::HUD(640, 480);
 	
 	ObjectHandle world = Objects::World(100, 100);
 
@@ -107,6 +110,7 @@ int main(int argc, char *argv[])
 		w->terrain->selected.x = 4;
 		w->terrain->selected.y = 4;
 		w->children.insert(cube);
+		w->children.insert(hud);
 	}
 	
 	v1.world = world;
