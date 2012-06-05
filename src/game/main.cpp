@@ -107,8 +107,6 @@ int main(int argc, char *argv[])
 		w->terrain->selected.x = 4;
 		w->terrain->selected.y = 4;
 		w->children.insert(cube);
-		w->material = Assets::Test;
-		w->terrain->material = Assets::Test;
 	}
 	
 	v1.world = world;

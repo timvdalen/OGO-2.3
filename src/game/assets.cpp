@@ -23,9 +23,12 @@ void Initialize()
 	shade.emissive = Cf(0,.5,0,1);
 	Test = TwinMaterial(shade, TexturedMaterial("test.png"));
 	
-	Cloud = TexturedMaterial("assets/textures/world/cloud.png");
-	Grass = TwinMaterial(TexturedMaterial("assets/textures/terrain/grass.png"),
-	                     ShadedMaterial(Cf(1, 1, 1, 1)));
+	//Cloud = TexturedMaterial("assets/textures/world/cloud.png");
+	//Grass = TwinMaterial(TexturedMaterial("assets/textures/terrain/grass.png"),
+	//                     ShadedMaterial(Cf(1, 1, 1, 1)));
+	
+	Cloud = ShadedMaterial(Cf(.2,.2,1));
+	Grass = ShadedMaterial(Cf(0,.5,0));
 }
 
 //------------------------------------------------------------------------------
