@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 	
 	cube = Cuboid(Pd(0,3,0));
-	ObjectHandle player = Objects::Player(Pd(2,0,0));
+	ObjectHandle player = Objects::Player();
 	player->children.insert(Cuboid());
 	
 	cube->material = Assets::Test;
