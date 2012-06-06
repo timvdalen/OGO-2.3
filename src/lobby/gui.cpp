@@ -9,7 +9,6 @@
 #include "lobby.h"
 #include "common.h"
 #include "CrossPlatform.h"
-#include <errno.h>
 #define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 using namespace Lobby;
@@ -806,6 +805,7 @@ static void lobbyOnStart(){
     //ugly fix 
     char command[180] = "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/' ";
     strcat(command, serverAddr);
+    //arguments can be added here
     strcat(command,   "\\\"\"");
     printf(command);
 #else
