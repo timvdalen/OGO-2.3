@@ -73,6 +73,21 @@ class PlayerFragMessage: public Message{
 	string toString();
 };
 
+//! Represents a kill made by a tower
+class TowerFragMessage: public Message{
+	public:
+	//! The player fragged by a tower
+	Core::Player player;
+
+	//TODO: Add tower position or name
+	
+	
+	//! Constructs a new TowerFragMessage
+	TowerFragMessage(Core::Player _player);
+
+	//! Formats this message as <[victim.name]> was fragged by a tower
+	string toString();
+};
 
 }
 
