@@ -59,7 +59,7 @@ TowerFragMessage::TowerFragMessage(Core::Player _player)
 {}
 
 string TowerFragMessage::toString(){
-	return string("<") + victim.name + string("> was fragged by a tower");
+	return string("<") + player.name + string("> was fragged by a tower");
 }
 
 }
