@@ -68,7 +68,7 @@ run: default
 	@echo -------------------------------------------------------------------------------
 	@echo Running game...
 	@echo
-	@$(BIN)
+	@$(BIN) -p $(BINDIR) &
 
 $(BIN): $(OBJ)
 	$(CPP) $(OBJ) -o "$(BIN)" $(LIBS)
