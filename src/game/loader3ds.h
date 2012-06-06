@@ -6,7 +6,7 @@
 #include "core.h"
 #include "base.h"
 
-#include <3ds/lib3ds.h>
+#include <lib3ds.h>
 #include <string>
 
 //--------------------------------------------
@@ -33,4 +33,4 @@ public:
 
 } // namespace Loader
 
-#endif _LOADER3DS_H
+#endif // _LOADER3DS_H

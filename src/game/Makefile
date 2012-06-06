@@ -26,10 +26,11 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)objects.o  $(OBJDIR)clique.o $(OBJDIR)tokenring.o          \
            $(OBJDIR)CrossPlatform.o $(OBJDIR)materials.o $(OBJDIR)movement.o   \
            $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
-           $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o
+           $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o                  \
+		   $(OBJDIR)loader3ds.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
-LIBS     = -lpthread -lpng -lz 
+LIBS     = -lpthread -lpng -lz -l3ds
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC
@@ -128,3 +129,6 @@ $(OBJDIR)game.o: game.cpp
 
 $(OBJDIR)hud.o: hud.cpp
 	$(CPP) -c hud.cpp -o $(OBJDIR)hud.o $(CXXFLAGS) 
+
+$(OBJDIR)loader3ds.o: loader3ds.cpp
+	$(CPP) -c loader3ds.cpp -o $(OBJDIR)loader3ds.o $(CXXFLAGS) 

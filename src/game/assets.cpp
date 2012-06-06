@@ -2,10 +2,16 @@
  * Assets definitions -- see header file for more info
  */
 
+#include <string.h>
+
+#include <string>
+
 #include "materials.h"
 #include "assets.h"
 
 namespace Assets {
+
+using namespace std;
 
 //------------------------------------------------------------------------------
 
@@ -20,8 +26,13 @@ MaterialHandle Grass;
 
 //------------------------------------------------------------------------------
 
-void Initialize()
+void Initialize(int argc, char *argv[])
 {
+	string path = "./";
+	for (int i = 0; i < argc - 1; ++i)
+		if (!strcmp(argv[i], "-p"))
+			path = argv[i++];
+	
 	Grid = TwinMaterial(GridMaterial(5),
 		ShadedMaterial(Cf(0.2,0.8,0.2,1), //Ambient
 	                   Cf(0.2,0.8,0.2,1), //Diffuse
@@ -42,8 +53,8 @@ void Initialize()
 		Test = TwinMaterial(shade, TexturedMaterial("test.png"));
 	}
 	
-	Cloud = TexturedMaterial("assets/textures/world/cloud.png");
-	Grass = TexturedMaterial("assets/textures/terrain/grass.png");
+	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");
+	Grass = TexturedMaterial(path + "assets/textures/terrain/grass.png");
 }
 
 //------------------------------------------------------------------------------

@@ -139,6 +139,39 @@ void Terrain::draw()
 
 //------------------------------------------------------------------------------
 
+Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
+	const string path = "models/";
+	head = Loader::ModelObject(Pd(), Qd(), path + "head.3DS");
+	body = Loader::ModelObject(Pd(), Qd(), path + "body.3DS");
+	weapon = Loader::ModelObject(Pd(), Qd(), path + "gun.3DS");
+	tool = Loader::ModelObject(Pd(), Qd(), path + "wrench.3DS");
+	wheel = Loader::ModelObject(Pd(), Qd(), path + "wheel.3DS");
+	children.insert(head);
+	children.insert(body);
+	children.insert(weapon);
+	children.insert(tool);
+	children.insert(wheel);
+
+	velocity = Vd(0,0,0);
+	update(R);
+}
+
+//------------------------------------------------------------------------------
+
+inline void translate(ObjectHandle o, double x, double y, double z) {
+	o->origin = o->origin + Vd(x,y,z);
+}
+
+void Player::update(const Qd &camobj) {
+	translate(head,0,0,1.95);
+	translate(body,0,0,0.3);
+	translate(weapon,-0.037,-0.499,1.333);
+	translate(tool,-0.037,0.544,1.333);
+	translate(wheel,0,0,0.3);
+}
+
+//------------------------------------------------------------------------------
+
 } // namespace Objects
 
 //------------------------------------------------------------------------------
