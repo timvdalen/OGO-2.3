@@ -9,7 +9,7 @@
 #include "lobby.h"
 #include "common.h"
 #include "CrossPlatform.h"
-
+#include <errno.h>
 #define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 using namespace Lobby;
@@ -796,17 +796,22 @@ static void lobbyOnStartCall(){
 }
 
 static void lobbyOnStart(){
-	char *serverAddr;
+    char serverAddr[180];
 	server.string(serverAddr);
 	//I would use exec_*, but Windows does not support that
-	#if (defined WIN32 || defined _MSC_VER)
-		char command[28] = "start Game ";
-		strcat(command, serverAddr);
-	#else
-		char command[27] = "./Game ";
-		strcat(command, serverAddr);
-		strcat(command, " &");
-	#endif
+#if (defined WIN32 || defined _MSC_VER)
+    char command[28] = "start Game ";
+    strcat(command, serverAddr);
+#else
+#ifdef __APPLE__
+    char command[100] = "open ./Game --args ";
+    strcat(command, serverAddr);
+#else
+    char command[27] = "./Game ";
+    strcat(command, serverAddr);
+    strcat(command, " &");
+#endif
+#endif  
 	system(command);
 	exit(EXIT_SUCCESS);
 }
@@ -825,7 +830,12 @@ static void serverLobbyOnStart(){
 	#if (defined WIN32 || defined _MSC_VER)
 		system("start Game");
 	#else
-		system("./Game &");
+        #ifdef __APPLE__
+        system("echo \"`pwd`\"");
+            system("open ./Game --args -p \"`pwd`\"");
+        #else
+            system("./Game &");
+        #endif
 	#endif
 	exit(EXIT_SUCCESS);
 }

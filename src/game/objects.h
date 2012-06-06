@@ -18,6 +18,7 @@
 #include "core.h"
 #include "assets.h"
 #include "materials.h"
+#include "loader3ds.h"
 
 //------------------------------------------------------------------------------
 
@@ -160,6 +161,18 @@ class Player: public BoundedObject{
 
 		//! The time of the last shot this player fired
 		time_t lastShot;
+
+		//! Velocity of the player (y-axis)
+		Vd velocity;
+
+		//! Model
+		ObjectHandle head, body, weapon, tool, wheel;
+
+		//! Constructs a player
+		Player(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
+
+		//! Update model transformations according to velocity and the camera direction
+		void update(const Qd &camobj);
 };
 
 //! Represents a laser beam
