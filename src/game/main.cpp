@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 	
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
-	player->children.insert(Cuboid(Pd(0,-3,0)));
+	player->children.insert(Cuboid(Pd(0,0,0)));
 	player->rotation = Rd(0,Vd(0,0,1));
 	
 	cube->material = Assets::Test;
@@ -114,6 +114,8 @@ int main(int argc, char *argv[])
 		w->children.insert(cube);
 		w->children.insert(hud);
 	}
+
+	world->children.insert(player);
 	
 	v1.world = world;
 
@@ -168,17 +170,14 @@ void Frame()
 	/**/
 	controller->frame();
 	/** /
-	if (controller->look[dirLeft])     cube->origin.x -= 0.5;
-	if (controller->look[dirRight])    cube->origin.x += 0.5;
-	if (controller->look[dirBackward]) cube->origin.y -= 0.5;
-	if (controller->look[dirForward])  cube->origin.y += 0.5;
-	if (controller->look[dirUp])       cube->origin.z -= 0.1;
-	if (controller->look[dirDown])     cube->origin.z += 0.1;
+	if (controller->move[dirLeft])     cube->origin.x -= 0.1;
+	if (controller->move[dirRight])    cube->origin.x += 0.1;
+	if (controller->move[dirBackward]) cube->origin.y -= 0.1;
+	if (controller->move[dirForward])  cube->origin.y += 0.1;
+	if (controller->move[dirUp])       cube->origin.z += 0.1;
+	if (controller->move[dirDown])     cube->origin.z -= 0.1;
 	
-	Camera &cam = window->viewports[0]->camera;
-	Vd dir = cube->origin + Vd(.5,.5,.5) - cam.origin;
-	dir.z = 0;
-	cam.objective = Rd(Vd(0,1,0), ~dir);
+	window->viewports[0]->camera.lookAt(cube->origin);
 	/**/
 	
 	controller->look.reset();

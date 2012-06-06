@@ -50,7 +50,7 @@ void Initialize(int argc, char *argv[])
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));
 		shade.emissive = Cf(0,.5,0,1);
-		Test = TwinMaterial(shade, TexturedMaterial("test.png"));
+		Test = TwinMaterial(shade, TexturedMaterial(path + "test.png"));
 	}
 	
 	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");
