@@ -145,7 +145,7 @@ void ModelObject::render() {
 		cout << "rendered. \n";
 	}
 	else {
-		cout << "file not found..." << "\n";
+		//cout << "file not found..." << "\n"; -_- ;;
 	}
 }
 
