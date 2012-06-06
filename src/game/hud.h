@@ -1,12 +1,14 @@
 #ifndef _H_HUD
 #define _H_HUD
 
+#include <string>
 #include "core.h"
 #include "video.h"
 
 //! Contains HUD objects
 namespace HUD_objects{
 
+using namespace std;
 using namespace Core;
 
 //! Main class for the Heads-up display
@@ -31,6 +33,14 @@ class HUD: public Object{
 	//! Switches back to 3D drawing mode
 	void postRender();
 };
+
+//! Represents a displayable message
+class Message: public Object{
+	public:
+	//! Gives a textual representation of this message
+	virtual string toString() = 0;
+};
+
 
 }
 
