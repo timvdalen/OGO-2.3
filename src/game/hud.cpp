@@ -35,8 +35,9 @@ void HUD::postRender(){
         glPopMatrix();
 }
 
-ChatMessage::ChatMessage(Core::Player _player, string _message){
-	player = _player;
+ChatMessage::ChatMessage(Core::Player _player, string _message)
+	: player(_player)
+{
 	message = _message;
 }
 
@@ -45,18 +46,17 @@ string ChatMessage::toString(){
 	return string("<") + player.name + string(">: ") + message;
 }
 
-PlayerFragMessage::PlayerFragMessage(Core::Player _killer, Core::Player _victim){
-	killer = _killer;
-	victim = _victim;
-}
+PlayerFragMessage::PlayerFragMessage(Core::Player _killer, Core::Player _victim)
+	: killer(_killer), victim(_victim)
+{}
 
 string PlayerFragMessage::toString(){
 	return string("<") + killer.name + string("> fragged <") + victim.name + string(">");
 }
 
-TowerFragMessage::TowerFragMessage(Core::Player _player){
-	player = _player;
-}
+TowerFragMessage::TowerFragMessage(Core::Player _player)
+	: player(_player);
+{}
 
 string TowerFragMessage::toString(){
 	return string("<") + victim.name + string("> was fragged by a tower");
