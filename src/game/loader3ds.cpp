@@ -17,7 +17,7 @@
 	#include <GL/glu.h>
 #endif
 
-#include <3ds/lib3ds.h>
+#include <lib3ds.h>
 #include <string>
 #include <iostream>
 
@@ -102,9 +102,10 @@ void ModelObject::render(Lib3dsNode * n) {
 
 				glPushMatrix();
 				//glMultMatrixf(&n->matrix[0][0]);
-				glTranslatef(-node->pivot[0], -node->pivot[1], -node->pivot[2]);
+				//glTranslatef(-node->pivot[0], -node->pivot[1], -node->pivot[2]);
 				glMultMatrixf(&mesh->matrix[0][0]);
-				glTranslatef(node->pos[0], node->pos[1], node->pos[2]);
+				glTranslatef(-node->pivot[0], -node->pivot[1], -node->pivot[2]);
+				//glTranslatef(node->pos[0], node->pos[1], node->pos[2]);
 				//glRotatef(node->rot[0], node->rot[1], node->rot[2], node->rot[3]);
 
 				displaylist(mesh);
