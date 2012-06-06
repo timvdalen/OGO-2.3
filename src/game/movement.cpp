@@ -28,8 +28,10 @@ void Controller::moveX()
 {
 	if (move[dirLeft])
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(-1,0,0));
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
+
+		yaw -= (.5 * Pi);
 
 		pos.x = pos.x + sin(yaw);
 		pos.y = pos.y + cos(yaw);
@@ -41,8 +43,10 @@ void Controller::moveX()
 	}
 	else if (move[dirRight])
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(1,0,0));
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
+
+		yaw += (.5 * Pi);
 
 		pos.x = pos.x + sin(yaw);
 		pos.y = pos.y + cos(yaw);
