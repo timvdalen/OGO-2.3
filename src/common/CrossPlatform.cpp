@@ -30,6 +30,7 @@ void init(){
     	#ifdef DEBUG
 		std::cout << "Current Path: " << path << std::endl; // error: expected constructor, destructor or type conversion before '<<' token
         #endif
+    return;
         #endif
 	#else
 		#ifdef __linux__ 

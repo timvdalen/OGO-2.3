@@ -5,7 +5,7 @@ finalDMGName="Lobby.dmg"
 background="background.png"
 protocolbin="protocol"
 #---------Local script-----------------------
-pushd `dirname "$BASH_SOURCE[0]"`
+pushd "`dirname "$BASH_SOURCE[0]"`"
 #---------clean------------------------------
 rm -r -f $target
 mkdir $target
@@ -35,6 +35,7 @@ cp $target/../$background $target/$background
 cat "$target/Lobby.app/Contents/Resources/game.conf" | sed "s/foo/kay/" | tee "$target/Lobby.app/Contents/Resources/game.conf"
 #----------Move lobby to contents--------------
 mv "$target/Lobby.app/Contents/Resources/Lobby" "$target/Lobby.app/Contents/MacOS/Lobby"
+mv "$target/Lobby.app/Contents/Resources/Info.plist" "$target/Lobby.app/Contents/Info.plist"
 #----------Build dmg --------------------------
 cd $target
 #---------Make an lose approximation for the size
@@ -54,12 +55,15 @@ device=$(hdiutil attach -readwrite -noverify -noautoopen "pack.temp.dmg" | \
          egrep '^/dev/' | sed 1q | awk '{print $1}')
 #--------Add a theme --------------------------
 #--------Hide background file------------------
+sync
+ln -s /Applications "/Volumes/$title/ "
 dir=$(pwd)
 echo $dir
 echo '
    tell application "Finder"
      tell disk "'${title}'"
-           open
+ #          close
+	   open
            set current view of container window to icon view
            set toolbar visible of container window to false
            set statusbar visible of container window to false
@@ -67,9 +71,11 @@ echo '
            set theViewOptions to the icon view options of container window
            set arrangement of theViewOptions to not arranged
            set icon size of theViewOptions to 128
-           make new alias file at container window to POSIX file "/Applications" with properties {name:" "}
+      	   delay 1
 	   set background picture of theViewOptions to file "background.png"
+	   delay 1
 	   do shell script "chflags hidden /Volumes/'${title}'/'${background}'"
+	   delay 1
 	   set file_list to every file
 	   repeat 2 times
        	   repeat with i in file_list
@@ -80,16 +86,17 @@ echo '
          	else    #background image
 			set the position of i to {1000,1000}
 		end if
-           		-- Change the 7 to change the color: 0 is no label, then red,
-        		-- orange, yellow, green, blue, purple, or gray.
+		delay 1
            end repeat
 	   end repeat
+	   delay 1
 	   set the bounds of container window to {400, 100, 815, 395}
 	   update without registering applications
            delay 5
+	   close
      end tell
    end tell
-' | sudo osascript
+' | osascript
 #--------make dmg read-only --------------------
 echo "Need su permissions to chmod the dmg --- Requesting!"
 sudo chmod -Rf go-w /Volumes/"${title}"
