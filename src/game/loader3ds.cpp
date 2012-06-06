@@ -20,6 +20,7 @@
 #include <lib3ds.h>
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 #define PROBE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
 
@@ -43,18 +44,18 @@ void ModelObject::load(const char * path) {
 //--------------------------------------------
 
 void ModelObject::displaylist(Lib3dsMesh * mesh) {
-    /*
             {
                 int p;
 
-                //float (*normalL)[3] = (float(*)[3])malloc(3 * 3 * sizeof(float) * mesh->nfaces);
-				
-				//Replacement code "malloc"
-				float * normalL0 = new float[3 * mesh->nfaces];
-				float * normalL1 = new float[3 * mesh->nfaces];
-				float * normalL2 = new float[3 * mesh->nfaces];	
+				float (*normalL)[3] = (float(*)[3])malloc(3 * 3 * sizeof(float) * mesh->nfaces);
+				/* Replacement code "malloc"
+				const int size = 3 * mesh->nfaces;
+				float * normalL0 = new float[size];
+				float * normalL1 = new float[size];
+				float * normalL2 = new float[size];	
 				float n[3] = {*normalL0, *normalL1, *normalL2};
 				float (*normalL)[3] = &n;
+				//*/
 
                 Lib3dsMaterial *oldmat = (Lib3dsMaterial *) - 1;
                 {
@@ -83,7 +84,6 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
             }
 
             glDisable(GL_TEXTURE_2D);
-    */
 }
 
 //--------------------------------------------
@@ -154,7 +154,7 @@ void ModelObject::render() {
 		cout << "rendered. \n";
 	}
 	else {
-		//cout << "file not found..." << "\n"; -_- ;;
+		cout << "file not found...\n";
 	}
 }
 
