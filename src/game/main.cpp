@@ -85,11 +85,12 @@ struct Cuboid : public Object
 
 int main(int argc, char *argv[])
 {
-	Assets::Initialize();
 	Video::Initialize(argc, argv);
 	window = new Video::Window(640, 480, "Game");
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
+	
+	Assets::Initialize(); // after the viewports have been initialized!
 	
 	v1.camera.origin = Pd(0,0.1,0);
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
@@ -107,7 +108,7 @@ int main(int argc, char *argv[])
 
 	{
 		World *w = dynamic_cast<World *> (&*world);
-		w->terrain->showGrid = false;
+		w->terrain->showGrid = true;
 		w->terrain->selected.x = 4;
 		w->terrain->selected.y = 4;
 		w->children.insert(cube);

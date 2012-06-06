@@ -51,6 +51,9 @@ class ShadedMaterial : public Material {
 
 	//! Applies this material to the OpenGL pipeline
 	virtual void select();
+	
+	//! Cleans up the material from the OpenGL pipeline
+	virtual void unselect();
 };
 
 //------------------------------------------------------------------------------
@@ -76,7 +79,7 @@ class TexturedMaterial : public Material
 	
 	//! Cleans up the texture binding
 	virtual void unselect();
-	
+	uword id() { return texture->id; }
 	private:
 	struct Texture
 	{
@@ -123,35 +126,15 @@ class EmptyMaterial : public Material {
 //------------------------------------------------------------------------------
 
 //! A material for the grid.
-class GridMaterial : public ShadedMaterial {
+class GridMaterial : public Material
+{
+	uword size;
+	
 	public:
-		GridMaterial() : ShadedMaterial(Cf(0.2,0.8,0.2,1), 	//Ambient
-						 Cf(0.2,0.8,0.2,1), 	//Diffuse
-						 Cf(0.2,0.8,0.2,1), 	//Specular
-						 Cf(0.8,1,0,1), 	//Emissive,
-						 100.0)		//Shininess
-       		{}
-
-		virtual void select(){
-			ShadedMaterial::select();
-			glLineWidth(5);
-		}
-};
-
-//! A material for a selected grid.
-class SelectedGridMaterial : public ShadedMaterial {
-	public:
-		SelectedGridMaterial() : ShadedMaterial(Cf(0.01,0.31,0.58,1), 	//Ambient
-						Cf(0.01,0.31,0.58,1) , 	//Diffuse
-						Cf(0.01,0.31,0.58,1),	//Specular
-						Cf(0.49,0.97,1,1), 	//Emissive,
-						 100.0)		//Shininess
-       		{}
-
-		virtual void select(){
-			ShadedMaterial::select();
-			glLineWidth(5);
-		}
+	GridMaterial(uword S = 10) : size(S) {}
+	
+	virtual void select();
+	virtual void unselect();
 };
 
 //------------------------------------------------------------------------------
