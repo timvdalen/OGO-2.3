@@ -128,3 +128,6 @@ $(OBJDIR)game.o: game.cpp
 
 $(OBJDIR)hud.o: hud.cpp
 	$(CPP) -c hud.cpp -o $(OBJDIR)hud.o $(CXXFLAGS) 
+
+$(OBJDIR)loader3ds.o: loader3ds.cpp
+	$(CPP) -c loader3ds.cpp -o $(OBJDIR)loader3ds.o $(CXXFLAGS) 
