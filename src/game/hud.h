@@ -41,6 +41,22 @@ class Message: public Object{
 	virtual string toString() = 0;
 };
 
+//! Represents a chat message
+class ChatMessage: public Message{
+	public:
+	//! The player that sent this message
+	Core::Player player;
+
+	//! The actual message
+	string message;
+
+	//! Constructs a new ChatMessage
+	ChatMessage(Core::Player _player, string _message);
+
+	//! Formats this message as <[player.name]>: [message]
+	string toString();
+};
+
 
 }
 
