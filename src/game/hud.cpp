@@ -40,13 +40,26 @@ ChatMessage::ChatMessage(Core::Player _player, string _message){
 	message = _message;
 }
 
+string ChatMessage::toString(){
+	//This could be so much more efficient
+	return string("<") + player.name + string(">: ") + message;
+}
+
 PlayerFragMessage::PlayerFragMessage(Core::Player _killer, Core::Player _victim){
 	killer = _killer;
 	victim = _victim;
 }
 
+string PlayerFragMessage::toString(){
+	return string("<") + killer.name + string("> fragged <") + victim.name + string(">");
+}
+
 TowerFragMessage::TowerFragMessage(Core::Player _player){
 	player = _player;
+}
+
+string TowerFragMessage::toString(){
+	return string("<") + victim.name + string("> was fragged by a tower");
 }
 
 }
