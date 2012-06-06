@@ -32,6 +32,8 @@
 	#define SOCKET int
 #endif
 
+#define TOSOCK(x) (reinterpret_cast<SOCKET> (x))
+
 #include "net.h"
 
 namespace Net {
@@ -243,15 +245,15 @@ Socket::~Socket()
 
 bool Socket::setBlocking()
 {
-	if ((SOCKET) data == SOCKET_ERROR)
+	if (TOSOCK(data) == SOCKET_ERROR)
 		return false;
 	
 	#ifdef WIN32
 		u_long x = 0;
-		return (ioctlsocket((SOCKET) data, FIONBIO, &x) != -1);
+		return (ioctlsocket(TOSOCK(data), FIONBIO, &x) != -1);
 	#else
-		int x = fcntl((SOCKET) data, F_GETFL, 0);
-		return (fcntl((SOCKET) data, F_SETFL, x & ~O_NONBLOCK) != -1);
+		int x = fcntl(TOSOCK(data), F_GETFL, 0);
+		return (fcntl(TOSOCK(data), F_SETFL, x & ~O_NONBLOCK) != -1);
 	#endif
 }
 
@@ -259,15 +261,15 @@ bool Socket::setBlocking()
 
 bool Socket::setNonBlocking()
 {
-	if ((SOCKET) data == SOCKET_ERROR)
+	if (TOSOCK(data) == SOCKET_ERROR)
 		return false;
 	
 	#ifdef WIN32
 		u_long x = 1;
-		return (ioctlsocket((SOCKET) data, FIONBIO, &x) != -1);
+		return (ioctlsocket(TOSOCK(data), FIONBIO, &x) != -1);
 	#else
-		int x = fcntl((SOCKET) data, F_GETFL, 0);
-		return (fcntl((SOCKET) data, F_SETFL, x | O_NONBLOCK) != -1);
+		int x = fcntl(TOSOCK(data), F_GETFL, 0);
+		return (fcntl(TOSOCK(data), F_SETFL, x | O_NONBLOCK) != -1);
 	#endif
 }
 
@@ -275,16 +277,16 @@ bool Socket::setNonBlocking()
 
 bool Socket::reuse()
 {
-	if ((SOCKET) data == SOCKET_ERROR)
+	if (TOSOCK(data) == SOCKET_ERROR)
 		return false;
 	
 	#ifdef WIN32
 		const char mode = 1;
-		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_REUSEADDR,
+		return !setsockopt(TOSOCK(data), SOL_SOCKET, SO_REUSEADDR,
 			&mode, sizeof (mode));
 	#else
 		int mode = 1;
-		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_REUSEADDR,
+		return !setsockopt(TOSOCK(data), SOL_SOCKET, SO_REUSEADDR,
 			&mode, sizeof (int));
 	#endif
 }
@@ -293,7 +295,7 @@ bool Socket::reuse()
 
 bool Socket::bind(const Address &address)
 {
-	return !::bind((SOCKET) data, (const sockaddr *) address.data,
+	return !::bind(TOSOCK(data), (const sockaddr *) address.data,
 		address.length);
 }
 
@@ -308,13 +310,13 @@ bool Socket::bind(unsigned short port)
 
 void Socket::close()
 {
-	if ((SOCKET) data == SOCKET_ERROR)
+	if (TOSOCK(data) == SOCKET_ERROR)
 		return;
 
 	#ifdef WIN32
-		closesocket((SOCKET) data);
+		closesocket(TOSOCK(data));
 	#else
-		::close((SOCKET) data);
+		::close(TOSOCK(data));
 	#endif
 
 	data = (void *) SOCKET_ERROR;
@@ -324,7 +326,7 @@ void Socket::close()
 
 bool Socket::valid() const
 {
-	return ((SOCKET) data != SOCKET_ERROR);
+	return (TOSOCK(data) != SOCKET_ERROR);
 }
 
 //------------------------------------------------------------------------------
@@ -449,16 +451,16 @@ UDPSocket::~UDPSocket()
 
 bool UDPSocket::broadcast()
 {
-	if ((SOCKET) data == SOCKET_ERROR)
+	if (TOSOCK(data) == SOCKET_ERROR)
 		return false;
 	
 	#ifdef WIN32
 		const char mode = 1;
-		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_BROADCAST,
+		return !setsockopt(TOSOCK(data), SOL_SOCKET, SO_BROADCAST,
 			&mode, sizeof (mode));
 	#else
 		int mode = 1;
-		return !setsockopt((SOCKET) data, SOL_SOCKET, SO_BROADCAST,
+		return !setsockopt(TOSOCK(data), SOL_SOCKET, SO_BROADCAST,
 			&mode, sizeof (int));
 	#endif
 }
@@ -470,7 +472,7 @@ bool UDPSocket::sendto(const Address &address, const char *data_in, size_t &leng
 	#ifdef NETDEBUG
 		printf("%03X> %s\n", data, data_in);
 	#endif
-	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
+	ssize_t ret = ::sendto(TOSOCK(data), data_in, length, 0,
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
 		return true;
@@ -487,7 +489,7 @@ bool UDPSocket::shout(unsigned short port, const char *data_in, size_t &length)
 	#ifdef NETDEBUG
 		printf("%03X>> %s\n", data, data_in);
 	#endif
-	ssize_t ret = ::sendto((SOCKET) data, data_in, length, 0,
+	ssize_t ret = ::sendto(TOSOCK(data), data_in, length, 0,
 		(sockaddr *) address.data, address.length);
 	if (ret == length)
 		return true;
@@ -500,7 +502,7 @@ bool UDPSocket::shout(unsigned short port, const char *data_in, size_t &length)
 
 bool UDPSocket::recvfrom(Address &address, char *data_out, size_t &length)
 {
-	ssize_t ret = ::recvfrom((SOCKET) data, data_out, --length, 0,
+	ssize_t ret = ::recvfrom(TOSOCK(data), data_out, --length, 0,
 		(sockaddr *) address.data, (socklen_t *) &address.length);
 	if (ret >= 0)
 	{
@@ -552,7 +554,7 @@ TCPSocket::~TCPSocket()
 
 bool TCPSocket::connect(const Address &address)
 {
-	return !::connect((SOCKET) data,
+	return !::connect(TOSOCK(data),
 		(const sockaddr *) address.data, address.length);
 }
 
@@ -562,7 +564,7 @@ bool TCPSocket::listen(const Address &address)
 {
 	if (!bind(address))
 		return false;
-	return !::listen((SOCKET) data, 10);
+	return !::listen(TOSOCK(data), 10);
 }
 
 //------------------------------------------------------------------------------
@@ -571,14 +573,14 @@ bool TCPSocket::listen(unsigned short port)
 {
 	if (!bind(port))
 		return false;
-	return !::listen((SOCKET) data, 10);
+	return !::listen(TOSOCK(data), 10);
 }
 
 //------------------------------------------------------------------------------
 
 bool TCPSocket::accept(TCPSocket &socket, Address &address)
 {
-	SOCKET sock = ::accept((SOCKET) data,
+	SOCKET sock = ::accept(TOSOCK(data),
 		(sockaddr *)address.data, (socklen_t *) &address.length);
 	socket.data = (void *)sock;
 	return (sock != SOCKET_ERROR);
@@ -591,7 +593,7 @@ bool TCPSocket::send(const char *data_in, size_t &length)
 	#ifdef NETDEBUG
 		printf("%03X> %s\n", data, data_in);
 	#endif
-	ssize_t ret = ::send((SOCKET) data, data_in, length, 0);
+	ssize_t ret = ::send(TOSOCK(data), data_in, length, 0);
 	if (ret == length)
 		return true;
 
@@ -603,7 +605,7 @@ bool TCPSocket::send(const char *data_in, size_t &length)
 
 bool TCPSocket::recv(char *data_out, size_t &length)
 {
-	ssize_t ret = ::recv((SOCKET) data, data_out, --length, 0);
+	ssize_t ret = ::recv(TOSOCK(data), data_out, --length, 0);
 	if (ret >= 0)
 	{
 		length = ret;
