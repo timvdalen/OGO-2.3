@@ -1,11 +1,3 @@
-#if defined _WIN32
-	#include <gl\freeglut.h>
-#elif defined __APPLE__
-	#include <GL/freeglut.h>
-#else
-	#include <GL/freeglut.h>
-#endif
-
 #include "hud.h"
 
 namespace HUD_objects{
@@ -31,10 +23,6 @@ void HUD::preRender(){
         gluOrtho2D(0,viewport[2], viewport[3], 0);
 
         glDepthFunc(GL_ALWAYS);
-
-	glRasterPos2i(100, 120);
-
-	glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const ubyte *) "HUD");
 }
 
 void HUD::postRender(){
