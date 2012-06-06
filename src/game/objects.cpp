@@ -136,6 +136,22 @@ void Terrain::draw()
 
 //------------------------------------------------------------------------------
 
+Player::Player(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox()) : BoundedObject(P, R, B) {
+	const string path = "models/";
+	head = Loader::ModelObject(Pd(), Qd(), path + "head.3DS");
+	body = Loader::ModelObject(Pd(), Qd(), path + "body.3DS");
+	weapon = Loader::ModelObject(Pd(), Qd(), path + "gun.3DS");
+	tool = Loader::ModelObject(Pd(), Qd(), path + "wrench.3DS");
+	wheel = Loader::ModelObject(Pd(), Qd(), path + "wheel.3DS");
+	children.insert(head);
+	children.insert(body);
+	children.insert(weapon);
+	children.insert(tool);
+	children.insert(wheel);
+}
+
+//------------------------------------------------------------------------------
+
 } // namespace Objects
 
 //------------------------------------------------------------------------------
