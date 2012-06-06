@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
 	
-	Assets::Initialize(); // after the viewports have been initialized!
+	Assets::Initialize(argc, argv); // after the viewports have been initialized!
 	
 	v1.camera.origin = Pd(0,0.1,0);
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));

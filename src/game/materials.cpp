@@ -34,9 +34,9 @@ void ShadedMaterial::unselect()
 
 //==============================================================================
 
-TexturedMaterial::TexturedMaterial(const char *filename)
+TexturedMaterial::TexturedMaterial(string filename)
 {
-	PngImage image(filename);
+	PngImage image(filename.c_str());
 	texture = Texture();
 	texture->load(image);
 }

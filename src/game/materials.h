@@ -11,6 +11,8 @@
 #ifndef _MATERIALS_H
 #define _MATERIALS_H
 
+#include <string>
+
 #include "base.h"
 #include "core.h"
 #include "image.h"
@@ -64,7 +66,7 @@ class TexturedMaterial : public Material
 	public:
 	//! Constructs a material with supplied texture file
 	//! \note Currently only supports PNG files
-	TexturedMaterial(const char *filename);
+	TexturedMaterial(std::string filename);
 	
 	//! Constructs a material with supplied texture image
 	//! \note The texture data is stored in video memory, so it is save to
