@@ -40,7 +40,7 @@ void init(){
 		printf("Warning: The platforms: Windows NT, Mac OS X (>=10.7) and Linux are supported"\n);
 		#endif
 	#endif
-#endif*/
+#endif
 }
 
 } // namespace CrossPlatform
