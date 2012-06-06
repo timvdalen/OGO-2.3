@@ -43,7 +43,7 @@ class HUD: public Object{
 class Message: public Object{
 	public:
 	//! Gives a textual representation of this message
-	virtual string toString(){}
+	virtual string toString(){return "";}
 };
 
 //! Represents a chat message
