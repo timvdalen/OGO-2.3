@@ -43,6 +43,7 @@ void ModelObject::load(const char * path) {
 //--------------------------------------------
 
 void ModelObject::displaylist(Lib3dsMesh * mesh) {
+    /*
             {
                 int p;
                 float (*normalL)[3] = (float(*)[3])malloc(3 * 3 * sizeof(float) * mesh->nfaces);
@@ -73,6 +74,7 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
             }
 
             glDisable(GL_TEXTURE_2D);
+    */
 }
 
 //--------------------------------------------
