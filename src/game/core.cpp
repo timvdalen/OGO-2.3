@@ -2,10 +2,13 @@
  * Core module -- see header
  */
 
+#include <string>
 #include "video.h"
 #include "core.h"
 
 namespace Core {
+
+using namespace std;
 
 //------------------------------------------------------------------------------
 
@@ -47,6 +50,14 @@ void Object::postRender()
 		(*it)->render();
 	
 	glPopMatrix();
+}
+
+//------------------------------------------------------------------------------
+
+Player::Player(Id _id, unsigned char _team, string _name){
+	id = id;
+	team = _team;
+	name = _name;
 }
 
 //------------------------------------------------------------------------------
