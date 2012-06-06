@@ -159,17 +159,20 @@ class Player: public BoundedObject{
 		//! Health of this player
 		int health;
 
-		//! Velocity of the player
-		int v;
-
 		//! The time of the last shot this player fired
 		time_t lastShot;
+
+		//! Velocity of the player (y-axis)
+		Vd velocity;
 
 		//! Model
 		ObjectHandle head, body, weapon, tool, wheel;
 
 		//! Constructs a player
-		Player(Pd P, Qd R, BoundingBox B);
+		Player(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
+
+		//! Update model transformations according to velocity and the camera direction
+		void update(const Qd &camobj);
 };
 
 //! Represents a laser beam
