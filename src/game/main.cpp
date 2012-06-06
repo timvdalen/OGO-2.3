@@ -168,7 +168,7 @@ void Frame()
 
 	input->frame();
 
-	/**/
+	/** /
 	controller->frame();
 	/** /
 	if (controller->move[dirLeft])     cube->origin.x -= 0.1;
@@ -179,6 +179,24 @@ void Frame()
 	if (controller->move[dirDown])     cube->origin.z -= 0.1;
 
 	window->viewports[0]->camera.lookAt(cube->origin);
+	/**/
+	Camera &cam = window->viewports[0]->camera;
+	Pd &pos = cam.origin;
+	Qd &rot = cam.objective;
+	
+	if (controller->look[dirLeft])     rot = rot * Rd(-.05, Vd(0,0,1));
+	if (controller->look[dirRight])    rot = rot * Rd( .05, Vd(0,0,1));
+	if (controller->look[dirBackward]) rot = rot * Rd(-.05, Vd(0,1,0));
+	if (controller->look[dirForward])  rot = rot * Rd( .05, Vd(0,1,0));
+	if (controller->look[dirUp])       rot = rot * Rd(-.05, Vd(1,0,0));
+	if (controller->look[dirDown])     rot = rot * Rd( .05, Vd(1,0,0));
+	
+	if (controller->move[dirLeft])     pos = pos + -rot * Vd(1,0,0) * -0.5;
+	if (controller->move[dirRight])    pos = pos + -rot * Vd(1,0,0) *  0.5;
+	if (controller->move[dirBackward]) pos = pos + -rot * Vd(0,1,0) * -0.5;
+	if (controller->move[dirForward])  pos = pos + -rot * Vd(0,1,0) *  0.5;
+	if (controller->move[dirUp])       pos = pos + -rot * Vd(0,0,1) *  0.5;
+	if (controller->move[dirDown])     pos = pos + -rot * Vd(0,0,1) * -0.5;
 	/**/
 
 	controller->look.reset();
