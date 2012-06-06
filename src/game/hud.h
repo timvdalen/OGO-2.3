@@ -11,6 +11,8 @@ namespace HUD_objects{
 using namespace std;
 using namespace Core;
 
+class MessageDisplayer;
+
 //! Main class for the Heads-up display
 class HUD: public Object{
 	public:
@@ -21,6 +23,9 @@ class HUD: public Object{
 	//! Height of the screen in pixels
 	int height;
 
+	//! The main MessageDisplayer for this HUD
+	MessageDisplayer *messageDisplayer;
+
 	//! Constructs the HUD with width _width and height _height. 
 	HUD(int _width, int _height);
 
@@ -30,7 +35,7 @@ class HUD: public Object{
 	//! Sets up 2D drawing mode
 	void preRender();
 
-	//! Switches back to 3D drawing mode
+	//! Draws its children and switches back to 3D drawing mode
 	void postRender();
 };
 
@@ -38,7 +43,7 @@ class HUD: public Object{
 class Message: public Object{
 	public:
 	//! Gives a textual representation of this message
-	virtual string toString() = 0;
+	virtual string toString(){return "";}
 };
 
 //! Represents a chat message
@@ -87,6 +92,44 @@ class TowerFragMessage: public Message{
 
 	//! Formats this message as <[victim.name]> was fragged by a tower
 	string toString();
+};
+
+
+//! Displays a variety of messages
+class MessageDisplayer: public Object{
+	//! The last time a message was added
+	int lastMessage;
+
+	public:
+	//! Circluar array that contains the messages
+	Message messages[10];
+
+	//! Array index that points to the current head
+	
+	//! On the head is the last message that was added
+	int curr;
+
+	//! Number of items that are filled
+	int full;
+
+	public:
+	//! x-offset for drawing
+	int x;
+
+	//! y-offset for drawing
+	int y;
+	
+	//! Constructs a new MessageDisplayer with x-offset x and y-offset y
+	MessageDisplayer(int _x, int _y);
+
+	//! Adds a message to the queue
+	void addMessage(Message m);
+
+	//! Displays the messages
+	virtual void draw();
+
+	//! Renders this object
+	virtual void render();
 };
 
 }

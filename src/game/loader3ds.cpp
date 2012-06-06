@@ -43,6 +43,7 @@ void ModelObject::load(const char * path) {
 //--------------------------------------------
 
 void ModelObject::displaylist(Lib3dsMesh * mesh) {
+    /*
             {
                 int p;
 
@@ -82,6 +83,7 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
             }
 
             glDisable(GL_TEXTURE_2D);
+    */
 }
 
 //--------------------------------------------
@@ -152,7 +154,7 @@ void ModelObject::render() {
 		cout << "rendered. \n";
 	}
 	else {
-		cout << "file not found..." << "\n";
+		//cout << "file not found..." << "\n"; -_- ;;
 	}
 }
 

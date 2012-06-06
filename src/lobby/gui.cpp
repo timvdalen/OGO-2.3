@@ -9,7 +9,6 @@
 #include "lobby.h"
 #include "common.h"
 #include "CrossPlatform.h"
-#include <errno.h>
 #define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 using namespace Lobby;
@@ -170,7 +169,6 @@ IMPLEMENT_APP(LobbyGUI)
 
 bool LobbyGUI::OnInit(){
     CrossPlatform::init();
-	
 	ConfigFile config("game.conf");
 	string pname;
 	config.readInto(pname, "playername");
@@ -798,14 +796,18 @@ static void lobbyOnStartCall(){
 static void lobbyOnStart(){
     char serverAddr[180];
 	server.string(serverAddr);
-	//I would use exec_*, but Windows does not support that
+    //I would use exec_*, but Windows does not support that
 #if (defined WIN32 || defined _MSC_VER)
     char command[28] = "start Game ";
     strcat(command, serverAddr);
 #else
 #ifdef __APPLE__
-    char command[100] = "open ./Game --args ";
+    //ugly fix 
+    char command[180] = "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/' ";
     strcat(command, serverAddr);
+    //arguments can be added here
+    strcat(command,   "\\\"\"");
+    printf(command);
 #else
     char command[27] = "./Game ";
     strcat(command, serverAddr);
@@ -831,8 +833,9 @@ static void serverLobbyOnStart(){
 		system("start Game");
 	#else
         #ifdef __APPLE__
+        //awesome ugly code :D
         system("echo \"`pwd`\"");
-            system("open ./Game --args -p \"`pwd`\"");
+            system("osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/'\\\"\"");
         #else
             system("./Game &");
         #endif

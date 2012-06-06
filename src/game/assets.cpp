@@ -31,7 +31,7 @@ void Initialize(int argc, char *argv[])
 	string path = "./";
 	for (int i = 0; i < argc - 1; ++i)
 		if (!strcmp(argv[i], "-p"))
-			path = argv[i++];
+			path = argv[++i];
 	
 	Grid = TwinMaterial(GridMaterial(5),
 		ShadedMaterial(Cf(0.2,0.8,0.2,1), //Ambient
@@ -50,7 +50,7 @@ void Initialize(int argc, char *argv[])
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));
 		shade.emissive = Cf(0,.5,0,1);
-		Test = TwinMaterial(shade, TexturedMaterial("test.png"));
+		Test = TwinMaterial(shade, TexturedMaterial(path + "test.png"));
 	}
 	
 	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");

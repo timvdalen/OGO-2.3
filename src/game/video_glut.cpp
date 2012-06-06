@@ -208,7 +208,7 @@ void Camera::lookAt(const Point<double> &target)
     double len = sqrt(dir.x * dir.x + dir.y * dir.y);
     double pitch = atan2(dir.z, len);
     double pan = atan2(dir.x, dir.y);
-    objective = Qd(Rd(pitch, Vd(1, 0, 0))) * Qd(Rd(pan, Vd(0, 0, 1)));
+    objective = Qd(Rd(-pitch, Vd(1, 0, 0))) * Qd(Rd(pan, Vd(0, 0, 1)));
 
 }
 
