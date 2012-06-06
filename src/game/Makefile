@@ -29,7 +29,7 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
-LIBS     = -lpthread -lpng -lz 
+LIBS     = -lpthread -lpng -lz -l3ds
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC

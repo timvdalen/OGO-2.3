@@ -831,7 +831,8 @@ static void serverLobbyOnStart(){
 		system("start Game");
 	#else
         #ifdef __APPLE__
-            system("open ./Game --args ");
+        system("echo \"`pwd`\"");
+            system("open ./Game --args -p \"`pwd`\"");
         #else
             system("./Game &");
         #endif
