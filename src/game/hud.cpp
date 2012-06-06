@@ -1,6 +1,9 @@
+#include "core.h"
 #include "hud.h"
 
 namespace HUD_objects{
+
+using namespace std;
 
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
@@ -30,6 +33,20 @@ void HUD::postRender(){
         glPopMatrix();
         glMatrixMode(GL_MODELVIEW);
         glPopMatrix();
+}
+
+ChatMessage::ChatMessage(Core::Player _player, string _message){
+	player = _player;
+	message = _message;
+}
+
+PlayerFragMessage::PlayerFragMessage(Core::Player _killer, Core::Player _victim){
+	killer = _killer;
+	victim = _victim;
+}
+
+TowerFragMessage::TowerFragMessage(Core::Player _player){
+	player = _player;
 }
 
 }
