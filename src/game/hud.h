@@ -57,6 +57,22 @@ class ChatMessage: public Message{
 	string toString();
 };
 
+//! Represents a kill made by a player
+class PlayerFragMessage: public Message{
+	public:
+	//! The player that made the frag
+	Core::Player killer;
+
+	//! The player that was fragged
+	Core::Player victim;
+
+	//! Constructs a new PlayerFragMessage
+	PlayerFragMessage(Core::Player _killer, Core::Player _victim);
+
+	//! Formats this message as <[killer.name]> fragged <[victim.name]>
+	string toString();
+};
+
 
 }
 
