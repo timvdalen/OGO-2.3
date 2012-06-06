@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "objects.h"
 #include "video.h"
+#include "assets.h"
 
 namespace Objects {
 
@@ -108,12 +109,13 @@ void Terrain::draw()
 				glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
 			glEnd();
 			if(showGrid){
-				Material *gridMat;
+				MaterialHandle gridMat;
 				if(selected.x == i && selected.y == j){
-					gridMat = new Materials::SelectedGridMaterial();
+					gridMat = Assets::SelectedGrid;
 				}else{
-					gridMat = new Materials::GridMaterial();
+					gridMat = Assets::Grid;
 				}
+				material->unselect();
 				gridMat->select();
 				glBegin(GL_LINES);
 					glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
@@ -128,6 +130,7 @@ void Terrain::draw()
 					glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
 					glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
 				glEnd();
+				gridMat->unselect();
 				material->select();
 			}
 		}

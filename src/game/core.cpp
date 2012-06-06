@@ -25,11 +25,11 @@ void Object::render()
 {
 	preRender();
 	
-	material->select();
+	if (material) material->select();
 	
 	draw();
 	
-	material->unselect();
+	if (material) material->unselect();
 	
 	postRender();
 }

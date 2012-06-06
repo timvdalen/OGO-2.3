@@ -21,6 +21,11 @@ using namespace Core;
 void Initialize();
 void Terminate();
 
+//------------------------------------------------------------------------------
+
+extern MaterialHandle Grid;
+extern MaterialHandle SelectedGrid;
+
 extern MaterialHandle Test;
 
 extern MaterialHandle Cloud;

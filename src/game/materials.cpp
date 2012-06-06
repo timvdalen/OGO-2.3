@@ -2,8 +2,6 @@
  * Materials -- see header file for more info
  */
 
-#include <stdio.h>
-
 #include "video.h"
 #include "materials.h"
 
@@ -19,6 +17,19 @@ void ShadedMaterial::select()
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
 	glMaterialfv(GL_FRONT, GL_EMISSION, emissive);
 	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+}
+
+//------------------------------------------------------------------------------
+
+void ShadedMaterial::unselect()
+{
+	Cf white(1,1,1,1);
+	Cf empty(0,0,0,0);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, white);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_EMISSION, empty);
+	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
 }
 
 //==============================================================================
@@ -100,17 +111,33 @@ void TexturedMaterial::Texture::load(const Image &image)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, pack);
 }
 
-//------------------------------------------------------------------------------
+//==============================================================================
 
-void EmptyMaterial::select(){
+void EmptyMaterial::select()
+{
 	GLfloat empty[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	glMaterialfv(GL_FRONT, GL_AMBIENT, empty);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, empty);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, empty);
 	glMaterialfv(GL_FRONT, GL_EMISSION, empty);
 	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+}
+
+//==============================================================================
+
+void GridMaterial::select()
+{
+	glLineWidth(size);
+}
+
+//------------------------------------------------------------------------------
+
+void GridMaterial::unselect()
+{
 	glLineWidth(1);
 }
+
+//------------------------------------------------------------------------------
 
 } // namespace Materials
 
