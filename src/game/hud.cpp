@@ -55,7 +55,7 @@ string PlayerFragMessage::toString(){
 }
 
 TowerFragMessage::TowerFragMessage(Core::Player _player)
-	: player(_player);
+	: player(_player)
 {}
 
 string TowerFragMessage::toString(){
