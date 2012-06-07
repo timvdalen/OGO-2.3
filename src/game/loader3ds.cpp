@@ -73,10 +73,6 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
                             glTexCoord2f(
                                 mesh->texcos[mesh->faces[p].index[i]][0],
                                 mesh->texcos[mesh->faces[p].index[i]][1] );
-
-							//cout << mesh->texcos[mesh->faces[p].index[i]][0] << " - ";
-							//cout << mesh->texcos[mesh->faces[p].index[i]][1] << "\n";
-
                             glVertex3fv(mesh->vertices[mesh->faces[p].index[i]]);
                         }
                         glEnd();
@@ -90,20 +86,15 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
 //--------------------------------------------
 
 void ModelObject::render(Lib3dsNode * n) {
-	// cout << "render " << n->node_id;
     for (Lib3dsNode * nc = n->childs; nc; nc = nc->next) {
         render(nc);
     }
 
 	if (n->type == LIB3DS_NODE_MESH_INSTANCE) {
-		//cout << "mesh found";
-
 		Lib3dsMeshInstanceNode * node = (Lib3dsMeshInstanceNode*) n;
-		Lib3dsMesh * mesh;
 
-		cout << "\n mesh size: " << file->meshes_size <<"\n";
-		
-		for (int i = 0; i < file->meshes_size; i++) {
+		Lib3dsMesh * mesh;
+		for (int i = 0; i < file->nmeshes; i++) {
 			mesh = file->meshes[i];
 			
 			if (!mesh) continue;
