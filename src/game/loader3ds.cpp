@@ -91,7 +91,6 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
 
 void ModelObject::render(Lib3dsNode * n) {
 	// cout << "render " << n->node_id;
-
     for (Lib3dsNode * nc = n->childs; nc; nc = nc->next) {
         render(nc);
     }
@@ -102,14 +101,16 @@ void ModelObject::render(Lib3dsNode * n) {
 		Lib3dsMeshInstanceNode * node = (Lib3dsMeshInstanceNode*) n;
 		Lib3dsMesh * mesh;
 
-		// cout << "\n mesh size: " << file->meshes_size <<"\n";
-
+		cout << "\n mesh size: " << file->meshes_size <<"\n";
+		
 		for (int i = 0; i < file->meshes_size; i++) {
 			mesh = file->meshes[i];
+			
+			if (!mesh) continue;
 
 			if (!mesh->user_id) {
 				mesh->user_id = glGenLists(1);
-				//cout << "displaylist id: " << mesh->user_id;
+				cout << "displaylist id: " << mesh->user_id;
 				glNewList(mesh->user_id, GL_COMPILE);
 
 				glPushMatrix();
@@ -155,7 +156,7 @@ void ModelObject::render() {
 		//cout << "rendered. \n";
 	}
 	else {
-		cout << "file not found...\n";
+		//cout << "file not found...\n";
 	}
 }
 
