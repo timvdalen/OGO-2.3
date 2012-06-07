@@ -10,6 +10,7 @@ namespace Movement {
 	double jetpackspeed = 0.2;
 	double lookspeed = 0.035;
 	double zoomspeed = 0.5;
+	Qd camAngle;
 
 //------------------------------------------------------------------------------
 
@@ -19,12 +20,14 @@ Controller::Controller(Camera &C, ObjectHandle P) : camera(C), player(P)
 
 	pos = player->origin;
 
-	Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
 	zoom = 10.0;
 
 	camera.origin = pos - (~vec * zoom);
 	camera.lookAt(pos);
+
+	camAngle = Qd();
 }
 
 //------------------------------------------------------------------------------
@@ -33,7 +36,7 @@ void Controller::moveX()
 {
 	if (move[dirLeft])
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		yaw -= (.5 * Pi);
@@ -48,7 +51,7 @@ void Controller::moveX()
 	}
 	else if (move[dirRight])
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		yaw += (.5 * Pi);
@@ -69,7 +72,7 @@ void Controller::moveY()
 {
 	if (move[dirForward])
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		pos.x = pos.x + movespeed * sin(yaw);
@@ -82,7 +85,7 @@ void Controller::moveY()
 	}
 	else if (move[dirBackward])
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,-1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,-1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		pos.x = pos.x + movespeed * sin(yaw);
@@ -123,9 +126,9 @@ void Controller::lookX()
 {
 	if (look[dirLeft])
 	{
-		player->rotation = Qd(Rd(lookspeed, Vd(0,0,1))) * player->rotation;
+		camAngle = Qd(Rd(lookspeed, Vd(0,0,1))) * camAngle;
 
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
@@ -140,9 +143,9 @@ void Controller::lookX()
 	}
 	else if (look[dirRight])
 	{
-		player->rotation = Qd(Rd(-lookspeed, Vd(0,0,1))) * player->rotation;
+		camAngle = Qd(Rd(-lookspeed, Vd(0,0,1))) * camAngle;
 
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
@@ -163,7 +166,7 @@ void Controller::lookY()
 {
 	if (look[dirForward]) // Zoom in
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (zoom > 5.0)
 		{
@@ -187,7 +190,7 @@ void Controller::lookY()
 	}
 	else if (look[dirBackward]) // Zoom out
 	{
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (zoom < 15.0) 
 		{
@@ -219,12 +222,12 @@ void Controller::lookZ()
 {
 	if (look[dirUp])
 	{
-		Vector<double> mystery = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> mystery = ~(camAngle * Vector<double>(0,1,0));
 		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		player->rotation = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
+		camAngle = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
 
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
@@ -239,12 +242,12 @@ void Controller::lookZ()
 	}
 	else if (look[dirDown])
 	{
-		Vector<double> mystery = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> mystery = ~(camAngle * Vector<double>(0,1,0));
 		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		player->rotation = Qd(Rd(-lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
+		camAngle = Qd(Rd(-lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
 
-		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
+		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
