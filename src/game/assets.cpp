@@ -29,6 +29,7 @@ MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
 
+MaterialHandle Font;
 MaterialHandle CrossHair;
 
 //------------------------------------------------------------------------------
@@ -75,7 +76,9 @@ void Initialize(int argc, char *argv[])
 	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
 	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 
-	CrossHair = ShadedMaterial(Cf(1, 1, 1, 1));
+	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+
 
 	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
 	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
