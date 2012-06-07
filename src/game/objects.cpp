@@ -225,8 +225,8 @@ pair<int, int> Terrain::getGridCoordinates(Vd camera, Vd pos){
     double intersecx = camera.x + dir.x * lambda;
     double intersecy = camera.y + dir.y * lambda;
 
-    int x = floor(intersecx / (double) GRID_SIZE);
-    int y = floor(intersecy / (double) GRID_SIZE);
+    int x = (int) floor(intersecx / (double) GRID_SIZE);
+    int y = (int) floor(intersecy / (double) GRID_SIZE);
     return pair<int, int>(x, y);
 }
 
