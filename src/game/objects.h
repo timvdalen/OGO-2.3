@@ -18,7 +18,6 @@
 #include "core.h"
 #include "assets.h"
 #include "materials.h"
-#include "loader3ds.h"
 
 //------------------------------------------------------------------------------
 

@@ -8,6 +8,7 @@
 
 #include "materials.h"
 #include "assets.h"
+#include "loader3ds.h"
 
 namespace Assets {
 
@@ -27,6 +28,14 @@ MaterialHandle Grass;
 MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
+
+//------------------------------------------------------------------------------
+
+ObjectHandle HeadObj;
+ObjectHandle BodyObj;
+ObjectHandle GunObj;
+ObjectHandle WrenchObj;
+ObjectHandle WheelObj;
 
 //------------------------------------------------------------------------------
 
@@ -63,6 +72,12 @@ void Initialize(int argc, char *argv[])
 	Head = TexturedMaterial(path + "assets/textures/models/headtext.png");
 	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
 	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+
+	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
+	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
+	GunObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/gun.3DS");
+	WrenchObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wrench.3DS");
+	WheelObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wheel.3DS");
 }
 
 //------------------------------------------------------------------------------
@@ -74,9 +89,16 @@ void Terminate()
 	Test.clear();
 	Cloud.clear();
 	Grass.clear();
+
 	Head.clear();
 	Body.clear();
 	Gun.clear();
+
+	HeadObj.clear();
+	BodyObj.clear();
+	GunObj.clear();
+	WrenchObj.clear();
+	WheelObj.clear();
 }
 
 //------------------------------------------------------------------------------

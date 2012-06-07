@@ -141,11 +141,11 @@ void Terrain::draw()
 
 Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
 	const string path = "assets/models/";
-	head = Loader::ModelObject(Pd(), Qd(), path + "head.3DS");
-	body = Loader::ModelObject(Pd(), Qd(), path + "body.3DS");
-	weapon = Loader::ModelObject(Pd(), Qd(), path + "gun.3DS");
-	tool = Loader::ModelObject(Pd(), Qd(), path + "wrench.3DS");
-	wheel = Loader::ModelObject(Pd(), Qd(), path + "wheel.3DS");
+	head = Assets::HeadObj;
+	body = Assets::BodyObj;
+	weapon = Assets::GunObj;
+	tool = Assets::WrenchObj;
+	wheel = Assets::WheelObj;
 	children.insert(head);
 	children.insert(body);
 	children.insert(weapon);
