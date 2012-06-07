@@ -27,7 +27,7 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)CrossPlatform.o $(OBJDIR)materials.o $(OBJDIR)movement.o   \
            $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
            $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o                  \
-		   $(OBJDIR)loader3ds.o
+		   $(OBJDIR)loader3ds.o $(OBJDIR)structures.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz -l3ds
@@ -84,6 +84,9 @@ $(OBJDIR)main.o: main.cpp
 
 $(OBJDIR)objects.o: objects.cpp
 	$(CPP) -c objects.cpp -o $(OBJDIR)objects.o $(CXXFLAGS)
+
+$(OBJDIR)structures.o: structures.cpp
+	$(CPP) -c structures.cpp -o $(OBJDIR)structures.o $(CXXFLAGS)
 
 $(OBJDIR)ConfigFile.o: ../common/ConfigFile.cpp
 	$(CPP) -c ../common/ConfigFile.cpp -o $(OBJDIR)ConfigFile.o $(CXXFLAGS)
