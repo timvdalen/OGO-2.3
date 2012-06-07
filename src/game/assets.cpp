@@ -24,6 +24,10 @@ MaterialHandle Test;
 MaterialHandle Cloud;
 MaterialHandle Grass;
 
+MaterialHandle Head;
+MaterialHandle Body;
+MaterialHandle Gun;
+
 //------------------------------------------------------------------------------
 
 void Initialize(int argc, char *argv[])
@@ -55,6 +59,10 @@ void Initialize(int argc, char *argv[])
 	
 	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");
 	Grass = TexturedMaterial(path + "assets/textures/terrain/grass.png");
+
+	Head = TexturedMaterial(path + "assets/textures/models/headtext.png");
+	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
+	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 }
 
 //------------------------------------------------------------------------------

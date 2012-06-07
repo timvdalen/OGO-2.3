@@ -31,6 +31,10 @@ extern MaterialHandle Test;
 extern MaterialHandle Cloud;
 extern MaterialHandle Grass;
 
+extern MaterialHandle Head;
+extern MaterialHandle Body;
+extern MaterialHandle Gun;
+
 //------------------------------------------------------------------------------
 
 } // namespace Assets
