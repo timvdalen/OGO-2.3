@@ -94,7 +94,7 @@ Window::Window(uword width, uword height, const char *title,
 	glShadeModel(GL_SMOOTH);
 
 	glEnable(GL_LIGHTING);
-	
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -197,20 +197,12 @@ void Window::timer(int state)
 
 void Camera::lookAt(const Point<double> &target)
 {
-	//const Vd def = Vd(0,1,0);
-	//Vd dir = ~Vd(target - origin);
-	//double dot = dir ^ def;
-
-	//if (dot == 1.0)
-		//objective = Rd(0.0, def);
-	//else if (dot == -1.0)
-		//objective = Rd(Pi, Vd(0,0,1));
-	//else
-		//objective = Rd(Vd(0,1,0), dir);
     Vd dir = ~Vd(target-origin);
+
     double len = sqrt(dir.x * dir.x + dir.y * dir.y);
     double pitch = atan2(dir.z, len);
     double pan = atan2(dir.x, dir.y);
+
     objective = Qd(Rd(-pitch, Vd(1, 0, 0))) * Qd(Rd(pan, Vd(0, 0, 1)));
 
 }
