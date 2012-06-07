@@ -13,6 +13,7 @@ using namespace Core;
 
 class MessageDisplayer;
 class CrossHair;
+class Widget;
 
 //! Main class for the Heads-up display
 class HUD: public Object{
@@ -41,6 +42,34 @@ class HUD: public Object{
 
 	//! Draws its children and switches back to 3D drawing mode
 	void postRender();
+};
+
+//! Object for display on the HUD
+class Widget: public Object{
+	public:
+	//! X offset of this widget in pixels
+	int xOffset;
+
+	//! Y offset of this widget in pixels
+	int yOffset;
+
+	//! Width of this widget in pixels
+	int width;
+
+	//! Height of this widget in pixels
+	int height;
+
+	//! Constructs a new widget with a custom Material
+	Widget(int _x, int _y, int _width, int _height, MaterialHandle M);
+
+	//! Replaces the widget
+	void replace(int _x, int _y);
+
+	//! Resizes the widget
+	void resize(int _width, int _height);
+
+	//! Renders the widget
+	virtual void render();
 };
 
 //! Represents a displayable message
@@ -100,7 +129,7 @@ class TowerFragMessage: public Message{
 
 
 //! Displays a variety of messages
-class MessageDisplayer: public Object{
+class MessageDisplayer: public Widget{
 	//! The last time a message was added
 	int lastMessage;
 
@@ -117,14 +146,8 @@ class MessageDisplayer: public Object{
 	int full;
 
 	public:
-	//! x-offset for drawing
-	int x;
-
-	//! y-offset for drawing
-	int y;
-	
-	//! Constructs a new MessageDisplayer with x-offset x and y-offset y
-	MessageDisplayer(int _x, int _y);
+	//! Constructs a new MessageDisplayer
+	MessageDisplayer(int _x, int _y, int _width, int _height);
 
 	//! Adds a message to the queue
 	void addMessage(Message m);
@@ -136,20 +159,11 @@ class MessageDisplayer: public Object{
 	virtual void render();
 };
 
-class CrossHair: public Object{
+class CrossHair: public Widget{
 	public:
 
-	//! Width of the viewport
-	int width;
-
-	//! Height of the viewport
-	int height;	
-
-	//! Constructs the crosshair with width _width and height _height. 
-	CrossHair(int _width, int _height);
-
-	//! Notifies the crosshair that the screen size has changed
-	void resize(int _width, int _height);
+	//! Constructs the crosshair
+	CrossHair(int _x, int _y, int _width, int _height);
 
 	//! Displays the crosshair
 	virtual void draw();

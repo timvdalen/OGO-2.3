@@ -31,6 +31,7 @@ MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
 
+MaterialHandle Widget;
 MaterialHandle Font;
 MaterialHandle CrossHair;
 

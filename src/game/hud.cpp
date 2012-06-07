@@ -22,21 +22,25 @@ HUD::HUD(int _width, int _height){
 	resize(_width, _height);
 	
 	ObjectHandle mdHandle;
-	mdHandle = MessageDisplayer(100, 100);
+	mdHandle = MessageDisplayer(100, 100, -1, -1); //Don't limit size for now
 	messageDisplayer = dynamic_cast<MessageDisplayer *>(&*mdHandle);
 	children.insert(mdHandle);	
 
-	
 	ObjectHandle chHandle;
-	chHandle = CrossHair(_width, _height);
+	chHandle = CrossHair(0, 0, _width, _height);
 	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
 	children.insert(chHandle);
-	
 }
 
 void HUD::resize(int _width, int _height){
 	width = _width;
 	height = _height;
+
+	set<ObjectHandle>::iterator it;
+	for(it = children.begin(); it != children.end(); ++it){
+		Widget* child = dynamic_cast<Widget *>(&**it);
+		if(child) child->resize(_width, _height);
+	}	
 }
 
 void HUD::preRender(){
@@ -66,6 +70,35 @@ void HUD::postRender(){
         glPopMatrix();
 }
 
+Widget::Widget(int _x, int _y, int _width, int _height, MaterialHandle M = Assets::Widget)
+	: Object(Pd(), Qd(), M)
+{
+	replace(_x, _y);
+	resize(_width, _height);
+}
+
+void Widget::replace(int _x, int _y){
+	xOffset = _x;
+	yOffset = _y;
+}
+
+void Widget::resize(int _width, int _height){
+	width = _width;
+	height = _height;
+}
+
+void Widget::render(){
+	glRasterPos2i(xOffset, yOffset);
+
+	if(material) material->select();
+
+	draw();
+
+	if(material) material->unselect();
+
+	glRasterPos2i(0, 0);
+}
+
 ChatMessage::ChatMessage(Core::Player _player, string _message)
 	: player(_player)
 {
@@ -93,10 +126,9 @@ string TowerFragMessage::toString(){
 	return string("<") + player.name + string("> was fragged by a tower");
 }
 
-MessageDisplayer::MessageDisplayer(int _x, int _y)
+MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
+	: Widget(_x, _y, _width, _height)
 {
-	x = _x;
-	y = _y;
 	curr = 0;
 	full = 0;
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
@@ -111,7 +143,7 @@ void MessageDisplayer::addMessage(Message m){
 }
 
 void MessageDisplayer::draw(){
-	glRasterPos2i(x, y);
+	glRasterPos2i(xOffset, yOffset);
 
 	
 	string teststring = "Welcome to the game!";
@@ -143,16 +175,9 @@ void MessageDisplayer::render(){
 	
 }
 
-CrossHair::CrossHair(int _width, int _height)
-	: Object(Pd(), Qd(), Assets::CrossHair)
-{
-	resize(_width, _height);
-}
-
-void CrossHair::resize(int _width, int _height){
-	width = _width;
-	height = _height;
-}
+CrossHair::CrossHair(int _x, int _y, int _width, int _height)
+	: Widget(_x, _y, _width, _height, Assets::CrossHair)
+{}
 
 void CrossHair::draw(){
 	int midX = width/2;
