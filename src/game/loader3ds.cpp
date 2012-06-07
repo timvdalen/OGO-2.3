@@ -101,7 +101,6 @@ void ModelObject::render(Lib3dsNode * n) {
 
 			if (!mesh->user_id) {
 				mesh->user_id = glGenLists(1);
-				cout << "displaylist id: " << mesh->user_id;
 				glNewList(mesh->user_id, GL_COMPILE);
 
 				glPushMatrix();
@@ -129,7 +128,6 @@ void ModelObject::render(Lib3dsNode * n) {
 
 ModelObject::ModelObject(Point<double> P, Quaternion<double> R, string path) : Object(P, R) {
 	load(path.c_str());
-	cout << "Opening " << path << "\n";
 }
 
 //--------------------------------------------
@@ -144,10 +142,6 @@ void ModelObject::draw() {
 		for (n = file->nodes; n; n = n->next) {
 			render(n);
 		}
-		//cout << "rendered. \n";
-	}
-	else {
-		//cout << "file not found...\n";
 	}
 }
 
