@@ -26,6 +26,8 @@ void Terminate();
 extern MaterialHandle Grid;
 extern MaterialHandle SelectedGrid;
 
+extern MaterialHandle WorldMaterial;
+
 extern MaterialHandle Test;
 
 extern MaterialHandle Cloud;
