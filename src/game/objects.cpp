@@ -71,8 +71,16 @@ World::World(double _width, double _height)
 	  BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0)),
 	  Assets::WorldMaterial)
 {
-	children.insert(Terrain(_width, _height));
-	terrain = dynamic_cast<Terrain *>(&**children.begin());
+	ObjectHandle tHandle;
+	tHandle = Terrain(_width, _height);
+	terrain = dynamic_cast<Terrain *>(&*tHandle);
+	children.insert(tHandle);
+
+	ObjectHandle hudHandle;
+	hudHandle = HUD(640, 480);
+	hud = dynamic_cast<HUD *>(&*hudHandle);
+	children.insert(hudHandle);
+
 	width = _width;
 	height = _height;
 }
