@@ -61,7 +61,7 @@ extern void(*OnFrame) ();
 class Window
 {
 	public:
-	bool changed;
+	bool resized;
 	std::vector<Viewport *> viewports; //!< A collection of viewports the window shows
 	
 	//! Creates a new window width and height and window title and position

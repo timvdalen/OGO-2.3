@@ -74,7 +74,7 @@ struct WindowData
 //------------------------------------------------------------------------------
 
 Window::Window(uword width, uword height, const char *title,
-               word xpos, word ypos) : changed(true)
+               word xpos, word ypos) : resized(true)
 {
 	data = (void *) new WindowData;
 
@@ -115,7 +115,6 @@ Window::~Window()
 
 void Window::select()
 {
-	changed = false;
 	PRIV(WindowData, wd)
 	glutSetWindow(wd->wid);
 }
@@ -158,7 +157,6 @@ void Window::size(uword &width, uword &height)
 
 	width = wd->width;
 	height = wd->height;
-	changed = true;
 }
 
 //------------------------------------------------------------------------------
@@ -183,6 +181,7 @@ void Window::resize(int width, int height)
 	wd->width = width;
 	wd->height = height;
 	wd->aspect = (double) width / (double) height;
+	(*windows.begin())->resized = true;
 	(*windows.begin())->render();
 }
 
@@ -191,6 +190,8 @@ void Window::resize(int width, int height)
 void Window::timer(int state)
 {
 	CALL(OnFrame);
+	for (set<Window *>::iterator it = windows.begin(); it != windows.end(); ++it)
+		(*it)->resized = false;
 
 	glutTimerFunc(16, Window::timer, 0);
 }

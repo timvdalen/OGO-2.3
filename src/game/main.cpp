@@ -174,9 +174,9 @@ void Frame()
 	
 	world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
 	
-	if (window->changed)
+	if (window->resized)
 	{
-		int width, height;
+		uword width, height;
 		window->size(width = 0, height = 0);
 		world->hud->resize(width, height);
 	}
