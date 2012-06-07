@@ -31,7 +31,7 @@ using namespace Materials;
 using namespace HUD_objects;
 
 struct Boundingbox;
-class BoundedObject;
+class BoundedObject;typedef Handle<BoundedObject> BoundedObjectHandle;
 class World;
 class Team;
 class Player;
@@ -73,7 +73,7 @@ class BoundedObject: public Object{
 		//! Checks if a line from origin to direction collides with this object or one of its children.
 		//! If there is a collision, this function returns a handle to the object the line collides with
 		//! if not, it returns null.
-		pair<BoundedObject, double> checkCollision(Point<double> origin, Vector<double> direction);
+		pair<BoundedObjectHandle, double> checkCollision(Point<double> origin, Vector<double> direction);
 
 		//! Draws this object
 		virtual void draw() {}

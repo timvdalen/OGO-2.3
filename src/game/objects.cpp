@@ -13,7 +13,7 @@ namespace Objects {
 
 //------------------------------------------------------------------------------
 
-pair<BoundedObject, double> BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
+pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
 {
     double collision = numeric_limits<double>::infinity();
     //--- We only check lbl rbh, could be improved-----
@@ -60,21 +60,24 @@ pair<BoundedObject, double> BoundedObject::checkCollision(Point<double> origin, 
     //find a collision with a child
     if(collision < std::numeric_limits<double>::infinity()){
         set<ObjectHandle>::iterator it;
-        BoundedObject* colobject = this;
+        BoundedObjectHandle colobject = *this;
         for (it = children.begin(); it != children.end(); ++it){
             BoundedObject* child = dynamic_cast<BoundedObject *>(&**it);
             if(child){
-                pair<BoundedObject, int> childcollision = child->checkCollision(p, v);
+                pair<BoundedObjectHandle, int> childcollision = child->checkCollision(p, v);
                 if(childcollision.second < collision){ //We have a collision with a child
+                    colobject.clear();
                     collision = childcollision.second;
-                    colobject = &childcollision.first;
+                    colobject = childcollision.first;
+                }else{
+                    childcollision.first.clear();
                 }
 //                childcollision.clear();
             }
         }
-        return make_pair(*colobject,collision);
+        return make_pair(colobject,collision);
     }
-    return make_pair(NULL,collision);
+    return make_pair(BoundedObjectHandle(),collision);
 }
 
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
