@@ -39,6 +39,14 @@ extern MaterialHandle CrossHair;
 
 //------------------------------------------------------------------------------
 
+extern ObjectHandle HeadObj;
+extern ObjectHandle BodyObj;
+extern ObjectHandle GunObj;
+extern ObjectHandle WrenchObj;
+extern ObjectHandle WheelObj;
+
+//------------------------------------------------------------------------------
+
 } // namespace Assets
 
 #endif // _ASSETS_H

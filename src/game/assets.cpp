@@ -8,6 +8,7 @@
 
 #include "materials.h"
 #include "assets.h"
+#include "loader3ds.h"
 
 namespace Assets {
 
@@ -29,6 +30,14 @@ MaterialHandle Body;
 MaterialHandle Gun;
 
 MaterialHandle CrossHair;
+
+//------------------------------------------------------------------------------
+
+ObjectHandle HeadObj;
+ObjectHandle BodyObj;
+ObjectHandle GunObj;
+ObjectHandle WrenchObj;
+ObjectHandle WheelObj;
 
 //------------------------------------------------------------------------------
 
@@ -67,6 +76,12 @@ void Initialize(int argc, char *argv[])
 	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 
 	CrossHair = ShadedMaterial(Cf(1, 1, 1, 1));
+
+	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
+	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
+	GunObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/gun.3DS");
+	WrenchObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wrench.3DS");
+	WheelObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wheel.3DS");
 }
 
 //------------------------------------------------------------------------------
@@ -78,10 +93,18 @@ void Terminate()
 	Test.clear();
 	Cloud.clear();
 	Grass.clear();
+
 	Head.clear();
 	Body.clear();
 	Gun.clear();
+
 	CrossHair.clear();
+
+	HeadObj.clear();
+	BodyObj.clear();
+	GunObj.clear();
+	WrenchObj.clear();
+	WheelObj.clear();
 }
 
 //------------------------------------------------------------------------------

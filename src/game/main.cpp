@@ -148,6 +148,9 @@ int main(int argc, char *argv[])
 
 	lookbind[btnMouseScrollUp] = dirForward;
 	lookbind[btnMouseScrollDown] = dirBackward;
+	
+	lookbind[btnKeyQ] = dirForward;
+	lookbind[btnKeyZ] = dirBackward;
 
 	OnFrame = Frame;
 
@@ -168,7 +171,7 @@ void Frame()
 
 	input->frame();
 
-	/** /
+	/**/
 	controller->frame();
 	/** /
 	if (controller->move[dirLeft])     cube->origin.x -= 0.1;
@@ -179,7 +182,7 @@ void Frame()
 	if (controller->move[dirDown])     cube->origin.z -= 0.1;
 
 	window->viewports[0]->camera.lookAt(cube->origin);
-	/**/
+	/** /
 	Camera &cam = window->viewports[0]->camera;
 	Pd &pos = cam.origin;
 	Qd &rot = cam.objective;
