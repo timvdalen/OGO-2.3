@@ -140,7 +140,7 @@ void Terrain::draw()
 //------------------------------------------------------------------------------
 
 Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
-	const string path = "models/";
+	const string path = "assets/models/";
 	head = Loader::ModelObject(Pd(), Qd(), path + "head.3DS");
 	body = Loader::ModelObject(Pd(), Qd(), path + "body.3DS");
 	weapon = Loader::ModelObject(Pd(), Qd(), path + "gun.3DS");
@@ -152,8 +152,14 @@ Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
 	children.insert(tool);
 	children.insert(wheel);
 
+	//set position of seperate elements
 	velocity = Vd(0,0,0);
 	update(R);
+
+	//textures
+	head->material = Assets::Head;
+	body->material = Assets::Body;
+	weapon->material = Assets::Gun;
 }
 
 //------------------------------------------------------------------------------
