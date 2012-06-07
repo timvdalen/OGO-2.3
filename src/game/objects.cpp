@@ -17,7 +17,7 @@ ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> 
     //--- We only check lbl rbh, could be improved-----
     Point<double> a = bb.lbl;
     Point<double> b = bb.rbh;
-    //--- Origin does not have to be rotated 
+    //--- Origin does not have to be rotated
     Point<double> p = origin - this->origin;
     //--- Vector only needs to be rotated
     Vector<double> v = rotation*direction;
@@ -60,10 +60,10 @@ ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> 
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
         return a.x <= p.x && p.x <= b.x//Inside x-interval
             && a.y <= p.y && p.y <= b.y//Inside y-interval
-            
+
     && a.z <= p.z && p.z <= b.z;//Inside z-interval
 }
-    
+
 //------------------------------------------------------------------------------
 
 World::World(double _width, double _height)
@@ -81,7 +81,7 @@ World::World(double _width, double _height)
 
 void World::draw(){
 	#define HIGH 500
-	
+
 	double halfWidth = width/2;
 	double halfHeight = height/2;
 
@@ -114,7 +114,7 @@ void World::draw(){
 		glVertex3f(-1 * halfWidth, -1 * halfHeight, 0);
 		glTexCoord2d(0.5, 1);
 		glVertex3f(0, 0, HIGH);
-		
+
 	glEnd();
 
 	#undef HIGH
@@ -122,7 +122,7 @@ void World::draw(){
 
 //------------------------------------------------------------------------------
 
-Terrain::Terrain(double _width, double _height) 
+Terrain::Terrain(double _width, double _height)
 	: Object(Pd(), Qd(), Assets::Grass)
 {
 	width = _width;
@@ -190,6 +190,22 @@ void Terrain::draw()
 
 //------------------------------------------------------------------------------
 
+// This function draws the line from camera to pos. It then finds the intersection
+// with the ground: the corresponding grid coordinates are returned.
+pair<int, int> Terrain::getGridCoordinates(Vd camera, Vd pos){
+    Vd dir = pos + -camera;
+
+    double lambda = -camera.z / dir.z;
+    double intersecx = camera.x + dir.x * lambda;
+    double intersecy = camera.y + dir.y * lambda;
+
+    int x = floor(intersecx / GRID_SIZE);
+    int y = floor(intersecy / GRID_SIZE);
+    return pair<int, int>(x, y);
+}
+
+//------------------------------------------------------------------------------
+
 Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
 	const string path = "assets/models/";
 	head = Assets::HeadObj;
@@ -230,7 +246,7 @@ void Player::translateModel() {
 }
 
 void Player::update(const Qd &camobj) {
-	
+
 	head->rotation = camobj;
 }
 
