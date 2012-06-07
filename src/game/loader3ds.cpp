@@ -72,10 +72,10 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
                             glNormal3fv(normalL[3*p+i]);
                             glTexCoord2f(
                                 mesh->texcos[mesh->faces[p].index[i]][0],
-                                mesh->texcos[1-mesh->faces[p].index[i]][1] );
+                                mesh->texcos[mesh->faces[p].index[i]][1] );
 
 							//cout << mesh->texcos[mesh->faces[p].index[i]][0] << " - ";
-							//cout << mesh->texcos[1-mesh->faces[p].index[i]][1] << "\n";
+							//cout << mesh->texcos[mesh->faces[p].index[i]][1] << "\n";
 
                             glVertex3fv(mesh->vertices[mesh->faces[p].index[i]]);
                         }
@@ -147,7 +147,7 @@ ModelObject::~ModelObject() {}
 
 //--------------------------------------------
 
-void ModelObject::render() {
+void ModelObject::draw() {
 	if (file) {
 		Lib3dsNode * n;
 		for (n = file->nodes; n; n = n->next) {

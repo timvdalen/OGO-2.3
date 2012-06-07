@@ -29,6 +29,9 @@ MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
 
+MaterialHandle Font;
+MaterialHandle CrossHair;
+
 //------------------------------------------------------------------------------
 
 ObjectHandle HeadObj;
@@ -59,7 +62,7 @@ void Initialize(int argc, char *argv[])
 	                   Cf(0.01,0.31,0.58,1), //Specular
 	                   Cf(0.49,0.97,1,1),    //Emissive,
 	                   100.0));              //Shininess
-	
+
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));
 		shade.emissive = Cf(0,.5,0,1);
@@ -72,6 +75,10 @@ void Initialize(int argc, char *argv[])
 	Head = TexturedMaterial(path + "assets/textures/models/headtext.png");
 	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
 	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+
+	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+
 
 	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
 	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
@@ -93,6 +100,8 @@ void Terminate()
 	Head.clear();
 	Body.clear();
 	Gun.clear();
+
+	CrossHair.clear();
 
 	HeadObj.clear();
 	BodyObj.clear();
