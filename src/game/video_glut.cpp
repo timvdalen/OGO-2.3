@@ -10,6 +10,7 @@
 	#include <GL/freeglut.h>
 #endif
 
+#include <cstdio>
 #include <set>
 
 #include "objects.h"
