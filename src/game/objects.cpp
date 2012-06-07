@@ -92,6 +92,9 @@ void Terrain::draw()
 	int noX = (int) width/GRID_SIZE;
 	int noY = (int) height/GRID_SIZE;
 
+	//Set normal
+	glNormal3i(0, 0, 1);
+
 	//Draw all columns
 	for(int i=0; i < noX; i++){
 		//Draw all cells in this column
