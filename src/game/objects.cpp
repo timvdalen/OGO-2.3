@@ -228,7 +228,7 @@ Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
 	body->material = Assets::Body;
 	weapon->material = Assets::Gun;
 
-	//translateModel();
+	translateModel();
 }
 
 //------------------------------------------------------------------------------
@@ -240,10 +240,12 @@ inline void translate(ObjectHandle o, double x, double y, double z) {
 void Player::translateModel() {
 	translate(head,0,0,1.95);
 	translate(body,0,0,0.3);
-	translate(weapon,-0.037,-0.499,1.333);
-	translate(tool,-0.037,0.544,1.333);
+	translate(weapon,-0.499,-0.037,1.333);
+	translate(tool,0.544,-0.037,1.333);
 	translate(wheel,0,0,0.3);
 }
+
+const Vd Player::maxVelocity = Vd(0,1,0);
 
 void Player::update(const Qd &camobj) {
 

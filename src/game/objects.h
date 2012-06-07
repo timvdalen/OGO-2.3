@@ -171,7 +171,8 @@ class Player: public BoundedObject{
 		time_t lastShot;
 
 		//! Velocity of the player (y-axis)
-		Vd velocity, maxvelocity;
+		Vd velocity;
+		static const Vd maxVelocity;
 
 		//! Model
 		ObjectHandle head, body, weapon, tool, wheel;
