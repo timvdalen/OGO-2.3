@@ -69,7 +69,7 @@ bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b)
 World::World(double _width, double _height)
 	: BoundedObject(Pd(), Qd(),
 	  BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0)),
-	  Assets::Cloud)
+	  Assets::WorldMaterial)
 {
 	children.insert(Terrain(_width, _height));
 	terrain = dynamic_cast<Terrain *>(&**children.begin());
@@ -80,41 +80,67 @@ World::World(double _width, double _height)
 //------------------------------------------------------------------------------
 
 void World::draw(){
-	#define HIGH 500
+	#define HIGH 100
 
 	double halfWidth = width/2;
 	double halfHeight = height/2;
 
 
-	glBegin(GL_TRIANGLES);
-		glTexCoord2d(0, 0);
-		glVertex3f(-1 * halfWidth, -1 * halfHeight, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(-1 * halfWidth, halfHeight, 0);
-		glTexCoord2d(0.5, 1);
-		glVertex3f(0, 0, HIGH);
+	glBegin(GL_QUADS);
+		//Back side
+		glNormal3i(0, 1, 0);
+		glTexCoord2f(0.33, 0);
+		glVertex3f(-halfWidth, -halfHeight, 0.0f);
+		glTexCoord2f(0.33, 0.33);
+		glVertex3f(-halfWidth, -halfHeight, HIGH);
+		glTexCoord2f(0.66, 0.33);
+		glVertex3f(halfWidth, -halfHeight, HIGH);
+		glTexCoord2f(0.66, 0);
+		glVertex3f(halfWidth, -halfHeight, 0.0f);
 
-		glTexCoord2d(0, 0);
-		glVertex3f(halfWidth, halfHeight, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(halfWidth, -1* halfHeight, 0);
-		glTexCoord2d(0.5, 1);
-		glVertex3f(0, 0, HIGH);
+		//Left side
+		glNormal3i(1, 0, 0);
+		glTexCoord2f(0, 0.66);
+		glVertex3f(-halfWidth, halfHeight, 0.0f);
+		glTexCoord2f(0.33, 0.66);
+		glVertex3f(-halfWidth, halfHeight, HIGH);
+		glTexCoord2f(0.33, 0.33);
+		glVertex3f(-halfWidth, -halfHeight, HIGH);
+		glTexCoord2f(0, 0.33);
+		glVertex3f(-halfWidth, -halfHeight, 0.0f);
 
-		glTexCoord2d(0, 0);
-		glVertex3f(-1 * halfWidth, halfHeight, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(halfWidth, halfHeight, 0);
-		glTexCoord2d(0.5, 1);
-		glVertex3f(0, 0, HIGH);
+		//Right side
+		glNormal3i(-1, 0, 0);
+		glTexCoord2d(1, 0.33);
+		glVertex3f(halfWidth, -halfHeight, 0.0f);
+		glTexCoord2d(0.66, 0.33);
+		glVertex3f(halfWidth, -halfHeight, HIGH);
+		glTexCoord2d(0.66, 0.66);
+		glVertex3f(halfWidth, halfHeight, HIGH);
+		glTexCoord2d(1, 0.66);
+		glVertex3f(halfWidth, halfHeight, 0.0f);
 
-		glTexCoord2d(0, 0);
-		glVertex3f(halfWidth, -1 * halfHeight, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(-1 * halfWidth, -1 * halfHeight, 0);
-		glTexCoord2d(0.5, 1);
-		glVertex3f(0, 0, HIGH);
+		//Front side
+		glNormal3i(0, -1, 0);
+		glTexCoord2d(0.66, 1);
+		glVertex3f(halfWidth, halfHeight, 0.0f);
+		glTexCoord2d(0.66, 0.66);
+		glVertex3f(halfWidth, halfHeight, HIGH);
+		glTexCoord2d(0.33, 0.66);
+		glVertex3f(-halfWidth, halfHeight, HIGH);
+		glTexCoord2d(0.33, 1);
+		glVertex3f(-halfWidth, halfHeight, 0.0f);
 
+		//Top side
+		glNormal3i(0, 0, -1);
+		glTexCoord2d(0.66, 0.66);
+		glVertex3f(halfWidth, halfHeight, HIGH);
+		glTexCoord2d(0.66, 0.33);
+		glVertex3f(halfWidth, -halfHeight, HIGH);
+		glTexCoord2d(0.33, 0.33);
+		glVertex3f(-halfWidth, -halfHeight, HIGH);
+		glTexCoord2d(0.33, 0.66);
+		glVertex3f(-halfWidth, halfHeight, HIGH);
 	glEnd();
 
 	#undef HIGH
