@@ -16,7 +16,7 @@ ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> 
     bool collision;
     //--- We only check lbl rbh, could be improved-----
     Point<double> a = bb.lbl;
-    Point<double> b = bb.rbh;
+    Point<double> b = bb.rth;
     //--- Origin does not have to be rotated
     Point<double> p = origin - this->origin;
     //--- Vector only needs to be rotated
