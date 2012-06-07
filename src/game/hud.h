@@ -12,6 +12,7 @@ using namespace std;
 using namespace Core;
 
 class MessageDisplayer;
+class CrossHair;
 
 //! Main class for the Heads-up display
 class HUD: public Object{
@@ -25,6 +26,9 @@ class HUD: public Object{
 
 	//! The main MessageDisplayer for this HUD
 	MessageDisplayer *messageDisplayer;
+
+	//! The main CrossHair for this HUD
+	CrossHair *crossHair;
 
 	//! Constructs the HUD with width _width and height _height. 
 	HUD(int _width, int _height);
@@ -132,6 +136,26 @@ class MessageDisplayer: public Object{
 	virtual void render();
 };
 
+class CrossHair: public Object{
+	public:
+
+	//! Width of the viewport
+	int width;
+
+	//! Height of the viewport
+	int height;	
+
+	//! Constructs the crosshair with width _width and height _height. 
+	CrossHair(int _width, int _height);
+
+	//! Notifies the crosshair that the screen size has changed
+	void resize(int _width, int _height);
+
+	//! Displays the crosshair
+	virtual void draw();
+};
+
 }
 
 #endif
+
