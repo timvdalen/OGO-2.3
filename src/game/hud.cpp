@@ -11,6 +11,7 @@
 #include "core.h"
 #include "materials.h"
 #include "hud.h"
+#include "assets.h"
 
 namespace HUD_objects{
 
@@ -19,8 +20,16 @@ using namespace Materials;
 
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
-	children.insert(MessageDisplayer(100, 100));
-	messageDisplayer = dynamic_cast<MessageDisplayer *>(&**children.begin());
+	
+	ObjectHandle mdHandle;
+	mdHandle = MessageDisplayer(100, 100);
+	messageDisplayer = dynamic_cast<MessageDisplayer *>(&*mdHandle);
+	children.insert(mdHandle);	
+
+	ObjectHandle chHandle;
+	chHandle = CrossHair(_width, _height);
+	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
+	children.insert(chHandle);
 }
 
 void HUD::resize(int _width, int _height){
@@ -124,4 +133,35 @@ void MessageDisplayer::render(){
 	draw(); //Other render functions are not needed for this class
 }
 
+CrossHair::CrossHair(int _width, int _height)
+	: Object(Pd(), Qd(), Assets::CrossHair)
+{
+	resize(_width, _height);
 }
+
+void CrossHair::resize(int _width, int _height){
+	width = _width;
+	height = _height;
+}
+
+void CrossHair::draw(){
+	int midX = width/2;
+	int midY = height/2;
+
+	glBegin(GL_LINES);
+		glVertex2i(midX - 15, midY);
+		glVertex2i(midX - 5, midY);
+
+		glVertex2i(midX + 5, midY);
+		glVertex2i(midX + 15, midY);
+
+		glVertex2i(midX, midY - 15);
+		glVertex2i(midX, midY - 5);
+
+		glVertex2i(midX, midY + 5);
+		glVertex2i(midX, midY + 15);
+	glEnd();
+}
+
+}
+
