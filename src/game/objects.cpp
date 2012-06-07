@@ -6,6 +6,7 @@
 #include "structures.h"
 #include "video.h"
 #include "assets.h"
+#include <iostream>
 
 namespace Objects {
 
@@ -186,9 +187,23 @@ void Player::translateModel() {
 	translate(wheel,0,0,0.3);
 }
 
+//------------------------------------------------------------------------------
+
 const Vd Player::maxVelocity = Vd(0,1,0);
 
 void Player::update(const Qd &camobj) {
+	//if (velocity.y < 1) velocity.y += 0.01;
+
+	if (velocity.y != oldVelocity.y) {
+		oldVelocity = velocity;
+
+		rotation = Qd();
+		double angle = velocity.y / maxVelocity.y * 0.15f * Pi;
+		rotation = rotation * Rd(angle,Vd(1,0,0));
+		
+		weapon->rotation = -rotation;
+		tool->rotation = -rotation;
+	}
 
 	head->rotation = camobj;
 }
