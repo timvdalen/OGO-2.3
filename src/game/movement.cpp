@@ -120,16 +120,16 @@ void Controller::lookX()
 	{
 		player->rotation = Qd(Rd(0.05, Vd(0,0,1))) * player->rotation;
 
-		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
 			camera.origin = player->origin;
-			camera.lookAt(pos + (~vec * 5.0));
+			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
 		{
-			camera.origin = pos - (~vec * zoom);
+			camera.origin = pos - (vec * zoom);
 			camera.lookAt(pos);
 		}
 	}
@@ -137,16 +137,16 @@ void Controller::lookX()
 	{
 		player->rotation = Qd(Rd(-0.05, Vd(0,0,1))) * player->rotation;
 
-		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
 			camera.origin = player->origin;
-			camera.lookAt(pos + (~vec * 5.0));
+			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
 		{
-			camera.origin = pos - (~vec * zoom);
+			camera.origin = pos - (vec * zoom);
 			camera.lookAt(pos);
 		}
 	}
@@ -158,7 +158,7 @@ void Controller::lookY()
 {
 	if (look[dirForward]) // Zoom in
 	{
-		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
 		if (zoom > 5.0)
 		{
@@ -172,17 +172,17 @@ void Controller::lookY()
 		if (fps == true)
 		{
 			camera.origin = player->origin;
-			camera.lookAt(pos + (~vec * 5.0));
+			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
 		{
-			camera.origin = pos - (~vec * zoom);
+			camera.origin = pos - (vec * zoom);
 			camera.lookAt(pos);
 		}
 	}
 	else if (look[dirBackward]) // Zoom out
 	{
-		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
 		if (zoom < 15.0) 
 		{
@@ -198,11 +198,11 @@ void Controller::lookY()
 		if (fps == true)
 		{
 			camera.origin = player->origin;
-			camera.lookAt(pos + (~vec * 5.0));
+			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
 		{
-			camera.origin = pos - (~vec * zoom);
+			camera.origin = pos - (vec * zoom);
 			camera.lookAt(pos);
 		}
 	}
@@ -214,35 +214,41 @@ void Controller::lookZ()
 {
 	if (look[dirUp])
 	{
-		player->rotation = Qd(Rd(0.05, Vd(1,0,0))) * player->rotation;
+		Vector<double> mystery = ~(player->rotation * Vector<double>(0,1,0));
+		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+		player->rotation = Qd(Rd(0.05, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
+
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
 			camera.origin = player->origin;
-			camera.lookAt(pos + (~vec * 5.0));
+			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
 		{
-			camera.origin = pos - (~vec * zoom);
+			camera.origin = pos - (vec * zoom);
 			camera.lookAt(pos);
 		}
 	}
 	else if (look[dirDown])
 	{
-		player->rotation = Qd(Rd(-0.05, Vd(1,0,0))) * player->rotation;
+		Vector<double> mystery = ~(player->rotation * Vector<double>(0,1,0));
+		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		Vector<double> vec = player->rotation * Vector<double>(0,1,0);
+		player->rotation = Qd(Rd(-0.05, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
+
+		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
 		if (fps == true)
 		{
 			camera.origin = player->origin;
-			camera.lookAt(pos + (~vec * 5.0));
+			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
 		{
-			camera.origin = pos - (~vec * zoom);
+			camera.origin = pos - (vec * zoom);
 			camera.lookAt(pos);
 		}
 	}
