@@ -31,6 +31,7 @@ MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
 
+MaterialHandle Widget;
 MaterialHandle Font;
 MaterialHandle CrossHair;
 
@@ -80,6 +81,7 @@ void Initialize(int argc, char *argv[])
 	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
 	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 
+	Widget =  ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 

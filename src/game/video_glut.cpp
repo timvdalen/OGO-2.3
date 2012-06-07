@@ -74,7 +74,7 @@ struct WindowData
 //------------------------------------------------------------------------------
 
 Window::Window(uword width, uword height, const char *title,
-               word xpos, word ypos)
+               word xpos, word ypos) : changed(true)
 {
 	data = (void *) new WindowData;
 
@@ -115,6 +115,7 @@ Window::~Window()
 
 void Window::select()
 {
+	changed = false;
 	PRIV(WindowData, wd)
 	glutSetWindow(wd->wid);
 }
@@ -157,6 +158,7 @@ void Window::size(uword &width, uword &height)
 
 	width = wd->width;
 	height = wd->height;
+	changed = true;
 }
 
 //------------------------------------------------------------------------------

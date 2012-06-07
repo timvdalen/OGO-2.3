@@ -18,7 +18,6 @@
 #include "video.h"
 #include "input.h"
 #include "movement.h"
-#include "hud.h"
 
 using namespace Core;
 using namespace Base::Alias;
@@ -105,8 +104,6 @@ int main(int argc, char *argv[])
 
 	cube->material = Assets::Test;
 
-	ObjectHandle hud = HUD_objects::HUD(640, 480);
-
 	ObjectHandle world = Objects::World(100, 100);
 
 	{
@@ -115,7 +112,6 @@ int main(int argc, char *argv[])
 		w->terrain->selected.x = 4;
 		w->terrain->selected.y = 4;
 		w->children.insert(cube);
-		w->children.insert(hud);
 	}
 
 	world->children.insert(player);
@@ -172,6 +168,18 @@ void Frame()
 	if (!controller) return;
 
 	input->frame();
+	
+	World *world = dynamic_cast<World *>(&*window->viewports[0]->world);
+	Camera &cam = window->viewports[0]->camera;
+	
+	world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+	
+	if (window->changed)
+	{
+		int width, height;
+		window->size(width = 0, height = 0);
+		world->hud->resize(width, height);
+	}
 
 	/**/
 	controller->frame();

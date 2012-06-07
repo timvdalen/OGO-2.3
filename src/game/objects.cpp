@@ -12,9 +12,9 @@ namespace Objects {
 
 //------------------------------------------------------------------------------
 
-ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
+pair<BoundedObject, double> BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
 {
-    bool collision;
+    double collision = numeric_limits<double>::infinity();
     //--- We only check lbl rbh, could be improved-----
     Point<double> a = bb.lbl;
     Point<double> b = bb.rth;
@@ -24,45 +24,62 @@ ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> 
     Vector<double> v = rotation*direction;
     //--- Now check if we have a collision in the x direction
     double lambda1, lambda2;
-    if(v.x != 0 && !collision){
-        lambda1 = (a.x - p.x)/(v.x);//intersection with axis in lbl.z
+    if(v.x != 0){
+        lambda1 = (a.x - p.x)/(v.x);
         lambda2 = (b.x -p.x)/(v.x);
-        collision = insideBox(p + v*lambda1, a, b) || insideBox(p + v*lambda2, a, b);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if (insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
     }
     //---- y direction
-    if(v.y != 0 && !collision){
+    if(v.y != 0){
         lambda1 = (a.y - p.y)/(v.y);
         lambda2 = (b.y - p.y)/(v.y);
-        collision = insideBox(p + v*lambda1, a, b) || insideBox(p + v*lambda2, a, b);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if(insideBox(p + v*lambda2,a,b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
     }
     //--- z direction
     if(v.z != 0 && !collision){
         lambda1 = (a.z - p.z)/(v.z);//intersection with axis in lbl.z
         lambda2 = (b.z - p.z)/(v.z);
-        collision = insideBox(p + v*lambda1, a, b) || insideBox(p + v*lambda2, a, b);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if(insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
     }
-    if(collision){
+    //find a collision with a child
+    if(collision < std::numeric_limits<double>::infinity()){
         set<ObjectHandle>::iterator it;
+        BoundedObject* colobject = this;
         for (it = children.begin(); it != children.end(); ++it){
             BoundedObject* child = dynamic_cast<BoundedObject *>(&**it);
             if(child){
-                ObjectHandle childcollision = child->checkCollision(p, v);
-                if(childcollision){ //We have a collision with a child
-                    return childcollision;
+                pair<BoundedObject, int> childcollision = child->checkCollision(p, v);
+                if(childcollision.second < collision){ //We have a collision with a child
+                    collision = childcollision.second;
+                    colobject = &childcollision.first;
                 }
-                childcollision.clear();
+//                childcollision.clear();
             }
         }
-        return (ObjectHandle)(*this);
+        return make_pair(*colobject,collision);
     }
-    return ObjectHandle();
+    return make_pair(NULL,collision);
 }
 
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
         return a.x <= p.x && p.x <= b.x//Inside x-interval
             && a.y <= p.y && p.y <= b.y//Inside y-interval
-
-    && a.z <= p.z && p.z <= b.z;//Inside z-interval
+            && a.z <= p.z && p.z <= b.z;//Inside z-interval
 }
 
 //------------------------------------------------------------------------------
@@ -72,8 +89,16 @@ World::World(double _width, double _height)
 	  BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0)),
 	  Assets::WorldMaterial)
 {
-	children.insert(Terrain(_width, _height));
-	terrain = dynamic_cast<Terrain *>(&**children.begin());
+	ObjectHandle tHandle;
+	tHandle = Terrain(_width, _height);
+	terrain = dynamic_cast<Terrain *>(&*tHandle);
+	children.insert(tHandle);
+
+	ObjectHandle hudHandle;
+	hudHandle = HUD(640, 480);
+	hud = dynamic_cast<HUD *>(&*hudHandle);
+	children.insert(hudHandle);
+
 	width = _width;
 	height = _height;
 }

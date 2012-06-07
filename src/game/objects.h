@@ -18,6 +18,7 @@
 #include "core.h"
 #include "assets.h"
 #include "materials.h"
+#include "hud.h"
 
 //------------------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ namespace Objects{
 using namespace Core;
 using namespace Base::Alias;
 using namespace Materials;
+using namespace HUD_objects;
 
 struct Boundingbox;
 class BoundedObject;
@@ -71,7 +73,7 @@ class BoundedObject: public Object{
 		//! Checks if a line from origin to direction collides with this object or one of its children.
 		//! If there is a collision, this function returns a handle to the object the line collides with
 		//! if not, it returns null.
-		ObjectHandle checkCollision(Point<double> origin, Vector<double> direction);
+		pair<BoundedObject, double> checkCollision(Point<double> origin, Vector<double> direction);
 
 		//! Draws this object
 		virtual void draw() {}
@@ -93,6 +95,9 @@ class World: public BoundedObject{
 
 		//! Terrain associated with this World
 		Terrain *terrain;
+
+		//! HUD associated with this World
+		HUD *hud;
 
 		//! Constructs a new world
 		World(double _width, double _height);
