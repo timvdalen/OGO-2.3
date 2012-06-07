@@ -118,7 +118,6 @@ void ModelObject::render(Lib3dsNode * n) {
 				glEndList();
 			} else {
 				glCallList(mesh->user_id);
-				glFlush();
 			}
 		}
 	}
