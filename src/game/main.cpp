@@ -13,6 +13,7 @@
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
+#include "structures.h"
 #include "materials.h"
 #include "video.h"
 #include "input.h"
