@@ -228,7 +228,7 @@ Player::Player(Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
 	body->material = Assets::Body;
 	weapon->material = Assets::Gun;
 
-	translateModel();
+	//translateModel();
 }
 
 //------------------------------------------------------------------------------
