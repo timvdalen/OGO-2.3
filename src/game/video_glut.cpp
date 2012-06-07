@@ -88,16 +88,16 @@ Window::Window(uword width, uword height, const char *title,bool fullscreen,
 	wd->height = height;
 	wd->aspect = (double) width / (double) height;
     wd->fullscreen = fullscreen; 
-    if(!fullscreen){
-        glutInitWindowPosition(xpos, ypos);
-        glutInitWindowSize(width, height);
-        glutCreateWindow(title);
-    }else{
+    glutInitWindowPosition(xpos, ypos);
+    glutInitWindowSize(width, height);
+    glutCreateWindow(title);
+    if(fullscreen){
+        glutHideWindow();
+        glutDestroyWindow(glutGetWindow());
         char gameModeString [50];
         sprintf (gameModeString, "%dx%d",width,height);
         glutGameModeString(gameModeString);
-        glutEnterGameMode();
-        glutFullScreen();
+        glutSetWindow(glutEnterGameMode());
     }
 	wd->wid = glutGetWindow();
 
@@ -110,7 +110,9 @@ Window::Window(uword width, uword height, const char *title,bool fullscreen,
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    //Clearing screen to get a black screen while loading..
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glutSwapBuffers();
 	windows.insert(this);
 }
 
