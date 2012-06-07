@@ -7,6 +7,7 @@
 #include "video.h"
 #include "assets.h"
 #include <iostream>
+#include <limits>
 
 namespace Objects {
 
