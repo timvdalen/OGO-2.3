@@ -21,6 +21,8 @@ using namespace Materials;
 MaterialHandle Grid;
 MaterialHandle SelectedGrid;
 
+MaterialHandle WorldMaterial;
+
 MaterialHandle Test;
 MaterialHandle Cloud;
 MaterialHandle Grass;
@@ -71,6 +73,8 @@ void Initialize(int argc, char *argv[])
 	
 	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");
 	Grass = TexturedMaterial(path + "assets/textures/terrain/grass.png");
+
+	WorldMaterial = TwinMaterial(Cloud, ShadedMaterial(Cf(0.5, 0.5, 0.5, 1.0)));
 
 	Head = TexturedMaterial(path + "assets/textures/models/headtext.png");
 	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
