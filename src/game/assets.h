@@ -37,6 +37,7 @@ extern MaterialHandle Head;
 extern MaterialHandle Body;
 extern MaterialHandle Gun;
 
+extern MaterialHandle Widget;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
 
