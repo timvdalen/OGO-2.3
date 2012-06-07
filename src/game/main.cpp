@@ -13,6 +13,7 @@
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
+#include "structures.h"
 #include "materials.h"
 #include "video.h"
 #include "input.h"
@@ -203,6 +204,9 @@ void Frame()
 	if (controller->move[dirDown])     pos = pos + -rot * Vd(0,0,1) * -0.5;
 	/**/
 	
+	Objects::Player * player = dynamic_cast<Objects::Player*>(&*controller->player);
+	player->update(controller->camera.objective);
+
 	cube->rotation = cube->rotation * Rd(.1, Vd(0,0,1));
 	controller->look.reset();
 	window->render();

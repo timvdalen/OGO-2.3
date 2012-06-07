@@ -35,12 +35,6 @@ class Team;
 class Player;
 class LaserBeam;
 class Terrain;
-class Structure;
-class Mine;
-class Building;
-class HeadQuarters;
-class DefenseTower;
-class ResourceMine;
 class Droppables;
 
 //! Represents a bounding box.
@@ -57,11 +51,6 @@ struct BoundingBox{
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
-};
-
-//! Represents a point on a grid
-struct GridPoint{
-	int x,y;
 };
 
 //! Represents an object with a bounding box
@@ -88,39 +77,6 @@ class BoundedObject: public Object{
 		virtual void draw() {}
 };
 
-//! Represents the terrain of the game
-class Terrain: public Object{
-	public:
-		//! Size of the world in the X direction.
-
-		//! Needs to be a multiple GRID_SIZE
-		double width;
-
-		//! Size of the world in the Y direction.
-
-		//! Needs to be a multiple GRID_SIZE
-		double height;
-
-		//! Selected square of the grid.
-
-		//! If this is not on the grid, it will not show up.
-		GridPoint selected;
-
-		//! Whether or not to draw a grid on this terrain
-		bool showGrid;
-
-		//! Represents the \ref Structure "Structure" on the grid of the terrain
-		map<Point<double>, Structure> structures;
-
-		//! Constructs a new Terrain
-		Terrain(double _width, double _height);
-
-		//! Draws the terrain
-		virtual void draw();
-
-		//! Gives the grid coordinates corresponding to a mouse click
-		pair<int, int> getGridCoordinates(Vd camera, Vd pos);
-};
 
 //! Represents the world of the game
 class World: public BoundedObject{
@@ -171,7 +127,8 @@ class Player: public BoundedObject{
 		time_t lastShot;
 
 		//! Velocity of the player (y-axis)
-		Vd velocity, maxvelocity;
+		Vd velocity;
+		static const Vd maxVelocity;
 
 		//! Model
 		ObjectHandle head, body, weapon, tool, wheel;
@@ -193,87 +150,6 @@ class LaserBeam: public BoundedObject{
 		time_t ttl;
 };
 
-//! Represents a structure on the terrain
-class Structure: public BoundedObject
-{
-	public:
-	Structure(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-			: BoundedObject(P, R, B) {}
-};
-
-//! Represents a mine structure on the terrain
-class Mine: public Structure{
-	public:
-		//! The maxium income that can be generated from this mine
-		Resource maxIncome;
-
-		//! Constructs a new mine
-		Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-		     Resource _maxIncome = 0)
-			: Structure(P, R, B), maxIncome(_maxIncome) {}
-
-		//! Draws the mine
-		virtual void draw();
-};
-
-//! Represents a building on the terrain
-class Building: public Structure{
-	public:
-		//! The cost of this building
-		Resource cost;
-		//! The income this building generates
-		Resource income;
-		//! The time at which the construction of this building was started
-		time_t buildTime;
-		//! The time it takes to completely build this building
-		time_t buildDuration;
-		//! The attack power of this building
-		Power attackPower;
-
-
-		//! Constructs a new building
-		Building(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-		         Resource _cost = 0, Resource _income = 0, time_t _buildTime = 0,
-				 time_t _buildDuration = 0, Power _attackPower = 0)
-			: Structure(P, R, B),
-			  cost(_cost), income(_income),
-			  buildTime(_buildTime), buildDuration(_buildDuration),
-			  attackPower(_attackPower) {}
-
-		//! Draws the building
-		virtual void draw();
-
-};
-
-//! Represents a headquarters
-class HeadQuarters: public Building{
-	public:
-	HeadQuarters(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-		: Building(P, R, B,
-		  0, 0,
-		  0, 0,
-		  0) {}
-};
-
-//! Represents a defense tower
-class DefenseTower: public Building{
-	public:
-	DefenseTower(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-		: Building(P, R, B,
-		  0, 0,
-		  0, 0,
-		  0) {}
-};
-
-//! Represents a mining tower built over a mine
-class ResourceMine: public Building{
-	public:
-	ResourceMine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-		: Building(P, R, B,
-		  0, 0,
-		  0, 0,
-		  0) {}
-};
 
 //! Represents a droppable object
 class Droppable: public BoundedObject{
