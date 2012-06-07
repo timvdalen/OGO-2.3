@@ -26,10 +26,12 @@ HUD::HUD(int _width, int _height){
 	messageDisplayer = dynamic_cast<MessageDisplayer *>(&*mdHandle);
 	children.insert(mdHandle);	
 
+	
 	ObjectHandle chHandle;
 	chHandle = CrossHair(_width, _height);
 	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
 	children.insert(chHandle);
+	
 }
 
 void HUD::resize(int _width, int _height){
@@ -49,10 +51,14 @@ void HUD::preRender(){
         gluOrtho2D(0,viewport[2], viewport[3], 0);
 
         glDepthFunc(GL_ALWAYS);
+
+	glDisable(GL_LIGHTING);
 }
 
 void HUD::postRender(){
 	Object::postRender();
+
+	glEnable(GL_LIGHTING);
 
 	glDepthFunc(GL_LESS);
         glPopMatrix();
@@ -87,7 +93,8 @@ string TowerFragMessage::toString(){
 	return string("<") + player.name + string("> was fragged by a tower");
 }
 
-MessageDisplayer::MessageDisplayer(int _x, int _y){
+MessageDisplayer::MessageDisplayer(int _x, int _y)
+{
 	x = _x;
 	y = _y;
 	curr = 0;
@@ -106,31 +113,34 @@ void MessageDisplayer::addMessage(Message m){
 void MessageDisplayer::draw(){
 	glRasterPos2i(x, y);
 
+	
+	string teststring = "Welcome to the game!";
+	for(int count=0; count < teststring.length(); count++){
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, teststring[count]);
+	}
+}
 
-	ShadedMaterial *textColor;
-
+void MessageDisplayer::render(){
+	MaterialHandle font;
 
 	int now = glutGet(GLUT_ELAPSED_TIME);
 	if((now - lastMessage) > 2000){
 		return;
 	}else if((now - lastMessage) > 1000){
-		textColor = new ShadedMaterial(Cf(1, 1, 1, -(1/1000)*((now-lastMessage)-2000)));
+		float alpha = -(0.001)*((now-lastMessage)-2000);
+		font = ColorMaterial(1.0f, 1.0f, 1.0f, alpha);
 	}else{
-		textColor = new ShadedMaterial(Cf(1, 1, 1, 1));
+		font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	}
-	textColor = new ShadedMaterial(Cf(1, 1, 1, 1));
-	textColor->select();
 
-	
+	//Select material
+	font->select();
 
-	string helpstring = "q: Gear down";
-	for(int count=0; count < helpstring.length(); count++){
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, helpstring[count]);
-	}
-}
-
-void MessageDisplayer::render(){
 	draw(); //Other render functions are not needed for this class
+
+	//Unselect material
+	font->unselect();
+	
 }
 
 CrossHair::CrossHair(int _width, int _height)
