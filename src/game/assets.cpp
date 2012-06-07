@@ -74,6 +74,9 @@ void Terminate()
 	Test.clear();
 	Cloud.clear();
 	Grass.clear();
+	Head.clear();
+	Body.clear();
+	Gun.clear();
 }
 
 //------------------------------------------------------------------------------
