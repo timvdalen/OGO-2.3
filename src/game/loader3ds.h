@@ -26,7 +26,7 @@ class ModelObject : public Object {
 public:
 	ModelObject(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), string path = "");
 	virtual ~ModelObject();
-	virtual void render();
+	virtual void draw();
 };
 
 //--------------------------------------------
