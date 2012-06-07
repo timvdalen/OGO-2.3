@@ -44,43 +44,43 @@ void ModelObject::load(const char * path) {
 //------------------------------------------------------------------------------
 
 void ModelObject::displaylist(Lib3dsMesh * mesh) {
-            {
-                int p;
+	{
+		int p;
 
-				float (*normalL)[3] = (float(*)[3])malloc(3 * 3 * sizeof(float) * mesh->nfaces);
-				/* Replacement code "malloc"
-				const int size = 3 * mesh->nfaces;
-				float * normalL0 = new float[size];
-				float * normalL1 = new float[size];
-				float * normalL2 = new float[size];	
-				float n[3] = {*normalL0, *normalL1, *normalL2};
-				float (*normalL)[3] = &n;
-				//*/
+		float (*normalL)[3] = (float(*)[3])malloc(3 * 3 * sizeof(float) * mesh->nfaces);
+		/* Replacement code "malloc"
+		const int size = 3 * mesh->nfaces;
+		float * normalL0 = new float[size];
+		float * normalL1 = new float[size];
+		float * normalL2 = new float[size];	
+		float n[3] = {*normalL0, *normalL1, *normalL2};
+		float (*normalL)[3] = &n;
+		//*/
 
-                {
-                    float M[4][4];
-                    lib3ds_matrix_copy(M, mesh->matrix);
-                    lib3ds_matrix_inv(M);
-                    glMultMatrixf(&M[0][0]);
-                }
-                lib3ds_mesh_calculate_vertex_normals(mesh, normalL);
+		{
+			float M[4][4];
+			lib3ds_matrix_copy(M, mesh->matrix);
+			lib3ds_matrix_inv(M);
+			glMultMatrixf(&M[0][0]);
+		}
+		lib3ds_mesh_calculate_vertex_normals(mesh, normalL);
 
-                for (p = 0; p < mesh->nfaces; ++p) {
-                    {
-                        glBegin(GL_TRIANGLES);
-                        for (int i = 0; i < 3; ++i) {
-                            glNormal3fv(normalL[3*p+i]);
-                            glTexCoord2f(
-                                mesh->texcos[mesh->faces[p].index[i]][0],
-                                mesh->texcos[mesh->faces[p].index[i]][1] );
-                            glVertex3fv(mesh->vertices[mesh->faces[p].index[i]]);
-                        }
-                        glEnd();
-                    }
-                }
+		for (p = 0; p < mesh->nfaces; ++p) {
+			{
+				glBegin(GL_TRIANGLES);
+				for (int i = 0; i < 3; ++i) {
+					glNormal3fv(normalL[3*p+i]);
+					glTexCoord2f(
+						mesh->texcos[mesh->faces[p].index[i]][0],
+						mesh->texcos[mesh->faces[p].index[i]][1] );
+					glVertex3fv(mesh->vertices[mesh->faces[p].index[i]]);
+				}
+				glEnd();
+			}
+		}
 
-                free(normalL);
-            }
+		free(normalL);
+	}
 }
 
 //------------------------------------------------------------------------------
