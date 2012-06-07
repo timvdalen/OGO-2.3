@@ -28,6 +28,8 @@ MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
 
+MaterialHandle CrossHair;
+
 //------------------------------------------------------------------------------
 
 void Initialize(int argc, char *argv[])
@@ -50,7 +52,7 @@ void Initialize(int argc, char *argv[])
 	                   Cf(0.01,0.31,0.58,1), //Specular
 	                   Cf(0.49,0.97,1,1),    //Emissive,
 	                   100.0));              //Shininess
-	
+
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));
 		shade.emissive = Cf(0,.5,0,1);
@@ -63,6 +65,8 @@ void Initialize(int argc, char *argv[])
 	Head = TexturedMaterial(path + "assets/textures/models/headtext.png");
 	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
 	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+
+	CrossHair = ShadedMaterial(Cf(1, 1, 1, 1));
 }
 
 //------------------------------------------------------------------------------
@@ -77,6 +81,7 @@ void Terminate()
 	Head.clear();
 	Body.clear();
 	Gun.clear();
+	CrossHair.clear();
 }
 
 //------------------------------------------------------------------------------

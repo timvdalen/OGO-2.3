@@ -35,6 +35,8 @@ extern MaterialHandle Head;
 extern MaterialHandle Body;
 extern MaterialHandle Gun;
 
+extern MaterialHandle CrossHair;
+
 //------------------------------------------------------------------------------
 
 } // namespace Assets
