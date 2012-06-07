@@ -57,6 +57,9 @@ void StartEventLoop()
 
 void StopEventLoop()
 {
+    if(glutGameModeGet(GLUT_GAME_MODE_ACTIVE)){
+        glutLeaveGameMode();
+    }
 	glutLeaveMainLoop();
 }
 
@@ -69,11 +72,12 @@ struct WindowData
 	uword width, height;
 	double aspect;
 	int wid;
+    bool fullscreen;
 };
 
 //------------------------------------------------------------------------------
 
-Window::Window(uword width, uword height, const char *title,
+Window::Window(uword width, uword height, const char *title,bool fullscreen,
                word xpos, word ypos) : resized(true)
 {
 	data = (void *) new WindowData;
@@ -82,10 +86,18 @@ Window::Window(uword width, uword height, const char *title,
 	wd->width = width;
 	wd->height = height;
 	wd->aspect = (double) width / (double) height;
-
-	glutInitWindowPosition(xpos, ypos);
-	glutInitWindowSize(width, height);
-	glutCreateWindow(title);
+    wd->fullscreen = fullscreen; 
+    if(!fullscreen){
+        glutInitWindowPosition(xpos, ypos);
+        glutInitWindowSize(width, height);
+        glutCreateWindow(title);
+    }else{
+        char gameModeString [50];
+        sprintf (gameModeString, "%dx%d",width,height);
+        glutGameModeString(gameModeString);
+        glutEnterGameMode();
+        glutFullScreen();
+    }
 	wd->wid = glutGetWindow();
 
 	glClearColor(0, 0, 0, 0);

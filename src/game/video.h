@@ -67,7 +67,7 @@ class Window
 	//! Creates a new window width and height and window title and position
 	//! \note set the window positions -1 for a default position
 	Window(uword width, uword height,
-	       const char *title, word xpos = -1, word ypos = -1);
+	       const char *title, bool fullscreen = true, word xpos = -1, word ypos = -1);
 	~Window();
 	
 	//! Selects the window

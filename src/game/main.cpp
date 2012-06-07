@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <sstream>
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
@@ -85,8 +85,29 @@ struct Cuboid : public Object
 
 int main(int argc, char *argv[])
 {
-	Video::Initialize(argc, argv);
-	window = new Video::Window(640, 480, "Game");
+    //parse arguments...
+    int width = 640;
+    int height = 480;
+    bool fullscreen = false;
+	for (int i = 0; i < argc; ++i){
+		if (!strcmp(argv[i], "-width") && i < argc - 1){
+			std::stringstream converter(argv[++i]);
+            converter >> width;
+            if (converter.fail()) {
+                width = 640;
+            }
+        }else if(!strcmp(argv[i], "-height") && i < argc - 1){
+            std::stringstream converter(argv[++i]);
+            converter >> height;
+            if(converter.fail()){
+                height = 480;
+            }
+        }else if(!strcmp(argv[i], "-fullscreen")){
+            fullscreen = true;
+        }
+    }
+    Video::Initialize(argc, argv);
+	window = new Video::Window(width, height, "Game", fullscreen);
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
 
