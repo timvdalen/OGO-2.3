@@ -354,7 +354,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	{
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
 		{
-			SOCKET fd = (SOCKET) (*it)->data;
+			SOCKET fd = TOSOCK((*it)->data);
 			FD_SET(fd, &rfds);
 			maxfd = maxfd < fd ? fd : maxfd;
 		}
@@ -364,7 +364,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	{
 		for (List::iterator it = write.begin(); it != write.end(); ++it)
 		{
-			SOCKET fd = (SOCKET) (*it)->data;
+			SOCKET fd = TOSOCK((*it)->data);
 			FD_SET(fd, &wfds);
 			maxfd = maxfd < fd ? fd : maxfd;
 		}
@@ -374,7 +374,7 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 	{
 		for (List::iterator it = error.begin(); it != error.end(); ++it)
 		{
-			SOCKET fd = (SOCKET) (*it)->data;
+			SOCKET fd = TOSOCK((*it)->data);
 			FD_SET(fd, &efds);
 			maxfd = (maxfd < fd ? fd : maxfd);
 		}
@@ -414,17 +414,17 @@ bool Socket::select(Socket::List &read, Socket::List &write,
 
 	if (!read.empty())
 		for (List::iterator it = read.begin(); it != read.end(); ++it)
-			if (!FD_ISSET((SOCKET) (*it)->data, &rfds))
+			if (!FD_ISSET(TOSOCK((*it)->data), &rfds))
 				read.erase(it--);
 
 	if (!write.empty())
 		for (List::iterator it = write.begin(); it != write.end(); ++it)
-			if (!FD_ISSET((SOCKET) (*it)->data, &wfds))
+			if (!FD_ISSET(TOSOCK((*it)->data), &wfds))
 				write.erase(it--);
 
 	if (!error.empty())
 		for (List::iterator it = error.begin(); it != error.end(); ++it)
-			if (!FD_ISSET((SOCKET) (*it)->data, &efds))
+			if (!FD_ISSET(TOSOCK((*it)->data), &efds))
 				error.erase(it--);
 
 	return true;
