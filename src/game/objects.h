@@ -66,7 +66,10 @@ struct GridPoint{
 
 //! Represents an object with a bounding box
 class BoundedObject: public Object{
-	public:
+    
+    //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
+    bool insideBox(Point<double> p, Point<double> a, Point<double> b);
+    public:
 		//! The boundingbox for this object
 		BoundingBox bb;
 
@@ -154,6 +157,9 @@ class Team: public Object{
 
 //! Represents a player
 class Player: public BoundedObject{
+		//!Set relative position of seperate elements
+		void translateModel();
+
 	public:
 		//! Maximum health for this player
 		int maxHealth;
@@ -165,7 +171,7 @@ class Player: public BoundedObject{
 		time_t lastShot;
 
 		//! Velocity of the player (y-axis)
-		Vd velocity;
+		Vd velocity, maxvelocity;
 
 		//! Model
 		ObjectHandle head, body, weapon, tool, wheel;
