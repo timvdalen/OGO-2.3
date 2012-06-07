@@ -153,7 +153,7 @@ struct Quaternion
 {
 	type a, b, c, d;
 	
-	Quaternion(type A = 0, type B = 0, type C = 0, type D = 1) : a(A), b(B), c(C), d(D) {}
+	Quaternion(type A = 1, type B = 0, type C = 0, type D = 0) : a(A), b(B), c(C), d(D) {}
 	Quaternion(type R, const Vector<type> &V) : a(R), b(V.x), c(V.y), d(V.z) {}
 	operator type() const { return a; }
 	operator Vector<type>() const { return Vector<type>(b,c,d); }

@@ -97,7 +97,9 @@ int main(int argc, char *argv[])
 
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
-	player->children.insert(Cuboid(Pd(-.5,-.5,-.5)));
+	ObjectHandle playercube = Cuboid(Pd(-.5,-.5,-1));
+	playercube->material = ShadedMaterial(Cf(1,0,0,1));
+	player->children.insert(playercube);
 	player->rotation = Rd(0,Vd(0,0,1));
 
 	cube->material = Assets::Test;
@@ -113,7 +115,6 @@ int main(int argc, char *argv[])
 		w->terrain->selected.y = 4;
 		w->children.insert(cube);
 		w->children.insert(hud);
-		w->children.insert(player);
 	}
 
 	world->children.insert(player);
@@ -201,7 +202,8 @@ void Frame()
 	if (controller->move[dirUp])       pos = pos + -rot * Vd(0,0,1) *  0.5;
 	if (controller->move[dirDown])     pos = pos + -rot * Vd(0,0,1) * -0.5;
 	/**/
-
+	
+	cube->rotation = cube->rotation * Rd(.1, Vd(0,0,1));
 	controller->look.reset();
 	window->render();
 	fps();
