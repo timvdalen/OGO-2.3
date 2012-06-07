@@ -94,6 +94,9 @@ Window::Window(uword width, uword height, const char *title,
 	glShadeModel(GL_SMOOTH);
 
 	glEnable(GL_LIGHTING);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	windows.insert(this);
 }
