@@ -151,6 +151,9 @@ class Team: public Object{
 
 //! Represents a player
 class Player: public BoundedObject{
+		//!Set relative position of seperate elements
+		void translateModel();
+
 	public:
 		//! Maximum health for this player
 		int maxHealth;
@@ -162,7 +165,7 @@ class Player: public BoundedObject{
 		time_t lastShot;
 
 		//! Velocity of the player (y-axis)
-		Vd velocity;
+		Vd velocity, maxvelocity;
 
 		//! Model
 		ObjectHandle head, body, weapon, tool, wheel;
