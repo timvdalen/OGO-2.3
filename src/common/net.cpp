@@ -32,7 +32,11 @@
 	#define SOCKET int
 #endif
 
-#define TOSOCK(x) ((SOCKET) reinterpret_cast<long> (x))
+#ifdef __LP64__
+	#define TOSOCK(x) ((SOCKET) reinterpret_cast<long long> (x))
+#else
+	#define TOSOCK(x) (reinterpret_cast<SOCKET> (x))
+#endif
 
 #include "net.h"
 
