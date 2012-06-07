@@ -13,9 +13,57 @@ namespace Objects {
 
 ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
 {
-	return (Object());
+    bool collision;
+    //--- We only check lbl rbh, could be improved-----
+    Point<double> a = bb.lbl;
+    Point<double> b = bb.rbh;
+    //--- Origin does not have to be rotated 
+    Point<double> p = origin - this->origin;
+    //--- Vector only needs to be rotated
+    Vector<double> v = rotation*direction;
+    //--- Now check if we have a collision in the x direction
+    double lambda1, lambda2;
+    if(v.x != 0 && !collision){
+        lambda1 = (a.x - p.x)/(v.x);//intersection with axis in lbl.z
+        lambda2 = (b.x -p.x)/(v.x);
+        collision = insideBox(p + v*lambda1, a, b) || insideBox(p + v*lambda2, a, b);
+    }
+    //---- y direction
+    if(v.y != 0 && !collision){
+        lambda1 = (a.y - p.y)/(v.y);
+        lambda2 = (b.y - p.y)/(v.y);
+        collision = insideBox(p + v*lambda1, a, b) || insideBox(p + v*lambda2, a, b);
+    }
+    //--- z direction
+    if(v.z != 0 && !collision){
+        lambda1 = (a.z - p.z)/(v.z);//intersection with axis in lbl.z
+        lambda2 = (b.z - p.z)/(v.z);
+        collision = insideBox(p + v*lambda1, a, b) || insideBox(p + v*lambda2, a, b);
+    }
+    if(collision){
+        set<ObjectHandle>::iterator it;
+        for (it = children.begin(); it != children.end(); ++it){
+            BoundedObject* child = dynamic_cast<BoundedObject *>(&**it);
+            if(child){
+                ObjectHandle childcollision = child->checkCollision(p, v);
+                if(childcollision){ //We have a collision with a child
+                    return childcollision;
+                }
+                childcollision.clear();
+            }
+        }
+        return (ObjectHandle)(*this);
+    }
+    return ObjectHandle();
 }
 
+bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
+        return a.x <= p.x && p.x <= b.x//Inside x-interval
+            && a.y <= p.y && p.y <= b.y//Inside y-interval
+            
+    && a.z <= p.z && p.z <= b.z;//Inside z-interval
+}
+    
 //------------------------------------------------------------------------------
 
 World::World(double _width, double _height)
