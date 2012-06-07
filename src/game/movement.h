@@ -55,6 +55,7 @@ class Controller
 	
 	private:
 	Point<double> pos;
+	Qd camAngle;
 	double zoom;
 	bool fps;
 
