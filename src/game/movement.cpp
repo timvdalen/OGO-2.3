@@ -6,6 +6,11 @@
 
 namespace Movement {
 
+	double movespeed = 0.5;
+	double jetpackspeed = 0.2;
+	double lookspeed = 0.035;
+	double zoomspeed = 0.5;
+
 //------------------------------------------------------------------------------
 
 Controller::Controller(Camera &C, ObjectHandle P) : camera(C), player(P)
@@ -33,10 +38,10 @@ void Controller::moveX()
 
 		yaw -= (.5 * Pi);
 
-		pos.x = pos.x + sin(yaw);
-		pos.y = pos.y + cos(yaw);
-		camera.origin.x = camera.origin.x + sin(yaw);
-		camera.origin.y = camera.origin.y + cos(yaw);
+		pos.x = pos.x + movespeed * sin(yaw);
+		pos.y = pos.y + movespeed * cos(yaw);
+		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
+		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
 		player->origin = pos;
@@ -48,10 +53,10 @@ void Controller::moveX()
 
 		yaw += (.5 * Pi);
 
-		pos.x = pos.x + sin(yaw);
-		pos.y = pos.y + cos(yaw);
-		camera.origin.x = camera.origin.x + sin(yaw);
-		camera.origin.y = camera.origin.y + cos(yaw);
+		pos.x = pos.x + movespeed * sin(yaw);
+		pos.y = pos.y + movespeed * cos(yaw);
+		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
+		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
 		player->origin = pos;
@@ -67,10 +72,10 @@ void Controller::moveY()
 		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
-		pos.x = pos.x + sin(yaw);
-		pos.y = pos.y + cos(yaw);
-		camera.origin.x = camera.origin.x + sin(yaw);
-		camera.origin.y = camera.origin.y + cos(yaw);
+		pos.x = pos.x + movespeed * sin(yaw);
+		pos.y = pos.y + movespeed * cos(yaw);
+		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
+		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
 		player->origin = pos;
@@ -80,10 +85,10 @@ void Controller::moveY()
 		Vector<double> vec = ~(player->rotation * Vector<double>(0,-1,0));
 		double yaw = atan2(vec.x, vec.y);
 
-		pos.x = pos.x + sin(yaw);
-		pos.y = pos.y + cos(yaw);
-		camera.origin.x = camera.origin.x + sin(yaw);
-		camera.origin.y = camera.origin.y + cos(yaw);
+		pos.x = pos.x + movespeed * sin(yaw);
+		pos.y = pos.y + movespeed * cos(yaw);
+		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
+		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
 		player->origin = pos;
@@ -96,16 +101,16 @@ void Controller::moveZ()
 {
 	if (move[dirUp])
 	{
-		pos.z = pos.z + 0.2;
-		camera.origin.z = camera.origin.z + 0.2;
+		pos.z = pos.z + jetpackspeed;
+		camera.origin.z = camera.origin.z + jetpackspeed;
 
 		//test
 		player->origin = pos;
 	}
 	else if (move[dirDown])
 	{
-		pos.z = pos.z - 0.2;
-		camera.origin.z = camera.origin.z - 0.2;
+		pos.z = pos.z - jetpackspeed;
+		camera.origin.z = camera.origin.z - jetpackspeed;
 
 		//test
 		player->origin = pos;
@@ -118,7 +123,7 @@ void Controller::lookX()
 {
 	if (look[dirLeft])
 	{
-		player->rotation = Qd(Rd(0.05, Vd(0,0,1))) * player->rotation;
+		player->rotation = Qd(Rd(lookspeed, Vd(0,0,1))) * player->rotation;
 
 		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
@@ -135,7 +140,7 @@ void Controller::lookX()
 	}
 	else if (look[dirRight])
 	{
-		player->rotation = Qd(Rd(-0.05, Vd(0,0,1))) * player->rotation;
+		player->rotation = Qd(Rd(-lookspeed, Vd(0,0,1))) * player->rotation;
 
 		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
@@ -162,7 +167,7 @@ void Controller::lookY()
 
 		if (zoom > 5.0)
 		{
-			zoom -= 0.5;
+			zoom -= zoomspeed;
 		}
 		else if (zoom <= 5.0)
 		{
@@ -186,7 +191,7 @@ void Controller::lookY()
 
 		if (zoom < 15.0) 
 		{
-			zoom += 0.5;
+			zoom += zoomspeed;
 		}
 		
 		if (fps == true)
@@ -217,7 +222,7 @@ void Controller::lookZ()
 		Vector<double> mystery = ~(player->rotation * Vector<double>(0,1,0));
 		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		player->rotation = Qd(Rd(0.05, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
+		player->rotation = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
 
 		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
@@ -237,7 +242,7 @@ void Controller::lookZ()
 		Vector<double> mystery = ~(player->rotation * Vector<double>(0,1,0));
 		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		player->rotation = Qd(Rd(-0.05, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
+		player->rotation = Qd(Rd(-lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * player->rotation;
 
 		Vector<double> vec = ~(player->rotation * Vector<double>(0,1,0));
 
