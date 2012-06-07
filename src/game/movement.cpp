@@ -97,7 +97,7 @@ void Controller::moveZ()
 	if (move[dirUp])
 	{
 		pos.z = pos.z + 0.2;
-		camera.origin.z = camera.origin.z + 0.1;
+		camera.origin.z = camera.origin.z + 0.2;
 
 		//test
 		player->origin = pos;
@@ -105,7 +105,7 @@ void Controller::moveZ()
 	else if (move[dirDown])
 	{
 		pos.z = pos.z - 0.2;
-		camera.origin.z = camera.origin.z - 0.1;
+		camera.origin.z = camera.origin.z - 0.2;
 
 		//test
 		player->origin = pos;
