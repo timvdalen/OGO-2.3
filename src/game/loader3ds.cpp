@@ -57,7 +57,6 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
 				float (*normalL)[3] = &n;
 				//*/
 
-                Lib3dsMaterial *oldmat = (Lib3dsMaterial *) - 1;
                 {
                     float M[4][4];
                     lib3ds_matrix_copy(M, mesh->matrix);
@@ -73,7 +72,11 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
                             glNormal3fv(normalL[3*p+i]);
                             glTexCoord2f(
                                 mesh->texcos[mesh->faces[p].index[i]][0],
-                                1-mesh->texcos[mesh->faces[p].index[i]][1] );
+                                mesh->texcos[1-mesh->faces[p].index[i]][1] );
+
+							//cout << mesh->texcos[mesh->faces[p].index[i]][0] << " - ";
+							//cout << mesh->texcos[1-mesh->faces[p].index[i]][1] << "\n";
+
                             glVertex3fv(mesh->vertices[mesh->faces[p].index[i]]);
                         }
                         glEnd();
@@ -82,8 +85,6 @@ void ModelObject::displaylist(Lib3dsMesh * mesh) {
 
                 free(normalL);
             }
-
-            glDisable(GL_TEXTURE_2D);
 }
 
 //--------------------------------------------
@@ -151,7 +152,7 @@ void ModelObject::render() {
 		for (n = file->nodes; n; n = n->next) {
 			render(n);
 		}
-		cout << "rendered. \n";
+		//cout << "rendered. \n";
 	}
 	else {
 		cout << "file not found...\n";
