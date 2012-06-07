@@ -10,7 +10,6 @@ namespace Movement {
 	double jetpackspeed = 0.2;
 	double lookspeed = 0.035;
 	double zoomspeed = 0.5;
-	Qd camAngle;
 
 //------------------------------------------------------------------------------
 
