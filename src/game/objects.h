@@ -43,19 +43,19 @@ class DefenseTower;
 class ResourceMine;
 class Droppables;
 
-//! Represents a bounding box. 
+//! Represents a bounding box.
 
 //! Point variables follow xyz where x is l(left) or r(ight), y is t(op) or b(ottom) and z is l(ow) or h(igh).
 struct BoundingBox{
 	Point<double> lbl, rbl, ltl, rtl, lbh, rbh, lth, rth;
-	
+
 	BoundingBox(const BoundingBox &B)
 		: lbl(B.lbl), rbl(B.rbl), ltl(B.ltl), rtl(B.rtl),
 		  lbh(B.lbh), rbh(B.rbh), lth(B.lth), rth(B.rth) {}
 
 	BoundingBox(Pd _lbl = Pd(), Pd _rbl = Pd(), Pd _ltl = Pd(), Pd _rtl = Pd(),
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
-		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl), 
+		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
 };
 
@@ -69,7 +69,7 @@ class BoundedObject: public Object{
 	public:
 		//! The boundingbox for this object
 		BoundingBox bb;
-	
+
 		//! Constructs a new bounded object
 		BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(), MaterialHandle M = Material())
 			: Object(P, R, M), bb(B) {}
@@ -89,7 +89,7 @@ class BoundedObject: public Object{
 class Terrain: public Object{
 	public:
 		//! Size of the world in the X direction.
-		
+
 		//! Needs to be a multiple GRID_SIZE
 		double width;
 
@@ -99,7 +99,7 @@ class Terrain: public Object{
 		double height;
 
 		//! Selected square of the grid.
-		
+
 		//! If this is not on the grid, it will not show up.
 		GridPoint selected;
 
@@ -114,18 +114,21 @@ class Terrain: public Object{
 
 		//! Draws the terrain
 		virtual void draw();
+
+		//! Gives the grid coordinates corresponding to a mouse click
+		pair<int, int> getGridCoordinates(Vd camera, Vd pos);
 };
 
 //! Represents the world of the game
 class World: public BoundedObject{
 	public:
 		//! Size of the world in the X direction.
-		
+
 		//! Needs to be a multiple of GRID_SIZE
 		double width;
 
 		//! Size of the world in the Y direction.
-		
+
 		//! Needs to be a multiple of GRID_SIZE
 		double height;
 
