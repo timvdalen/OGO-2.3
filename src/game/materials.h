@@ -141,6 +141,32 @@ class GridMaterial : public Material
 
 //------------------------------------------------------------------------------
 
+class ColorMaterial: public Material{
+	public:
+	//! Red part of the color
+	GLfloat r;
+		
+	//! Green part of the color
+	GLfloat g;
+
+	//! Blue part of the color
+	GLfloat b;
+
+	//! Alpha part of the color
+	GLfloat a;
+
+	//! Constructs a new ColorMaterial
+	ColorMaterial(GLfloat _r, GLfloat _g, GLfloat _b, GLfloat _a);
+
+	//! Selects this material
+	virtual void select();
+
+	//! Unselects this material
+	virtual void unselect();
+};
+
+//------------------------------------------------------------------------------
+
 } // namespace Material
 
 #endif // _MATERIAL_H
