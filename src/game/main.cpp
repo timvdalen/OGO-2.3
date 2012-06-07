@@ -172,6 +172,18 @@ void Frame()
 	if (!controller) return;
 
 	input->frame();
+	
+	World *world = dynamic_cast<World *>(&*window->viewports[0]->world);
+	Camera &cam = window->viewports[0]->camera;
+	
+	world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+	
+	if (window->changed)
+	{
+		int width, height;
+		window->size(width = 0, height = 0);
+		world->hud->resize(width, height);
+	}
 
 	/**/
 	controller->frame();
