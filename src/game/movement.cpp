@@ -4,7 +4,6 @@
 
 #include "movement.h"
 #include <iostream>
-
 namespace Movement {
 
 	double movespeed = 0.5;
@@ -24,7 +23,6 @@ Controller::Controller(Camera &C, ObjectHandle P, double width, double height) :
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
 	zoom = 10.0;
-
 	camera.origin = pos - (~vec * zoom);
 	camera.lookAt(pos);
 
@@ -300,14 +298,13 @@ void Controller::lookZ()
 }
 
 //------------------------------------------------------------------------------
-
+    
 void Controller::frame()
 {
 	/*if (move[dirLeft] || move[dirRight])
 	{
 		moveX();
 	}*/
-
 	if (move[dirForward] || move[dirBackward])
 	{
 		moveY();
@@ -315,7 +312,17 @@ void Controller::frame()
 		else if (move[dirRight]) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
 		else {
 			double axis = Rd(player->rotation/camAngle).v.z;
-			if (axis != 0) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,axis));
+            Vd camv = camAngle*Vd(0,1,0);
+            Vd plav = player->rotation*Vd(0,1,0);
+            camv.z = 0; camv = ~camv;
+            plav.z = 0; plav = ~plav;
+            double angle = atan2(camv.y - plav.y, camv.x - plav.x);
+            double angle2 = (angle < 0? -angle : angle);
+            angle2 = angle2 > 0.5*Pi ? Pi - angle2 : angle2;
+            angle2 = angle2 < 0.05? angle2 : 0.05;
+			if (axis != 0) {
+                player->rotation = player->rotation * Rd(-angle2,Vd(0,0,axis));
+            }
 		}
 	}
 
