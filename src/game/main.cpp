@@ -286,6 +286,10 @@ void handleMouse(bool left){
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
 				
 				toggleBuild();
+			}else{
+				//Shoot
+				Player *p = TO(Player, controller->player);
+				controller->world->children.insert(LaserBeam(p->origin, Vd(0.57, 0.57, -0.57)));
 			}
 		}else{
 			input->grabMouse();
