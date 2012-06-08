@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 
 	v1.camera.lookAt(cube->origin);
 
-	controller = new Controller(v1.camera, player);
+	controller = new Controller(v1.camera, player, 100, 100);
 	input = new Input(*window);
 	input->onKeyUp = KeyUp;
 	input->onKeyDown = KeyDown;
