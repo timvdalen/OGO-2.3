@@ -77,8 +77,8 @@ void Terrain::draw()
 
 //------------------------------------------------------------------------------
 
-// This function draws the line from camera to pos. It then finds the intersection
-// with the ground: the corresponding grid coordinates are returned.
+//! This function draws the line from camera to pos. It then finds the intersection
+//! with the ground: the corresponding grid coordinates are returned.
 Terrain::GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 {
     Vd dir = pos + -camera;
@@ -87,8 +87,8 @@ Terrain::GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
     double intersecx = camera.x + dir.x * lambda;
     double intersecy = camera.y + dir.y * lambda;
 
-    int x = (int) floor(intersecx / (double) GRID_SIZE);
-    int y = (int) floor(intersecy / (double) GRID_SIZE);
+    int x = (int) floor(intersecx / (double) GRID_SIZE) + width/(2*GRID_SIZE);
+    int y = (int) floor(intersecy / (double) GRID_SIZE) + height/(2*GRID_SIZE);
     return GridPoint(x, y);
 }
 
