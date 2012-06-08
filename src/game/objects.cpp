@@ -14,7 +14,7 @@ namespace Objects {
 
 //------------------------------------------------------------------------------
 
-pair<ObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
+pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Vector<double> direction)
 {
     double collision = numeric_limits<double>::infinity();
     //--- We only check lbl rbh, could be improved-----
@@ -66,7 +66,7 @@ pair<ObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, V
         for (it = children.begin(); it != children.end(); ++it){
             BoundedObject* child = TO(BoundedObject, *it);
             if(child){
-                pair<ObjectHandle, int> childcollision = child->checkCollision(p, v);
+                pair<ObjectHandle, int> childcollision = child->findCollision(p, v);
                 if(childcollision.second < collision2){ //We have a collision with a child
                     colobject.clear();
                     collision2 = childcollision.second;
@@ -74,7 +74,6 @@ pair<ObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, V
                 }else{
                     childcollision.first.clear();
                 }
-//                childcollision.clear();
             }
         }
         if(collision2 == numeric_limits<double>::infinity()){
@@ -84,6 +83,10 @@ pair<ObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, V
     }
     return make_pair(ObjectHandle(),collision);
 }
+    
+    ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> direction){
+        return findCollision(origin,direction).first;
+    }
 
 //------------------------------------------------------------------------------
 

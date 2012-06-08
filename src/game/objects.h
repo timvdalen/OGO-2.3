@@ -57,6 +57,7 @@ class BoundedObject: public Object
 {
     //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
     bool insideBox(Point<double> p, Point<double> a, Point<double> b);
+    pair<ObjectHandle, double> findCollision(Point<double> origin, Vector<double> direction);
     
     public:
 	//! The boundingbox for this object
@@ -71,7 +72,7 @@ class BoundedObject: public Object
 	//! Checks if a line from origin to direction collides with this object or one of its children.
 	//! If there is a collision, this function returns a handle to the object the line collides with
 	//! if not, it returns null.
-	pair<ObjectHandle, double> checkCollision(Point<double> origin, Vector<double> direction);
+	ObjectHandle checkCollision(Point<double> origin, Vector<double> direction);
 
 	//! Draws this object
 	virtual void draw() {}
