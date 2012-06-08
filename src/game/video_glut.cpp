@@ -357,7 +357,15 @@ void Viewport::render()
 
 		// Camera position
 		const Point<double> &o = camera.origin;
-		glTranslated(-o.x, -o.y, -o.z);
+        Point<double> p;
+        p.x = o.x;
+        p.y = o.y;
+        p.z = o.z;
+        Vd v = q*Vd(0,1,0);
+        if(p.z < 0 && v.z != 0){
+            p = p + (v*(-p.z/v.z));
+        }
+		glTranslated(-p.x, -p.y, -p.z);
 	}
 
 	// Enable lighting
