@@ -19,7 +19,7 @@ bool GridPoint::operator<(const GridPoint& p2) const
 	if(x < p2.x){
 		return true;
 	}else{
-		if(y < p2.y){
+		if(x == p2.x && y < p2.y){
 			return true;
 		}else{
 			return false;
@@ -134,8 +134,8 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 //------------------------------------------------------------------------------
 
 bool Terrain::placeStructure(GridPoint p, Handle<Structure> s){
-	multimap<GridPoint, StructureHandle>::iterator it;
-	it = structures.find(p);
+    multimap<GridPoint, StructureHandle>::iterator it;
+    it = structures.find(p);
 	if(it != structures.end()){
 		return false;
 	}

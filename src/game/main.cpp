@@ -272,17 +272,21 @@ void handleMouse(bool left){
 					MaterialHandle m = TwinMaterial(ShadedMaterial(Cf(0.5, 0.5, 0.5, 1)), Assets::Test);
 					tower->material = m;
 				}
+                stringstream ss;
+                int noX = (int) world->width / GRID_SIZE;
+                int noY = (int) world->height / GRID_SIZE;
+                if(clicked.x < 0 || clicked.y < 0 || clicked.x >= noX || clicked.y >= noY){
+                    ss << "Invalid Place selected, building aborted";
+                }else{
+                    bool done = world->terrain->placeStructure(clicked, tower);
 				
-				bool done = world->terrain->placeStructure(clicked, tower);
-				
-				//Dit zou ik eigenlijk met std::to_string() willen doen
-				stringstream ss;
-				if(done){
-					ss << "Tower placed at  (" << clicked.x << ", " << clicked.y << ")";
-				}else{
-					ss << "Tower place failed, already there at (" << clicked.x << ", " << clicked.y << ")";
+                    //Dit zou ik eigenlijk met std::to_string() willen doen
+                    if(done){
+                        ss << "Tower placed at  (" << clicked.x << ", " << clicked.y << ")";
+                    }else{
+                        ss << "Tower place failed, already there at (" << clicked.x << ", " <<  clicked.y << ")";
+                    }
 				}
-				
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
 				
 				toggleBuild();
@@ -290,6 +294,7 @@ void handleMouse(bool left){
 				//Shoot
 				Player *p = TO(Player, controller->player);
 				controller->world->children.insert(LaserBeam(p->origin, Vd(0.57, 0.57, -0.57)));
+                controller->avoidPulverizebyBuilding();
 			}
 		}else{
 			input->grabMouse();
