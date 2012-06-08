@@ -9,8 +9,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include <sstream>
 #include <string>
+
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"

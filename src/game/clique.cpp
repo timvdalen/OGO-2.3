@@ -3,7 +3,7 @@
  */
 
 #include <time.h>
-//#include <stdio.h>
+#include <stdio.h>
 #include <pthread.h>
 #if (defined WIN32 || defined _MSC_VER)
 #define WIN32_LEAN_AND_MEAN
