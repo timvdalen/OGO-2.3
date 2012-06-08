@@ -17,6 +17,7 @@ namespace HUD_objects{
 
 using namespace std;
 using namespace Materials;
+using namespace Objects;
 
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
@@ -99,7 +100,7 @@ void Widget::render(){
 	glRasterPos2i(0, 0);
 }
 
-ChatMessage::ChatMessage(Core::Player _player, string _message)
+ChatMessage::ChatMessage(Player _player, string _message)
 	: player(_player)
 {
 	message = _message;
@@ -110,7 +111,7 @@ string ChatMessage::toString(){
 	return string("<") + player.name + string(">: ") + message;
 }
 
-PlayerFragMessage::PlayerFragMessage(Core::Player _killer, Core::Player _victim)
+PlayerFragMessage::PlayerFragMessage(Player _killer, Player _victim)
 	: killer(_killer), victim(_victim)
 {}
 
@@ -118,7 +119,7 @@ string PlayerFragMessage::toString(){
 	return string("<") + killer.name + string("> fragged <") + victim.name + string(">");
 }
 
-TowerFragMessage::TowerFragMessage(Core::Player _player)
+TowerFragMessage::TowerFragMessage(Player _player)
 	: player(_player)
 {}
 

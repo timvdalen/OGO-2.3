@@ -35,7 +35,6 @@ using namespace Base;
 template <class type> class Handle;
 class Object; typedef Handle<Object> ObjectHandle;
 class Material; typedef Handle<Material> MaterialHandle;
-class Player;
 typedef int Resource;
 typedef float Power;
 
@@ -146,26 +145,6 @@ class Object
 	virtual void render();
 
 
-};
-
-//------------------------------------------------------------------------------
-
-//! Represents a playing person
-class Player{
-	public:
-	typedef unsigned int Id;
-	
-	//! The ID of this player
-	Id id;
-
-	//! The team of this player
-	unsigned char team;
-
-	//! The name of this player
-	string name;
-
-	//! Constructs a player
-	Player(Id _id, unsigned char _team, string _name);
 };
 
 //------------------------------------------------------------------------------

@@ -4,12 +4,14 @@
 #include <string>
 #include "core.h"
 #include "video.h"
+#include "objects.h"
 
 //! Contains HUD objects
 namespace HUD_objects{
 
 using namespace std;
 using namespace Core;
+using namespace Objects;
 
 class MessageDisplayer;
 class CrossHair;
@@ -83,13 +85,13 @@ class Message: public Object{
 class ChatMessage: public Message{
 	public:
 	//! The player that sent this message
-	Core::Player player;
+	Player player;
 
 	//! The actual message
 	string message;
 
 	//! Constructs a new ChatMessage
-	ChatMessage(Core::Player _player, string _message);
+	ChatMessage(Player _player, string _message);
 
 	//! Formats this message as <[player.name]>: [message]
 	string toString();
@@ -99,13 +101,13 @@ class ChatMessage: public Message{
 class PlayerFragMessage: public Message{
 	public:
 	//! The player that made the frag
-	Core::Player killer;
+	Player killer;
 
 	//! The player that was fragged
-	Core::Player victim;
+	Player victim;
 
 	//! Constructs a new PlayerFragMessage
-	PlayerFragMessage(Core::Player _killer, Core::Player _victim);
+	PlayerFragMessage(Player _killer, Player _victim);
 
 	//! Formats this message as <[killer.name]> fragged <[victim.name]>
 	string toString();
@@ -115,13 +117,13 @@ class PlayerFragMessage: public Message{
 class TowerFragMessage: public Message{
 	public:
 	//! The player fragged by a tower
-	Core::Player player;
+	Player player;
 
 	//TODO: Add tower position or name
 	
 	
 	//! Constructs a new TowerFragMessage
-	TowerFragMessage(Core::Player _player);
+	TowerFragMessage(Player _player);
 
 	//! Formats this message as <[victim.name]> was fragged by a tower
 	string toString();
