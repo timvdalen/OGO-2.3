@@ -37,6 +37,12 @@ void Controller::setView(bool fp = true){
 
 //------------------------------------------------------------------------------
 
+bool Controller::getView(){
+	return fps;
+}
+
+//------------------------------------------------------------------------------
+
 void Controller::moveX()
 {
 	if (move[dirLeft])

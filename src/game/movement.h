@@ -56,6 +56,9 @@ class Controller
 	//! Sets to view to first or third person
 	void setView(bool fp);
 	
+	//! Gets the view
+	bool getView();
+	
 	private:
 	Point<double> pos;
 	Qd camAngle;
