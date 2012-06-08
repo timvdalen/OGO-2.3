@@ -317,17 +317,19 @@ void handleMouse(bool left){
 	//For !input
 	if(left){
 		if(input->grabbing){
-			//Build something
-			Video::Viewport *v = window->viewports.front();
-			World *world = TO(World, v->world);
-			Camera &cam = v->camera;
-			Terrain::GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
-			
-			//Dit zou ik eigenlijk met std::to_string() willen doen
-			stringstream ss;
-			ss << "Gridpoint (" << clicked.x << ", " << clicked.y << ") was clicked";
-			
-			world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+			if(building){
+				//Build something
+				Video::Viewport *v = window->viewports.front();
+				World *world = TO(World, v->world);
+				Camera &cam = v->camera;
+				Terrain::GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+				
+				//Dit zou ik eigenlijk met std::to_string() willen doen
+				stringstream ss;
+				ss << "Gridpoint (" << clicked.x << ", " << clicked.y << ") was clicked";
+				
+				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+			}
 		}else{
 			input->grabMouse();
 		}
