@@ -2,22 +2,30 @@
  * Structure objects -- see header file for more info
  */
 
-#include <stdio.h>
-#if defined _WIN32
-	#include <gl\freeglut.h>
-#elif defined __APPLE__
-	#include <GL/freeglut.h>
-#else
-	#include <GL/freeglut.h>
-#endif
 
-#include <cstdlib>
- 
+#include <stdlib.h>
+
+#include "video.h" 
 #include "objects.h"
 #include "structures.h"
 #include "materials.h"
 
 namespace Objects {
+
+//------------------------------------------------------------------------------
+
+bool GridPoint::operator<(const GridPoint& p2) const
+{
+	if(x < p2.x){
+		return true;
+	}else{
+		if(y < p2.y){
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
 
 //------------------------------------------------------------------------------
 
@@ -118,8 +126,8 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
     double intersecx = camera.x + dir.x * lambda;
     double intersecy = camera.y + dir.y * lambda;
 
-    int x = (int) floor(intersecx / (double) GRID_SIZE) + width/(2*GRID_SIZE);
-    int y = (int) floor(intersecy / (double) GRID_SIZE) + height/(2*GRID_SIZE);
+    int x = (int) (floor(intersecx / (double) GRID_SIZE) + width/(2*GRID_SIZE));
+    int y = (int) (floor(intersecy / (double) GRID_SIZE) + height/(2*GRID_SIZE));
     return GridPoint(x, y);
 }
 
@@ -141,11 +149,12 @@ bool Terrain::placeStructure(GridPoint p, Handle<Structure> s){
 void Building::preRender(){
 	Object::preRender();
 	
-	int now = glutGet(GLUT_ELAPSED_TIME);
+	int now = Video::ElapsedTime();
 	if((now-buildTime) > buildDuration) 
 		return;
 		
-	float animationHeight = ((float)height/(float)buildDuration)*(float)now - ((float)buildTime*((float)height/(float)buildDuration));
+	float animationHeight = ((float)height/(float)buildDuration)*(float)now
+		 - ((float)buildTime*((float)height/(float)buildDuration));
 	float randX = (((float)rand()/RAND_MAX)-0.5);
 	float randY = (((float)rand()/RAND_MAX)-0.5);
 	glTranslatef(randX, randY, -height + animationHeight);
@@ -156,7 +165,7 @@ void Building::preRender(){
 DefenseTower::DefenseTower(int _height, BoundingBox B)
 		: Building(_height, B,
 			100, 0,
-			glutGet(GLUT_ELAPSED_TIME), 10000,
+			Video::ElapsedTime(), 10000,
 			20) 
 {
 	height = _height;

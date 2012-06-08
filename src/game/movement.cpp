@@ -15,7 +15,7 @@ namespace Movement {
 
 Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
-	fps = false;
+	firstPerson = false;
 	pos = player->origin;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
@@ -25,18 +25,6 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 	camera.lookAt(pos);
 
 	camAngle = Qd();
-}
-
-//------------------------------------------------------------------------------
-
-void Controller::setView(bool fp = true){
-	fps = fp;
-}
-
-//------------------------------------------------------------------------------
-
-bool Controller::getView(){
-	return fps;
 }
 
 //------------------------------------------------------------------------------
@@ -157,7 +145,7 @@ void Controller::lookX()
 
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-		if (fps == true)
+		if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));
@@ -174,7 +162,7 @@ void Controller::lookX()
 
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-		if (fps == true)
+		if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));
@@ -201,10 +189,10 @@ void Controller::lookY()
 		}
 		else if (zoom <= 5.0)
 		{
-			fps = true;
+			firstPerson = true;
 		}
 
-		if (fps == true)
+		if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));
@@ -224,13 +212,13 @@ void Controller::lookY()
 			zoom += zoomspeed;
 		}
 		
-		if (fps == true)
+		if (firstPerson == true)
 		{
-			fps = false;
+			firstPerson = false;
 			zoom = 5.0;
 		}
 
-		if (fps == true)
+		if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));
@@ -259,7 +247,7 @@ void Controller::lookZ()
         }
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-		if (fps == true)
+		if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));
@@ -282,7 +270,7 @@ void Controller::lookZ()
         }
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-		if (fps == true)
+		if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));

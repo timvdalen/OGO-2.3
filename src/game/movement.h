@@ -45,27 +45,22 @@ class Controller
 	public:
 	Camera &camera;      //!< Assigned camera
 	ObjectHandle player; //!< Assigned player
-	ObjectHandle world;        //!< Needed to be able to check were we can walk
+	ObjectHandle world;  //!< Needed to be able to check were we can walk
     
 	bitset<dirLast> move; //!< Current comera movement
 	bitset<dirLast> look; //!< Current camera target movement
+	
+	bool firstPerson;     //!< selects first person view instead of third person
 	
 	//! Construct controller by assigning a player and camera
 	Controller(Camera &C, ObjectHandle P, ObjectHandle W);
 	
 	void frame();         //!< Called everytime a frame passes in game
 	
-	//! Sets to view to first or third person
-	void setView(bool fp);
-	
-	//! Gets the view
-	bool getView();
-	
 	private:
 	Point<double> pos;
 	Qd camAngle;
 	double zoom;
-	bool fps;
 
 	void moveX();
 	void moveY();

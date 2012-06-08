@@ -1,3 +1,12 @@
+/*
+ * World object
+ *
+ * Date: 08-06-12 16:00
+ *
+ * Description: Object that defines the root object of the game
+ *
+ */
+
 #ifndef _WORLD_H
 #define _WORLD_H
 
@@ -5,7 +14,7 @@
 #include "structures.h"
 #include "hud.h"
 
-namespace Objects{
+namespace Objects {
 
 using namespace HUD_objects;
 
@@ -68,6 +77,8 @@ class Droppable: public BoundedObject
 
 //------------------------------------------------------------------------------
 
-}
+} // namespace Objects
 
-#endif
+#endif // _WORLD_H
+
+//------------------------------------------------------------------------------

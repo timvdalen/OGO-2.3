@@ -64,6 +64,13 @@ void StopEventLoop()
 	glutLeaveMainLoop();
 }
 
+//------------------------------------------------------------------------------
+
+dword ElapsedTime()
+{
+	return glutGet(GLUT_ELAPSED_TIME);
+}
+
 //==============================================================================
 
 std::set<Window *> Window::windows;
