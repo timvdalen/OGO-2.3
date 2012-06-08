@@ -16,6 +16,8 @@ CPP      = g++
 CC       = gcc
 RM       = -rm -f
 MV       = -mv -f
+UNZIP    = unzip -uo 
+WGET     = wget --no-check-certificate
 
 OBJDIR   = ../../obj/
 BINDIR   = ../../bin/
@@ -31,6 +33,9 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz -l3ds
+
+DLDIR    = https://github.com/downloads/timvdalen/OGO-2.3/
+ASSETS   = assets.zip
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC
@@ -55,7 +60,7 @@ ifeq ($(build),release)
 	CXXFLAGS += -fexpensive-optimizations -O3
 endif
 
-.PHONY: all clean run
+.PHONY: all clean run assets
 default: all
 
 all: $(BIN)
@@ -69,6 +74,11 @@ run: default
 	@echo Running game...
 	@echo
 	@$(BIN) -p $(BINDIR) &
+
+assets:
+	$(WGET) $(DLDIR)$(ASSETS) -O $(ASSETS)
+	$(UNZIP) $(ASSETS) -d $(BINDIR)
+	$(RM) $(ASSETS)
 
 $(BIN): $(OBJ)
 	$(CPP) $(OBJ) -o "$(BIN)" $(LIBS)
