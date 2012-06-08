@@ -408,7 +408,7 @@ void Controller::avoidPulverizebyBuilding(){
         pos.y = GRID_SIZE*gridy - (w->height)/2 + GRID_SIZE*0.5;
         player->origin = pos;
         Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
-        if (fps == true)
+        if (firstPerson == true)
 		{
 			camera.origin = player->origin;
 			camera.lookAt(pos + (vec * 5.0));
