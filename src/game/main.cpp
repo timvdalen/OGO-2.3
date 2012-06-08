@@ -112,6 +112,9 @@ int main(int argc, char *argv[])
             fullscreen = true;
         }
     }
+	
+	srand(time(NULL));
+	
     Video::Initialize(argc, argv);
 	window = new Video::Window(width, height, "Game", fullscreen);
 	Video::Viewport v1(1,1);
