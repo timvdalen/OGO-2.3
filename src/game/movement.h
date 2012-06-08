@@ -53,6 +53,9 @@ class Controller
 	
 	void frame();         //!< Called everytime a frame passes in game
 	
+	//! Sets to view to first or third person
+	void setView(bool fp);
+	
 	private:
 	Point<double> pos;
 	Qd camAngle;

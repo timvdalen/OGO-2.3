@@ -31,6 +31,12 @@ Controller::Controller(Camera &C, ObjectHandle P) : camera(C), player(P)
 
 //------------------------------------------------------------------------------
 
+void Controller::setView(bool fp = true){
+	fps = fp;
+}
+
+//------------------------------------------------------------------------------
+
 void Controller::moveX()
 {
 	if (move[dirLeft])
