@@ -82,7 +82,9 @@ void Terrain::draw()
 Terrain::GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 {
     Vd dir = pos + -camera;
-
+    if(dir.z == 0){
+        return GridPoint(-1,-1);
+    }
     double lambda = -camera.z / dir.z;
     double intersecx = camera.x + dir.x * lambda;
     double intersecy = camera.y + dir.y * lambda;
