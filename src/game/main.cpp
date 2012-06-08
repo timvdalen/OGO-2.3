@@ -286,6 +286,7 @@ void handleMouse(bool left){
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
 				
 				toggleBuild();
+                controller->avoidPulverizebyBuilding();
 			}
 		}else{
 			input->grabMouse();

@@ -339,6 +339,7 @@ Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
 }
 
 //------------------------------------------------------------------------------
+
 bool Controller::walkAble(Point<double> old, Point<double> updated){
     World *w = TO(World, world);
     if(!(-(w->width)/2 < updated.x && updated.x < (w->width)/2//Inside x-interval
@@ -352,8 +353,8 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     multimap<GridPoint, StructureHandle>::iterator it;
 	for(it = t->structures.begin(); it != t->structures.end(); it++){
 		GridPoint p = it->first;
-        double worldx = GRID_SIZE*p.x - w->width/2;
-        double worldy = GRID_SIZE*p.y - w->width/2;
+        double worldx = GRID_SIZE*p.x - (w->width)/2;
+        double worldy = GRID_SIZE*p.y - (w->height)/2;
 		//Process them
         //TODO:Maybe use bounding boxes? Should be straightforward to implement this
         if(   worldx < updated.x && updated.x < worldx + GRID_SIZE
@@ -367,6 +368,59 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     
     return true;
 }
+
+//------------------------------------------------------------------------------
+
+void Controller::avoidPulverizebyBuilding(){
+    World *w = TO(World, world); 
+    Terrain *t = w->terrain; 
+    int xlength = w->width/GRID_SIZE;
+    int ylength = w->height/GRID_SIZE;
+    bool containsBuilding[xlength][ylength];
+    memset(containsBuilding, 0, sizeof containsBuilding);
+    //create a mapping with all used grids
+    multimap<GridPoint, StructureHandle>::iterator it;
+    for(it = t->structures.begin(); it != t->structures.end(); it++){
+        GridPoint p = it->first;
+        containsBuilding[p.x][p.y] = true;
+    }
+    //O(n^2) could be faster, alot faster, pruning could be applied extensively
+    int gridx = (pos.x + w->width/2)/GRID_SIZE;
+    int gridy = (pos.y + w->height/2)/GRID_SIZE;
+    if(containsBuilding[gridx][gridy]){
+        double min_distance = std::numeric_limits<double>::infinity();
+        int i, j;
+        for(i = 0; i < xlength; i++){
+            for(j = 0; j < ylength; j++){
+                if(!containsBuilding[i][j]){
+                    double x = GRID_SIZE*(i+0.5) - (w->width)/2;
+                    double y = GRID_SIZE*(j+0.5) - (w->height)/2;
+                    double d = (pos.x - x)*(pos.x - x) + (pos.y - y)*(pos.y - y);
+                    if(d < min_distance){
+                        min_distance = d;
+                        gridx = i;
+                        gridy = j;
+                    }
+               }
+            }
+        }
+        pos.x = GRID_SIZE*gridx - (w->width)/2 + GRID_SIZE*0.5;;
+        pos.y = GRID_SIZE*gridy - (w->height)/2 + GRID_SIZE*0.5;
+        player->origin = pos;
+        Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
+        if (fps == true)
+		{
+			camera.origin = player->origin;
+			camera.lookAt(pos + (vec * 5.0));
+		}
+		else
+		{
+			camera.origin = pos - (vec * zoom);
+			camera.lookAt(pos);
+		}
+    }
+}
+
     
 //------------------------------------------------------------------------------
 } // namespace Movement

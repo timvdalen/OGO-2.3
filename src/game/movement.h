@@ -70,6 +70,7 @@ class Controller
 	void lookY();
 	void lookZ();
     bool walkAble(Point<double> old, Point<double> p);
+    void avoidPulverizebyBuilding();
 };
 
 //------------------------------------------------------------------------------
