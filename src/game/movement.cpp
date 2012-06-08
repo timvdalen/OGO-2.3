@@ -14,10 +14,11 @@ namespace Movement {
 
 //------------------------------------------------------------------------------
 
-Controller::Controller(Camera &C, ObjectHandle P) : camera(C), player(P)
+Controller::Controller(Camera &C, ObjectHandle P, double width, double height) : camera(C), player(P)
 {
 	fps = false;
-
+    this->width = width;
+    this->height = height;
 	pos = player->origin;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
@@ -46,6 +47,7 @@ bool Controller::getView(){
 
 void Controller::moveX()
 {
+    Point<double> posrollback = Point<double>(pos);
 	if (move[dirLeft])
 	{
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
@@ -55,9 +57,13 @@ void Controller::moveX()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        if(!insideBounds(pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
-
+        
 		//test
 		player->origin = pos;
 	}
@@ -70,6 +76,10 @@ void Controller::moveX()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        if(!insideBounds(pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
@@ -82,6 +92,7 @@ void Controller::moveX()
 
 void Controller::moveY()
 {
+    Point<double> posrollback = Point<double>(pos);
 	if (move[dirForward])
 	{
 		Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
@@ -89,9 +100,13 @@ void Controller::moveY()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        
+        if(!insideBounds(pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
-
 		//test
 		player->origin = pos;
 	}
@@ -102,6 +117,10 @@ void Controller::moveY()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        if(!insideBounds(pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
@@ -327,7 +346,14 @@ Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
 }
 
 //------------------------------------------------------------------------------
-
+bool Controller::insideBounds(Point<double> p){
+    printf("(%f,%f,%f,)\n",p.x,p.y,p.z);
+    return -width/2 < p.x && p.x < width/2//Inside x-interval
+        && -height/2 < p.y && p.y < height/2;//Inside y-interval
+        
+}
+    
+//------------------------------------------------------------------------------
 } // namespace Movement
 
 //------------------------------------------------------------------------------

@@ -44,12 +44,14 @@ class Controller
 	public:
 	Camera &camera;      //!< Assigned camera
 	ObjectHandle player; //!< Assigned player
-	
+	double width;          //!< Size of the grid in the x direction
+    double height;          //!< Size of the grid in the y direction
+    
 	bitset<dirLast> move; //!< Current comera movement
 	bitset<dirLast> look; //!< Current camera target movement
 	
 	//! Construct controller by assigning a player and camera
-	Controller(Camera &C, ObjectHandle P);
+	Controller(Camera &C, ObjectHandle P, double width, double height);
 	
 	void frame();         //!< Called everytime a frame passes in game
 	
@@ -72,6 +74,7 @@ class Controller
 	void lookX();
 	void lookY();
 	void lookZ();
+    bool insideBounds(Point<double> p);
 };
 
 //------------------------------------------------------------------------------
