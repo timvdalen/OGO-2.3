@@ -1,3 +1,7 @@
+/*
+ * World object -- see header file for more info
+ */
+
 #include "world.h"
 
 namespace Objects {
@@ -99,4 +103,8 @@ ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 	// Todo: implement
 }
 
-}
+//------------------------------------------------------------------------------
+
+} // namespace Objects
+
+//------------------------------------------------------------------------------

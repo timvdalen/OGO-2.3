@@ -15,13 +15,7 @@ using namespace Base::Alias;
 
 void Object::preRender()
 {
-	// Stack has only at least 32 levels! Maybe just translate twice...
-	glPushMatrix();
-	//glTranslated(origin.x, origin.y, origin.z);
-	//Rotation<double> rot = rotation;
-	//glRotated(rot.a, rot.v.x, rot.v.y, rot.v.z);
-	
-	// Camera orientation (quaternion to rotation matrix)
+	// Camera orientation and translation (quaternion to rotation matrix)
 	const Quaternion<double> &q = rotation;
 	double aa, ab, ac, ad, bb, bc, bd, cc, cd, dd;
 	aa = q.a*q.a; ab = q.a*q.b; ac = q.a*q.c; ad = q.a*q.d;
@@ -34,7 +28,8 @@ void Object::preRender()
 		 2.0*(bc+ad), aa-bb+cc-dd, 2.0*(cd-ab),           0,
 		 2.0*(bd-ac), 2.0*(cd+ab), aa-bb-cc+dd,           0,
 	        origin.x,    origin.y,    origin.z, aa+bb+cc+dd};
-
+	
+	glPushMatrix();
 	glMultMatrixd(m);
 }
 

@@ -13,11 +13,13 @@
 #include "hud.h"
 #include "assets.h"
 
-namespace HUD_objects{
+namespace HUD_objects {
 
 using namespace std;
 using namespace Materials;
 using namespace Objects;
+
+//------------------------------------------------------------------------------
 
 int modulo(int a, int b)
 {
@@ -25,6 +27,8 @@ int modulo(int a, int b)
     if (r < 0) r += b;
     return r;
 }
+
+//------------------------------------------------------------------------------
 
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
@@ -40,6 +44,8 @@ HUD::HUD(int _width, int _height){
 	children.insert(chHandle);
 }
 
+//------------------------------------------------------------------------------
+
 void HUD::resize(int _width, int _height){
 	width = _width;
 	height = _height;
@@ -50,6 +56,8 @@ void HUD::resize(int _width, int _height){
 		if(child) child->resize(_width, _height);
 	}	
 }
+
+//------------------------------------------------------------------------------
 
 void HUD::preRender(){
 	glPushMatrix();
@@ -67,6 +75,8 @@ void HUD::preRender(){
 	glDisable(GL_LIGHTING);
 }
 
+//------------------------------------------------------------------------------
+
 void HUD::postRender(){
 	Object::postRender();
 
@@ -78,6 +88,8 @@ void HUD::postRender(){
         glPopMatrix();
 }
 
+//------------------------------------------------------------------------------
+
 Widget::Widget(int _x, int _y, int _width, int _height, MaterialHandle M = Assets::Widget)
 	: Object(Pd(), Qd(), M)
 {
@@ -85,15 +97,21 @@ Widget::Widget(int _x, int _y, int _width, int _height, MaterialHandle M = Asset
 	resize(_width, _height);
 }
 
+//------------------------------------------------------------------------------
+
 void Widget::replace(int _x, int _y){
 	xOffset = _x;
 	yOffset = _y;
 }
 
+//------------------------------------------------------------------------------
+
 void Widget::resize(int _width, int _height){
 	width = _width;
 	height = _height;
 }
+
+//------------------------------------------------------------------------------
 
 void Widget::render(){
 	glRasterPos2i(xOffset, yOffset);
@@ -107,40 +125,58 @@ void Widget::render(){
 	glRasterPos2i(0, 0);
 }
 
+//------------------------------------------------------------------------------
+
 ChatMessage::ChatMessage(Player _player, string _message)
 	: player(_player)
 {
 	message = _message;
 }
 
+//------------------------------------------------------------------------------
+
 string ChatMessage::toString(){
 	//This could be so much more efficient
 	return string("<") + player.name + string(">: ") + message;
 }
 
+//------------------------------------------------------------------------------
+
 PlayerFragMessage::PlayerFragMessage(Player _killer, Player _victim)
 	: killer(_killer), victim(_victim)
 {}
+
+//------------------------------------------------------------------------------
 
 string PlayerFragMessage::toString(){
 	return string("<") + killer.name + string("> fragged <") + victim.name + string(">");
 }
 
+//------------------------------------------------------------------------------
+
 TowerFragMessage::TowerFragMessage(Player _player)
 	: player(_player)
 {}
+
+//------------------------------------------------------------------------------
 
 string TowerFragMessage::toString(){
 	return string("<") + player.name + string("> was fragged by a tower");
 }
 
+//------------------------------------------------------------------------------
+
 SystemMessage::SystemMessage(string _message)
 	: message(_message)
 {}
 
+//------------------------------------------------------------------------------
+
 string SystemMessage::toString(){
 	return string("** ") + message + string(" **");
 }
+
+//------------------------------------------------------------------------------
 
 MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	: Widget(_x, _y, _width, _height)
@@ -150,6 +186,8 @@ MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
 }
 
+//------------------------------------------------------------------------------
+
 void MessageDisplayer::addMessage(Handle<DisplayMessage> m){
 	messages[curr] = m;
 	//Move head to next slot
@@ -157,6 +195,8 @@ void MessageDisplayer::addMessage(Handle<DisplayMessage> m){
 	if(full < 10) full++;
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
 }
+
+//------------------------------------------------------------------------------
 
 void MessageDisplayer::draw(){
 	glRasterPos2i(xOffset, yOffset);
@@ -176,6 +216,8 @@ void MessageDisplayer::draw(){
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 void MessageDisplayer::render(){
 	MaterialHandle font;
@@ -200,9 +242,13 @@ void MessageDisplayer::render(){
 	
 }
 
+//------------------------------------------------------------------------------
+
 CrossHair::CrossHair(int _x, int _y, int _width, int _height)
 	: Widget(_x, _y, _width, _height, Assets::CrossHair)
 {}
+
+//------------------------------------------------------------------------------
 
 void CrossHair::draw(){
 	int midX = width/2;
@@ -223,5 +269,8 @@ void CrossHair::draw(){
 	glEnd();
 }
 
-}
+//------------------------------------------------------------------------------
 
+} // namespace HUD_objects
+
+//------------------------------------------------------------------------------
