@@ -347,7 +347,6 @@ Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
 
 //------------------------------------------------------------------------------
 bool Controller::insideBounds(Point<double> p){
-    printf("(%f,%f,%f,)\n",p.x,p.y,p.z);
     return -width/2 < p.x && p.x < width/2//Inside x-interval
         && -height/2 < p.y && p.y < height/2;//Inside y-interval
         
