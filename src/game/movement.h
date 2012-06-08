@@ -13,6 +13,7 @@
 
 #include "objects.h"
 #include "video.h"
+#include "world.h"
 
 //! Movement module
 //! Takes care of camera movement
@@ -44,14 +45,13 @@ class Controller
 	public:
 	Camera &camera;      //!< Assigned camera
 	ObjectHandle player; //!< Assigned player
-	double width;          //!< Size of the grid in the x direction
-    double height;          //!< Size of the grid in the y direction
+	ObjectHandle world;        //!< Needed to be able to check were we can walk
     
 	bitset<dirLast> move; //!< Current comera movement
 	bitset<dirLast> look; //!< Current camera target movement
 	
 	//! Construct controller by assigning a player and camera
-	Controller(Camera &C, ObjectHandle P, double width, double height);
+	Controller(Camera &C, ObjectHandle P, ObjectHandle W);
 	
 	void frame();         //!< Called everytime a frame passes in game
 	
@@ -74,7 +74,7 @@ class Controller
 	void lookX();
 	void lookY();
 	void lookZ();
-    bool insideBounds(Point<double> p);
+    bool walkAble(Point<double> old, Point<double> p);
 };
 
 //------------------------------------------------------------------------------
