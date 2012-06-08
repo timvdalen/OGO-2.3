@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 	ObjectHandle world = Objects::World(100, 100);
 
 	{
-		World *w = dynamic_cast<World *> (&*world);
+		World *w = TO(World, world);
 		w->terrain->showGrid = true;
 		w->terrain->selected.x = 4;
 		w->terrain->selected.y = 4;
@@ -233,7 +233,7 @@ void Frame()
 	if (controller->move[dirDown])     pos = pos + -rot * Vd(0,0,1) * -0.5;
 	/**/
 	
-	Objects::Player * player = dynamic_cast<Objects::Player*>(&*controller->player);
+	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
 
 	cube->rotation = cube->rotation * Rd(.1, Vd(0,0,1));

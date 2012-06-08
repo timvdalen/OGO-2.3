@@ -10,6 +10,8 @@
 #ifndef _CORE_H
 #define _CORE_H
 
+#define TO(T,x) (dynamic_cast<T *>(&*(x)))
+
 #define GRID_SIZE 10
 
 //------------------------------------------------------------------------------
