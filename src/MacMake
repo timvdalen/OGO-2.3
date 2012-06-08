@@ -19,6 +19,7 @@ cd ../
 cd game
 echo "±±±±±±±±±±±±±±±±BuildingGame±±±±±±±±±±±±±±"
 make clean
+sync
 #make -f Makefile2 platform=macos
 make platform=macos
 #-----------remove app-bundle----------------

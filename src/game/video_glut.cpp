@@ -362,6 +362,19 @@ void Viewport::render()
 
 	// Enable lighting
 	glEnable(GL_LIGHT0);
+    //set lighting in right position
+    GLfloat light_pos[4] = {0,0,100,0};
+    GLfloat ambientColor[4] = {0.2f, 0.2f, 0.2f, 1.0f};//blueish ambient light
+    GLfloat ambientLight[4] = {0.3f, 0.3f, 0.3f, 1.0f};
+    GLfloat diffuseLight[4] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat specularLight[4] = {0,0,0,0};// Should be: {0.4f, 0.4f, 0.4f, 1.0f};//white specular but materials are configured to be to shiny...
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+    glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0f);
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 
 	// Render the world and everything in it
 	world->render();
