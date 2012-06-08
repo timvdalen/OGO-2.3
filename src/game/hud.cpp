@@ -19,6 +19,13 @@ using namespace std;
 using namespace Materials;
 using namespace Objects;
 
+int modulo(int a, int b)
+{
+    int r = a % b;
+    if (r < 0) r += b;
+    return r;
+}
+
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
 	
@@ -127,6 +134,14 @@ string TowerFragMessage::toString(){
 	return string("<") + player.name + string("> was fragged by a tower");
 }
 
+SystemMessage::SystemMessage(string _message)
+	: message(_message)
+{}
+
+string SystemMessage::toString(){
+	return string("** ") + message + string(" **");
+}
+
 MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	: Widget(_x, _y, _width, _height)
 {
@@ -135,21 +150,30 @@ MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
 }
 
-void MessageDisplayer::addMessage(Message m){
+void MessageDisplayer::addMessage(Handle<DisplayMessage> m){
+	messages[curr] = m;
 	//Move head to next slot
 	curr = ((curr+1)%10);
-	messages[curr] = m;
 	if(full < 10) full++;
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
 }
 
 void MessageDisplayer::draw(){
 	glRasterPos2i(xOffset, yOffset);
-
 	
-	string teststring = "Welcome to the game!";
-	for(int count=0; count < teststring.length(); count++){
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, teststring[count]);
+	//Loop through all messages, starting with the first added one
+	//up to the last added one
+	for(int i=0; i < 10; i++){
+		int ai = (curr+i)%10;
+		Handle<DisplayMessage> mh = messages[ai];
+		if(!mh)	continue;
+		DisplayMessage *m = &*mh;
+		if(!m) continue;
+		string message = m->toString();
+		glRasterPos2i(xOffset, yOffset + (18*i));
+		for(int count=0; count < message.length(); count++){
+			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, message[count]);
+		}
 	}
 }
 

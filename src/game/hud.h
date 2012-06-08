@@ -75,14 +75,14 @@ class Widget: public Object{
 };
 
 //! Represents a displayable message
-class Message: public Object{
+class DisplayMessage{
 	public:
 	//! Gives a textual representation of this message
-	virtual string toString(){return "";}
+	virtual string toString(){return "emp";}
 };
 
 //! Represents a chat message
-class ChatMessage: public Message{
+class ChatMessage: public DisplayMessage{
 	public:
 	//! The player that sent this message
 	Player player;
@@ -94,11 +94,11 @@ class ChatMessage: public Message{
 	ChatMessage(Player _player, string _message);
 
 	//! Formats this message as <[player.name]>: [message]
-	string toString();
+	virtual string toString();
 };
 
 //! Represents a kill made by a player
-class PlayerFragMessage: public Message{
+class PlayerFragMessage: public DisplayMessage{
 	public:
 	//! The player that made the frag
 	Player killer;
@@ -110,11 +110,11 @@ class PlayerFragMessage: public Message{
 	PlayerFragMessage(Player _killer, Player _victim);
 
 	//! Formats this message as <[killer.name]> fragged <[victim.name]>
-	string toString();
+	virtual string toString();
 };
 
 //! Represents a kill made by a tower
-class TowerFragMessage: public Message{
+class TowerFragMessage: public DisplayMessage{
 	public:
 	//! The player fragged by a tower
 	Player player;
@@ -126,9 +126,21 @@ class TowerFragMessage: public Message{
 	TowerFragMessage(Player _player);
 
 	//! Formats this message as <[victim.name]> was fragged by a tower
-	string toString();
+	virtual string toString();
 };
 
+//! Represents a system message
+class SystemMessage: public DisplayMessage{
+	public:
+	//! The message
+	string message;
+	
+	//! Constructs a new SystemMessage
+	SystemMessage(string _message);
+	
+	//! Formats this message as ** <message> **
+	virtual string toString();
+};
 
 //! Displays a variety of messages
 class MessageDisplayer: public Widget{
@@ -137,7 +149,7 @@ class MessageDisplayer: public Widget{
 
 	public:
 	//! Circluar array that contains the messages
-	Message messages[10];
+	Handle<DisplayMessage> messages[10];
 
 	//! Array index that points to the current head
 	
@@ -152,7 +164,7 @@ class MessageDisplayer: public Widget{
 	MessageDisplayer(int _x, int _y, int _width, int _height);
 
 	//! Adds a message to the queue
-	void addMessage(Message m);
+	void addMessage(Handle<DisplayMessage> m);
 
 	//! Displays the messages
 	virtual void draw();
