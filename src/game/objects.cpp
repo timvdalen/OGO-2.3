@@ -14,7 +14,7 @@ namespace Objects {
 
 //------------------------------------------------------------------------------
 
-pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
+pair<ObjectHandle, double> BoundedObject::checkCollision(Point<double> origin, Vector<double> direction)
 {
     double collision = numeric_limits<double>::infinity();
     //--- We only check lbl rbh, could be improved-----
@@ -61,14 +61,15 @@ pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> or
     //find a collision with a child
     if(collision < std::numeric_limits<double>::infinity()){
         set<ObjectHandle>::iterator it;
-        BoundedObjectHandle colobject = *this;
+        ObjectHandle colobject = *this;
+        double collision2 = numeric_limits<double>::infinity();
         for (it = children.begin(); it != children.end(); ++it){
             BoundedObject* child = TO(BoundedObject, *it);
             if(child){
-                pair<BoundedObjectHandle, int> childcollision = child->checkCollision(p, v);
-                if(childcollision.second < collision){ //We have a collision with a child
+                pair<ObjectHandle, int> childcollision = child->checkCollision(p, v);
+                if(childcollision.second < collision2){ //We have a collision with a child
                     colobject.clear();
-                    collision = childcollision.second;
+                    collision2 = childcollision.second;
                     colobject = childcollision.first;
                 }else{
                     childcollision.first.clear();
@@ -76,9 +77,12 @@ pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> or
 //                childcollision.clear();
             }
         }
-        return make_pair(colobject,collision);
+        if(collision2 == numeric_limits<double>::infinity()){
+            collision2 = collision;
+        }
+        return make_pair(colobject,collision2);
     }
-    return make_pair(BoundedObjectHandle(),collision);
+    return make_pair(ObjectHandle(),collision);
 }
 
 //------------------------------------------------------------------------------
