@@ -2,12 +2,13 @@
  * Objects -- see header
  */
 
+#include <stack>
+#include <limits>
+
 #include "objects.h"
 #include "structures.h"
 #include "video.h"
 #include "assets.h"
-#include <iostream>
-#include <limits>
 
 namespace Objects {
 
@@ -62,7 +63,7 @@ pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> or
         set<ObjectHandle>::iterator it;
         BoundedObjectHandle colobject = *this;
         for (it = children.begin(); it != children.end(); ++it){
-            BoundedObject* child = dynamic_cast<BoundedObject *>(&**it);
+            BoundedObject* child = TO(BoundedObject, *it);
             if(child){
                 pair<BoundedObjectHandle, int> childcollision = child->checkCollision(p, v);
                 if(childcollision.second < collision){ //We have a collision with a child
@@ -80,6 +81,8 @@ pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> or
     return make_pair(BoundedObjectHandle(),collision);
 }
 
+//------------------------------------------------------------------------------
+
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
         return a.x <= p.x && p.x <= b.x//Inside x-interval
             && a.y <= p.y && p.y <= b.y//Inside y-interval
@@ -95,12 +98,12 @@ World::World(double _width, double _height)
 {
 	ObjectHandle tHandle;
 	tHandle = Terrain(_width, _height);
-	terrain = dynamic_cast<Terrain *>(&*tHandle);
+	terrain = TO(Terrain, tHandle);
 	children.insert(tHandle);
 
 	ObjectHandle hudHandle;
 	hudHandle = HUD(640, 480);
-	hud = dynamic_cast<HUD *>(&*hudHandle);
+	hud = TO(HUD, hudHandle);
 	children.insert(hudHandle);
 
 	width = _width;
@@ -174,6 +177,13 @@ void World::draw(){
 	glEnd();
 
 	#undef HIGH
+}
+
+//------------------------------------------------------------------------------
+
+ObjectHandle World::trace(Point<double> origin, Vector<double> path)
+{
+	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
