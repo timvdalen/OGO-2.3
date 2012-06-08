@@ -359,7 +359,7 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
         return false;
     }
     Terrain *t = w->terrain; 
-    //TODO check every terrain item, we return false if and only if updated is in a object
+    //check every terrain item, we return false if and only if updated is in a object
     //and old is not in that object
     multimap<GridPoint, StructureHandle>::iterator it;
 	for(it = t->structures.begin(); it != t->structures.end(); it++){
@@ -367,6 +367,7 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
         double worldx = GRID_SIZE*p.x - w->width/2;
         double worldy = GRID_SIZE*p.y - w->width/2;
 		//Process them
+        //TODO:Maybe use bounding boxes? Should be straightforward to implement this
         if(   worldx < updated.x && updated.x < worldx + GRID_SIZE
            && worldy < updated.y && updated.y < worldy + GRID_SIZE//update in bounds
            &&!(   worldx < old.x && old.x < worldx + GRID_SIZE
