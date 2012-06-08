@@ -49,6 +49,8 @@ Input::Input(Window &W)
 	glutPassiveMotionFunc(motion_event);
 	glutMotionFunc(motion_event);
 	
+	grabbing = false;
+	
 	inputs.insert(this);
 }
 

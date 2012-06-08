@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <string>
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
@@ -32,11 +33,15 @@ map<Button,Direction> lookbind;
 map<Button,word> lookcount;
 FPS fps;
 ObjectHandle cube;
+bool building = false;
+bool lastview = false;
 
 void Frame();
 void KeyUp(Button btn);
 void KeyDown(Button btn);
 void MouseMove(word x, word y);
+void toggleBuild();
+void handleMouse(bool left);
 
 //------------------------------------------------------------------------------
 
@@ -107,6 +112,9 @@ int main(int argc, char *argv[])
             fullscreen = true;
         }
     }
+	
+	srand(time(NULL));
+	
     Video::Initialize(argc, argv);
 	window = new Video::Window(width, height, "Game", fullscreen);
 	Video::Viewport v1(1,1);
@@ -130,9 +138,9 @@ int main(int argc, char *argv[])
 
 	{
 		World *w = TO(World, world);
-		w->terrain->showGrid = true;
-		w->terrain->selected.x = 4;
-		w->terrain->selected.y = 4;
+		w->hud->messageDisplayer->addMessage(SystemMessage("Loading assets..."));
+		w->hud->messageDisplayer->addMessage(SystemMessage("Everything loaded!"));
+		w->hud->messageDisplayer->addMessage(SystemMessage("Welcome to the game"));
 		w->children.insert(cube);
 	}
 
@@ -142,7 +150,7 @@ int main(int argc, char *argv[])
 
 	v1.camera.lookAt(cube->origin);
 
-	controller = new Controller(v1.camera, player);
+	controller = new Controller(v1.camera, player, world);
 	input = new Input(*window);
 	input->onKeyUp = KeyUp;
 	input->onKeyDown = KeyDown;
@@ -194,7 +202,8 @@ void Frame()
 	World *world = dynamic_cast<World *>(&*window->viewports[0]->world);
 	Camera &cam = window->viewports[0]->camera;
 	
-	world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+	if(building)
+		world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
 	
 	if (window->resized)
 	{
@@ -244,6 +253,14 @@ void Frame()
 }
 
 //------------------------------------------------------------------------------
+void printFps(){
+    World *world = TO(World, (window->viewports.front())->world);
+    stringstream ss;
+    ss << "Current FPS: " << (double)fps;
+    world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+}
+
+//------------------------------------------------------------------------------
 
 void KeyUp(Button btn)
 {
@@ -270,9 +287,10 @@ void KeyDown(Button btn)
 	switch (btn)
 	{
 		case btnKeyEscape:  Video::StopEventLoop();              break;
-		case btnKeyF:       printf("FPS: %2.f\n", (double) fps); break;
-		case btnMouseRight: input->releaseMouse();               break;
-		case btnMouseLeft:  input->grabMouse();                  break;
+		case btnKeyF:       printFps();                          break;
+		case btnKeyB:       toggleBuild(); 						 break;
+		case btnMouseRight: handleMouse(false);               	 break;
+		case btnMouseLeft:  handleMouse(true);                   break;
 	}
 }
 
@@ -284,3 +302,63 @@ void MouseMove(word x, word y)
 }
 
 //------------------------------------------------------------------------------
+
+void toggleBuild(){
+	Video::Viewport *v = window->viewports.front();
+	World *world = TO(World, v->world);
+	Terrain *terrain = TO(Terrain, world->terrain);
+	
+	if(building){
+		terrain->showGrid = false;
+		//Restore view
+		controller->setView(lastview);
+	}else{
+		//Save view before entering building mode
+		lastview = controller->getView();
+		terrain->showGrid = true;
+		controller->setView(true);
+	}
+	building = !building;
+}
+
+//------------------------------------------------------------------------------
+
+void handleMouse(bool left){
+	//If this ever gets called from anywhere but KeyDown, remember to check
+	//For !input
+	if(left){
+		if(input->grabbing){
+			if(building){
+				//Build something
+				Video::Viewport *v = window->viewports.front();
+				World *world = TO(World, v->world);
+				Camera &cam = v->camera;
+				GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+				
+				Handle<Structure> tower = Objects::DefenseTower(10);
+				{
+					MaterialHandle m = TwinMaterial(ShadedMaterial(Cf(0.5, 0.5, 0.5, 1)), Assets::Test);
+					tower->material = m;
+				}
+				
+				bool done = world->terrain->placeStructure(clicked, tower);
+				
+				//Dit zou ik eigenlijk met std::to_string() willen doen
+				stringstream ss;
+				if(done){
+					ss << "Tower placed at  (" << clicked.x << ", " << clicked.y << ")";
+				}else{
+					ss << "Tower place failed, already there at (" << clicked.x << ", " << clicked.y << ")";
+				}
+				
+				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+				
+				toggleBuild();
+			}
+		}else{
+			input->grabMouse();
+		}
+	}else{
+		input->releaseMouse();
+	}
+}

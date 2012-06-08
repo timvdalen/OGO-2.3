@@ -4,7 +4,6 @@
 
 #include "movement.h"
 #include <iostream>
-
 namespace Movement {
 
 	double movespeed = 0.5;
@@ -14,16 +13,14 @@ namespace Movement {
 
 //------------------------------------------------------------------------------
 
-Controller::Controller(Camera &C, ObjectHandle P) : camera(C), player(P)
+Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	fps = false;
-
 	pos = player->origin;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
 	zoom = 10.0;
-
 	camera.origin = pos - (~vec * zoom);
 	camera.lookAt(pos);
 
@@ -46,6 +43,7 @@ bool Controller::getView(){
 
 void Controller::moveX()
 {
+    Point<double> posrollback = Point<double>(pos);
 	if (move[dirLeft])
 	{
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
@@ -55,9 +53,13 @@ void Controller::moveX()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        if(!walkAble(posrollback, pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
-
+        
 		//test
 		player->origin = pos;
 	}
@@ -70,6 +72,10 @@ void Controller::moveX()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        if(!walkAble(posrollback, pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
@@ -82,6 +88,7 @@ void Controller::moveX()
 
 void Controller::moveY()
 {
+    Point<double> posrollback = Point<double>(pos);
 	if (move[dirForward])
 	{
 		Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
@@ -89,9 +96,13 @@ void Controller::moveY()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        
+        if(!walkAble(posrollback, pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
-
 		//test
 		player->origin = pos;
 	}
@@ -102,6 +113,10 @@ void Controller::moveY()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
+        if(!walkAble(posrollback, pos)){
+            pos = posrollback;
+            return;
+        }
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
@@ -281,14 +296,13 @@ void Controller::lookZ()
 }
 
 //------------------------------------------------------------------------------
-
+    
 void Controller::frame()
 {
 	/*if (move[dirLeft] || move[dirRight])
 	{
 		moveX();
 	}*/
-
 	if (move[dirForward] || move[dirBackward])
 	{
 		moveY();
@@ -296,7 +310,17 @@ void Controller::frame()
 		else if (move[dirRight]) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
 		else {
 			double axis = Rd(player->rotation/camAngle).v.z;
-			if (axis != 0) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,axis));
+            Vd camv = camAngle*Vd(0,1,0);
+            Vd plav = player->rotation*Vd(0,1,0);
+            camv.z = 0; camv = ~camv;
+            plav.z = 0; plav = ~plav;
+            double angle = atan2(camv.y - plav.y, camv.x - plav.x);
+            double angle2 = (angle < 0? -angle : angle);
+            angle2 = angle2 > 0.5*Pi ? Pi - angle2 : angle2;
+            angle2 = angle2 < 0.05? angle2 : 0.05;
+			if (axis != 0) {
+                player->rotation = player->rotation * Rd(-angle2,Vd(0,0,axis));
+            }
 		}
 	}
 
@@ -327,7 +351,36 @@ Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
 }
 
 //------------------------------------------------------------------------------
-
+bool Controller::walkAble(Point<double> old, Point<double> updated){
+    World *w = TO(World, world);
+    if(!(-(w->width)/2 < updated.x && updated.x < (w->width)/2//Inside x-interval
+        && -(w->height)/2 < updated.y && updated.y < (w->height)/2))//Inside y-interval
+    {
+        return false;
+    }
+    Terrain *t = w->terrain; 
+    //check every terrain item, we return false if and only if updated is in a object
+    //and old is not in that object
+    multimap<GridPoint, StructureHandle>::iterator it;
+	for(it = t->structures.begin(); it != t->structures.end(); it++){
+		GridPoint p = it->first;
+        double worldx = GRID_SIZE*p.x - w->width/2;
+        double worldy = GRID_SIZE*p.y - w->width/2;
+		//Process them
+        //TODO:Maybe use bounding boxes? Should be straightforward to implement this
+        if(   worldx < updated.x && updated.x < worldx + GRID_SIZE
+           && worldy < updated.y && updated.y < worldy + GRID_SIZE//update in bounds
+           &&!(   worldx < old.x && old.x < worldx + GRID_SIZE
+               && worldy < old.y && old.y < worldy + GRID_SIZE )       //old not in bounds
+           ){
+            return false;
+        }
+	}
+    
+    return true;
+}
+    
+//------------------------------------------------------------------------------
 } // namespace Movement
 
 //------------------------------------------------------------------------------
