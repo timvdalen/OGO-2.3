@@ -104,6 +104,15 @@ class World: public BoundedObject
 
 	//! Draws the world
 	virtual void draw();
+	
+	//! Finds the first colliding object going from a point in a direction 
+	//! \par origin will define the starting point in the world for the lookpath
+	//! \par path is a vector that is searched
+	//! \note the norm of path defines the length that is searched.
+	//!       When the function returns witha object the path value will be set
+	//!       to the vector pointing to collision spot
+	//! \returns the first colliding object or an empty handle when no object was found
+	ObjectHandle trace(Point<double> origin, Vector<double> &path);
 };
 
 //------------------------------------------------------------------------------

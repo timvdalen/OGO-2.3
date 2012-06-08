@@ -2,12 +2,13 @@
  * Objects -- see header
  */
 
+#include <stack>
+#include <limits>
+
 #include "objects.h"
 #include "structures.h"
 #include "video.h"
 #include "assets.h"
-#include <iostream>
-#include <limits>
 
 namespace Objects {
 
@@ -79,6 +80,8 @@ pair<BoundedObjectHandle, double> BoundedObject::checkCollision(Point<double> or
     }
     return make_pair(BoundedObjectHandle(),collision);
 }
+
+//------------------------------------------------------------------------------
 
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
         return a.x <= p.x && p.x <= b.x//Inside x-interval
@@ -174,6 +177,13 @@ void World::draw(){
 	glEnd();
 
 	#undef HIGH
+}
+
+//------------------------------------------------------------------------------
+
+ObjectHandle World::trace(Point<double> origin, Vector<double> path)
+{
+	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
