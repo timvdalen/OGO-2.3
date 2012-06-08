@@ -354,10 +354,15 @@ void Viewport::render()
 			           0,           0,           0, aa+bb+cc+dd};
 
 		glMultMatrixd(m2);
-
+        #define LOWERBOUND 0.1
 		// Camera position
-		const Point<double> &o = camera.origin;
-		glTranslated(-o.x, -o.y, -o.z);
+        Point<double> p = Point<double>(camera.origin);
+        Vd v = q*Vd(0,1,0);
+        if(p.z < LOWERBOUND && v.z != 0){
+            p = p + (v*(-(p.z-LOWERBOUND)/v.z));
+        }
+		glTranslated(-p.x, -p.y, -p.z);
+        #undef LOWERBOUND
 	}
 
 	// Enable lighting
