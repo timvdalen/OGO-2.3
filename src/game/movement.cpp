@@ -3,6 +3,7 @@
  */
 
 #include "movement.h"
+#include <iostream>
 
 namespace Movement {
 
@@ -71,7 +72,7 @@ void Controller::moveY()
 {
 	if (move[dirForward])
 	{
-		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		pos.x = pos.x + movespeed * sin(yaw);
@@ -84,7 +85,7 @@ void Controller::moveY()
 	}
 	else if (move[dirBackward])
 	{
-		Vector<double> vec = ~(camAngle * Vector<double>(0,-1,0));
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		pos.x = pos.x + movespeed * sin(yaw);
@@ -265,14 +266,20 @@ void Controller::lookZ()
 
 void Controller::frame()
 {
-	if (move[dirLeft] || move[dirRight])
+	/*if (move[dirLeft] || move[dirRight])
 	{
 		moveX();
-	}
+	}*/
 
 	if (move[dirForward] || move[dirBackward])
 	{
 		moveY();
+		if (move[dirLeft]) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
+		else if (move[dirRight]) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
+		else {
+			double axis = Rd(player->rotation/camAngle).v.z;
+			if (axis != 0) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,axis));
+		}
 	}
 
 	if (move[dirUp] || move[dirDown])
@@ -295,6 +302,10 @@ void Controller::frame()
 	{
 		lookZ();
 	}
+
+	
+Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
+	p->velocity = Vd(0,movespeed,0);
 }
 
 //------------------------------------------------------------------------------

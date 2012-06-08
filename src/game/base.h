@@ -172,6 +172,8 @@ struct Quaternion
 		                a*Q.b + b*Q.a + c*Q.d - d*Q.c,
 						a*Q.c - b*Q.d + c*Q.a + d*Q.b,
 						a*Q.d + b*Q.c - c*Q.b + d*Q.a); }
+	//! Quaternion devision
+	Quaternion operator /(const Quaternion &Q) const { return Quaternion((Q*Quaternion(a,b,c,d))/(a*a + b*b + c*c + d*d)); }
 	//! Vector multiplication
 	Vector<type> operator *(const Vector<type> &V) const { return (*this) * Quaternion(0,V) * -(*this); }
 	//! Quaternion norm
