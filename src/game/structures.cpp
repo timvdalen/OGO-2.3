@@ -3,6 +3,13 @@
  */
 
 #include <stdio.h>
+#if defined _WIN32
+	#include <gl\freeglut.h>
+#elif defined __APPLE__
+	#include <GL/freeglut.h>
+#else
+	#include <GL/freeglut.h>
+#endif
  
 #include "objects.h"
 #include "structures.h"
@@ -129,11 +136,24 @@ bool Terrain::placeStructure(GridPoint p, Handle<Structure> s){
 
 //------------------------------------------------------------------------------
 
+void Building::preRender(){
+	Object::preRender();
+	
+	int now = glutGet(GLUT_ELAPSED_TIME);
+	if((now-buildTime) > buildDuration) 
+		return;
+		
+	float animationHeight = ((float)height/(float)buildDuration)*(float)now - ((float)buildTime*((float)height/(float)buildDuration));
+	glTranslatef(0, 0, -height + animationHeight);
+}
+
+//------------------------------------------------------------------------------
+
 DefenseTower::DefenseTower(int _height, BoundingBox B)
-		: Building(B,
-			0, 0,
-			0, 0,
-			0) 
+		: Building(_height, B,
+			100, 0,
+			glutGet(GLUT_ELAPSED_TIME), 10000,
+			20) 
 {
 	height = _height;
 }

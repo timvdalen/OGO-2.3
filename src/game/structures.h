@@ -122,26 +122,31 @@ class Mine: public Structure
 class Building: public Structure
 {
 	public:
+	//! Height of this building in local object coordinates
+	int height;
 	//! The cost of this building
 	Resource cost;
 	//! The income this building generates
 	Resource income;
-	//! The time at which the construction of this building was started
-	time_t buildTime;
-	//! The time it takes to completely build this building
-	time_t buildDuration;
+	//! The time in milliseconds since the start of the glut event loop at which the construction of this building was started
+	int buildTime;
+	//! The time in milliseconds it takes to completely build this building
+	int buildDuration;
 	//! The attack power of this building
 	Power attackPower;
 
 	//! Constructs a new building
-	Building(BoundingBox B = BoundingBox(),
-	         Resource _cost = 0, Resource _income = 0, time_t _buildTime = 0,
-			 time_t _buildDuration = 0, Power _attackPower = 0)
-		: Structure(B),
+	Building(int _height, BoundingBox B = BoundingBox(),
+	         Resource _cost = 0, Resource _income = 0, int _buildTime = 0,
+			 int _buildDuration = 0, Power _attackPower = 0)
+		: height(_height), Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
 		  attackPower(_attackPower) {}
 
+	//! Sets up translations and rotations
+	virtual void preRender();
+		  
 	//! Draws the building
 	virtual void draw(){}
 
@@ -154,7 +159,7 @@ class HeadQuarters: public Building
 {
 	public:
 	HeadQuarters(BoundingBox B = BoundingBox())
-		: Building(B,
+		: Building(10, B,
 		  0, 0,
 		  0, 0,
 		  0) {}
@@ -168,9 +173,6 @@ class HeadQuarters: public Building
 //! Represents a defense tower
 class DefenseTower: public Building
 {
-	//! Height of this building in local object coordinates
-	int height;
-	
 	public:
 	DefenseTower(int _height, BoundingBox B = BoundingBox());
 		  
@@ -184,7 +186,7 @@ class ResourceMine: public Building
 {
 	public:
 	ResourceMine(BoundingBox B = BoundingBox())
-		: Building(B,
+		: Building(15, B,
 		  0, 0,
 		  0, 0,
 		  0) {}
