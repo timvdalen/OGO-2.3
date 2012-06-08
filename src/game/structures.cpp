@@ -2,8 +2,11 @@
  * Structure objects -- see header file for more info
  */
 
+#include <stdio.h>
+ 
 #include "objects.h"
 #include "structures.h"
+#include "materials.h"
 
 namespace Objects {
 
@@ -77,9 +80,26 @@ void Terrain::draw()
 
 //------------------------------------------------------------------------------
 
+void Terrain::postRender()
+{
+	multimap<GridPoint, StructureHandle>::iterator it;
+	for(it = structures.begin(); it != structures.end(); it++){
+		GridPoint p = it->first;
+		StructureHandle s = it->second;
+		glPushMatrix();
+			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
+			s->render();
+		glPopMatrix();
+	}
+
+	Object::postRender();
+}
+
+//------------------------------------------------------------------------------
+
 //! This function draws the line from camera to pos. It then finds the intersection
 //! with the ground: the corresponding grid coordinates are returned.
-Terrain::GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
+GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 {
     Vd dir = pos + -camera;
     if(dir.z >= 0){//We are looking in the sky
@@ -94,6 +114,71 @@ Terrain::GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
     return GridPoint(x, y);
 }
 
+//------------------------------------------------------------------------------
+
+bool Terrain::placeStructure(GridPoint p, Handle<Structure> s){
+	multimap<GridPoint, StructureHandle>::iterator it;
+	it = structures.find(p);
+	if(it != structures.end()){
+		return false;
+	}
+	const GridPoint ip = GridPoint(p);
+	structures.insert(make_pair(ip, s));
+	return true;
+}
+
+//------------------------------------------------------------------------------
+
+DefenseTower::DefenseTower(int _height, BoundingBox B)
+		: Building(B,
+			0, 0,
+			0, 0,
+			0) 
+{
+	height = _height;
+}
+
+//------------------------------------------------------------------------------
+
+void DefenseTower::draw()
+{
+	glBegin(GL_QUADS);
+		//Front side
+		glNormal3i(0, -1, 0);
+		glTexCoord2i(0, 0);	glVertex3i(0, 0, 0);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, 0);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, 0, height);
+		glTexCoord2i(1, 0);	glVertex3i(0, 0, height);
+		
+		//Right side
+		glNormal3i(1, 0, 0);
+		glTexCoord2i(0, 0);	glVertex3i(GRID_SIZE, 0, 0);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, height);
+		glTexCoord2i(1, 0);	glVertex3i(GRID_SIZE, 0, height);
+		
+		//Back side
+		glNormal3i(0, 1, 0);
+		glTexCoord2i(0, 0);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
+		glTexCoord2i(0, 1);	glVertex3i(0, GRID_SIZE, 0);
+		glTexCoord2i(1, 1);	glVertex3i(0, GRID_SIZE, height);
+		glTexCoord2i(1, 0);	glVertex3i(GRID_SIZE, GRID_SIZE, height);
+		
+		//Left side
+		glNormal3i(-1, 0, 0);
+		glTexCoord2i(0, 0); glVertex3i(0, GRID_SIZE, 0);
+		glTexCoord2i(0, 1);	glVertex3i(0, 0, 0);
+		glTexCoord2i(1, 1);	glVertex3i(0, 0, height);
+		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, height);
+		
+		//Top side
+		glNormal3i(0, 0, 1);
+		glTexCoord2i(0, 0); glVertex3i(0, 0, height);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, height);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, height);
+		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, height);
+	glEnd();
+}
 
 //------------------------------------------------------------------------------
 

@@ -6,13 +6,42 @@
  * Description: Building and structural objects
  *
  */
-
+ 
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
+
+#include <stdio.h>
 
 namespace Objects {
 
 class Structure;
+class Building;
+class DefenseTower;
+
+typedef Handle<Structure> StructureHandle;
+
+//------------------------------------------------------------------------------
+
+//! Represents a point on a grid
+struct GridPoint
+{
+	int x, y;
+	
+	bool operator<(const GridPoint& p2) const
+	{
+		if(x < p2.x){
+			return true;
+		}else{
+			if(y < p2.y){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+	
+	GridPoint(int X = 0, int Y = 0) : x(X), y(Y) {}
+};
 
 //------------------------------------------------------------------------------
 
@@ -20,15 +49,6 @@ class Structure;
 class Terrain: public Object
 {
 	public:
-	
-	//! Represents a point on a grid
-	struct GridPoint
-	{
-		int x, y;
-		
-		GridPoint(int X = 0, int Y = 0) : x(X), y(Y) {}
-	};
-	
 	//! Size of the world in the X direction.
 
 	//! Needs to be a multiple GRID_SIZE
@@ -47,14 +67,22 @@ class Terrain: public Object
 	//! Whether or not to draw a grid on this terrain
 	bool showGrid;
 
-	//! Represents the \ref Structure "Structure" on the grid of the terrain
-	map<Point<double>, Structure> structures;
-
+	//! Represents the \ref Structure "Structures" on the grid of the terrain
+	multimap<GridPoint, StructureHandle> structures;
+	
 	//! Constructs a new Terrain
 	Terrain(double _width, double _height);
 
 	//! Draws the terrain
 	virtual void draw();
+	
+	//! Draw the terrains chidlren
+	virtual void postRender();
+	
+	//! Safe-places a Structure on the grid
+	
+	//! Returns false when adding fails
+	bool placeStructure(GridPoint p, Handle<Structure> s);
 
 	//! Gives the grid coordinates corresponding to a mouse click
 	GridPoint getGridCoordinates(Vd camera, Vd pos);
@@ -66,8 +94,8 @@ class Terrain: public Object
 class Structure: public BoundedObject
 {
 	public:
-	Structure(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-			: BoundedObject(P, R, B) {}
+	Structure(BoundingBox B = BoundingBox())
+			: BoundedObject(Pd(), Qd(), B) {}
 };
 
 //------------------------------------------------------------------------------
@@ -82,7 +110,7 @@ class Mine: public Structure
 		//! Constructs a new mine
 		Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
 		     Resource _maxIncome = 0)
-			: Structure(P, R, B), maxIncome(_maxIncome) {}
+			: Structure(B), maxIncome(_maxIncome) {}
 
 		//! Draws the mine
 		virtual void draw();
@@ -106,16 +134,16 @@ class Building: public Structure
 	Power attackPower;
 
 	//! Constructs a new building
-	Building(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
+	Building(BoundingBox B = BoundingBox(),
 	         Resource _cost = 0, Resource _income = 0, time_t _buildTime = 0,
 			 time_t _buildDuration = 0, Power _attackPower = 0)
-		: Structure(P, R, B),
+		: Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
 		  attackPower(_attackPower) {}
 
 	//! Draws the building
-	virtual void draw();
+	virtual void draw(){}
 
 };
 
@@ -125,11 +153,14 @@ class Building: public Structure
 class HeadQuarters: public Building
 {
 	public:
-	HeadQuarters(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-		: Building(P, R, B,
+	HeadQuarters(BoundingBox B = BoundingBox())
+		: Building(B,
 		  0, 0,
 		  0, 0,
 		  0) {}
+	
+		  
+	virtual void draw();
 };
 
 //------------------------------------------------------------------------------
@@ -137,12 +168,13 @@ class HeadQuarters: public Building
 //! Represents a defense tower
 class DefenseTower: public Building
 {
+	//! Height of this building in local object coordinates
+	int height;
+	
 	public:
-	DefenseTower(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-		: Building(P, R, B,
-		  0, 0,
-		  0, 0,
-		  0) {}
+	DefenseTower(int _height, BoundingBox B = BoundingBox());
+		  
+	virtual void draw();
 };
 
 //------------------------------------------------------------------------------
@@ -151,8 +183,8 @@ class DefenseTower: public Building
 class ResourceMine: public Building
 {
 	public:
-	ResourceMine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox())
-		: Building(P, R, B,
+	ResourceMine(BoundingBox B = BoundingBox())
+		: Building(B,
 		  0, 0,
 		  0, 0,
 		  0) {}

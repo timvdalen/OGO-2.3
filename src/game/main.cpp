@@ -322,13 +322,27 @@ void handleMouse(bool left){
 				Video::Viewport *v = window->viewports.front();
 				World *world = TO(World, v->world);
 				Camera &cam = v->camera;
-				Terrain::GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+				GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+				
+				Handle<Structure> tower = Objects::DefenseTower(10);
+				{
+					MaterialHandle m = TwinMaterial(ShadedMaterial(Cf(0.5, 0.5, 0.5, 1)), Assets::Test);
+					tower->material = m;
+				}
+				
+				bool done = world->terrain->placeStructure(clicked, tower);
 				
 				//Dit zou ik eigenlijk met std::to_string() willen doen
 				stringstream ss;
-				ss << "Gridpoint (" << clicked.x << ", " << clicked.y << ") was clicked";
+				if(done){
+					ss << "Tower placed at  (" << clicked.x << ", " << clicked.y << ")";
+				}else{
+					ss << "Tower place failed, already there at (" << clicked.x << ", " << clicked.y << ")";
+				}
 				
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+				
+				toggleBuild();
 			}
 		}else{
 			input->grabMouse();
