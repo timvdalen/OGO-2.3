@@ -181,7 +181,7 @@ void World::draw(){
 
 //------------------------------------------------------------------------------
 
-ObjectHandle World::trace(Point<double> origin, Vector<double> path)
+ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 {
 	// Todo: implement
 }
