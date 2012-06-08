@@ -250,6 +250,14 @@ void Frame()
 }
 
 //------------------------------------------------------------------------------
+void printFps(){
+    World *world = TO(World, (window->viewports.front())->world);
+    stringstream ss;
+    ss << "Current FPS: " << (double)fps;
+    world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+}
+
+//------------------------------------------------------------------------------
 
 void KeyUp(Button btn)
 {
@@ -276,7 +284,7 @@ void KeyDown(Button btn)
 	switch (btn)
 	{
 		case btnKeyEscape:  Video::StopEventLoop();              break;
-		case btnKeyF:       printf("FPS: %2.f\n", (double) fps); break;
+		case btnKeyF:       printFps();                          break;
 		case btnKeyB:       toggleBuild(); 						 break;
 		case btnMouseRight: handleMouse(false);               	 break;
 		case btnMouseLeft:  handleMouse(true);                   break;
