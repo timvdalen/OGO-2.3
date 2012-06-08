@@ -27,7 +27,7 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)CrossPlatform.o $(OBJDIR)materials.o $(OBJDIR)movement.o   \
            $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
            $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o                  \
-		   $(OBJDIR)loader3ds.o $(OBJDIR)structures.o
+		   $(OBJDIR)loader3ds.o $(OBJDIR)structures.o $(OBJDIR)world.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz -l3ds
@@ -135,3 +135,6 @@ $(OBJDIR)hud.o: hud.cpp
 
 $(OBJDIR)loader3ds.o: loader3ds.cpp
 	$(CPP) -c loader3ds.cpp -o $(OBJDIR)loader3ds.o $(CXXFLAGS) 
+	
+$(OBJDIR)world.o: world.cpp
+	$(CPP) -c world.cpp -o $(OBJDIR)world.o $(CXXFLAGS) 

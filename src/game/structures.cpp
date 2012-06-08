@@ -82,7 +82,7 @@ void Terrain::draw()
 Terrain::GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 {
     Vd dir = pos + -camera;
-    if(dir.z == 0){
+    if(dir.z >= 0){//We are looking in the sky
         return GridPoint(-1,-1);
     }
     double lambda = -camera.z / dir.z;
