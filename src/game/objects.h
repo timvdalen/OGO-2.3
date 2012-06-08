@@ -148,6 +148,20 @@ class LaserBeam: public BoundedObject
 
 //------------------------------------------------------------------------------
 
+//! Cube like object (it is in reality a parallelepiped) to test with
+struct Cuboid : public BoundedObject
+{
+	Vector<double> u, v, w;
+
+	Cuboid(Pd origin = Pd(), double S = 1);
+
+	void rotate(Quaternion<double> Q) { Qd q = ~Q; u = q*u ;v = q*v; w = q*w; }
+
+	virtual void draw();
+};
+
+//------------------------------------------------------------------------------
+
 } // namespace Objects
 
 #endif // _OBJECTS_H

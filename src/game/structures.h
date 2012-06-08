@@ -10,7 +10,7 @@
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
 
-#include <stdio.h>
+#define GRID_SIZE 10
 
 namespace Objects {
 
@@ -27,20 +27,9 @@ struct GridPoint
 {
 	int x, y;
 	
-	bool operator<(const GridPoint& p2) const
-	{
-		if(x < p2.x){
-			return true;
-		}else{
-			if(y < p2.y){
-				return true;
-			}else{
-				return false;
-			}
-		}
-	}
-	
 	GridPoint(int X = 0, int Y = 0) : x(X), y(Y) {}
+	
+	bool operator<(const GridPoint& p2) const;
 };
 
 //------------------------------------------------------------------------------
@@ -104,16 +93,16 @@ class Structure: public BoundedObject
 class Mine: public Structure
 {
 	public:
-		//! The maxium income that can be generated from this mine
-		Resource maxIncome;
+	//! The maxium income that can be generated from this mine
+	Resource maxIncome;
 
-		//! Constructs a new mine
-		Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-		     Resource _maxIncome = 0)
-			: Structure(B), maxIncome(_maxIncome) {}
+	//! Constructs a new mine
+	Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
+	     Resource _maxIncome = 0)
+		: Structure(B), maxIncome(_maxIncome) {}
 
-		//! Draws the mine
-		virtual void draw();
+	//! Draws the mine
+	virtual void draw();
 };
 
 //------------------------------------------------------------------------------

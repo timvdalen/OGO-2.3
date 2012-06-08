@@ -66,7 +66,7 @@ pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Ve
         for (it = children.begin(); it != children.end(); ++it){
             BoundedObject* child = TO(BoundedObject, *it);
             if(child){
-                pair<ObjectHandle, int> childcollision = child->findCollision(p, v);
+                pair<ObjectHandle, double> childcollision = child->findCollision(p, v);
                 if(childcollision.second < collision2){ //We have a collision with a child
                     colobject.clear();
                     collision2 = childcollision.second;
@@ -159,6 +159,48 @@ void Player::update(const Qd &camobj) {
 	}
 
 	head->rotation = camobj;
+}
+
+//------------------------------------------------------------------------------
+
+Cuboid::Cuboid(Pd origin, double S)
+	: BoundedObject(origin, Qd(), BoundingBox(), Assets::Test),
+	  u(Vd(S,0,0)),
+	  v(Vd(0,S,0)),
+	  w(Vd(0,0,S))
+{
+	// Define bounding box
+}
+
+//------------------------------------------------------------------------------
+
+void Cuboid::draw()
+{
+	#define Vert(v) { Pd vt = (v); glVertex3d(vt.x,vt.y,vt.z); }
+	#define Norm(u,v) { Vd n = ~((u)*(v)); glNormal3d(n.x,n.y,n.z); }
+	#define A { glTexCoord2d(0.0,0.0); }
+	#define B { glTexCoord2d(1.0,0.0); }
+	#define C { glTexCoord2d(1.0,1.0); }
+	#define D { glTexCoord2d(0.0,1.0); }
+
+	Pd o = Vd(0,0,0);
+	Pd a = o + u + v + w;
+
+	glBegin(GL_QUADS);
+		Norm(u,w); A Vert(o); B Vert(o+u); C Vert(o+u+w); D Vert(o+w);
+		Norm(v,u); A Vert(o); B Vert(o+v); C Vert(o+v+u); D Vert(o+u);
+		Norm(w,v); A Vert(o); B Vert(o+w); C Vert(o+w+v); D Vert(o+v);
+		Norm(u,v); A Vert(a); B Vert(a-u); C Vert(a-u-v); D Vert(a-v);
+		Norm(v,w); A Vert(a); B Vert(a-v); C Vert(a-v-w); D Vert(a-w);
+		Norm(w,u); A Vert(a); B Vert(a-w); C Vert(a-w-u); D Vert(a-u);
+	glEnd();
+
+	#undef Vert
+	#undef Norm
+	#undef A
+	#undef B
+	#undef C
+	#undef D
 }
 
 //------------------------------------------------------------------------------
