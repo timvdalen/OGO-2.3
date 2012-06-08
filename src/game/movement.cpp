@@ -13,11 +13,9 @@ namespace Movement {
 
 //------------------------------------------------------------------------------
 
-Controller::Controller(Camera &C, ObjectHandle P, double width, double height) : camera(C), player(P)
+Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	fps = false;
-    this->width = width;
-    this->height = height;
 	pos = player->origin;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
@@ -55,7 +53,7 @@ void Controller::moveX()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
-        if(!insideBounds(pos)){
+        if(!walkAble(posrollback, pos)){
             pos = posrollback;
             return;
         }
@@ -74,7 +72,7 @@ void Controller::moveX()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
-        if(!insideBounds(pos)){
+        if(!walkAble(posrollback, pos)){
             pos = posrollback;
             return;
         }
@@ -99,7 +97,7 @@ void Controller::moveY()
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
         
-        if(!insideBounds(pos)){
+        if(!walkAble(posrollback, pos)){
             pos = posrollback;
             return;
         }
@@ -115,7 +113,7 @@ void Controller::moveY()
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
-        if(!insideBounds(pos)){
+        if(!walkAble(posrollback, pos)){
             pos = posrollback;
             return;
         }
@@ -353,10 +351,32 @@ Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
 }
 
 //------------------------------------------------------------------------------
-bool Controller::insideBounds(Point<double> p){
-    return -width/2 < p.x && p.x < width/2//Inside x-interval
-        && -height/2 < p.y && p.y < height/2;//Inside y-interval
-        
+bool Controller::walkAble(Point<double> old, Point<double> updated){
+    World *w = TO(World, world);
+    if(!(-(w->width)/2 < updated.x && updated.x < (w->width)/2//Inside x-interval
+        && -(w->height)/2 < updated.y && updated.y < (w->height)/2))//Inside y-interval
+    {
+        return false;
+    }
+    Terrain *t = w->terrain; 
+    //TODO check every terrain item, we return false if and only if updated is in a object
+    //and old is not in that object
+    multimap<GridPoint, StructureHandle>::iterator it;
+	for(it = t->structures.begin(); it != t->structures.end(); it++){
+		GridPoint p = it->first;
+        double worldx = GRID_SIZE*p.x - w->width/2;
+        double worldy = GRID_SIZE*p.y - w->width/2;
+		//Process them
+        if(   worldx < updated.x && updated.x < worldx + GRID_SIZE
+           && worldy < updated.y && updated.y < worldy + GRID_SIZE//update in bounds
+           &&!(   worldx < old.x && old.x < worldx + GRID_SIZE
+               && worldy < old.y && old.y < worldy + GRID_SIZE )       //old not in bounds
+           ){
+            return false;
+        }
+	}
+    
+    return true;
 }
     
 //------------------------------------------------------------------------------
