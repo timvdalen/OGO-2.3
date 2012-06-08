@@ -219,13 +219,15 @@ void Controller::lookY()
 
 void Controller::lookZ()
 {
+    Qd buffer = camAngle;//Used to rollback if out of bounds
 	if (look[dirUp])
 	{
 		Vector<double> mystery = ~(camAngle * Vector<double>(0,1,0));
 		double mysteryYaw = atan2(mystery.x, mystery.y);
-
 		camAngle = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
-
+        if((camAngle*Vector<double>(0,1,0)).z > 0.99){
+            return;
+        }
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (fps == true)
@@ -245,7 +247,9 @@ void Controller::lookZ()
 		double mysteryYaw = atan2(mystery.x, mystery.y);
 
 		camAngle = Qd(Rd(-lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
-
+        if((camAngle*Vector<double>(0,1,0)).z < -0.99){
+            return;
+        }
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 		if (fps == true)
