@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <string>
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
@@ -32,11 +33,15 @@ map<Button,Direction> lookbind;
 map<Button,word> lookcount;
 FPS fps;
 ObjectHandle cube;
+bool building = false;
+bool lastview = false;
 
 void Frame();
 void KeyUp(Button btn);
 void KeyDown(Button btn);
 void MouseMove(word x, word y);
+void toggleBuild();
+void handleMouse(bool left);
 
 //------------------------------------------------------------------------------
 
@@ -130,9 +135,9 @@ int main(int argc, char *argv[])
 
 	{
 		World *w = TO(World, world);
-		w->terrain->showGrid = true;
-		w->terrain->selected.x = 4;
-		w->terrain->selected.y = 4;
+		w->hud->messageDisplayer->addMessage(SystemMessage("Loading assets..."));
+		w->hud->messageDisplayer->addMessage(SystemMessage("Everything loaded!"));
+		w->hud->messageDisplayer->addMessage(SystemMessage("Welcome to the game"));
 		w->children.insert(cube);
 	}
 
@@ -194,7 +199,8 @@ void Frame()
 	World *world = dynamic_cast<World *>(&*window->viewports[0]->world);
 	Camera &cam = window->viewports[0]->camera;
 	
-	world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+	if(building)
+		world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
 	
 	if (window->resized)
 	{
@@ -271,8 +277,9 @@ void KeyDown(Button btn)
 	{
 		case btnKeyEscape:  Video::StopEventLoop();              break;
 		case btnKeyF:       printf("FPS: %2.f\n", (double) fps); break;
-		case btnMouseRight: input->releaseMouse();               break;
-		case btnMouseLeft:  input->grabMouse();                  break;
+		case btnKeyB:       toggleBuild(); 						 break;
+		case btnMouseRight: handleMouse(false);               	 break;
+		case btnMouseLeft:  handleMouse(true);                   break;
 	}
 }
 
@@ -284,3 +291,47 @@ void MouseMove(word x, word y)
 }
 
 //------------------------------------------------------------------------------
+
+void toggleBuild(){
+	Video::Viewport *v = window->viewports.front();
+	World *world = TO(World, v->world);
+	Terrain *terrain = TO(Terrain, world->terrain);
+	
+	if(building){
+		terrain->showGrid = false;
+		//Restore view
+		controller->setView(lastview);
+	}else{
+		//Save view before entering building mode
+		lastview = controller->getView();
+		terrain->showGrid = true;
+		controller->setView(true);
+	}
+	building = !building;
+}
+
+//------------------------------------------------------------------------------
+
+void handleMouse(bool left){
+	//If this ever gets called from anywhere but KeyDown, remember to check
+	//For !input
+	if(left){
+		if(input->grabbing){
+			//Build something
+			Video::Viewport *v = window->viewports.front();
+			World *world = TO(World, v->world);
+			Camera &cam = v->camera;
+			Terrain::GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+			
+			//Dit zou ik eigenlijk met std::to_string() willen doen
+			stringstream ss;
+			ss << "Gridpoint (" << clicked.x << ", " << clicked.y << ") was clicked";
+			
+			world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
+		}else{
+			input->grabMouse();
+		}
+	}else{
+		input->releaseMouse();
+	}
+}

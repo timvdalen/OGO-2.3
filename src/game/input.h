@@ -55,6 +55,7 @@ class Input
 	word mouseX;    //!< Current horizontal mouse position
 	word mouseY;    //!< Current vertical mouse position
 	Window &window; //!< Assigned window
+	bool grabbing;  //!< If the mouse is grabbed or not
 	
 	void (*onKeyUp) (Button);             //!< Callback: a key was released
 	void (*onKeyDown) (Button);           //!< Callback: a key was pressed
@@ -71,7 +72,6 @@ class Input
 	private:
 	void *data;
 	double dx, dy;
-	bool grabbing;
 };
 
 //------------------------------------------------------------------------------
