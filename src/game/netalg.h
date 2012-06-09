@@ -93,6 +93,8 @@ class TokenRing
 	
 	bool select(int timeout = 0);
 	
+	void debug();
+	
 	private:
 	Clique *clique;
 	void *data;
