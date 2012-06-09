@@ -31,7 +31,7 @@ struct GridPoint
 	
 	bool operator<(const GridPoint& p2) const;
     
-    operator bool();
+    bool isValid();
 };
 
 //------------------------------------------------------------------------------

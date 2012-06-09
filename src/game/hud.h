@@ -14,6 +14,7 @@ using namespace Core;
 using namespace Objects;
 
 class MessageDisplayer;
+class StatusDisplayer;
 class CrossHair;
 class Widget;
 
@@ -29,9 +30,15 @@ class HUD: public Object{
 
 	//! The main MessageDisplayer for this HUD
 	MessageDisplayer *messageDisplayer;
-
+    
+    //!The main StatusDisplayer for this hhud
+    StatusDisplayer *statusDisplayer;
 	//! The main CrossHair for this HUD
 	CrossHair *crossHair;
+    
+    Player *currentPlayer;
+    
+    Team *currentTeam;
 
 	//! Constructs the HUD with width _width and height _height. 
 	HUD(int _width, int _height);
@@ -183,6 +190,20 @@ class CrossHair: public Widget{
 	virtual void draw();
 };
 
+class StatusDisplayer: public Widget{
+    public:
+        
+    Player* p;
+    Team* t;
+    //! Constructs the status displayer
+    StatusDisplayer(int _x, int _y, int _width, int _height, Team* _t, Player *_p);
+        
+    //! Displays the status
+    virtual void draw();
+    
+    //! Renders this object
+    virtual void render();
+};
 }
 
 #endif

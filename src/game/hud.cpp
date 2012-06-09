@@ -7,7 +7,7 @@
 #else
 	#include <GL/freeglut.h>
 #endif
-
+#include <sstream>
 #include "core.h"
 #include "materials.h"
 #include "hud.h"
@@ -32,12 +32,23 @@ int modulo(int a, int b)
 
 HUD::HUD(int _width, int _height){
 	resize(_width, _height);
-	
+	// TODO FIX FOLLOWING REFERENCES
+    currentPlayer = new Player();
+    currentPlayer->maxHealth = 100;
+    currentPlayer->health = 10;
+    currentTeam = new Team();
+    currentTeam->resources = 100;
+    //END TODO
 	ObjectHandle mdHandle;
 	mdHandle = MessageDisplayer(100, 100, -1, -1); //Don't limit size for now
 	messageDisplayer = dynamic_cast<MessageDisplayer *>(&*mdHandle);
 	children.insert(mdHandle);	
-
+    
+    ObjectHandle sdHandle;
+    sdHandle = StatusDisplayer(50,50, _width, _height, currentTeam, currentPlayer);
+    statusDisplayer = dynamic_cast<StatusDisplayer *>(&*mdHandle);
+	children.insert(sdHandle);	
+    
 	ObjectHandle chHandle;
 	chHandle = CrossHair(0, 0, _width, _height);
 	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
@@ -270,6 +281,180 @@ void CrossHair::draw(){
 }
 
 //------------------------------------------------------------------------------
+    
+    
+StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* _t, Player *_p) : Widget(_x, _y, _width, _height)
+    {
+        p = _p;
+        t = _t;
+    }
+    
+    
+    //------------------------------------------------------------------------------
+    //Should be splitted in subroutintes, to lazy atm
+    //Using the x and y coordinates can be done (and is not done)
+    //by using render and translating..., width and height can be scaled...
+    //Maybe also not use select, but that is a lot of work to revamp
+    //and only results in more beautifull code
+    void StatusDisplayer::draw(){
+        glRasterPos2i(0,0);
+        //Cache them somewere?
+        MaterialHandle bg = ColorMaterial(254.0/255.0, 251.0/255, 225.0/255.0,0.8f);
+        MaterialHandle white = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+        MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        MaterialHandle darkred = ColorMaterial(138.0/255.0,24.0/255.0,18.0/255.0,1.0);
+        MaterialHandle red = ColorMaterial(229.0/255.0,37.0/255.0,32.0/255.0,1.0);
+        MaterialHandle darkgreen = ColorMaterial(19.0/255.0,51.0/255.0,36.0/255.0, 1.0);
+        MaterialHandle green = ColorMaterial(156.0/255.0,202.0/255.0,135.0/255.0, 1.0);
+        bg->select();
+        //Draw background
+        glBegin(GL_QUADS);
+        glVertex2i(5,5);
+        glVertex2i(5,105);
+        glVertex2i(205,105);
+        glVertex2i(205,5);
+        glEnd();
+        bg->unselect();
+        //draw table lines
+        black->select();
+        glBegin(GL_LINE_STRIP);
+        glVertex2i(5,5);
+        glVertex2i(5,105);
+        glVertex2i(205,105);
+        glVertex2i(205,5);
+        glEnd();
+        glBegin(GL_LINES);
+        glVertex2i(60, 5);
+        glVertex2i(60,105);
+        glVertex2i(5, 55);
+        glVertex2i(205,55);
+        glEnd();
+        black->unselect();
+        //Draw money icon
+        Assets::Money->select();
+        glBegin(GL_QUADS);
+        glTexCoord2f(0,1);
+        glVertex2i(10,10);
+        glTexCoord2f(0,0);
+        glVertex2i(10,50);
+        glTexCoord2f(1,0);
+        glVertex2i(50,50);
+        glTexCoord2f(1,1);
+        glVertex2i(50,10);
+        glEnd();
+        Assets::Money->unselect();
+        //Draw Health icon
+        Assets::Health->select();
+        glBegin(GL_QUADS);
+        glTexCoord2f(0,0);
+        glVertex2i(10,60);
+        glTexCoord2f(0,1);
+        glVertex2i(10,100);
+        glTexCoord2f(1,1);
+        glVertex2i(50,100);
+        glTexCoord2f(1,0);
+        glVertex2i(50,60);
+        glEnd();
+        Assets::Health->unselect();
+        //Draw amount of money
+        black->select();
+        stringstream ss;
+        ss << t->resources << "f";
+		string message = ss.str();
+        glPushMatrix();
+        glTranslatef(65,45,0);
+        glScalef(0.25,-0.25,1);
+		glRasterPos2i(10, 15);
+        glLineWidth(2);
+		for(int count=0; count < message.length(); count++){
+			glutStrokeCharacter(GLUT_STROKE_ROMAN, message[count]);
+		}
+        glPopMatrix();
+        black->unselect();
+        //Draw Health-bar
+        black->select();
+        glLineWidth(5);
+        glBegin(GL_LINE_STRIP);
+        glVertex2i(70,65);
+        glVertex2i(70,95);
+        glVertex2i(170,95);
+        glVertex2i(170,65);
+        glVertex2i(70,65);
+        glEnd();
+        //round corners
+        glLineWidth(2);
+        glBegin(GL_LINE_STRIP);
+        glVertex2i(69,64);
+        glVertex2i(69,96);
+        glVertex2i(171,96);
+        glVertex2i(171,64);
+        glVertex2i(69,64);
+        glEnd();
+        black->unselect();
+        //red-background healthbar
+        red->select();
+        glBegin(GL_QUADS);
+        glVertex2i(72,67);
+        glVertex2i(72,93);
+        glVertex2i(168,93);
+        glVertex2i(168,67);
+        glEnd();
+        red->unselect();
+        darkred->select();
+        glBegin(GL_QUADS);
+        glVertex2i(75,70);
+        glVertex2i(75,90);
+        glVertex2i(165,90);
+        glVertex2i(165,70);
+        glEnd();
+        darkred->unselect();
+        //draw-live health bar
+        double factor = ((double)p->health)/((double)p->maxHealth);
+        green->select();
+        glBegin(GL_QUADS);
+        glVertex2i(72,67);
+        glVertex2i(72,93);
+        glVertex2i(72 + 96*factor,93);
+        glVertex2i(72 + 96*factor,67);
+        glEnd();
+        green->unselect();
+        if(96*factor > 6){//The rectangle has not been degenerated
+            darkgreen->select();
+            glBegin(GL_QUADS);
+            glVertex2i(75,70);
+            glVertex2i(75,90);
+            glVertex2i(69 + 96*factor,90);
+            glVertex2i(69 + 96*factor,70);
+            glEnd();
+            darkgreen->unselect();
+        }
+        //Draw line to distinct red part from green part
+        if(3 < 96*factor && 96*factor < 93){//Dont overwrite the green part with a line
+            glLineWidth(2);
+            black->select();
+            glBegin(GL_LINES);
+            glVertex2i(72+96*factor, 93);
+            glVertex2i(72+96*factor, 67);
+            glEnd();
+            black->unselect();
+        }
+        glLineWidth(1);
+    }
+    
+    void StatusDisplayer::render(){
+        glPushMatrix();
+        //Set to the right coordinates
+        //-10 because the draw() method has as upperright corner (10,10)
+        //If one wants to subtract minus 10 from all the vertices
+        //the statusbar would be as it should be..
+        glTranslatef(xOffset-10,yOffset-10,0);
+        //TODO scaling with width and height (is this actually needed)?
+        draw();
+        glPopMatrix();
+        
+    }
+    
+    //------------------------------------------------------------------------------
 
 } // namespace HUD_objects
 

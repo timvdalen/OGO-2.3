@@ -33,13 +33,12 @@ extern MaterialHandle Test;
 extern MaterialHandle Cloud;
 extern MaterialHandle Grass;
 
-extern MaterialHandle Head;
-extern MaterialHandle Body;
-extern MaterialHandle Gun;
-
 extern MaterialHandle Widget;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
+    
+extern MaterialHandle Money;
+extern MaterialHandle Health;
 
 //------------------------------------------------------------------------------
 
