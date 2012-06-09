@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	while (tr.connected())
 	{
 		if (queueing)
-			printf("> ");
+			printf(tr.authorized() ? "#> " : "> ");
 		
 		line = gets2(buffer, sizeof(buffer));
 		msg = line;
@@ -119,16 +119,10 @@ void *loop(void *data)
 	Message msg;
 	NodeID id;
 	bool reliable;
-	bool hadToken;
 	while (tr->connected())
 	{
 		pthread_testcancel();
 		tr->select();
-		
-		if (!hadToken && tr->authorized())
-			printf2("*** Token received ***\n");
-		
-		hadToken = tr->authorized();
 		
 		while (tr->entry(id))
 			printf2("*** Node #%d entered.\n", id);

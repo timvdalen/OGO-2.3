@@ -45,6 +45,7 @@ namespace Protocol {
 #define DECIDED (!td->deciding)
 #define INCOMMING (!td->entry.empty() || !td->loss.empty() || !td->msgs.empty())
 #define CONNECTED (clique && clique->connected())
+#define AUTHORIZED ((td->token == td->id) || td->nodes.empty())
 
 using namespace std;
 using namespace Net;
@@ -208,7 +209,7 @@ void TokenRing::close()
 	pthread_mutex_lock(&td->lock);
 	{
 		// Pass token
-		if (td->token == td->id)
+		if AUTHORIZED
 		{
 			msg.push_back((long) td->nextId());
 			clique->shout(msg);
@@ -244,7 +245,7 @@ bool TokenRing::authorized() const
 	
 	pthread_mutex_lock(&td->lock);
 	{
-		auth = (td->token == td->id);
+		auth = AUTHORIZED;
 	}
 	pthread_mutex_unlock(&td->lock);
 	
@@ -280,7 +281,7 @@ bool TokenRing::shout(const Message &msg, bool reliable)
 	
 	pthread_mutex_lock(&td->lock);
 	{
-		if (!reliable || (td->token == td->id))
+		if (!reliable || AUTHORIZED)
 			success = clique->shout(msg2);
 	}
 	pthread_mutex_unlock(&td->lock);
@@ -300,7 +301,7 @@ bool TokenRing::pass()
 	
 	pthread_mutex_lock(&td->lock);
 	{
-		if (td->token == td->id)
+		if AUTHORIZED
 		{
 			NodeID nextId = td->nextId();
 			msg.push_back((long) nextId);
@@ -419,7 +420,7 @@ void TokenRing::debug()
 	{
 		printf("Clique: ");
 		clique->debug();
-		printf("Ring: %c%d -- ", td->id == td->token ? '#' : ' ', td->id);
+		printf("Ring: %c%d -- ", AUTHORIZED ? '#' : ' ', td->id);
 		
 		map<Address,NodeID>::iterator it;
 		char ip[128];
@@ -531,11 +532,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 	if ((cmd == "#>") && (size == 1))      // Connection request
 	{
 		request.push(addr);
-		if (nodes.empty())
-		{
-			accept();
-			pthread_cond_broadcast(&incomming);
-		}
+		if (nodes.empty()) accept();
 	}
 	else if ((cmd == "#>") && (size > 1))  // Connection affirmation
 	{
@@ -649,7 +646,6 @@ void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 		
 		// Process a connection request
 		accept();
-		pthread_cond_broadcast(&incomming);
 	}
 	else if ((nextId == id) && (passId != id)) // node token expected
 	{
@@ -732,7 +728,13 @@ void TokenRingData::accept()
 	node.addr = remote;
 	nodes[newId] = node;
 	lookup[remote] = newId;
-	entry.push(newId);
+	
+	{
+		TokenRingData *td = this;
+		bool cond = INCOMMING;
+		entry.push(newId);
+		if (!cond) pthread_cond_broadcast(&incomming);
+	}
 }
 
 //------------------------------------------------------------------------------
