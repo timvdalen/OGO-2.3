@@ -92,6 +92,23 @@ class Team: public Object
 
 //------------------------------------------------------------------------------
 
+// These will be moved to player.h in the future
+
+enum ToolType
+{
+	toolNone,
+	toolSomething,
+	toolCount
+};
+
+enum WeaponType
+{
+	weapNone,
+	weapLaser,
+	weapWrench,
+	weapCount
+};
+
 //! Represents a player
 class Player: public BoundedObject
 {
@@ -118,13 +135,19 @@ class Player: public BoundedObject
 
 	//! The time of the last shot this player fired
 	time_t lastShot;
+	
+	//! Currently selected weapon to fire
+	WeaponType weapon;
+	
+	//! Currently selected building type to build
+	ToolType tool;
 
 	//! Velocity of the player (y-axis)
 	Vd velocity, oldVelocity;
 	static const Vd maxVelocity;
 
 	//! Model
-	ObjectHandle head, body, weapon, tool, wheel;
+	struct { ObjectHandle head, body, weapon, tool, wheel; } model;
 
 	//! Constructs a player
 	Player(Id _id = 0, unsigned char _team = 'a', string _name = "player", Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());

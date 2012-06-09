@@ -2,8 +2,12 @@
  * Movement module -- see header file for more info
  */
 
+#include <string.h>
+
+#include <limits>
+
 #include "movement.h"
-#include <iostream>
+
 namespace Movement {
 
 	double movespeed = 0.5;
