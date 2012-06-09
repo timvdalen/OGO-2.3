@@ -10,6 +10,8 @@
 #ifndef _WORLD_H
 #define _WORLD_H
 
+#include <vector>
+
 #include "objects.h"
 #include "structures.h"
 #include "hud.h"
@@ -39,12 +41,18 @@ class World: public BoundedObject
 
 	//! HUD associated with this World
 	HUD *hud;
-
+	
+	//! A vector of \ref LaserBeam "LaserBeams" in this World
+	vector<ObjectHandle> laserBeams;
+	
 	//! Constructs a new world
 	World(double _width, double _height);
 
 	//! Draws the world
 	virtual void draw();
+	
+	//! Renders the Worlds children (including those in laserBeams) and pops the matrix
+	virtual void postRender();
 	
 	//! Finds the first colliding object going from a point in a direction 
 	//! \par origin will define the starting point in the world for the lookpath
@@ -54,6 +62,10 @@ class World: public BoundedObject
 	//!       to the vector pointing to collision spot
 	//! \returns the first colliding object or an empty handle when no object was found
 	ObjectHandle trace(Point<double> origin, Vector<double> &path);
+	
+	//! Adds a LaserBeam to this World
+	void addLaserBeam(ObjectHandle laserBeam);
+	
 };
 
 //------------------------------------------------------------------------------

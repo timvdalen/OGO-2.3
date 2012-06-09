@@ -308,7 +308,8 @@ void handleMouse(bool left){
 				//This translation was copied from Player::translateModel
 				//That information should be accessible
 				Pd gunLoc = p->origin + Vd(-0.499,-0.037,1.333);
-				controller->world->children.insert(LaserBeam(gunLoc, -controller->camera.objective * Vd(0,10,0)));
+				World *w = TO(World, controller->world);
+				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, -controller->camera.objective * Vd(0,10,0))));
 			}
 		}else{
 			input->grabMouse();

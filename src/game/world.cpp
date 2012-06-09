@@ -2,6 +2,8 @@
  * World object -- see header file for more info
  */
 
+#include <vector>
+
 #include "world.h"
 
 namespace Objects {
@@ -98,9 +100,44 @@ void World::draw(){
 
 //------------------------------------------------------------------------------
 
+void World::postRender(){
+	//Check for the ttl of all active LaserBeams and render them
+	vector<ObjectHandle>::iterator it;
+	for(it = laserBeams.begin(); it != laserBeams.end(); ){
+		LaserBeam *curr = TO(LaserBeam, *it);
+		if(!curr){
+			//This situation can only happen when an ObjectHandle is manually
+			//added to laserBeams
+			it = laserBeams.erase(it);
+		}else{
+			if(curr->done){
+				it = laserBeams.erase(it);
+			}else{
+				curr->render();
+				it++;
+			}
+		}
+	}
+	
+	//Go on to render children and pop matrix
+	Object::postRender();
+}
+
+//------------------------------------------------------------------------------
+
 ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 {
 	// Todo: implement
+}
+
+//------------------------------------------------------------------------------
+
+void World::addLaserBeam(ObjectHandle laserBeam){
+	LaserBeam *lb = TO(LaserBeam, laserBeam);
+	//Check if the ObjectHandle passed actually points to a LaserBeam
+	if(lb){
+		laserBeams.push_back(laserBeam);
+	}
 }
 
 //------------------------------------------------------------------------------
