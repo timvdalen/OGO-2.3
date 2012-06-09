@@ -30,6 +30,8 @@ struct GridPoint
 	GridPoint(int X = 0, int Y = 0) : x(X), y(Y) {}
 	
 	bool operator<(const GridPoint& p2) const;
+    
+    operator bool();
 };
 
 //------------------------------------------------------------------------------

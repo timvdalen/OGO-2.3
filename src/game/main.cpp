@@ -273,9 +273,7 @@ void handleMouse(bool left){
 					tower->material = m;
 				}
                 stringstream ss;
-                int noX = (int) world->width / GRID_SIZE;
-                int noY = (int) world->height / GRID_SIZE;
-                if(clicked.x < 0 || clicked.y < 0 || clicked.x >= noX || clicked.y >= noY){
+                if(clicked){
                     ss << "Invalid Place selected, building aborted";
                 }else{
                     bool done = world->terrain->placeStructure(clicked, tower);

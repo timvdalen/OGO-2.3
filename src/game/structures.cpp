@@ -26,6 +26,12 @@ bool GridPoint::operator<(const GridPoint& p2) const
 		}
 	}
 }
+//------------------------------------------------------------------------------
+
+GridPoint::operator bool()
+{
+    return x == -1 && y == -1;
+}
 
 //------------------------------------------------------------------------------
 
@@ -116,6 +122,8 @@ void Terrain::postRender()
 
 //! This function draws the line from camera to pos. It then finds the intersection
 //! with the ground: the corresponding grid coordinates are returned.
+//! If there is no intersection within the bounds of the grounds
+//! a gridPoint(-1,-1) is returned
 GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 {
     Vd dir = pos + -camera;
@@ -125,9 +133,14 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
     double lambda = -camera.z / dir.z;
     double intersecx = camera.x + dir.x * lambda;
     double intersecy = camera.y + dir.y * lambda;
-
+    
+    int noX = (int) width / GRID_SIZE;
+    int noY = (int) height / GRID_SIZE;
     int x = (int) (floor(intersecx / (double) GRID_SIZE) + width/(2*GRID_SIZE));
     int y = (int) (floor(intersecy / (double) GRID_SIZE) + height/(2*GRID_SIZE));
+    if(x < 0 || y < 0 || x >= noX || y >= noY){
+        return GridPoint(-1,-1);
+    }
     return GridPoint(x, y);
 }
 
