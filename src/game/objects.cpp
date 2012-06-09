@@ -4,6 +4,7 @@
 
 #include <stack>
 #include <limits>
+#include <stdio.h>
 
 #include "objects.h"
 #include "structures.h"
@@ -159,6 +160,67 @@ void Player::update(const Qd &camobj) {
 	}
 
 	head->rotation = camobj;
+}
+
+//------------------------------------------------------------------------------
+
+LaserBeam::LaserBeam(Pd _origin, Vd _direction, int _fireTime, int _ttl)
+	: Object(_origin), direction(_direction)
+{
+	fireTime = _fireTime;
+	ttl = _ttl;
+	done = false;
+}
+
+//------------------------------------------------------------------------------
+
+void LaserBeam::preRender(){
+	int timelived = Video::ElapsedTime() - fireTime;
+	if(timelived >= ttl){
+		done = true;
+		return;
+	}
+	MaterialHandle lm;
+	if(timelived < 0.33*ttl){
+		//Fade in
+		float alpha = ((1.0/ttl)/0.33)*timelived;
+		lm = TwinMaterial(GridMaterial(1),
+				ShadedMaterial(Cf(0.2,0.8,0.2,alpha), //Ambient
+							   Cf(0.2,0.8,0.2,alpha), //Diffuse
+							   Cf(0.2,0.8,0.2,alpha), //Specular
+							   Cf(0.8,1,0,alpha),     //Emissive
+							   100.0));           //Shininess
+	}else if(timelived < 0.66*ttl){
+		lm = TwinMaterial(GridMaterial(2),
+				ShadedMaterial(Cf(0.2,0.8,0.2,1), //Ambient
+							   Cf(0.2,0.8,0.2,1), //Diffuse
+							   Cf(0.2,0.8,0.2,1), //Specular
+							   Cf(0.8,1,0,1),     //Emissive
+							   100.0));           //Shininess
+	}else{
+		//Fade out
+		float alpha = ((-1*(1.0/ttl)/0.33)*timelived + 3);
+		lm = TwinMaterial(GridMaterial(1),
+				ShadedMaterial(Cf(0.2,0.8,0.2,alpha), //Ambient
+							   Cf(0.2,0.8,0.2,alpha), //Diffuse
+							   Cf(0.2,0.8,0.2,alpha), //Specular
+							   Cf(0.8,1,0,alpha),     //Emissive
+							   100.0));           //Shininess
+	}
+	
+	material = lm;
+	
+	Object::preRender();
+}
+
+//------------------------------------------------------------------------------
+
+void LaserBeam::draw(){
+	glBegin(GL_LINES);
+		glVertex3f(0.0, 0.0, 0.0);
+		Vd endpoint = direction*10;
+		glVertex3f(endpoint.x, endpoint.y, endpoint.z);
+	glEnd();
 }
 
 //------------------------------------------------------------------------------

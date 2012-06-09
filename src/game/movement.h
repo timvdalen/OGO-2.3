@@ -56,7 +56,8 @@ class Controller
 	Controller(Camera &C, ObjectHandle P, ObjectHandle W);
 	
 	void frame();         //!< Called everytime a frame passes in game
-	
+    void avoidPulverizebyBuilding();
+    
 	private:
 	Point<double> pos;
 	Qd camAngle;
