@@ -81,15 +81,18 @@ int main(int argc, char *argv[])
 			string cmd = msg[0];
 			if ((cmd == "!exit") || (cmd == "!close"))
 				tr.close();
-			//else if (cmd == "!list")
-			//	tr.debug();
+			else if (cmd == "!pass")
+				tr.pass();
+			else if (cmd == "!list")
+				tr.debug();
 			else if ((cmd == "!connect") && (msg.size() > 1))
 				tr.connect(Address(string(msg[1]).c_str()));
 		}
 		else if (line[0] == '#')
 		{
 			msg[0].str.erase(0,1);
-			tr.shout(msg, true);
+			if (!tr.shout(msg, true))
+				puts("*** Not allowed ***");
 		}
 		else
 			tr.shout(msg, false);
@@ -116,10 +119,16 @@ void *loop(void *data)
 	Message msg;
 	NodeID id;
 	bool reliable;
+	bool hadToken;
 	while (tr->connected())
 	{
 		pthread_testcancel();
 		tr->select();
+		
+		if (!hadToken && tr->authorized())
+			printf2("*** Token received ***\n");
+		
+		hadToken = tr->authorized();
 		
 		while (tr->entry(id))
 			printf2("*** Node #%d entered.\n", id);
