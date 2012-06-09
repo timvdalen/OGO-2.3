@@ -5,6 +5,14 @@
 #include <stack>
 #include <limits>
 
+#if defined _WIN32
+#include <gl\freeglut.h>
+#elif defined __APPLE__
+#include <GL/freeglut.h>
+#else
+#include <GL/freeglut.h>
+#endif
+
 #include "objects.h"
 #include "structures.h"
 #include "video.h"
@@ -159,6 +167,58 @@ void Player::update(const Qd &camobj) {
 	}
 
 	model.head->rotation = camobj;
+}
+
+//------------------------------------------------------------------------------
+    
+void applyBillboarding(){
+    float m[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX , m);
+        //set look and up-vector to identity vertices
+    float billBoardedMatrix[16] = { 1   ,     0,     0,   m[3],
+                                    m[4],  m[5],  m[6],   m[7],
+                                       0,     0,     1,  m[11],
+                                   m[12], m[13], m[14],  m[15]};
+    glLoadMatrixf(billBoardedMatrix);     
+}
+    
+    //TODO: Color for teams, for ferry maybe use projection matrix
+void Player::render(){
+    glDisable(GL_LIGHTING);
+    MaterialHandle teamcolor = ColorMaterial(0.0, 1.0, 0.0,1.0f);
+    glPushMatrix();
+    glLineWidth(5);
+    glTranslated(origin.x,origin.y,origin.z+4);
+    glRotated(90,1,0,0);//Revert custom axis
+    glPushMatrix();
+    applyBillboarding();
+    glScaled(0.01, 0.01, 0.01);    //Scale down
+    double w = glutStrokeLength(GLUT_STROKE_ROMAN, 
+                               reinterpret_cast<const unsigned char *> (name.c_str()));
+    glColor4d(0,1,0,1);
+    //Translate to center
+    glTranslated(-w/2,0,0);
+    for(int count=0; count < name.length(); count++){
+         glutStrokeCharacter(GLUT_STROKE_ROMAN, name[count]);
+    }
+    glPopMatrix();
+    glTranslated(0,-1.5,0);//Translate down in !typical! axis world
+    applyBillboarding();
+    glScaled(0.01, 0.01, 0.01);
+    string teamstring = "<";
+    teamstring+=(char) team;
+    teamstring+=">";
+    w = glutStrokeLength(GLUT_STROKE_ROMAN, 
+                        reinterpret_cast<const unsigned char *> (teamstring.c_str()));
+    glTranslated(-w/2,0,0);
+    for(int count=0; count < teamstring.length(); count++){
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, teamstring[count]);
+    }
+    glLineWidth(1);
+    teamcolor->unselect();
+    glPopMatrix();
+    glEnable(GL_LIGHTING);
+    Object::render();
 }
 
 //------------------------------------------------------------------------------
