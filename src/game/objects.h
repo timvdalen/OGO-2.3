@@ -26,7 +26,7 @@ using namespace Core;
 using namespace Base::Alias;
 using namespace Materials;
 
-class BoundedObject;typedef Handle<BoundedObject> BoundedObjectHandle;
+class BoundedObject;
 class Terrain;
 class Player;
 
