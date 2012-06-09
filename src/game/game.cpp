@@ -18,6 +18,8 @@ using namespace Protocol;
 
 string to_lower_case(string str);
 
+GameState game;
+
 //------------------------------------------------------------------------------
 
 class Command
@@ -210,6 +212,18 @@ void Build()
 CMD(Weapon, 1, arg, (WeaponType) (int) arg[0])
 void Weapon(WeaponType weapon)
 {
+	WeaponType prevWeapon = game.player->weapon;
+	if (prevWeapon == weapon) return;
+	
+	game.player->weapon = weapon;
+	if (weapon == weapWrench)
+	{
+		// Goto build mode
+	}
+	else if (prevWeapon == weapWrench)
+	{
+		// Leave build mode
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -217,6 +231,10 @@ void Weapon(WeaponType weapon)
 CMD(Tool, 1, arg, (ToolType) (int) arg[0])
 void Tool(ToolType tool)
 {
+	ToolType prevTool = game.player->tool;
+	if (prevTool == tool) return;
+	
+	game.player->tool = tool;
 }
 
 //------------------------------------------------------------------------------

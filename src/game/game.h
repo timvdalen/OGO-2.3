@@ -16,9 +16,12 @@
 #include "objects.h"
 #include "world.h"
 
+//! Definition of the game action
+//! \warning Do not use anything if not initialized \see Initialize
 namespace Game {
 
 using namespace Core;
+using namespace Objects;
 
 //------------------------------------------------------------------------------
 
@@ -34,29 +37,13 @@ bool Callable(std::string command);
 
 //------------------------------------------------------------------------------
 
+//! Game state data set
 struct GameState
 {
-	ObjectHandle world;
-	ObjectHandle player;
+	World *world;
+	Player *player;
 	string gameName;
-};
-
-//------------------------------------------------------------------------------
-
-// I guess these should be moved to player
-
-enum ToolType
-{
-	toolNone,
-	toolSomething
-};
-
-enum WeaponType
-{
-	weapNone,
-	weapLaser,
-	weapWrench
-};
+} extern game; //! Current game state
 
 //------------------------------------------------------------------------------
 // General

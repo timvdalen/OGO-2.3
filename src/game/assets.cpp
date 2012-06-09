@@ -77,10 +77,6 @@ void Initialize(int argc, char *argv[])
 
 	WorldMaterial = TwinMaterial(Cloud, ShadedMaterial(Cf(0.5, 0.5, 0.5, 1.0)));
 
-	Head = TexturedMaterial(path + "assets/textures/models/headtext.png");
-	Body = TexturedMaterial(path + "assets/textures/models/robottex.png");
-	Gun = TexturedMaterial(path + "assets/textures/models/guntextu.png");
-
 	Widget =  ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
@@ -91,6 +87,10 @@ void Initialize(int argc, char *argv[])
 	GunObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/gun.3DS");
 	WrenchObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wrench.3DS");
 	WheelObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wheel.3DS");
+	
+	HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
+	BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
+	GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 }
 
 //------------------------------------------------------------------------------
