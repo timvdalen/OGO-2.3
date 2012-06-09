@@ -34,6 +34,7 @@ extern MaterialHandle Cloud;
 extern MaterialHandle Grass;
 
 extern MaterialHandle Widget;
+extern MaterialHandle WidgetBG;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
     

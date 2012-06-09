@@ -31,6 +31,7 @@ MaterialHandle Money;
 MaterialHandle Health;
 
 MaterialHandle Widget;
+MaterialHandle WidgetBG;
 MaterialHandle Font;
 MaterialHandle CrossHair;
 
@@ -77,6 +78,7 @@ void Initialize(int argc, char *argv[])
 	WorldMaterial = TwinMaterial(Cloud, ShadedMaterial(Cf(0.5, 0.5, 0.5, 1.0)));
 
 	Widget =  ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+	WidgetBG = ColorMaterial(0.184f, 0.31f, 0.31f, 0.7f);
 	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
     

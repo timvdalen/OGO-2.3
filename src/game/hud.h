@@ -204,6 +204,26 @@ class StatusDisplayer: public Widget{
     //! Renders this object
     virtual void render();
 };
+
+class TextInput: public Widget{
+	//! The text thas has been types
+	string buffer;
+	
+	public:
+	
+	//! The function to call when the TextInput finishes
+	void (*onFinish) (string input);
+	
+	//! Constructs a new TextInput widget
+	TextInput(void (*_onFinish) (string), int _x, int _y, int _width, int _height);
+	
+	//! Receive new input
+	void receiveInput(int inChar);
+	
+	//! Displays the TextInput
+	void draw();
+};
+
 }
 
 #endif

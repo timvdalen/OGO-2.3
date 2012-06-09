@@ -99,7 +99,7 @@ bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b)
 //------------------------------------------------------------------------------
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBox B) : BoundedObject(P, R, B) {
-	id = id;
+	id = _id;
 	team = _team;
 	name = _name;
 

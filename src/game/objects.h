@@ -150,7 +150,7 @@ class Player: public BoundedObject
 	struct { ObjectHandle head, body, weapon, tool, wheel; } model;
 
 	//! Constructs a player
-	Player(Id _id = 0, unsigned char _team = 'a', string _name = "player", Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
+	Player(Id _id = (Id)0, unsigned char _team = 'a', string _name = "player", Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
 
 	//! Update model transformations according to velocity and the camera direction
 	void update(const Qd &camobj);

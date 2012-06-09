@@ -454,7 +454,50 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         
     }
     
-    //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+TextInput::TextInput(void (*_onFinish) (string), int _x, int _y, int _width, int _height)
+	: Widget(_x, _y, _width, _height, Assets::WidgetBG)
+{
+	onFinish = _onFinish;
+}
+
+//------------------------------------------------------------------------------
+
+void TextInput::receiveInput(int inChar){
+	#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
+	if(inChar == 13){
+		CALL(onFinish, buffer);
+	}else if(inChar == 27){
+		CALL(onFinish, "");
+	}else{
+		buffer += (char)inChar;
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void TextInput::draw(){
+	//TODO: This should be implemented in Widget::preRender() and Widget::postRender()
+	glPushMatrix();
+		
+		glTranslatef(xOffset, yOffset, 0);
+		glBegin(GL_QUADS);
+			glVertex2f(0.30*width, 0.45*height);
+			glVertex2f(0.30*width, 0.55*height);
+			glVertex2f(0.70*width, 0.55*height);
+			glVertex2f(0.70*width, 0.45*height);
+		glEnd();
+		Assets::Font->select();
+		glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height);
+		for(int count=0; count < buffer.length(); count++){
+			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, buffer[count]);
+		}
+		
+	glPopMatrix();
+}
+
+//------------------------------------------------------------------------------
 
 } // namespace HUD_objects
 
