@@ -29,6 +29,8 @@ enum Button
 	btnMouseScrollDown, btnMouseMoveLeft, btnMouseMoveRight, btnMouseMoveUp,
 	btnMouseMoveDown,
 	
+	btnEnter = 13,
+	
 	btnKeySpace = 32, btnKeyEscape = 27,
 	
 	btnKey0 = 48, btnKey1, btnKey2, btnKey3, btnKey4, btnKey5, btnKey6,

@@ -149,6 +149,8 @@ void keyboard_down_event(unsigned char key, int x, int y)
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyDown, (Button) (key))
 	else if ((key == ' ') || (key == '\e'))
+		CALL(input->onKeyDown, (Button) key)
+	else if ((int)key == 13)
 		CALL(input->onKeyDown, (Button) key);
 }
 
@@ -164,6 +166,8 @@ void keyboard_up_event(unsigned char key, int x, int y)
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyUp, (Button) (key))
 	else if ((key == ' ') || (key == '\e'))
+		CALL(input->onKeyUp, (Button) key)
+	else if ((int)key == 13)
 		CALL(input->onKeyUp, (Button) key);
 }
 
