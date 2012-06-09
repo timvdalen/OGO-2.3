@@ -23,6 +23,7 @@
 #include "video.h"
 #include "input.h"
 #include "movement.h"
+#include "game.h"
 
 using namespace Core;
 using namespace Base::Alias;
@@ -80,6 +81,8 @@ int main(int argc, char *argv[])
 	window->viewports.push_back(&v1);
 
 	Assets::Initialize(argc, argv); // after the viewports have been initialized!
+	
+	Game::Initialize(argc, argv);
 
 	v1.camera.origin = Pd(0,0.1,0);
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
@@ -140,7 +143,18 @@ int main(int argc, char *argv[])
 	lookbind[btnKeyZ] = dirBackward;
 
 	OnFrame = Frame;
-
+	
+	/** /
+	char buffer[512];
+	while (fgets(buffer, sizeof (buffer), stdin))
+	{
+		size_t len = strlen(buffer);
+		if (buffer[len-1] == '\n') buffer[--len] = 0;
+		if (buffer[len-1] == '\r') buffer[--len] = 0;
+		Game::Call(buffer);
+	}
+	/**/
+	
 	Video::StartEventLoop();
 
 	puts("Press any key...");

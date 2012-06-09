@@ -231,7 +231,14 @@ Cuboid::Cuboid(Pd origin, double S)
 	  v(Vd(0,S,0)),
 	  w(Vd(0,0,S))
 {
-	// Define bounding box
+	bb.lbl = origin         ;
+	bb.rbl = origin +u      ;
+	bb.ltl = origin    +v   ;
+	bb.rtl = origin +u +v   ;
+	bb.lbh = origin       +w;
+	bb.rbh = origin +u    +w;
+	bb.lth = origin    +v +w;
+	bb.rth = origin +u +v +w;
 }
 
 //------------------------------------------------------------------------------
