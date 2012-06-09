@@ -7,6 +7,7 @@
 
 #include <algorithm>
 
+#include "video.h"
 #include "protocol.h"
 #include "game.h"
 
@@ -88,7 +89,7 @@ bool Callable(std::string command)
 
 string to_lower_case(string str)
 {
-	transform(str.begin(), str.end(), str.begin(), tolower);
+	transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
 }
 
@@ -98,6 +99,124 @@ CMD(Echo, 1, arg, (string) arg[0])
 void Echo(string msg)
 {
 	puts(msg.c_str());
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Quit, 0, arg)
+void Quit()
+{
+	Video::StopEventLoop();
+}
+
+//------------------------------------------------------------------------------
+
+CMD(RQuit, 0, arg, (arg.size() < 1 ? "AAAAaaaRRGG!!" : arg[0]))
+void RQuit(string msg)
+{
+	Say(msg);
+	
+	// Let player explode
+	
+	Quit();
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Connect, 1, arg, (string) arg[0])
+void Connect(string address)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Say, 1, arg, (string) arg[0])
+void Say(string msg)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(TeamSay, 1, arg, (string) arg[0])
+void TeamSay(string msg)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(MoveX, 1, arg, (double) arg[0])
+void MoveX(double speed)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(MoveY, 1, arg, (double) arg[0])
+void MoveY(double speed)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(MoveZ, 1, arg, (double) arg[0])
+void MoveZ(double speed)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(LookX, 1, arg, (double) arg[0])
+void LookX(double speed)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(LookY, 1, arg, (double) arg[0])
+void LookY(double speed)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(LookZ, 1, arg, (double) arg[0])
+void LookZ(double speed)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Jump, 0, arg)
+void Jump()
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Fire, 0, arg)
+void Fire()
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Build, 0, arg)
+void Build()
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Weapon, 1, arg, (WeaponType) (int) arg[0])
+void Weapon(WeaponType weapon)
+{
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Tool, 1, arg, (ToolType) (int) arg[0])
+void Tool(ToolType tool)
+{
 }
 
 //------------------------------------------------------------------------------

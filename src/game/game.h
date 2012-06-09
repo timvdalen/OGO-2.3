@@ -43,7 +43,59 @@ struct GameState
 
 //------------------------------------------------------------------------------
 
-void Echo(string msg); //!< Prints a message in the hud
+// I guess these should be moved to player
+
+enum ToolType
+{
+	toolNone,
+	toolSomething
+};
+
+enum WeaponType
+{
+	weapNone,
+	weapLaser,
+	weapWrench
+};
+
+//------------------------------------------------------------------------------
+// General
+
+void Echo(string msg);  //!< Prints a message in the hud
+
+void Quit();            //!< Quits to game
+void RQuit(string msg); //!< Rage quits with the supplied swear words
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// Network
+
+void Connect(string address); //!< Connects to the specified address
+
+void Say(string msg);         //!< Sends a chat message to all
+void TeamSay(string msg);     //!< Sends a chat message to all team members
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// Movement
+//! \invariant (0.0 <= speed <= 1.0)
+
+void MoveX(double speed); //!< Moves the player left and right
+void MoveY(double speed); //!< Moves the player forward and backward
+void MoveZ(double speed); //!< Moves the player up and down
+
+void LookX(double speed); //!< Looks left and right
+void LookY(double speed); //!< Zooms in and out
+void LookZ(double speed); //!< Looks up and down
+
+void Jump(); //!< Makes the player jump (possibly not implemented)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// Player actions
+
+void Fire();  //!< Fires the primary weapon in the current look direction
+void Build(); //!< Builds with the primary tool at the seelcted grid unit
+
+void Weapon(WeaponType weapon); //!< Sets the primary weapon
+void Tool(ToolType tool);       //!< Sets the primary build tool
 
 //------------------------------------------------------------------------------
 
