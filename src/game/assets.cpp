@@ -30,6 +30,9 @@ MaterialHandle Grass;
 MaterialHandle Head;
 MaterialHandle Body;
 MaterialHandle Gun;
+    
+MaterialHandle Money;
+MaterialHandle Health;
 
 MaterialHandle Widget;
 MaterialHandle Font;
@@ -84,7 +87,9 @@ void Initialize(int argc, char *argv[])
 	Widget =  ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
-
+    
+    Money = TexturedMaterial(path + "assets/textures/hud/money.png");
+    Health = TexturedMaterial(path+ "assets/textures/hud/health.png");
 
 	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
 	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");

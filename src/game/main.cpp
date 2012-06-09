@@ -273,7 +273,7 @@ void handleMouse(bool left){
 					tower->material = m;
 				}
                 stringstream ss;
-                if(clicked){
+                if(clicked.isValid()){
                     ss << "Invalid Place selected, building aborted";
                 }else{
                     bool done = world->terrain->placeStructure(clicked, tower);
@@ -286,13 +286,12 @@ void handleMouse(bool left){
                     }
 				}
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
-				
+                controller->avoidPulverizebyBuilding();
 				toggleBuild();
 			}else{
 				//Shoot
 				Player *p = TO(Player, controller->player);
 				controller->world->children.insert(LaserBeam(p->origin, Vd(0.57, 0.57, -0.57)));
-                controller->avoidPulverizebyBuilding();
 			}
 		}else{
 			input->grabMouse();

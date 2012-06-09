@@ -40,6 +40,9 @@ extern MaterialHandle Gun;
 extern MaterialHandle Widget;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
+    
+extern MaterialHandle Money;
+extern MaterialHandle Health;
 
 //------------------------------------------------------------------------------
 
