@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	while (tr.connected())
 	{
 		if (queueing)
-			printf("> ");
+			printf(tr.authorized() ? "#> " : "> ");
 		
 		line = gets2(buffer, sizeof(buffer));
 		msg = line;
@@ -81,15 +81,18 @@ int main(int argc, char *argv[])
 			string cmd = msg[0];
 			if ((cmd == "!exit") || (cmd == "!close"))
 				tr.close();
-			//else if (cmd == "!list")
-			//	tr.debug();
+			else if (cmd == "!pass")
+				tr.pass();
+			else if (cmd == "!list")
+				tr.debug();
 			else if ((cmd == "!connect") && (msg.size() > 1))
 				tr.connect(Address(string(msg[1]).c_str()));
 		}
 		else if (line[0] == '#')
 		{
 			msg[0].str.erase(0,1);
-			tr.shout(msg, true);
+			if (!tr.shout(msg, true))
+				puts("*** Not allowed ***");
 		}
 		else
 			tr.shout(msg, false);
