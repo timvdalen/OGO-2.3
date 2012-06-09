@@ -18,8 +18,6 @@ class Structure;
 class Building;
 class DefenseTower;
 
-typedef Handle<Structure> StructureHandle;
-
 //------------------------------------------------------------------------------
 
 //! Represents a point on a grid
@@ -59,7 +57,7 @@ class Terrain: public Object
 	bool showGrid;
 
 	//! Represents the \ref Structure "Structures" on the grid of the terrain
-	multimap<GridPoint, StructureHandle> structures;
+	multimap<GridPoint, ObjectHandle> structures;
 	
 	//! Constructs a new Terrain
 	Terrain(double _width, double _height);
@@ -73,7 +71,7 @@ class Terrain: public Object
 	//! Safe-places a Structure on the grid
 	
 	//! Returns false when adding fails
-	bool placeStructure(GridPoint p, Handle<Structure> s);
+	bool placeStructure(GridPoint p, ObjectHandle s);
 
 	//! Gives the grid coordinates corresponding to a mouse click
 	GridPoint getGridCoordinates(Vd camera, Vd pos);

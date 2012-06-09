@@ -105,10 +105,10 @@ void Terrain::draw()
 
 void Terrain::postRender()
 {
-	multimap<GridPoint, StructureHandle>::iterator it;
+	multimap<GridPoint, ObjectHandle>::iterator it;
 	for(it = structures.begin(); it != structures.end(); it++){
 		GridPoint p = it->first;
-		StructureHandle s = it->second;
+		ObjectHandle s = it->second;
 		glPushMatrix();
 			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 			s->render();
@@ -146,8 +146,8 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 
 //------------------------------------------------------------------------------
 
-bool Terrain::placeStructure(GridPoint p, Handle<Structure> s){
-    multimap<GridPoint, StructureHandle>::iterator it;
+bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
+    multimap<GridPoint, ObjectHandle>::iterator it;
     it = structures.find(p);
 	if(it != structures.end()){
 		return false;

@@ -354,7 +354,7 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     Terrain *t = w->terrain; 
     //check every terrain item, we return false if and only if updated is in a object
     //and old is not in that object
-    multimap<GridPoint, StructureHandle>::iterator it;
+    multimap<GridPoint, ObjectHandle>::iterator it;
 	for(it = t->structures.begin(); it != t->structures.end(); it++){
 		GridPoint p = it->first;
         double worldx = GRID_SIZE*p.x - (w->width)/2;
@@ -383,7 +383,7 @@ void Controller::avoidPulverizebyBuilding(){
     bool containsBuilding[xlength][ylength];
     memset(containsBuilding, 0, sizeof containsBuilding);
     //create a mapping with all used grids
-    multimap<GridPoint, StructureHandle>::iterator it;
+    multimap<GridPoint, ObjectHandle>::iterator it;
     for(it = t->structures.begin(); it != t->structures.end(); it++){
         GridPoint p = it->first;
         containsBuilding[p.x][p.y] = true;
