@@ -104,25 +104,25 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 	team = _team;
 	name = _name;
 
-	head = Assets::HeadObj;
-	body = Assets::BodyObj;
-	weapon = Assets::GunObj;
-	tool = Assets::WrenchObj;
-	wheel = Assets::WheelObj;
-	children.insert(head);
-	children.insert(body);
-	children.insert(weapon);
-	children.insert(tool);
-	children.insert(wheel);
+	model.head = Object();
+	model.body = Object();
+	model.weapon = Object();
+	model.tool = Object();
+	model.wheel = Object();
+	model.head->children.insert(Assets::HeadObj);
+	model.body->children.insert(Assets::BodyObj);
+	model.weapon->children.insert(Assets::GunObj);
+	model.tool->children.insert(Assets::WrenchObj);
+	model.wheel->children.insert(Assets::WheelObj);
+	children.insert(model.head);
+	children.insert(model.body);
+	children.insert(model.weapon);
+	children.insert(model.tool);
+	children.insert(model.wheel);
 
 	//set position of seperate elements
 	velocity = Vd(0,0,0);
 	update(R);
-
-	//textures
-	head->material = Assets::Head;
-	body->material = Assets::Body;
-	weapon->material = Assets::Gun;
 
 	translateModel();
 }
@@ -134,11 +134,11 @@ inline void translate(ObjectHandle o, double x, double y, double z) {
 }
 
 void Player::translateModel() {
-	translate(head,0,0,1.95);
-	translate(body,0,0,0.3);
-	translate(weapon,-0.499,-0.037,1.333);
-	translate(tool,0.544,-0.037,1.333);
-	translate(wheel,0,0,0.3);
+	translate(model.head,0,0,1.95);
+	translate(model.body,0,0,0.3);
+	translate(model.weapon,-0.499,-0.037,1.333);
+	translate(model.tool,0.544,-0.037,1.333);
+	translate(model.wheel,0,0,0.3);
 }
 
 //------------------------------------------------------------------------------
@@ -155,11 +155,11 @@ void Player::update(const Qd &camobj) {
 		double angle = velocity.y / maxVelocity.y * 0.15f * Pi;
 		rotation = rotation * Rd(angle,Vd(1,0,0));
 		
-		weapon->rotation = -rotation;
-		tool->rotation = -rotation;
+		model.weapon->rotation = -rotation;
+		model.tool->rotation = -rotation;
 	}
 
-	head->rotation = camobj;
+	model.head->rotation = camobj;
 }
 
 //------------------------------------------------------------------------------
@@ -231,7 +231,14 @@ Cuboid::Cuboid(Pd origin, double S)
 	  v(Vd(0,S,0)),
 	  w(Vd(0,0,S))
 {
-	// Define bounding box
+	bb.lbl = origin         ;
+	bb.rbl = origin +u      ;
+	bb.ltl = origin    +v   ;
+	bb.rtl = origin +u +v   ;
+	bb.lbh = origin       +w;
+	bb.rbh = origin +u    +w;
+	bb.lth = origin    +v +w;
+	bb.rth = origin +u +v +w;
 }
 
 //------------------------------------------------------------------------------
