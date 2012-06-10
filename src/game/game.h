@@ -48,15 +48,18 @@ struct GameState
 //------------------------------------------------------------------------------
 // General
 
-void Echo(string msg);  //!< Prints a message in the hud
+void Echo(string msg);   //!< Prints a message in the hud
+void Notice(string msg); //!< Prints a notice on screen
+void Prompt(string cmd); //!< Opens the console with the specified string in place
 
-void Quit();            //!< Quits to game
-void RQuit(string msg); //!< Rage quits with the supplied swear words
+void Quit();              //!< Quits to game
+void RQuit(string msg);   //!< Rage quits with the supplied swear words
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Network
 
 void Connect(string address); //!< Connects to the specified address
+void Disconnect();            //!< Disconnects and starts listening for clients
 
 void Say(string msg);         //!< Sends a chat message to all
 void TeamSay(string msg);     //!< Sends a chat message to all team members

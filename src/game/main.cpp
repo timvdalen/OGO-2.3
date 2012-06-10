@@ -24,6 +24,7 @@
 #include "input.h"
 #include "movement.h"
 #include "game.h"
+#include "netcode.h"
 
 using namespace Core;
 using namespace Base::Alias;
@@ -80,13 +81,16 @@ int main(int argc, char *argv[])
 	srand(time(NULL));
 	
     Video::Initialize(argc, argv);
-	window = new Video::Window(width, height, "Game", fullscreen);
+	window = new Video::Window(width, height, GAME_NAME, fullscreen);
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
 
 	Assets::Initialize(argc, argv); // after the viewports have been initialized!
 	
 	Game::Initialize(argc, argv);
+	
+	Net::Initialize();
+	NetCode::Initialize(argc, argv);
 
 	v1.camera.origin = Pd(0,0.1,0);
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
@@ -252,7 +256,7 @@ void KeyDown(Button btn)
 			case btnKeyB:       toggleBuild(); 						 break;
 			case btnMouseRight: handleMouse(false);               	 break;
 			case btnMouseLeft:  handleMouse(true);                   break;
-			case btnEnter:		addInput();							 break;
+			case btnKeyEnter:	addInput();							 break;
 		}
 	}
 }

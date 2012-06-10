@@ -11,6 +11,8 @@
 
 #define VERSION "v0.0.0"
 
+#define GAME_NAME "Grudge of the Oblivious"
+
 #ifndef LOBBY_BC_INTERVAL
 #define LOBBY_BC_INTERVAL 1
 #endif
