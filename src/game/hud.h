@@ -5,6 +5,7 @@
 #include "core.h"
 #include "video.h"
 #include "objects.h"
+#include "player.h"
 
 //! Contains HUD objects
 namespace HUD_objects{
