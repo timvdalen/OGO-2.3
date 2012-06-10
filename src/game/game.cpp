@@ -12,6 +12,8 @@
 #include "game.h"
 #include "netcode.h"
 
+#include "input.h" // debug
+
 namespace Game {
 
 using namespace std;
@@ -261,6 +263,15 @@ void Tool(ToolType tool)
 	
 	game.player->tool = tool;
 }
+
+//------------------------------------------------------------------------------
+
+
+void KeyCode(string str)
+{
+	printf("keycode: %d\n", Movement::ToButton(str));
+}
+CMD(KeyCode, 1, arg, (string) arg[0])
 
 //------------------------------------------------------------------------------
 

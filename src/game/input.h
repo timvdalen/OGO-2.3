@@ -44,6 +44,11 @@ enum Button
 	btnKeyArrowUp = 128, btnKeyArrowDown, btnKeyArrowLeft, btnKeyArrowRight
 };
 
+//! Gets the button from a specified string
+Button ToButton(std::string);
+//! Gets the string alias of given button
+std::string convert(Button);
+
 //------------------------------------------------------------------------------
 
 //! Input module

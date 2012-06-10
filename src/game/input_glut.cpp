@@ -4,7 +4,9 @@
 
 #include <stdlib.h>
 
+#include <algorithm>
 #include <set>
+#include <map>
 
 #if defined _WIN32
 	#include <gl\freeglut.h>
@@ -32,6 +34,68 @@ void special_down_event(int key, int x, int y);
 void special_up_event(int key, int x, int y);
 void mouse_event(int button, int state, int x, int y);
 void motion_event(int x, int y);
+
+//------------------------------------------------------------------------------
+
+string to_lower_case(string str);
+
+struct ButtonAlias
+{
+	typedef map<string,Button> List;
+	static List list;
+	ButtonAlias(string str, Button btn) { list[to_lower_case(str)] = btn; }
+	ButtonAlias(char start, char end, Button first)
+	{
+		for (int i = first; start <= end; ++start)
+			list[string(1, start)] = (Button) i++;
+	}
+};
+
+ButtonAlias::List ButtonAlias::list;
+
+#define BTN(x,y) ButtonAlias _ ## x(#x,y);
+
+ButtonAlias   alpha('a', 'z', btnKeyA);
+ButtonAlias numeric('0', '9', btnKey0);
+
+BTN(LeftClick,   btnMouseLeft)
+BTN(RightClick,  btnMouseRight)
+BTN(MiddleClick, btnMouseMiddle)
+BTN(ScrollUp,    btnMouseScrollUp)
+BTN(ScrollDown,  btnMouseScrollDown)
+
+BTN(MouseLeft, btnMouseMoveLeft) BTN(MouseRight, btnMouseMoveRight)
+BTN(MouseUp,   btnMouseMoveUp)   BTN(MouseDown,  btnMouseMoveDown)
+	
+BTN(Space,  btnKeySpace)
+BTN(Escape, btnKeyEscape)
+BTN(Enter,  btnKeyEnter)
+
+BTN(UpArrow,   btnKeyArrowUp)   BTN(DownArrow,  btnKeyArrowDown)
+BTN(LeftArrow, btnKeyArrowLeft) BTN(RightArrow, btnKeyArrowRight)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Button ToButton(std::string str)
+{
+	str = to_lower_case(str);
+	if (!ButtonAlias::list.count(str))
+		return btnUnknown;
+	else
+		return ButtonAlias::list[str];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+std::string convert(Button btn)
+{
+	ButtonAlias::List::iterator it;
+	for (it = ButtonAlias::list.begin(); it != ButtonAlias::list.end(); ++it)
+		if (it->second == btn)
+			return it->first;
+	
+	return "";
+}
 
 //------------------------------------------------------------------------------
 
@@ -270,6 +334,14 @@ void motion_event(int x, int y)
 	
 	input->mouseX = x;
 	input->mouseY = y;
+}
+
+//------------------------------------------------------------------------------
+
+string to_lower_case(string str)
+{
+	transform(str.begin(), str.end(), str.begin(), ::tolower);
+	return str;
 }
 
 //------------------------------------------------------------------------------
