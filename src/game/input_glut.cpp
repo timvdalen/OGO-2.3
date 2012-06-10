@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <set>
 #include <map>
+#include <stdio.h>
 
 #if defined _WIN32
 	#include <gl\freeglut.h>
@@ -247,7 +248,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 		CALL(input->onKeyDown, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyDown, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (key == '\n'))
+	else if ((key == ' ') || (key == '\e') || (key == '\n') || (key == 13))
 		CALL(input->onKeyDown, (Button) key);
 }
 
@@ -264,7 +265,7 @@ void keyboard_up_event(unsigned char key, int x, int y)
 		CALL(input->onKeyUp, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyUp, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (key == '\n'))
+	else if ((key == ' ') || (key == '\e') || (key == '\n') || (key == 13))
 		CALL(input->onKeyUp, (Button) key);
 }
 
