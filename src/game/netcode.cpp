@@ -74,8 +74,11 @@ bool Connect(std::string host)
 	if (Connected()) Disconnect();
 	Game::Notice(string("Connecting to ") + host + string("..."));
 	Address remote(host.c_str());
-	if (!tokenring->connect(remote), 30);
+	if (!tokenring->connect(remote), 30) {
 		Game::Notice(string("Unable to connect to " + host + string("!")));
+		return false;
+	}
+	return true;
 }
 
 //==============================================================================
