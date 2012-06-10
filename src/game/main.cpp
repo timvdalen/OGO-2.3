@@ -343,6 +343,10 @@ void addInput(){
 //------------------------------------------------------------------------------
 
 static void getInput(string input){
+	TextInput *curInput;
+	curInput = TO(TextInput, *inputField);
+	curInput->done = true;
+	
 	World *w = TO(World, controller->world);
 	HUD *h = TO(HUD, w->hud);
 	Player *p = TO(Player, controller->player);
@@ -350,13 +354,24 @@ static void getInput(string input){
 		ChatMessage m = ChatMessage(*p, input);
 		h->messageDisplayer->addMessage(m);
 	}
-	//TODO: Figure out how to actually remove the inputField from the set
-	//This is really hacky, but if I get the TextInput out of the ObjectHandle
-	//(or even just use the ObjectHandle like *inputField) the child isn't deleted.
+
+	//Not so nice, but better than the old way
 	set<ObjectHandle>::iterator it;
-	it = h->children.end();
-	it--;
-	h->children.erase(it);
+	TextInput *tInput;
+	for (it = w->hud->children.begin(); it != w->hud->children.end();)
+	{
+		tInput = TO(TextInput, *it);
+		if (tInput){
+			if(tInput->done){
+				w->hud->children.erase(it);
+				break;
+			}else{
+				it++;
+			}
+		}else{
+			it++;
+		}
+	}
 	delete &**inputField;
 	inputField = NULL;
 }

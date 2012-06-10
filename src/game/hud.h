@@ -213,6 +213,8 @@ class TextInput: public Widget{
 	Input *input;
 	
 	public:
+	//! Marks the TextInput as done
+	bool done;
 	
 	//! Constructs a new TextInput widget
 	TextInput(Input *_input, int _x, int _y, int _width, int _height);

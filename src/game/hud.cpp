@@ -459,6 +459,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
 TextInput::TextInput(Input *_input, int _x, int _y, int _width, int _height)
 	: Widget(_x, _y, _width, _height, Assets::WidgetBG), input(_input)
 {
+	done = false;
 	input->grabText();
 }
 
