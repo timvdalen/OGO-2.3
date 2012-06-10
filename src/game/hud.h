@@ -6,6 +6,7 @@
 #include "video.h"
 #include "objects.h"
 #include "player.h"
+#include "input.h"
 
 //! Contains HUD objects
 namespace HUD_objects{
@@ -13,6 +14,7 @@ namespace HUD_objects{
 using namespace std;
 using namespace Core;
 using namespace Objects;
+using namespace Movement;
 
 class MessageDisplayer;
 class StatusDisplayer;
@@ -207,19 +209,13 @@ class StatusDisplayer: public Widget{
 };
 
 class TextInput: public Widget{
-	//! The text thas has been types
-	string buffer;
+	//! The \ref Input this TextInput reads from
+	Input *input;
 	
 	public:
 	
-	//! The function to call when the TextInput finishes
-	void (*onFinish) (string input);
-	
 	//! Constructs a new TextInput widget
-	TextInput(void (*_onFinish) (string), int _x, int _y, int _width, int _height);
-	
-	//! Receive new input
-	void receiveInput(int inChar);
+	TextInput(Input *_input, int _x, int _y, int _width, int _height);
 	
 	//! Displays the TextInput
 	void draw();

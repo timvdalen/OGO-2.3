@@ -456,28 +456,17 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     
 //------------------------------------------------------------------------------
 
-TextInput::TextInput(void (*_onFinish) (string), int _x, int _y, int _width, int _height)
-	: Widget(_x, _y, _width, _height, Assets::WidgetBG)
+TextInput::TextInput(Input *_input, int _x, int _y, int _width, int _height)
+	: Widget(_x, _y, _width, _height, Assets::WidgetBG), input(_input)
 {
-	onFinish = _onFinish;
-}
-
-//------------------------------------------------------------------------------
-
-void TextInput::receiveInput(int inChar){
-	#define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
-	if(inChar == 13){
-		CALL(onFinish, buffer);
-	}else if(inChar == 27){
-		CALL(onFinish, "");
-	}else{
-		buffer += (char)inChar;
-	}
+	input->grabText();
 }
 
 //------------------------------------------------------------------------------
 
 void TextInput::draw(){
+	string buffer = input->text;
+
 	//TODO: This should be implemented in Widget::preRender() and Widget::postRender()
 	glPushMatrix();
 		
