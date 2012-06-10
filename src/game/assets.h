@@ -40,6 +40,18 @@ extern MaterialHandle CrossHair;
     
 extern MaterialHandle Money;
 extern MaterialHandle Health;
+extern MaterialHandle Mine;
+extern MaterialHandle Robot_red;    
+extern MaterialHandle Robot_blue;
+extern MaterialHandle Pickaxe_normal;
+extern MaterialHandle Pickaxe_blue;    
+extern MaterialHandle Pickaxe_red;
+extern MaterialHandle Tower_normal;
+extern MaterialHandle Tower_red;
+extern MaterialHandle Tower_blue;
+extern MaterialHandle HQ_normal;
+extern MaterialHandle HQ_blue;
+extern MaterialHandle HQ_red;
 
 //------------------------------------------------------------------------------
 

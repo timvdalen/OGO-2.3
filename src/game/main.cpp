@@ -347,11 +347,13 @@ void toggleBuild(){
 		terrain->showGrid = false;
 		//Restore view
 		controller->firstPerson = lastview;
+        world->hud->buildselector->show = false;
 	}else{
 		//Save view before entering building mode
 		lastview = controller->firstPerson;
 		terrain->showGrid = true;
 		controller->firstPerson = true;
+        world->hud->buildselector->show = true;
 	}
 	building = !building;
 }
