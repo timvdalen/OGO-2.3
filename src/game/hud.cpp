@@ -46,8 +46,13 @@ HUD::HUD(int _width, int _height){
     
     ObjectHandle sdHandle;
     sdHandle = StatusDisplayer(50,50, _width, _height, currentTeam, currentPlayer);
-    statusDisplayer = dynamic_cast<StatusDisplayer *>(&*mdHandle);
+    statusDisplayer = dynamic_cast<StatusDisplayer *>(&*sdHandle);
 	children.insert(sdHandle);	
+    
+    ObjectHandle bsHandle;
+    bsHandle = BuildingSelection(0,100, _width, _height);
+    buildselector = dynamic_cast<BuildingSelection *>(&*bsHandle);
+	children.insert(bsHandle);	
     
 	ObjectHandle chHandle;
 	chHandle = CrossHair(0, 0, _width, _height);
@@ -194,6 +199,7 @@ MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 {
 	curr = 0;
 	full = 0;
+	showAlways = false;
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
 }
 
@@ -205,6 +211,21 @@ void MessageDisplayer::addMessage(Handle<DisplayMessage> m){
 	curr = ((curr+1)%10);
 	if(full < 10) full++;
 	lastMessage = glutGet(GLUT_ELAPSED_TIME);
+}
+
+//------------------------------------------------------------------------------
+
+void MessageDisplayer::setShowAlways(bool show){
+	if(!show){
+		lastMessage = glutGet(GLUT_ELAPSED_TIME) - 1000;
+	}
+	showAlways = show;
+}
+
+//------------------------------------------------------------------------------
+
+bool MessageDisplayer::getShowAlways(){
+	return showAlways;
 }
 
 //------------------------------------------------------------------------------
@@ -233,16 +254,20 @@ void MessageDisplayer::draw(){
 void MessageDisplayer::render(){
 	MaterialHandle font;
 
-	int now = glutGet(GLUT_ELAPSED_TIME);
-	if((now - lastMessage) > 2000){
-		return;
-	}else if((now - lastMessage) > 1000){
-		float alpha = -(0.001)*((now-lastMessage)-2000);
-		font = ColorMaterial(1.0f, 1.0f, 1.0f, alpha);
-	}else{
+	if(showAlways){
 		font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+	}else{
+		int now = glutGet(GLUT_ELAPSED_TIME);
+		if((now - lastMessage) > 2000){
+			return;
+		}else if((now - lastMessage) > 1000){
+			float alpha = -(0.001)*((now-lastMessage)-2000);
+			font = ColorMaterial(1.0f, 1.0f, 1.0f, alpha);
+		}else{
+			font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+		}
 	}
-
+	
 	//Select material
 	font->select();
 
@@ -453,6 +478,115 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glPopMatrix();
         
     }
+    //------------------------------------------------------------------------------
+    
+    
+    BuildingSelection::BuildingSelection(int _x, int _y, int _width, int _height) : Widget(_x, _y, _width, _height)
+    {
+        selected = 1;
+        show = false;
+    }
+    
+    
+    //------------------------------------------------------------------------------
+    void BuildingSelection::draw(){
+        //TODO link this with the interface
+        MaterialHandle icons[2] = {
+            Assets::Pickaxe_normal,Assets::Tower_normal
+        };
+        string buildingname[2] = {"Mine", "Tower"};
+        int n = 2;
+        //Init ended, real code started:
+        glTranslatef(-185,-n*70,0);
+        MaterialHandle bgselected = ColorMaterial(255.0/255.0, 255.0/255.0, 190.0/255.0,1.0f);
+        MaterialHandle bgunselected = ColorMaterial(254.0/255.0, 251.0/255.0, 225.0/255.0, 0.8f);
+        MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        int i;
+        for(i = 0; i < n; i++){
+            //*le background
+            if(selected == i + 1){
+                bgselected->select();
+            }else{
+                bgunselected->select();
+            }
+            glBegin(GL_QUADS);
+            glVertex2i(0,0);
+            glVertex2i(0, 70);
+            glVertex2i(370, 70);
+            glVertex2i(370,0);
+            glEnd();
+            if(selected == i + 1){
+                bgselected->select();
+            }else{
+                bgunselected->select();
+            }
+            //*le table lines
+            black->select();
+            glBegin(GL_LINES);
+            //Top-line
+            glVertex2i(0,0);
+            glVertex2i(370,0);
+            //left-edge
+            glVertex2i(0,0);
+            glVertex2i(0,70);
+            //icon-text separator
+            glVertex2i(70,0);
+            glVertex2i(70,70);
+            //right-edge        
+            glVertex2i(370,0);
+            glVertex2i(370,70);
+            glEnd();
+            black->unselect();
+            //*le icon
+            icons[i]->select();
+            glBegin(GL_QUADS);
+            glTexCoord2f(0,1);
+            glVertex2i(10,10);
+            glTexCoord2f(0,0);
+            glVertex2i(10,60);
+            glTexCoord2f(1,0);
+            glVertex2i(60,60);
+            glTexCoord2f(1,1);
+            glVertex2i(60,10);
+            glEnd();
+            icons[i]->unselect();
+            //*le text
+            black->select();
+            glPushMatrix();
+                glTranslatef(80,40,0);
+                glScalef(0.15,-0.15,1);
+                glLineWidth(1);
+                stringstream ss;
+                ss << "Press '" << (i + 1) << "' to build a " << buildingname[i]
+                << ".";
+                string msg = ss.str();
+                for(int count=0; count < msg.length(); count++){
+                    glutStrokeCharacter(GLUT_STROKE_ROMAN, msg[count]);
+                }
+            glPopMatrix();
+            glTranslatef(0,70,0);
+        }
+        //*le last table lines
+        black->select();
+        glBegin(GL_LINES);
+        glVertex2i(0,0);
+        glVertex2i(370,0);
+        glEnd();
+        black->unselect();
+}
+    
+    void BuildingSelection::render(){
+        if(show){
+        glPushMatrix();
+        //Set to the right coordinates
+        glTranslatef(width/2+xOffset,height-yOffset,0);
+        draw();
+        glPopMatrix();
+        }
+  
+}
+    
+    
     
 //------------------------------------------------------------------------------
 
@@ -470,18 +604,28 @@ void TextInput::draw(){
 
 	//TODO: This should be implemented in Widget::preRender() and Widget::postRender()
 	glPushMatrix();
-		
+		int maxchars = (0.36*width)/9;
+		int noLines = buffer.size()/maxchars;
 		glTranslatef(xOffset, yOffset, 0);
 		glBegin(GL_QUADS);
 			glVertex2f(0.30*width, 0.45*height);
-			glVertex2f(0.30*width, 0.55*height);
-			glVertex2f(0.70*width, 0.55*height);
+			glVertex2f(0.30*width, 0.55*height + noLines*15);
+			glVertex2f(0.70*width, 0.55*height + noLines*15);
 			glVertex2f(0.70*width, 0.45*height);
 		glEnd();
 		Assets::Font->select();
 		glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height);
+		
+		int curchars = 0;
+		int line = 0;
 		for(int count=0; count < buffer.length(); count++){
 			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, buffer[count]);
+			curchars++;
+			if(curchars > maxchars){
+				line++;
+				curchars = 0;
+				glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height + 15*line);
+			}
 		}
 		
 	glPopMatrix();

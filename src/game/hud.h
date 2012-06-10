@@ -18,6 +18,7 @@ using namespace Movement;
 
 class MessageDisplayer;
 class StatusDisplayer;
+class BuildingSelection;
 class CrossHair;
 class Widget;
 
@@ -36,6 +37,10 @@ class HUD: public Object{
     
     //!The main StatusDisplayer for this hhud
     StatusDisplayer *statusDisplayer;
+    
+    //!The main buildselector for this hud
+    BuildingSelection *buildselector;
+    
 	//! The main CrossHair for this HUD
 	CrossHair *crossHair;
     
@@ -168,6 +173,9 @@ class MessageDisplayer: public Widget{
 
 	//! Number of items that are filled
 	int full;
+	
+	//! Whether or not to always show this displayer
+	bool showAlways;
 
 	public:
 	//! Constructs a new MessageDisplayer
@@ -175,6 +183,12 @@ class MessageDisplayer: public Widget{
 
 	//! Adds a message to the queue
 	void addMessage(Handle<DisplayMessage> m);
+	
+	//! Whether or not to always show this displayer
+	void setShowAlways(bool show = true);
+	
+	//! Whether or not to always show this displayer
+	bool getShowAlways();
 
 	//! Displays the messages
 	virtual void draw();
@@ -193,17 +207,36 @@ class CrossHair: public Widget{
 	virtual void draw();
 };
 
+class BuildingSelection: public Widget{
+    public:
+    
+    bool show;
+    
+    //! 0 for no selection, 1 for mine, 2 for tower, etc...
+    int selected;
+    
+    //! Constructs the status displayer
+    BuildingSelection(int _x, int _y, int _width, int _height);
+        
+    //! Displays the status
+    virtual void draw();
+    
+    //! Renders this object
+    virtual void render();
+};
+    
+    
 class StatusDisplayer: public Widget{
     public:
         
-    Player* p;
-    Team* t;
+        Player* p;
+        Team* t;
     //! Constructs the status displayer
     StatusDisplayer(int _x, int _y, int _width, int _height, Team* _t, Player *_p);
         
     //! Displays the status
     virtual void draw();
-    
+        
     //! Renders this object
     virtual void render();
 };

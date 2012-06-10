@@ -26,14 +26,27 @@ MaterialHandle WorldMaterial;
 MaterialHandle Test;
 MaterialHandle Cloud;
 MaterialHandle Grass;
-    
-MaterialHandle Money;
-MaterialHandle Health;
 
 MaterialHandle Widget;
 MaterialHandle WidgetBG;
 MaterialHandle Font;
 MaterialHandle CrossHair;
+    
+    
+MaterialHandle Money;
+MaterialHandle Health;
+MaterialHandle Mine;
+MaterialHandle Robot_red;    
+MaterialHandle Robot_blue;
+MaterialHandle Pickaxe_normal;
+MaterialHandle Pickaxe_blue;    
+MaterialHandle Pickaxe_red;
+MaterialHandle Tower_normal;
+MaterialHandle Tower_red;
+MaterialHandle Tower_blue;
+MaterialHandle HQ_normal;
+MaterialHandle HQ_blue;
+MaterialHandle HQ_red;
 
 //------------------------------------------------------------------------------
 
@@ -84,7 +97,18 @@ void Initialize(int argc, char *argv[])
     
     Money = TexturedMaterial(path + "assets/textures/hud/money.png");
     Health = TexturedMaterial(path+ "assets/textures/hud/health.png");
-
+    Mine = TexturedMaterial(path + "assets/textures/hud/mine.png");
+    Robot_red = TexturedMaterial(path + "assets/textures/hud/robot_red.png");
+    Robot_blue = TexturedMaterial(path + "assets/textures/hud/robot_blue.png");
+    Pickaxe_normal = TexturedMaterial(path + "assets/textures/hud/pickaxe_normal.png");
+    Pickaxe_blue = TexturedMaterial(path + "assets/textures/hud/pickaxe_blue.png");
+    Pickaxe_red = TexturedMaterial(path + "assets/textures/hud/pickaxe_red.png");
+    Tower_normal = TexturedMaterial(path + "assets/textures/hud/tower_normal.png");
+    Tower_red = TexturedMaterial(path + "assets/textures/hud/tower_red.png");
+    HQ_normal = TexturedMaterial(path + "assets/textures/hud/headquarter_normal.png");
+    HQ_blue = TexturedMaterial(path + "assets/textures/hud/headquarter_blue.png");
+    HQ_red = TexturedMaterial(path + "assets/textures/hud/headquarter_red.png");
+    
 	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
 	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
 	GunObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/gun.3DS");

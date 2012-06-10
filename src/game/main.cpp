@@ -39,6 +39,10 @@ map<Button,Direction> lookbind;
 map<Button,word> lookcount;
 FPS fps;
 ObjectHandle cube;
+
+ObjectHandle *npc = NULL;
+int lastmess = 0;
+
 bool building = false;
 bool lastview = false;
 
@@ -48,6 +52,7 @@ void KeyDown(Button btn);
 void MouseMove(word x, word y);
 void toggleBuild();
 void handleMouse(bool left);
+void toggleShow();
 
 static void getInput(string input);
 void addInput();
@@ -101,6 +106,8 @@ int main(int argc, char *argv[])
 	playercube->material = ShadedMaterial(Cf(1,0,0,1));
 	player->children.insert(playercube);
 	player->rotation = Rd(0,Vd(0,0,1));
+	
+	npc = new ObjectHandle(Objects::Player(1, 'b', "NPC", Pd(30, 40, 0)));
 
 	cube->material = Assets::Test;
 
@@ -115,6 +122,7 @@ int main(int argc, char *argv[])
 	}
 
 	world->children.insert(player);
+	world->children.insert(*npc);
 
 	v1.world = world;
 
@@ -205,6 +213,79 @@ void Frame()
 	
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
+	
+	int time = Video::ElapsedTime();
+	Objects::Player * pNPC = TO(Objects::Player, *npc);
+	World *w = TO(World, controller->world);
+	HUD *h = TO(HUD, w->hud);
+	if(time > 900 && time < 1100){
+		if(lastmess == 0){
+			ChatMessage m = ChatMessage(*pNPC, "Hey man, welcome to the game!");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 2900 && time < 3100){
+		if(lastmess == 1){
+			ChatMessage m = ChatMessage(*pNPC, "So your name is " + player->name + "?");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 4900 && time < 5100){
+		if(lastmess == 2){
+			ChatMessage m = ChatMessage(*pNPC, "Try to look around with the mouse");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 6900 && time < 7100){
+		if(lastmess == 3){
+			ChatMessage m = ChatMessage(*pNPC, "If you press W you will roll in the direction");
+			ChatMessage m2 = ChatMessage(*pNPC, "you're looking in");
+			h->messageDisplayer->addMessage(m);
+			h->messageDisplayer->addMessage(m2);
+			lastmess++;
+		}
+	}else if(time > 8900 && time < 9100){
+		if(lastmess == 4){
+			ChatMessage m = ChatMessage(*pNPC, "Left clicking will make you shoot a laser beam");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 10900 && time < 11100){
+		if(lastmess == 5){
+			ChatMessage m = ChatMessage(*pNPC, "Pressing B will enter build mode");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 12900 && time < 13100){
+		if(lastmess == 6){
+			ChatMessage m = ChatMessage(*pNPC, "Try to build some towers");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 13900 && time < 14100){
+		if(lastmess == 7){
+			ChatMessage m = ChatMessage(*pNPC, "They're of a special stealth");
+			ChatMessage m2 = ChatMessage(*pNPC, "kind that looks like a box.");
+			h->messageDisplayer->addMessage(m);
+			h->messageDisplayer->addMessage(m2);
+			lastmess++;
+		}
+	}else if(time > 16900 && time < 17100){
+		if(lastmess == 8){
+			ChatMessage m = ChatMessage(*pNPC, "Anyway. Have fun!");
+			h->messageDisplayer->addMessage(m);
+			lastmess++;
+		}
+	}else if(time > 19900 && time < 20100){
+		if(lastmess == 9){
+			ChatMessage m = ChatMessage(*pNPC, "Oh, one last thing. You can press [enter] if");
+			ChatMessage m2 = ChatMessage(*pNPC, "you ever want to talk to me!");
+			h->messageDisplayer->addMessage(m);
+			h->messageDisplayer->addMessage(m2);
+			lastmess++;
+		}
+	}
+	
 
 	cube->rotation = cube->rotation * Rd(.1, Vd(0,0,1));
 	controller->look.reset();
@@ -254,6 +335,7 @@ void KeyDown(Button btn)
 		case btnMouseRight: handleMouse(false);               	 break;
 		case btnMouseLeft:  handleMouse(true);                   break;
 		case btnKeyEnter:	addInput();							 break;
+		case btnKeyT:		toggleShow();						 break;
 	}
 }
 
@@ -275,11 +357,13 @@ void toggleBuild(){
 		terrain->showGrid = false;
 		//Restore view
 		controller->firstPerson = lastview;
+        world->hud->buildselector->show = false;
 	}else{
 		//Save view before entering building mode
 		lastview = controller->firstPerson;
 		terrain->showGrid = true;
 		controller->firstPerson = true;
+        world->hud->buildselector->show = true;
 	}
 	building = !building;
 }
@@ -361,6 +445,11 @@ static void getInput(string input){
 	if(!input.empty()){
 		ChatMessage m = ChatMessage(*p, input);
 		h->messageDisplayer->addMessage(m);
+		if(input == "hi"){
+			Objects::Player * pNPC = TO(Objects::Player, *npc);
+			ChatMessage m = ChatMessage(*pNPC, "Hey man, what's up?");
+			h->messageDisplayer->addMessage(m);
+		}
 	}
 
 	//Not so nice, but better than the old way
@@ -382,4 +471,12 @@ static void getInput(string input){
 	}
 	delete &**inputField;
 	inputField = NULL;
+}
+
+//------------------------------------------------------------------------------
+
+void toggleShow(){
+	World *w = TO(World, controller->world);
+	HUD *h = TO(HUD, w->hud);
+	h->messageDisplayer->setShowAlways(!h->messageDisplayer->getShowAlways());
 }
