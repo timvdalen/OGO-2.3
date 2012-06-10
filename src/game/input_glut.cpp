@@ -37,7 +37,7 @@ void motion_event(int x, int y);
 
 Input::Input(Window &W)
 	: window(W), onKeyDown(NULL), onKeyUp(NULL), onMouseMove(NULL),
-	  mouseX(0), mouseY(0), dx(0), dy(0), grabbing(false)
+	  mouseX(0), mouseY(0), dx(0), dy(0), grabbing(false), textMode(false), text()
 {
 	window.select();
 	
@@ -48,8 +48,6 @@ Input::Input(Window &W)
 	glutKeyboardUpFunc(keyboard_up_event);
 	glutPassiveMotionFunc(motion_event);
 	glutMotionFunc(motion_event);
-	
-	grabbing = false;
 	
 	inputs.insert(this);
 }
@@ -90,6 +88,22 @@ void Input::releaseMouse()
 	grabbing = false;
 	
 	glutSetCursor(GLUT_CURSOR_INHERIT);
+}
+
+//------------------------------------------------------------------------------
+
+void Input::grabText()
+{
+	text = "";
+	textMode = true;
+}
+
+//------------------------------------------------------------------------------
+
+void Input::releaseText()
+{
+	textMode = false;
+	CALL(onText, text);
 }
 
 //------------------------------------------------------------------------------
@@ -144,11 +158,32 @@ void keyboard_down_event(unsigned char key, int x, int y)
 	if (inputs.empty()) return;
 	Input *input = *inputs.begin();
 	
+	if (input->textMode)
+	{
+		if (key == '\e') //Aborted
+		{
+			input->text = "";
+			CALL(input->onText, input->text);
+			input->textMode = false;
+		}
+		else if (key == '\n') // Enter
+		{
+			CALL(input->onText, input->text);
+			input->text = "";
+			input->textMode = false;
+		}
+		else if (key == '\b')
+			input->text.erase(input->text.end() - 1, input->text.end());
+		else
+			input->text.push_back(key);
+		return;
+	}
+	
 	if ((key >= 'a') && (key <= 'z'))
 		CALL(input->onKeyDown, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyDown, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (int)key == 13)
+	else if ((key == ' ') || (key == '\e') || (key == '\n'))
 		CALL(input->onKeyDown, (Button) key);
 }
 
@@ -159,11 +194,13 @@ void keyboard_up_event(unsigned char key, int x, int y)
 	if (inputs.empty()) return;
 	Input *input = *inputs.begin();
 	
+	if (input->textMode) return;
+	
 	if ((key >= 'a') && (key <= 'z'))
 		CALL(input->onKeyUp, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyUp, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (int)key == 13)
+	else if ((key == ' ') || (key == '\e') || (key == '\n'))
 		CALL(input->onKeyUp, (Button) key);
 }
 
