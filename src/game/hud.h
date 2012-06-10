@@ -173,6 +173,9 @@ class MessageDisplayer: public Widget{
 
 	//! Number of items that are filled
 	int full;
+	
+	//! Whether or not to always show this displayer
+	bool showAlways;
 
 	public:
 	//! Constructs a new MessageDisplayer
@@ -180,6 +183,12 @@ class MessageDisplayer: public Widget{
 
 	//! Adds a message to the queue
 	void addMessage(Handle<DisplayMessage> m);
+	
+	//! Whether or not to always show this displayer
+	void setShowAlways(bool show = true);
+	
+	//! Whether or not to always show this displayer
+	bool getShowAlways();
 
 	//! Displays the messages
 	virtual void draw();

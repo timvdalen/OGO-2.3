@@ -52,6 +52,7 @@ void KeyDown(Button btn);
 void MouseMove(word x, word y);
 void toggleBuild();
 void handleMouse(bool left);
+void toggleShow();
 
 static void getInput(string input);
 void addInput();
@@ -326,6 +327,7 @@ void KeyDown(Button btn)
 		case btnMouseRight: handleMouse(false);               	 break;
 		case btnMouseLeft:  handleMouse(true);                   break;
 		case btnKeyEnter:	addInput();							 break;
+		case btnKeyT:		toggleShow();						 break;
 	}
 }
 
@@ -461,4 +463,12 @@ static void getInput(string input){
 	}
 	delete &**inputField;
 	inputField = NULL;
+}
+
+//------------------------------------------------------------------------------
+
+void toggleShow(){
+	World *w = TO(World, controller->world);
+	HUD *h = TO(HUD, w->hud);
+	h->messageDisplayer->setShowAlways(!h->messageDisplayer->getShowAlways());
 }
