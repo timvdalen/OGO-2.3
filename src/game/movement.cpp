@@ -301,13 +301,13 @@ void Controller::frame()
 		if (move[dirLeft]) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
 		else if (move[dirRight]) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
 		else {
-			double axis = Rd(player->rotation/camAngle).v.z;
             Vd camv = camAngle*Vd(0,1,0);
             Vd plav = player->rotation*Vd(0,1,0);
             camv.z = 0; camv = ~camv;
             plav.z = 0; plav = ~plav;
             double angle = atan2(camv.y - plav.y, camv.x - plav.x);
             double angle2 = (angle < 0? -angle : angle);
+            double axis = angle2 >  0.5*Pi ^ angle > 0? 1 : -1;
             angle2 = angle2 > 0.5*Pi ? Pi - angle2 : angle2;
             angle2 = angle2 < 0.05? angle2 : 0.05;
 			if (axis != 0) {
