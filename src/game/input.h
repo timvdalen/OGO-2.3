@@ -10,6 +10,8 @@
 #ifndef _INPUT_H
 #define _INPUT_H
 
+#include <string>
+
 #include "base.h"
 #include "video.h"
 
@@ -29,9 +31,7 @@ enum Button
 	btnMouseScrollDown, btnMouseMoveLeft, btnMouseMoveRight, btnMouseMoveUp,
 	btnMouseMoveDown,
 	
-	btnEnter = 13,
-	
-	btnKeySpace = 32, btnKeyEscape = 27,
+	btnKeySpace = 32, btnKeyEscape = 27, btnKeyEnter = 13,
 	
 	btnKey0 = 48, btnKey1, btnKey2, btnKey3, btnKey4, btnKey5, btnKey6,
 	btnKey7, btnKey8, btnKey9,
@@ -58,15 +58,23 @@ class Input
 	word mouseY;    //!< Current vertical mouse position
 	Window &window; //!< Assigned window
 	bool grabbing;  //!< If the mouse is grabbed or not
+	bool textMode;  //!< If text mode is enabled or not
+	std::string text; //!< Text recorded in text mode so far
 	
 	void (*onKeyUp) (Button);             //!< Callback: a key was released
 	void (*onKeyDown) (Button);           //!< Callback: a key was pressed
 	void (*onMouseMove) (word x, word y); //!< Callback: the mouse was moved
+	void (*onText) (std::string text);    //!< Callback: text mode ended (on release or enter was pressed)
 	
 	//! Locks (and hides) the mouse pointer in place
 	void grabMouse();
 	//! Releases the mouse pointer to the user
 	void releaseMouse();
+	
+	//! Grabs text input
+	void grabText();
+	//! Stops grabbing text input and fire the onText event.
+	void releaseText();
 	
 	//! A game frame has passed \note this will update the mouse motion events
 	void frame();
