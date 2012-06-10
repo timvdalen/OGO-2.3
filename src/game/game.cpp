@@ -10,6 +10,7 @@
 #include "video.h"
 #include "protocol.h"
 #include "game.h"
+#include "netcode.h"
 
 namespace Game {
 
@@ -105,6 +106,21 @@ void Echo(string msg)
 
 //------------------------------------------------------------------------------
 
+CMD(Notice, 1, arg, (string) arg[0])
+void Notice(string msg)
+{
+	printf("*** %s ***\n", msg.c_str());
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Prompt, 1, arg, (string) arg[0])
+void Prompt(string cmd)
+{
+}
+
+//------------------------------------------------------------------------------
+
 CMD(Quit, 0, arg)
 void Quit()
 {
@@ -128,6 +144,15 @@ void RQuit(string msg)
 CMD(Connect, 1, arg, (string) arg[0])
 void Connect(string address)
 {
+	NetCode::Connect(address);
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Disconnect, 0, arg)
+void Disconnect()
+{
+	NetCode::Disconnect();
 }
 
 //------------------------------------------------------------------------------

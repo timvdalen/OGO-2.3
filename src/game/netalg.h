@@ -18,7 +18,7 @@ namespace Protocol {
 //------------------------------------------------------------------------------
 
 //! Clique socket.
-//! A algorithm that maintains a complete connection graph between nodes.
+//! An algorithm that maintains a complete connection graph between nodes.
 //! \sa { https://github.com/timvdalen/OGO-2.3/wiki/Dist-Algo%27s }
 class Clique
 {
@@ -67,30 +67,50 @@ class Clique
 
 //------------------------------------------------------------------------------
 
-typedef unsigned long NodeID;
+typedef unsigned long NodeID; //!< Unique number assigned to connected nodes
 
+//! Token ring socket
+//! An algorithm that maintains fifo and mutual exclusion properties among a
+//! complete connection graph.
 class TokenRing
 {
 	public:
 	typedef Net::Address Address;
 	
+	//! Creates a token ring that listens for candidate nodes on the given port
 	TokenRing(unsigned short port);
+	//! Destroys the local node
 	~TokenRing();
 	
+	//! Connects to another token ring by specified address
+	//! \note this method will fail when already connected
+	//! \note check for entries after connect succeeded
 	bool connect(const Address &remote, int timeout = 0);
+	//! Closes the local connection
 	void close();
 	
-	bool connected() const; // Check for entries after connect succeeded
+	//! Returns the connection status of the node
+	bool connected() const;
+	//! Returns whether this node has the token.
 	bool authorized() const;
+	//! Returns ths id of the local node
 	NodeID id() const;
 	
+	//! Send a message to all connected nodes
 	bool shout(const Message &msg, bool reliable);
+	//! Passes the token to the next node in line
+	//! \note calling this function when unauthorized is a logical error
 	bool pass();
 	
+	//! Checks for incomming connections
 	bool entry(NodeID &node);
+	//! Checks for remote connection loss
 	bool loss(NodeID &node);
+	//! Receives messages
 	bool recvfrom(NodeID &node, Message &msg, bool &reliable);
 	
+	//! Waits for incomming connections/messages and losses
+	//! \warning does not return on token gain
 	bool select(int timeout = 0);
 	
 	void debug();

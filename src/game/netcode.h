@@ -10,13 +10,37 @@
 #ifndef _NETCODE_H
 #define _NETCODE_H
 
-namespace Protocol {
+#include "net.h"
+#include "protocol.h"
+#include "game.h"
+
+namespace NetCode {
+
+using namespace Net;
+using namespace Protocol;
 
 //------------------------------------------------------------------------------
 
+void Initialize(int argc, char *argv[]);
+
+void Terminate();
+
+void Frame();
+
 //------------------------------------------------------------------------------
 
-} // namespace Protocol
+bool Connected();
+
+void Disconnect();
+bool Connect(std::string host);
+
+//------------------------------------------------------------------------------
+
+bool Send(const Message &, bool reliable = false);
+
+//------------------------------------------------------------------------------
+
+} // namespace NetCode
 
 #endif // _NETCODE_H
 

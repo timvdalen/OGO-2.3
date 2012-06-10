@@ -49,7 +49,7 @@ void Initialize(int argc, char *argv[])
 {
 	string path = "./";
 	for (int i = 0; i < argc - 1; ++i)
-		if (!strcmp(argv[i], "-p"))
+		if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--path"))
 			path = argv[++i];
 	
 	Grid = TwinMaterial(GridMaterial(5),
