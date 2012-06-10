@@ -470,18 +470,28 @@ void TextInput::draw(){
 
 	//TODO: This should be implemented in Widget::preRender() and Widget::postRender()
 	glPushMatrix();
-		
+		int maxchars = (0.36*width)/9;
+		int noLines = buffer.size()/maxchars;
 		glTranslatef(xOffset, yOffset, 0);
 		glBegin(GL_QUADS);
 			glVertex2f(0.30*width, 0.45*height);
-			glVertex2f(0.30*width, 0.55*height);
-			glVertex2f(0.70*width, 0.55*height);
+			glVertex2f(0.30*width, 0.55*height + noLines*15);
+			glVertex2f(0.70*width, 0.55*height + noLines*15);
 			glVertex2f(0.70*width, 0.45*height);
 		glEnd();
 		Assets::Font->select();
 		glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height);
+		
+		int curchars = 0;
+		int line = 0;
 		for(int count=0; count < buffer.length(); count++){
 			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, buffer[count]);
+			curchars++;
+			if(curchars > maxchars){
+				line++;
+				curchars = 0;
+				glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height + 15*line);
+			}
 		}
 		
 	glPopMatrix();
