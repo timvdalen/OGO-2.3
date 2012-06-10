@@ -10,6 +10,8 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
+#include <map>
+
 #include "objects.h"
 
 namespace Objects {
@@ -51,7 +53,13 @@ class Player: public BoundedObject
 	typedef unsigned int Id;
 
 	//! The ID of this player
+	//! \invariant !id || (list[id] == this)
 	Id id;
+	
+	//! Player list
+	static map<Id,Player *> list;
+	//! Gets a player pointer by player id
+	static Player *byId(Id id) { return list.count(id) ? list[i] : 0; }
 
 	//! The team of this player
 	unsigned char team;
@@ -83,6 +91,9 @@ class Player: public BoundedObject
 
 	//! Constructs a player
 	Player(Id _id = (Id)0, unsigned char _team = 'a', string _name = "player", Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
+
+	//! Destroys a player
+	virtual ~Player();
 
 	//! Update model transformations according to velocity and the camera direction
 	void update(const Qd &camobj);

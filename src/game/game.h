@@ -43,6 +43,8 @@ struct GameState
 	World *world;
 	Player *player;
 	string gameName;
+	
+	GameState() : world(0), player(0) {}
 } extern game; //! Current game state
 
 //------------------------------------------------------------------------------
@@ -86,6 +88,12 @@ void Build(); //!< Builds with the primary tool at the seelcted grid unit
 
 void Weapon(WeaponType weapon); //!< Sets the primary weapon
 void Tool(ToolType tool);       //!< Sets the primary build tool
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// Events
+
+void DisplayChatMsg(Player *, string line);
+void DisplayTeamMsg(Player *, string line);
 
 //------------------------------------------------------------------------------
 

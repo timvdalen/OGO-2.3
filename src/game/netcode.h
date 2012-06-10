@@ -27,6 +27,9 @@ void Terminate();
 
 void Frame();
 
+bool TryLock();
+void Unlock();
+
 //------------------------------------------------------------------------------
 
 bool Connected();
@@ -34,9 +37,11 @@ bool Connected();
 void Disconnect();
 bool Connect(std::string host);
 
+bool Send(const Message &, bool reliable = false);
+
 //------------------------------------------------------------------------------
 
-bool Send(const Message &, bool reliable = false);
+void Chat(string line);
 
 //------------------------------------------------------------------------------
 

@@ -130,6 +130,8 @@ TokenRing::~TokenRing()
 {
 	VPRIV(TokenRingData, td)
 	
+	close();
+	
 	//pthread_mutex_lock(&td->lock); Would cause a deadlock
 	{
 		pthread_cancel(td->thread);
@@ -138,8 +140,6 @@ TokenRing::~TokenRing()
 		pthread_join(td->thread, &status);
 	}
 	pthread_mutex_unlock(&td->lock);
-	
-	close();
 	
 	pthread_mutex_destroy(&td->lock);
 	pthread_cond_destroy(&td->decided);

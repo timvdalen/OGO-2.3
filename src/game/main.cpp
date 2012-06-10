@@ -178,6 +178,14 @@ void Frame()
 	if (!window) return;
 	if (!controller) return;
 
+	NetCode::Frame();
+	if (NetCode::TryLock())
+	{
+		// Critical section
+		
+		NetCode::Unlock();
+	}
+
 	input->frame();
 	
 	World *world = dynamic_cast<World *>(&*window->viewports[0]->world);

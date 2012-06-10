@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #include <algorithm>
 
@@ -20,6 +21,9 @@ using namespace std;
 using namespace Protocol;
 
 string to_lower_case(string str);
+
+double defWidth = 100;
+double defHeight = 100;
 
 GameState game;
 
@@ -48,12 +52,24 @@ Command::List Command::list;
 
 void Initialize(int argc, char *argv[])
 {
+	for (int i = 0; i < argc - 1; ++i)
+	{
+		if (!strcmp(argv[i], "-x") || !strcmp(argv[i], "--map-width"))
+			defWidth = atof(argv[++i]);
+		if (!strcmp(argv[i], "-y") || !strcmp(argv[i], "--map-height"))
+			defHeight = atof(argv[++i]);
+	}
+	
+	game.world = new World(defWidth, defHeight);
 }
 
 //------------------------------------------------------------------------------
 
 void Terminate()
 {
+	game.player = NULL;
+	if (game.world) delete game.world;
+	game.world = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -266,6 +282,21 @@ void Tool(ToolType tool)
 
 //------------------------------------------------------------------------------
 
+void DisplayChatMsg(Player *player, string line)
+{
+	if (!player) return;
+	
+	// Display chat message in hud
+}
+
+//------------------------------------------------------------------------------
+
+void DisplayTeamMsg(Player *player, string line)
+{
+	if (!player) return;
+}
+
+//------------------------------------------------------------------------------
 
 void KeyCode(string str)
 {
