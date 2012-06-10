@@ -17,6 +17,7 @@
 namespace NetCode {
 
 using namespace std;
+using namespace Game;
 
 TokenRing *tokenring = NULL;
 uword port = GAME_PORT;
@@ -174,8 +175,8 @@ void Move(Pd position, Vd velocity)
 	Message msg;
 	msg.push_back("MOVE");
 	msg.push_back(game.player->origin.x);
-	msg.push_back(game.player->origin.Y);
-	msg.push_back(game.player->origin.Z);
+	msg.push_back(game.player->origin.y);
+	msg.push_back(game.player->origin.z);
 	msg.push_back(0);
 	msg.push_back(0);
 	msg.push_back(0);

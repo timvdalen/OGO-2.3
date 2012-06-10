@@ -59,7 +59,7 @@ class Player: public BoundedObject
 	//! Player list
 	static map<Id,Player *> list;
 	//! Gets a player pointer by player id
-	static Player *byId(Id id) { return list.count(id) ? list[i] : 0; }
+	static Player *byId(Id id) { return list.count(id) ? list[id] : 0; }
 
 	//! The team of this player
 	unsigned char team;

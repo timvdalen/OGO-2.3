@@ -10,14 +10,17 @@
 #ifndef _NETCODE_H
 #define _NETCODE_H
 
+#include "base.h"
 #include "net.h"
 #include "protocol.h"
 #include "game.h"
 
 namespace NetCode {
 
+using namespace Core;
 using namespace Net;
 using namespace Protocol;
+using namespace Base::Alias;
 
 //------------------------------------------------------------------------------
 
@@ -41,7 +44,8 @@ bool Send(const Message &, bool reliable = false);
 
 //------------------------------------------------------------------------------
 
-void Chat(string line);
+void Chat(std::string line);
+void Move(Pd position, Vd velocity);
 
 //------------------------------------------------------------------------------
 

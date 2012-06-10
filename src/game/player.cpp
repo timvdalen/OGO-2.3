@@ -18,7 +18,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
-static map<Id,Player *> Player::list;
+map<Player::Id,Player *> Player::list;
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBox B)
 	: BoundedObject(P, R, B)

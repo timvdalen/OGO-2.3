@@ -287,7 +287,6 @@ void Frame()
 	}
 	
 
-	cube->rotation = cube->rotation * Rd(.1, Vd(0,0,1));
 	controller->look.reset();
 	window->render();
 	fps();
