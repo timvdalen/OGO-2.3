@@ -231,7 +231,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 			CALL(input->onText, input->text);
 			input->textMode = false;
 		}
-		else if (key == '\n') // Enter
+		else if (key == '\n' || key == 13) // Enter
 		{
 			CALL(input->onText, input->text);
 			input->text = "";

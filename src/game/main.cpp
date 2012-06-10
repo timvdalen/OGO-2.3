@@ -235,29 +235,17 @@ void KeyDown(Button btn)
 	if (!controller) return;
 	if (!input) return;
 
-	bool isMouse = (btn == btnMouseRight || btn == btnMouseLeft || btn == btnMouseMiddle 
-					|| btn == btnMouseScrollUp || btn == btnMouseScrollDown || btn == btnMouseMoveLeft 
-					|| btn == btnMouseMoveRight || btn == btnMouseMoveUp || btn == btnMouseMoveDown);
-	if(inputField && !isMouse){
-		//Give input to field
-		TextInput *t = TO(TextInput, *inputField);
-		if(t){
-			t->receiveInput((int)btn);
-		}
-	}else{
-		//Handle input
-		if (movebind.count(btn)) controller->move[movebind[btn]] = true;
-		if (lookbind.count(btn)) controller->look[lookbind[btn]] = true;
-
-		switch (btn)
-		{
-			case btnKeyEscape:  Video::StopEventLoop();              break;
-			case btnKeyF:       printFps();                          break;
-			case btnKeyB:       toggleBuild(); 						 break;
-			case btnMouseRight: handleMouse(false);               	 break;
-			case btnMouseLeft:  handleMouse(true);                   break;
-			case btnKeyEnter:	addInput();							 break;
-		}
+	//Handle input
+	if (movebind.count(btn)) controller->move[movebind[btn]] = true;
+	if (lookbind.count(btn)) controller->look[lookbind[btn]] = true;
+	switch (btn)
+	{
+		case btnKeyEscape:  Video::StopEventLoop();              break;
+		case btnKeyF:       printFps();                          break;
+		case btnKeyB:       toggleBuild(); 						 break;
+		case btnMouseRight: handleMouse(false);               	 break;
+		case btnMouseLeft:  handleMouse(true);                   break;
+		case btnKeyEnter:	addInput();							 break;
 	}
 }
 
@@ -345,12 +333,20 @@ void handleMouse(bool left){
 void addInput(){
 	uword width, height;
 	window->size(width = 0, height = 0);
-	inputField = new ObjectHandle(TextInput(getInput, 0, 0, width, height));
+	Input *i = TO(Input, input);
+	i->onText = getInput;
+	inputField = new ObjectHandle(TextInput(&*input, 0, 0, width, height));
 	World *w = TO(World, controller->world);
 	w->hud->children.insert(*inputField);
 }
 
+//------------------------------------------------------------------------------
+
 static void getInput(string input){
+	TextInput *curInput;
+	curInput = TO(TextInput, *inputField);
+	curInput->done = true;
+	
 	World *w = TO(World, controller->world);
 	HUD *h = TO(HUD, w->hud);
 	Player *p = TO(Player, controller->player);
@@ -358,13 +354,24 @@ static void getInput(string input){
 		ChatMessage m = ChatMessage(*p, input);
 		h->messageDisplayer->addMessage(m);
 	}
-	//TODO: Figure out how to actually remove the inputField from the set
-	//This is really hacky, but if I get the TextInput out of the ObjectHandle
-	//(or even just use the ObjectHandle like *inputField) the child isn't deleted.
+
+	//Not so nice, but better than the old way
 	set<ObjectHandle>::iterator it;
-	it = h->children.end();
-	it--;
-	h->children.erase(it);
+	TextInput *tInput;
+	for (it = w->hud->children.begin(); it != w->hud->children.end();)
+	{
+		tInput = TO(TextInput, *it);
+		if (tInput){
+			if(tInput->done){
+				w->hud->children.erase(it);
+				break;
+			}else{
+				it++;
+			}
+		}else{
+			it++;
+		}
+	}
 	delete &**inputField;
 	inputField = NULL;
 }
