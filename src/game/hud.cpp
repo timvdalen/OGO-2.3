@@ -12,6 +12,7 @@
 #include "materials.h"
 #include "hud.h"
 #include "assets.h"
+#include "game.h"
 
 namespace HUD_objects {
 
@@ -443,8 +444,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glBegin(GL_QUADS);
         glVertex2i(72,67);
         glVertex2i(72,93);
-        glVertex2i(72 + 96*factor,93);
-        glVertex2i(72 + 96*factor,67);
+        glVertex2i((int) (72 + 96*factor), 93);
+        glVertex2i((int) (72 + 96*factor), 67);
         glEnd();
         green->unselect();
         if(96*factor > 6){//The rectangle has not been degenerated
@@ -452,8 +453,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             glBegin(GL_QUADS);
             glVertex2i(75,70);
             glVertex2i(75,90);
-            glVertex2i(69 + 96*factor,90);
-            glVertex2i(69 + 96*factor,70);
+            glVertex2i((int) (69 + 96*factor),90);
+            glVertex2i((int) (69 + 96*factor),70);
             glEnd();
             darkgreen->unselect();
         }
@@ -462,8 +463,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             glLineWidth(2);
             black->select();
             glBegin(GL_LINES);
-            glVertex2i(72+96*factor, 93);
-            glVertex2i(72+96*factor, 67);
+            glVertex2i((int) (72 + 96*factor), 93);
+            glVertex2i((int) (72 + 96*factor), 67);
             glEnd();
             black->unselect();
         }
@@ -622,9 +623,10 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         //*le buildings
         multimap<GridPoint, ObjectHandle> *mapp = &w->terrain->structures;
         //*le robots
-        map<Player::Id ,Player *>::iterator it;
-        for ( it=Player::list.begin() ; it != Player::list.end(); it++ ){
-            Player *p = (*it).second;
+        map<Player::Id,ObjectHandle>::iterator it;
+        for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
+		{
+            Player *p = TO(Player,it->second);
             if(!p){
                 return;
             }
@@ -633,8 +635,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             }else{
                 Assets::Robot_blue->select();
             }
-            int relx =  300*(p->origin.x + w->width/2.0)/w->width;
-            int rely =  300*(p->origin.y + w->height/2.0)/w->height;
+            int relx = (int) (300 * (p->origin.x + w->width / 2.0) / w->width);
+            int rely = (int) (300 * (p->origin.y + w->height / 2.0) / w->height);
             glBegin(GL_QUADS);
             glTexCoord2f(0,1);
             glVertex2i(relx,rely);
@@ -679,7 +681,7 @@ void TextInput::draw(){
 
 	//TODO: This should be implemented in Widget::preRender() and Widget::postRender()
 	glPushMatrix();
-		int maxchars = (0.36*width)/9;
+		int maxchars = (int) ((0.36 * width) / 9);
 		int noLines = buffer.size()/maxchars;
 		glTranslatef(xOffset, yOffset, 0);
 		glBegin(GL_QUADS);
@@ -689,7 +691,7 @@ void TextInput::draw(){
 			glVertex2f(0.70*width, 0.45*height);
 		glEnd();
 		Assets::Font->select();
-		glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height);
+		glRasterPos2i((int) (xOffset + 0.32 * width), (int) (yOffset + 0.50 * height));
 		
 		int curchars = 0;
 		int line = 0;
@@ -699,7 +701,7 @@ void TextInput::draw(){
 			if(curchars > maxchars){
 				line++;
 				curchars = 0;
-				glRasterPos2i(xOffset + 0.32*width, yOffset + 0.50*height + 15*line);
+				glRasterPos2i((int) (xOffset + 0.32 * width), (int) (yOffset + 0.50 * height + 15 * line));
 			}
 		}
 		
