@@ -62,6 +62,13 @@ void Prompt(string cmd); //!< Opens the console with the specified string in pla
 void Quit();              //!< Quits to game
 void RQuit(string msg);   //!< Rage quits with the supplied swear words
 
+//! Adds a bind to the default binding
+//! \see Binding::bind
+void Bind(string button, string line);
+
+//! Executes each line of a file
+void Exec(string filename);
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Network
 

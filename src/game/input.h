@@ -10,6 +10,7 @@
 #ifndef _INPUT_H
 #define _INPUT_H
 
+#include <map>
 #include <string>
 
 #include "base.h"
@@ -88,6 +89,24 @@ class Input
 	void *data;
 	double dx, dy;
 };
+
+//------------------------------------------------------------------------------
+
+//! Maps commands to key presses and releases
+class Binding
+{
+	public:
+	typedef map<Button,std::string> Bind; //!< Binding type
+	Bind down;                //!< Binding on key press
+	Bind up;                  //!< Binding on key release
+	
+	//! Create a new binding from a button and command string
+	//! \note use a '|' to specify an up event
+	void bind(std::string button, std::string line);
+	
+	void processUp(Button);   //!< Execute command bound on key release
+	void processDown(Button); //!< Execute command bound on key press
+} extern binds; //!< Default binding
 
 //------------------------------------------------------------------------------
 

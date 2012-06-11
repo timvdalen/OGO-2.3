@@ -2,13 +2,6 @@
  * Input module -- see header file for more info
  */
 
-#include <stdlib.h>
-
-#include <algorithm>
-#include <set>
-#include <map>
-#include <stdio.h>
-
 #if defined _WIN32
 	#include <gl\freeglut.h>
 #elif defined __APPLE__
@@ -17,6 +10,14 @@
 	#include <GL/freeglut.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <algorithm>
+#include <set>
+#include <map>
+
+#include "game.h"
 #include "input.h"
 
 #define PRIV(T,x) if (!data) return; T *x = (T *) data;
@@ -214,6 +215,47 @@ void Input::frame()
 	
 	
 	glutWarpPointer(width, height);
+}
+
+//------------------------------------------------------------------------------
+
+Binding binds;
+
+void Binding::processUp(Button btn)
+{
+	if (!up.count(btn)) return;
+	Game::Call(up[btn]);
+}
+
+//------------------------------------------------------------------------------
+
+void Binding::processDown(Button btn)
+{
+	if (!down.count(btn)) return;
+	Game::Call(down[btn]);
+}
+
+//------------------------------------------------------------------------------
+
+void Binding::bind(string button, string cmd)
+{	
+	Button btn = ToButton(button);
+	if (btn == btnUnknown) return;
+	
+	size_t pos = cmd.find('|');
+	if (pos != string::npos)
+	{
+		size_t pos2 = pos;
+		while (cmd[--pos]  == ' ');
+		while (cmd[++pos2] == ' ');
+		down[btn] = cmd.substr(0, pos + 1);
+		up[btn] = cmd.substr(pos2);
+	}
+	else
+	{
+		down[btn] = cmd;
+		up.erase(btn);
+	}
 }
 
 //------------------------------------------------------------------------------

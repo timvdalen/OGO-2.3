@@ -161,6 +161,44 @@ void RQuit(string msg)
 
 //------------------------------------------------------------------------------
 
+CMD(Bind, 2, arg, (string) arg[0], (string) arg[1])
+void Bind(string button, string line)
+{
+	binds.bind(button, line);
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Exec, 1, arg, (string) arg[0])
+void Exec(string filename)
+{
+	FILE *fp = fopen(filename.c_str(), "rt");
+	if (!fp)
+	{
+		Echo(string("Unable to open script file: " + filename));
+		return;
+	}
+	
+	Echo(string("Executing ") + filename + string("..."));
+	
+	char buffer[1024], *ptr;
+	while(fgets(buffer, sizeof (buffer), fp))
+	{
+		ptr = buffer;
+		while ((*ptr == ' ') || (*ptr = '\t')) ptr++;
+		if (!*ptr || (*ptr == '#')) continue;
+		
+		size_t len = strlen(ptr) - 1;
+		if (ptr[len] == '\n') ptr[len--] = 0;
+		if (ptr[len] == '\r') ptr[len] = 0;
+		
+		Call(string(ptr));
+	}
+	fclose(fp);
+}
+
+//------------------------------------------------------------------------------
+
 CMD(Connect, 1, arg, (string) arg[0])
 void Connect(string address)
 {

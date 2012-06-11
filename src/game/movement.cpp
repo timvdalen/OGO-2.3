@@ -378,8 +378,8 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
 void Controller::avoidPulverizebyBuilding(){
     World *w = TO(World, world); 
     Terrain *t = w->terrain; 
-    int xlength = w->width/GRID_SIZE;
-    int ylength = w->height/GRID_SIZE;
+    int xlength = (int) (w->width / GRID_SIZE);
+    int ylength = (int) (w->height / GRID_SIZE);
     bool ** containsBuilding = new bool*[xlength];
 	for (int x = 0; x < xlength; x++) containsBuilding[x] = new bool[ylength];
     //memset(containsBuilding, 0, sizeof containsBuilding);
@@ -390,8 +390,8 @@ void Controller::avoidPulverizebyBuilding(){
         containsBuilding[p.x][p.y] = true;
     }
     //O(n^2) could be faster, alot faster, pruning could be applied extensively
-    int gridx = (pos.x + w->width/2)/GRID_SIZE;
-    int gridy = (pos.y + w->height/2)/GRID_SIZE;
+    int gridx = (int) ((pos.x + w->width / 2) / GRID_SIZE);
+    int gridy = (int) ((pos.y + w->height / 2) / GRID_SIZE);
     if(containsBuilding[gridx][gridy]){
         double min_distance = std::numeric_limits<double>::infinity();
         int i, j;

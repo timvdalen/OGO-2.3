@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     }
 	
 	srand(time(NULL));
-	
+
     Video::Initialize(argc, argv);
 	window = new Video::Window(width, height, GAME_NAME, fullscreen);
 	Video::Viewport v1(1,1);
