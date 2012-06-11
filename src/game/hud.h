@@ -1,12 +1,17 @@
 #ifndef _H_HUD
 #define _H_HUD
 
+namespace HUD_objects{
+    class HUD;
+}
+
 #include <string>
 #include "core.h"
 #include "video.h"
 #include "objects.h"
 #include "player.h"
 #include "input.h"
+#include "world.h"
 
 //! Contains HUD objects
 namespace HUD_objects{
@@ -49,7 +54,7 @@ class HUD: public Object{
     Team *currentTeam;
 
 	//! Constructs the HUD with width _width and height _height. 
-	HUD(int _width, int _height);
+	HUD(int _width, int _height, World* _w);
 
 	//! Notifies the HUD that the screen size has changed
 	void resize(int _width, int _height);
@@ -254,6 +259,21 @@ class TextInput: public Widget{
 	
 	//! Displays the TextInput
 	void draw();
+};
+    
+class MiniMap: public Widget{
+    
+    World* w;
+    
+    public:     
+    //! Constructs the status displayer
+    MiniMap(int _x, int _y, int _width, int _height, World* _w);
+        
+    //! Displays the status
+    virtual void draw();
+        
+    //! Renders this object
+    virtual void render();
 };
 
 }

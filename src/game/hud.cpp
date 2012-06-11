@@ -30,7 +30,7 @@ int modulo(int a, int b)
 
 //------------------------------------------------------------------------------
 
-HUD::HUD(int _width, int _height){
+HUD::HUD(int _width, int _height, World *_w){
 	resize(_width, _height);
 	// TODO FIX FOLLOWING REFERENCES
     currentPlayer = new Player();
@@ -58,6 +58,10 @@ HUD::HUD(int _width, int _height){
 	chHandle = CrossHair(0, 0, _width, _height);
 	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
 	children.insert(chHandle);
+    
+    ObjectHandle mmHandle;
+    mmHandle = MiniMap(40,40, _width, _height, _w);
+    children.insert(mmHandle);
 }
 
 //------------------------------------------------------------------------------
@@ -585,7 +589,70 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         }
   
 }
+    //------------------------------------------------------------------------------
     
+    
+    MiniMap::MiniMap(int _x, int _y, int _width, int _height, World *_w) : Widget(_x, _y, _width, _height)
+    {
+        w = _w;
+    }
+    
+    
+    //------------------------------------------------------------------------------
+    void MiniMap::draw(){
+        MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
+        MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        bg->select();
+        glBegin(GL_QUADS);
+        glVertex2i(0,0);
+        glVertex2i(0,360);
+        glVertex2i(360,360);
+        glVertex2i(360,0);
+        glEnd();
+        bg->unselect();
+        black->select();
+        glBegin(GL_LINE_STRIP);
+        glVertex2i(0,0);
+        glVertex2i(0,360);
+        glVertex2i(360,360);
+        glVertex2i(360,0);
+        glVertex2i(0,0);
+        glEnd();
+        black->unselect();
+        return;
+        printf("start\n");
+        set<ObjectHandle>::iterator it;
+        for (it = w->children.begin(); it != w->children.end(); ++it){
+            printf("middle\n");
+            if(*it){
+            printf("middle\n");
+            ObjectHandle* oh = const_cast<ObjectHandle*>(&*it);
+            printf("middle\n");
+            printf(typeid(oh).name());
+            printf("\n");
+            ObjectHandle ohh = *oh;
+            printf("middle\n");
+            Player* p = TO(Player, ohh);
+            printf("checking\n");
+            if(p){
+                printf("a");
+                printf("\n");
+            }
+            }
+        }
+        printf("end\n");
+        printf("\n");
+        
+    }
+    
+    void MiniMap::render(){
+        return;
+            glPushMatrix();
+            //Set to the right coordinates
+            glTranslatef(width - xOffset- 360,yOffset,0);
+            draw();
+            glPopMatrix();
+    }
     
     
 //------------------------------------------------------------------------------
@@ -630,6 +697,8 @@ void TextInput::draw(){
 		
 	glPopMatrix();
 }
+    
+
 
 //------------------------------------------------------------------------------
 

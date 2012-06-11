@@ -21,7 +21,7 @@ World::World(double _width, double _height)
 	children.insert(tHandle);
 
 	ObjectHandle hudHandle;
-	hudHandle = HUD(640, 480);
+	hudHandle = HUD(640, 480, this);
 	hud = TO(HUD, hudHandle);
 	children.insert(hudHandle);
 
