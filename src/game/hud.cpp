@@ -597,12 +597,46 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     {
         w = _w;
     }
+    //------------------------------------------------------------------------------
+    void drawPlayer(Player *p, int xspacing, int yspacing, World* w, bool marked){
+        float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
+        float rely = ((w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/(w->height));
+        if(marked){
+            Assets::Robot_normal->select();
+        }else if(p->team =='a'){
+            Assets::Robot_red->select();
+        }else{
+            Assets::Robot_blue->select();
+        }
+        glBegin(GL_QUADS);
+        glTexCoord2f(0,1);
+        glVertex2i((int)(relx*xspacing),(int)(rely*yspacing));
+        glTexCoord2f(0,0);
+        glVertex2i((int)(relx*xspacing),(int)((rely+1)*yspacing));
+        glTexCoord2f(1,0);
+        glVertex2i((int)((relx+1)*xspacing), (int)((rely+1)*yspacing));
+        glTexCoord2f(1,1);
+        glVertex2i((int)((relx+1)*xspacing), (int)((rely)*yspacing));
+        glEnd();
+        if(marked){
+            Assets::Robot_normal->select();
+        }else if(p->team == 'a'){
+            Assets::Robot_red->unselect();
+        }else{
+            Assets::Robot_blue->unselect();
+        }
+    }
     
     
     //------------------------------------------------------------------------------
     void MiniMap::draw(){
         MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
         MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        if(w->width > w->height){
+            glScalef(1.0f, w->height/w->width,1.0f);
+        }else{
+            glScalef(w->width/w->height,1.0f,1.0f);
+        }
         bg->select();
         glBegin(GL_QUADS);
         glVertex2i(0,0);
@@ -621,7 +655,50 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glEnd();
         black->unselect();
         //*le buildings
-        multimap<GridPoint, ObjectHandle> *mapp = &w->terrain->structures;
+        multimap<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
+        multimap<GridPoint, ObjectHandle>::iterator itt;
+        int xspacing = (int) 320.0/(w->width/GRID_SIZE);
+        int yspacing = (int) 320.0/(w->height/GRID_SIZE);
+        for(itt = structs->begin(); itt != structs->end(); itt++){
+            GridPoint p = itt->first;
+            ObjectHandle s = itt->second;
+            Building *b = TO(Building, s);
+            MaterialHandle mat;
+            float progress;
+            //TODO team recognition.
+            if(TO(DefenseTower, s)){
+                progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+                mat = Assets::Tower_normal;
+        //    }else if(TO(Mine, s)){ TODO FIX THIS WONT COMPILE ?
+         //       progress = 1;
+        //        mat = Assets::Mine;
+        }else if(TO(ResourceMine, s)){
+                progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+                mat = Assets::Pickaxe_normal;
+        ///    }else if(TO(HeadQuarters, s)){
+         //       progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+          //      mat = Assets::HQ_normal;
+            }
+            if(mat){
+                mat->select();
+                glColor4f(1.0f,1.0f,1.0f,0.7f*progress+0.3f);
+                    glBegin(GL_QUADS);
+                        glTexCoord2f(0,1);
+                        glVertex2i(p.x*xspacing,p.y*yspacing);
+                        glTexCoord2f(0,0);
+                        glVertex2i(p.x*xspacing,(p.y+1)*yspacing);
+                        glTexCoord2f(1,0);
+                        glVertex2i((p.x+1)*xspacing, (p.y+1)*yspacing);
+                        glTexCoord2f(1,1);
+                        glVertex2i((p.x+1)*xspacing, (p.y)*yspacing);
+                    glEnd();
+                glColor4f(1.0f,1.0f,1.0f,1.0f);
+                mat->unselect();
+            }
+        }
+        
+        xspacing = (int) 320.0/(w->width/GRID_SIZE   + 1);
+        yspacing = (int) 320.0/(w->height/GRID_SIZE  + 1);
         //*le robots
         map<Player::Id,ObjectHandle>::iterator it;
         for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
@@ -630,36 +707,21 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             if(!p){
                 return;
             }
-            if(p->team =='a'){
-                Assets::Robot_red->select();
-            }else{
-                Assets::Robot_blue->select();
-            }
-            int relx = (int) (300 * (p->origin.x + w->width / 2.0) / w->width);
-            int rely = (int) (300 * (p->origin.y + w->height / 2.0) / w->height);
-            glBegin(GL_QUADS);
-            glTexCoord2f(0,1);
-            glVertex2i(relx,rely);
-            glTexCoord2f(0,0);
-            glVertex2i(relx,rely + 20);
-            glTexCoord2f(1,0);
-            glVertex2i(relx + 20, rely + 20);
-            glTexCoord2f(1,1);
-            glVertex2i(relx + 20, rely);
-            glEnd();
-            if(p->team == 'a'){
-                Assets::Robot_red->unselect();
-            }else{
-                Assets::Robot_blue->unselect();
-            }
+            drawPlayer(p,xspacing,yspacing,w,false);
         }        
+        drawPlayer(Game::game.player, xspacing, yspacing, w, true);
     }
     
+    
     void MiniMap::render(){
-        //return;
+        //scale width
             glPushMatrix();
             //Set to the right coordinates
-            glTranslatef(width - xOffset- 320,yOffset,0);
+            float scale = min(width, height);
+            scale = scale/1000.0;
+            glTranslatef(width,0,0);
+            glScalef(scale,scale,0);
+            glTranslatef(-320 - xOffset,yOffset,0);
             draw();
             glPopMatrix();
     }

@@ -96,7 +96,7 @@ void applyBillboarding(){
     glGetFloatv(GL_MODELVIEW_MATRIX , m);
         //set look and up-vector to identity vertices
     float billBoardedMatrix[16] = { 1   ,     0,     0,   m[3],
-                                    m[4],  m[5],  m[6],   m[7],
+                                    m[4]   ,  m[5], m[6],   m[7],
                                        0,     0,     1,  m[11],
                                    m[12], m[13], m[14],  m[15]};
     glLoadMatrixf(billBoardedMatrix);     
