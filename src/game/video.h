@@ -57,6 +57,8 @@ extern void(*OnFrame) ();
 
 //! Gets the number of milisecconds passed since Initialize was called
 dword ElapsedTime();
+//! Gets the current number of frames per second
+double CurrentFPS();
 
 //------------------------------------------------------------------------------
 

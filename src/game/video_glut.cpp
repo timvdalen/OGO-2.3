@@ -27,6 +27,8 @@ using namespace Base::Alias;
 
 void(*OnFrame) () = NULL;
 
+FPS fps;
+
 //------------------------------------------------------------------------------
 
 void Initialize(int argc, char *argv[])
@@ -69,6 +71,13 @@ void StopEventLoop()
 dword ElapsedTime()
 {
 	return glutGet(GLUT_ELAPSED_TIME);
+}
+
+//------------------------------------------------------------------------------
+
+double CurrentFPS()
+{
+	return fps;
 }
 
 //==============================================================================
@@ -211,6 +220,7 @@ void Window::resize(int width, int height)
 
 void Window::timer(int state)
 {
+	fps();
 	CALL(OnFrame);
 	for (set<Window *>::iterator it = windows.begin(); it != windows.end(); ++it)
 		(*it)->resized = false;

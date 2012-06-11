@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include <algorithm>
 
@@ -25,6 +26,7 @@ string to_lower_case(string str);
 
 double defWidth = 100;
 double defHeight = 100;
+string path = "./";
 
 GameState game;
 
@@ -59,7 +61,11 @@ void Initialize(int argc, char *argv[])
 			defWidth = atof(argv[++i]);
 		if (!strcmp(argv[i], "-y") || !strcmp(argv[i], "--map-height"))
 			defHeight = atof(argv[++i]);
+		if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--path"))
+			path = argv[++i];
 	}
+	
+	srand(time(NULL));
 	
 	game.world = new World(defWidth, defHeight);
 }
@@ -134,7 +140,7 @@ void Notice(string msg)
 
 //------------------------------------------------------------------------------
 
-CMD(Prompt, 1, arg, (string) arg[0])
+CMD(Prompt, 0, arg, (arg.empty() ? "" : (string) arg[0]))
 void Prompt(string cmd)
 {
 }
@@ -172,7 +178,7 @@ void Bind(string button, string line)
 CMD(Exec, 1, arg, (string) arg[0])
 void Exec(string filename)
 {
-	FILE *fp = fopen(filename.c_str(), "rt");
+	FILE *fp = fopen((path+filename).c_str(), "rt");
 	if (!fp)
 	{
 		Echo(string("Unable to open script file: " + filename));
@@ -185,14 +191,14 @@ void Exec(string filename)
 	while(fgets(buffer, sizeof (buffer), fp))
 	{
 		ptr = buffer;
-		while ((*ptr == ' ') || (*ptr = '\t')) ptr++;
+		while ((*ptr == ' ') || (*ptr == '\t')) ptr++;
 		if (!*ptr || (*ptr == '#')) continue;
 		
-		size_t len = strlen(ptr) - 1;
+		int len = strlen(ptr) - 1;
 		if (ptr[len] == '\n') ptr[len--] = 0;
-		if (ptr[len] == '\r') ptr[len] = 0;
+		if (ptr[len] == '\r') ptr[len--] = 0;
 		
-		Call(string(ptr));
+		if (len >= 0) Call(string(ptr));
 	}
 	fclose(fp);
 }
@@ -352,8 +358,7 @@ void DisplayTeamMsg(Player *player, string line)
 CMD(PrintFPS, 0, arg)
 void PrintFPS()
 {
-    double fps = 0.0;
-    Echo(string("Current FPS: ") + Argument((double) fps).str);
+    Echo(string("Current FPS: ") + Argument((double) CurrentFPS()).str);
 }
 
 //------------------------------------------------------------------------------

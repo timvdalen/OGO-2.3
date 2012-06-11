@@ -1,0 +1,39 @@
+# directionals
+bind A :moveX -1.0 | moveX 0.0
+bind W :moveY 1.0  | moveY 0.0
+bind S :moveY -1.0 | moveY 0.0
+bind D :moveX 1.0  | moveX 0.0
+
+bind C :moveZ -1.0    | moveZ 0.0
+bind Space :moveZ 1.0 | moveZ 0.0
+
+bind LeftArrow :moveX -1.0 | moveX 0.0
+bind UpArrow :moveY 1.0    | moveY 0.0
+bind DownArrow :moveY -1.0 | moveY 0.0
+bind RightArrow :moveX 1.0 | moveX 0.0
+
+# mouse look
+bind MouseUp :lookX 1.0    | lookX 0.0
+bind MouseDown :lookX -1.0 | lookX 0.0
+bind MouseLeft :lookZ -1.0 | lookZ 0.0
+bind MouseRight :lookZ 1.0 | lookZ 0.0
+
+bind ScrollUp :lookY 1.0
+bind ScrollDown :lookY -1.0
+
+# for the poor people without a scrollwheel
+bind Q :lookY 1.0
+bind Z :lookY -1.0
+
+# weapons & tools
+bind LeftClick :Fire
+bind RightClick :Jump
+
+# other
+bind Enter: Prompt
+bind T :Prompt :say :
+bind Y :Prompt :teamsay :
+bind O :Prompt :Connect :
+
+bind F :PrintFPS
+bind Escape :Quit
