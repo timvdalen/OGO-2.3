@@ -38,6 +38,7 @@ MaterialHandle Health;
 MaterialHandle Mine;
 MaterialHandle Robot_red;    
 MaterialHandle Robot_blue;
+MaterialHandle Robot_normal;
 MaterialHandle Pickaxe_normal;
 MaterialHandle Pickaxe_blue;    
 MaterialHandle Pickaxe_red;
@@ -100,6 +101,7 @@ void Initialize(int argc, char *argv[])
     Mine = TexturedMaterial(path + "assets/textures/hud/mine.png");
     Robot_red = TexturedMaterial(path + "assets/textures/hud/robot_red.png");
     Robot_blue = TexturedMaterial(path + "assets/textures/hud/robot_blue.png");
+    Robot_normal = TexturedMaterial(path + "assets/textures/hud/robot_normal.png");
     Pickaxe_normal = TexturedMaterial(path + "assets/textures/hud/pickaxe_normal.png");
     Pickaxe_blue = TexturedMaterial(path + "assets/textures/hud/pickaxe_blue.png");
     Pickaxe_red = TexturedMaterial(path + "assets/textures/hud/pickaxe_red.png");

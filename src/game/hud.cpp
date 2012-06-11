@@ -597,6 +597,35 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     {
         w = _w;
     }
+    //------------------------------------------------------------------------------
+    void drawPlayer(Player *p, int xspacing, int yspacing, World* w, bool marked){
+        float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
+        float rely = ((w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/(w->height));
+        if(marked){
+            Assets::Robot_normal->select();
+        }else if(p->team =='a'){
+            Assets::Robot_red->select();
+        }else{
+            Assets::Robot_blue->select();
+        }
+        glBegin(GL_QUADS);
+        glTexCoord2f(0,1);
+        glVertex2i((int)(relx*xspacing),(int)(rely*yspacing));
+        glTexCoord2f(0,0);
+        glVertex2i((int)(relx*xspacing),(int)((rely+1)*yspacing));
+        glTexCoord2f(1,0);
+        glVertex2i((int)((relx+1)*xspacing), (int)((rely+1)*yspacing));
+        glTexCoord2f(1,1);
+        glVertex2i((int)((relx+1)*xspacing), (int)((rely)*yspacing));
+        glEnd();
+        if(marked){
+            Assets::Robot_normal->select();
+        }else if(p->team == 'a'){
+            Assets::Robot_red->unselect();
+        }else{
+            Assets::Robot_blue->unselect();
+        }
+    }
     
     
     //------------------------------------------------------------------------------
@@ -678,30 +707,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             if(!p){
                 return;
             }
-            if(p->team =='a'){
-                Assets::Robot_red->select();
-            }else{
-                Assets::Robot_blue->select();
-            }
-            int relx =  (w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/w->width;
-            int rely =  (w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/w->height;
-            glBegin(GL_QUADS);
-            glTexCoord2f(0,1);
-            glVertex2i(relx*xspacing,rely*yspacing);
-            glTexCoord2f(0,0);
-            glVertex2i(relx*xspacing,(rely+1)*yspacing);
-            glTexCoord2f(1,0);
-            glVertex2i((relx+1)*xspacing, (rely+1)*yspacing);
-            glTexCoord2f(1,1);
-            glVertex2i((relx+1)*xspacing, (rely)*yspacing);
-            glEnd();
-            if(p->team == 'a'){
-                Assets::Robot_red->unselect();
-            }else{
-                Assets::Robot_blue->unselect();
-            }
+            drawPlayer(p,xspacing,yspacing,w,false);
         }        
+        drawPlayer(Game::game.player, xspacing, yspacing, w, true);
     }
+    
     
     void MiniMap::render(){
         //scale width

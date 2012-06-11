@@ -43,6 +43,7 @@ extern MaterialHandle Health;
 extern MaterialHandle Mine;
 extern MaterialHandle Robot_red;    
 extern MaterialHandle Robot_blue;
+extern MaterialHandle Robot_normal;
 extern MaterialHandle Pickaxe_normal;
 extern MaterialHandle Pickaxe_blue;    
 extern MaterialHandle Pickaxe_red;
