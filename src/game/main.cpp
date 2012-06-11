@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
 	cube->material = Assets::Test;
 
-	ObjectHandle world = Objects::World(100, 100);
+	ObjectHandle world = Objects::World(100, 150);
 
 	{
 		World *w = TO(World, world);
