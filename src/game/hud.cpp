@@ -621,24 +621,18 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         black->unselect();
         //*le buildings
         multimap<GridPoint, ObjectHandle> *mapp = &w->terrain->structures;
-        printf("%i",(int)mapp->size());
         //*le robots
         map<Player::Id ,Player *>::iterator it;
         for ( it=Player::list.begin() ; it != Player::list.end(); it++ ){
-            printf("unpacking");
             Player *p = (*it).second;
             if(!p){
                 return;
             }
-            printf("unpacked");
-            printf(p->name.c_str());
-            printf("printed\n");
             if(p->team =='a'){
                 Assets::Robot_red->select();
             }else{
                 Assets::Robot_blue->select();
             }
-            printf("origin: %f %f %f", origin.x, origin.y, origin.z);
             int relx =  300*(p->origin.x + w->width/2.0)/w->width;
             int rely =  300*(p->origin.y + w->height/2.0)/w->height;
             glBegin(GL_QUADS);
@@ -656,10 +650,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             }else{
                 Assets::Robot_blue->unselect();
             }
-        }
-        printf("\n");
-
-        
+        }        
     }
     
     void MiniMap::render(){
