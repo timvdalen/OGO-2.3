@@ -336,9 +336,8 @@ void Controller::frame()
 	{
 		lookZ();
 	}
-
 	
-Objects::Player * p = dynamic_cast<Objects::Player*>(&*player);
+	Objects::Player * p = TO(Objects::Player,player);
 	p->velocity = Vd(0,movespeed,0);
 }
 

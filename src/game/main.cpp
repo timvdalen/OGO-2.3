@@ -37,7 +37,6 @@ ObjectHandle *inputField = NULL;
 map<Button,Direction> movebind;
 map<Button,Direction> lookbind;
 map<Button,word> lookcount;
-FPS fps;
 ObjectHandle cube;
 
 ObjectHandle *npc = NULL;
@@ -82,8 +81,6 @@ int main(int argc, char *argv[])
             fullscreen = true;
         }
     }
-	
-	srand(time(NULL));
 
     Video::Initialize(argc, argv);
 	window = new Video::Window(width, height, GAME_NAME, fullscreen);
@@ -93,6 +90,7 @@ int main(int argc, char *argv[])
 	Assets::Initialize(argc, argv); // after the viewports have been initialized!
 	
 	Game::Initialize(argc, argv);
+	Game::Exec("inputs.exec");
 	
 	Net::Initialize();
 	NetCode::Initialize(argc, argv);
@@ -294,17 +292,6 @@ void Frame()
 
 	controller->look.reset();
 	window->render();
-	fps();
-}
-
-//------------------------------------------------------------------------------
-
-void printFps()
-{
-    World *world = TO(World, (window->viewports.front())->world);
-    stringstream ss;
-    ss << "Current FPS: " << (double)fps;
-    world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
 }
 
 //------------------------------------------------------------------------------
@@ -312,6 +299,9 @@ void printFps()
 void KeyUp(Button btn)
 {
 	//printf("key up: %d\n", btn);
+	
+	binds.processUp(btn);
+	
 	if (!controller) return;
 
 	if ((btn >= btnMouseScrollUp) && (btn <= btnMouseMoveDown)) return;
@@ -325,6 +315,9 @@ void KeyUp(Button btn)
 void KeyDown(Button btn)
 {
 	//printf("key down: %d\n", btn);
+	
+	binds.processDown(btn);
+	
 	if (!controller) return;
 	if (!input) return;
 
@@ -333,8 +326,6 @@ void KeyDown(Button btn)
 	if (lookbind.count(btn)) controller->look[lookbind[btn]] = true;
 	switch (btn)
 	{
-		case btnKeyEscape:  Video::StopEventLoop();              break;
-		case btnKeyF:       printFps();                          break;
 		case btnKeyB:       toggleBuild(); 						 break;
 		case btnMouseRight: handleMouse(false);               	 break;
 		case btnMouseLeft:  handleMouse(true);                   break;
