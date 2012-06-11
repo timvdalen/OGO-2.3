@@ -111,6 +111,7 @@ void DisplayTeamMsg(Player *, string line);
 // Diagnostics
 
 void PrintFPS();
+void PrintCPS();
 
 //------------------------------------------------------------------------------
 

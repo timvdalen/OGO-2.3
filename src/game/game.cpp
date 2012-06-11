@@ -363,6 +363,14 @@ void PrintFPS()
 
 //------------------------------------------------------------------------------
 
+CMD(PrintCPS, 0, arg)
+void PrintCPS()
+{
+    Echo(string("Current CPS: ") + Argument((double) NetCode::CurrentCPS()).str);
+}
+
+//------------------------------------------------------------------------------
+
 void NetDebug()
 {
 	NetCode::Debug();

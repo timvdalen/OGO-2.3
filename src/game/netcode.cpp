@@ -10,6 +10,7 @@
 #include "common.h"
 #include "netalg.h"
 #include "netcode.h"
+#include "video.h"
 #include "game.h"
 
 #define CONNECTED (tokenring && tokenring->connected())
@@ -21,6 +22,7 @@ using namespace Game;
 
 TokenRing *tokenring = NULL;
 uword port = GAME_PORT;
+FPS cps;
 
 //------------------------------------------------------------------------------
 
@@ -88,6 +90,12 @@ void Frame()
 	
 	while (tokenring->loss(id))
 	{
+		// Temporarily remove a player from the world
+		if (game.players.count(id))
+		{
+			game.world->children.erase(game.players[id]);
+			game.players.erase(id);
+		}
 	}
 	
 	while (tokenring->entry(id))
@@ -111,7 +119,7 @@ bool TryLock()
 
 void Unlock()
 {
-	if (tokenring) tokenring->pass();
+	if (tokenring && tokenring->pass()) cps();
 }
 
 //==============================================================================
@@ -119,6 +127,13 @@ void Unlock()
 bool Connected()
 {
 	return CONNECTED;
+}
+
+//------------------------------------------------------------------------------
+
+double CurrentCPS()
+{
+	return cps;
 }
 
 //------------------------------------------------------------------------------

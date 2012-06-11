@@ -53,7 +53,6 @@ class Player: public BoundedObject
 	typedef unsigned int Id;
 
 	//! The ID of this player
-	//! \invariant !id || (list[id] == this)
 	Id id;
 
 	//! The team of this player

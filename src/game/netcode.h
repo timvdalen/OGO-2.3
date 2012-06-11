@@ -36,6 +36,7 @@ void Unlock();
 //------------------------------------------------------------------------------
 
 bool Connected();
+double CurrentCPS();
 
 void Disconnect();
 bool Connect(std::string host);

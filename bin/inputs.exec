@@ -37,3 +37,7 @@ bind O :Prompt :Connect :
 
 bind F :PrintFPS
 bind Escape :Quit
+
+bind 7 :connect 127.0.0.1:7070
+bind 8 :connect 127.0.0.1:8070
+bind 9 :connect 127.0.0.1:9070

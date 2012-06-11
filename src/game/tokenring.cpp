@@ -84,6 +84,7 @@ struct TokenRingData
 	//! node nodeId passes token to node passId
 	void arrival(NodeID nodeId, NodeID passID);
 	void accept();
+	void unbuffer(NodeID nodeID);
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -306,7 +307,11 @@ bool TokenRing::pass()
 			NodeID nextId = td->nextId();
 			msg.push_back((long) nextId);
 			if (success = clique->shout(msg))
+			{
+				// Pass token and process buffered reliable messages
 				td->token = nextId;
+				td->unbuffer(nextId);
+			}
 		}
 	}
 	pthread_mutex_unlock(&td->lock);
@@ -529,6 +534,7 @@ NodeID TokenRingData::nextId() const
 
 void TokenRingData::receive(Message &msg, Address & addr)
 {
+	//printf("%d> %s\n", (lookup.count(addr) ? lookup[addr] : 0), string(msg).c_str());
 	TokenRingData *td = this;
 	string cmd = msg[0].str;
 	size_t size = msg.size();
@@ -542,6 +548,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 		id = (long) msg[1];
 		topId = id + 1;
 		token = lookup[addr];
+		unbuffer(token);
 		
 		if (nodes.count(id))
 		{
@@ -667,20 +674,19 @@ void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 			clique->close();
 			return;
 		}
+		
+		// Pass token and process buffered reliable messages
+		token = passId;
+		unbuffer(token);
 	}
 	else                                       // nodes token passed
 	{
 		// Pass token and process buffered reliable messages
 		token = passId;
-		TokenRingNode *node = &nodes[token];
-		while (!node->buffer.empty())
-		{
-			receive(node->buffer.front(), node->addr);
-			node->buffer.pop();
-		}
+		unbuffer(token);
 		
 		// Concistency check
-		node = &nodes[token];
+		TokenRingNode *node = &nodes[token];
 		if (!clique->connected(node->addr))
 		{
 			clique->close();
@@ -737,6 +743,18 @@ void TokenRingData::accept()
 		bool cond = INCOMMING;
 		entry.push(newId);
 		if (!cond) pthread_cond_broadcast(&incomming);
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void TokenRingData::unbuffer(NodeID nodeId)
+{
+	TokenRingNode *node = &nodes[nodeId];
+	while (!node->buffer.empty())
+	{
+		receive(node->buffer.front(), node->addr);
+		node->buffer.pop();
 	}
 }
 
