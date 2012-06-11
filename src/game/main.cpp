@@ -39,7 +39,7 @@ map<Button,Direction> lookbind;
 map<Button,word> lookcount;
 ObjectHandle cube;
 
-ObjectHandle *npc = NULL;
+ObjectHandle npc;
 int lastmess = 0;
 
 bool building = false;
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 	player->children.insert(playercube);
 	player->rotation = Rd(0,Vd(0,0,1));
 	
-	npc = new ObjectHandle(Objects::Player(1, 'b', "NPC", Pd(30, 40, 0)));
+	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
 
 	cube->material = Assets::Test;
 
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 	}
 
 	world->children.insert(player);
-	world->children.insert(*npc);
+	world->children.insert(npc);
 	
 	// hack
 	Game::game.world = TO(World, world);
@@ -182,6 +182,8 @@ int main(int argc, char *argv[])
 
 //------------------------------------------------------------------------------
 
+int loop = 0;
+
 void Frame()
 {
 	if (!input) return;
@@ -198,7 +200,7 @@ void Frame()
 
 	input->frame();
 	
-	World *world = dynamic_cast<World *>(&*window->viewports[0]->world);
+	World *world = TO(World, window->viewports[0]->world);
 	Camera &cam = window->viewports[0]->camera;
 	
 	if(building)
@@ -215,10 +217,16 @@ void Frame()
 	
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
-	NetCode::Move(player->origin, Vd());
+	
+	switch (++loop)
+	{
+		case 1:  NetCode::Move(player->origin, Vd()); break;
+		case 2:  NetCode::Look(player->rotation); break;
+		case 5: loop = 0; break;
+	}
 	
 	int time = Video::ElapsedTime();
-	Objects::Player * pNPC = TO(Objects::Player, *npc);
+	Objects::Player * pNPC = TO(Objects::Player, npc);
 	World *w = TO(World, controller->world);
 	HUD *h = TO(HUD, w->hud);
 	if(time > 900 && time < 1100){
@@ -441,7 +449,7 @@ static void getInput(string input){
 		//ChatMessage m = ChatMessage(*p, input);
 		//h->messageDisplayer->addMessage(m);
 		if(input == "hi"){
-			Objects::Player * pNPC = TO(Objects::Player, *npc);
+			Objects::Player * pNPC = TO(Objects::Player, npc);
 			ChatMessage m = ChatMessage(*pNPC, "Hey man, what's up?");
 			h->messageDisplayer->addMessage(m);
 		}

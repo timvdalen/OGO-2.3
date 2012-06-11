@@ -105,13 +105,13 @@ class DisplayMessage{
 class ChatMessage: public DisplayMessage{
 	public:
 	//! The player that sent this message
-	Player player;
+	const Player &player;
 
 	//! The actual message
 	string message;
 
 	//! Constructs a new ChatMessage
-	ChatMessage(Player _player, string _message);
+	ChatMessage(const Player &_player, string _message);
 
 	//! Formats this message as <[player.name]>: [message]
 	virtual string toString();
@@ -121,13 +121,13 @@ class ChatMessage: public DisplayMessage{
 class PlayerFragMessage: public DisplayMessage{
 	public:
 	//! The player that made the frag
-	Player killer;
+	const Player &killer;
 
 	//! The player that was fragged
-	Player victim;
+	const Player &victim;
 
 	//! Constructs a new PlayerFragMessage
-	PlayerFragMessage(Player _killer, Player _victim);
+	PlayerFragMessage(const Player &_killer, const Player &_victim);
 
 	//! Formats this message as <[killer.name]> fragged <[victim.name]>
 	virtual string toString();
@@ -137,13 +137,13 @@ class PlayerFragMessage: public DisplayMessage{
 class TowerFragMessage: public DisplayMessage{
 	public:
 	//! The player fragged by a tower
-	Player player;
+	const Player &player;
 
 	//TODO: Add tower position or name
 	
 	
 	//! Constructs a new TowerFragMessage
-	TowerFragMessage(Player _player);
+	TowerFragMessage(const Player &_player);
 
 	//! Formats this message as <[victim.name]> was fragged by a tower
 	virtual string toString();

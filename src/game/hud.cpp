@@ -148,7 +148,7 @@ void Widget::render(){
 
 //------------------------------------------------------------------------------
 
-ChatMessage::ChatMessage(Player _player, string _message)
+ChatMessage::ChatMessage(const Player &_player, string _message)
 	: player(_player)
 {
 	message = _message;
@@ -163,7 +163,7 @@ string ChatMessage::toString(){
 
 //------------------------------------------------------------------------------
 
-PlayerFragMessage::PlayerFragMessage(Player _killer, Player _victim)
+PlayerFragMessage::PlayerFragMessage(const Player &_killer, const Player &_victim)
 	: killer(_killer), victim(_victim)
 {}
 
@@ -175,7 +175,7 @@ string PlayerFragMessage::toString(){
 
 //------------------------------------------------------------------------------
 
-TowerFragMessage::TowerFragMessage(Player _player)
+TowerFragMessage::TowerFragMessage(const Player &_player)
 	: player(_player)
 {}
 
@@ -657,8 +657,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         //*le buildings
         multimap<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
         multimap<GridPoint, ObjectHandle>::iterator itt;
-        int xspacing = (int) 320.0/(w->width/GRID_SIZE);
-        int yspacing = (int) 320.0/(w->height/GRID_SIZE);
+        int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
+        int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
         for(itt = structs->begin(); itt != structs->end(); itt++){
             GridPoint p = itt->first;
             ObjectHandle s = itt->second;
@@ -697,8 +697,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             }
         }
         
-        xspacing = (int) 320.0/(w->width/GRID_SIZE   + 1);
-        yspacing = (int) 320.0/(w->height/GRID_SIZE  + 1);
+        xspacing = (int) (320.0 / (w->width / GRID_SIZE  + 1));
+        yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
         //*le robots
         map<Player::Id,ObjectHandle>::iterator it;
         for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)

@@ -184,12 +184,12 @@ void Move(Pd position, Vd velocity)
 	
 	Message msg;
 	msg.push_back("MOVE");
-	msg.push_back(game.player->origin.x);
-	msg.push_back(game.player->origin.y);
-	msg.push_back(game.player->origin.z);
-	msg.push_back(0);
-	msg.push_back(0);
-	msg.push_back(0);
+	msg.push_back(position.x);
+	msg.push_back(position.y);
+	msg.push_back(position.z);
+	msg.push_back(velocity.x);
+	msg.push_back(velocity.y);
+	msg.push_back(velocity.z);
 	SEND(msg, false);
 }
 RECEIVE(MOVE, id, msg, reliable)
@@ -201,6 +201,27 @@ RECEIVE(MOVE, id, msg, reliable)
 	if (!player) return;
 	
 	player->origin = position;
+}
+
+//------------------------------------------------------------------------------
+
+void Look(Qd rotation)
+{
+	Message msg;
+	msg.push_back(rotation.a);
+	msg.push_back(rotation.b);
+	msg.push_back(rotation.c);
+	msg.push_back(rotation.d);
+	SEND(msg, false);
+}
+RECEIVE(LOOK, id, msg, reliable)
+{
+	Qd rotation((double) msg[1], (double) msg[2], (double) msg[3], (double) msg[4]);
+	
+	Player *player = PLAYER(id);
+	if (!player) return;
+	
+	player->rotation = rotation;
 }
 
 //------------------------------------------------------------------------------
