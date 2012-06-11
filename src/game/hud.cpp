@@ -605,51 +605,68 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         bg->select();
         glBegin(GL_QUADS);
         glVertex2i(0,0);
-        glVertex2i(0,360);
-        glVertex2i(360,360);
-        glVertex2i(360,0);
+        glVertex2i(0,320);
+        glVertex2i(320,320);
+        glVertex2i(320,0);
         glEnd();
         bg->unselect();
         black->select();
         glBegin(GL_LINE_STRIP);
         glVertex2i(0,0);
-        glVertex2i(0,360);
-        glVertex2i(360,360);
-        glVertex2i(360,0);
+        glVertex2i(0,320);
+        glVertex2i(320,320);
+        glVertex2i(320,0);
         glVertex2i(0,0);
         glEnd();
         black->unselect();
-        return;
-        printf("start\n");
-        set<ObjectHandle>::iterator it;
-        for (it = w->children.begin(); it != w->children.end(); ++it){
-            printf("middle\n");
-            if(*it){
-            printf("middle\n");
-            ObjectHandle* oh = const_cast<ObjectHandle*>(&*it);
-            printf("middle\n");
-            printf(typeid(oh).name());
-            printf("\n");
-            ObjectHandle ohh = *oh;
-            printf("middle\n");
-            Player* p = TO(Player, ohh);
-            printf("checking\n");
-            if(p){
-                printf("a");
-                printf("\n");
+        //*le buildings
+        multimap<GridPoint, ObjectHandle> *mapp = &w->terrain->structures;
+        printf("%i",(int)mapp->size());
+        //*le robots
+        map<Player::Id ,Player *>::iterator it;
+        for ( it=Player::list.begin() ; it != Player::list.end(); it++ ){
+            printf("unpacking");
+            Player *p = (*it).second;
+            if(!p){
+                return;
             }
+            printf("unpacked");
+            printf(p->name.c_str());
+            printf("printed\n");
+            if(p->team =='a'){
+                Assets::Robot_red->select();
+            }else{
+                Assets::Robot_blue->select();
+            }
+            printf("origin: %f %f %f", origin.x, origin.y, origin.z);
+            int relx =  300*(p->origin.x + w->width/2.0)/w->width;
+            int rely =  300*(p->origin.y + w->height/2.0)/w->height;
+            glBegin(GL_QUADS);
+            glTexCoord2f(0,1);
+            glVertex2i(relx,rely);
+            glTexCoord2f(0,0);
+            glVertex2i(relx,rely + 20);
+            glTexCoord2f(1,0);
+            glVertex2i(relx + 20, rely + 20);
+            glTexCoord2f(1,1);
+            glVertex2i(relx + 20, rely);
+            glEnd();
+            if(p->team == 'a'){
+                Assets::Robot_red->unselect();
+            }else{
+                Assets::Robot_blue->unselect();
             }
         }
-        printf("end\n");
         printf("\n");
+
         
     }
     
     void MiniMap::render(){
-        return;
+        //return;
             glPushMatrix();
             //Set to the right coordinates
-            glTranslatef(width - xOffset- 360,yOffset,0);
+            glTranslatef(width - xOffset- 320,yOffset,0);
             draw();
             glPopMatrix();
     }
