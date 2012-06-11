@@ -21,9 +21,10 @@ pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Ve
     Point<double> a = bb.lbl;
     Point<double> b = bb.rth;
     //--- Origin does not have to be rotated
-    Point<double> p = origin - this->origin;
+    Point<double> p = (-rotation)*(origin - this->origin);
     //--- Vector only needs to be rotated
-    Vector<double> v = rotation*direction;
+    //--- We might need the inverse of rotation here
+    Vector<double> v = (-rotation)*direction;
     //--- Now check if we have a collision in the x direction
     double lambda1, lambda2;
     if(v.x != 0){
@@ -83,7 +84,7 @@ pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Ve
     }
     return make_pair(ObjectHandle(),collision);
 }
-    
+
     ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> direction){
         return findCollision(origin,direction).first;
     }
@@ -141,9 +142,9 @@ void LaserBeam::preRender(){
 							   Cf(0.8,1,0,alpha),     //Emissive
 							   100.0));           //Shininess
 	}
-	
+
 	material = lm;
-	
+
 	Object::preRender();
 }
 

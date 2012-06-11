@@ -93,16 +93,16 @@ template <class type>
 struct Point
 {
 	type x, y, z;
-	
+
 	Point(const Point &P) : x(P.x), y(P.y), z(P.z) {}
 	Point(type X = 0, type Y = 0, type Z = 0) : x(X), y(Y), z(Z) {}
-	
+
 	//! Vector addition
 	Point operator +(const Vector<type> &V) const { return Point(x+V.x, y+V.y, z+V.z); }
 	//! Vector subtraction
 	Point operator -(const Vector<type> &V) const { return Point(x-V.x, y-V.y, z-V.z); }
 	template <typename T> operator Point<T>() const { return Point<T>((T) x,(T) y,(T) z); }
-	
+
 	operator Vector<type>() const { return Vector<type>(x,y,z); }
 };
 
@@ -118,7 +118,7 @@ struct Vector : public Point<type>
 	using Point<type>::x;
 	using Point<type>::y;
 	using Point<type>::z;
-	
+
 	Vector(type X = 0, type Y = 0, type Z = 0) : Point<type>(X,Y,Z) {}
 	//! Flips the vector
 	Vector operator -() const { return Vector(-x,-y,-z); }
@@ -126,7 +126,7 @@ struct Vector : public Point<type>
 	Vector operator *(const type &S) const { return Vector(x*S,y*S,z*S); }
 	//! Scalar division
 	Vector operator /(const type &S) const { return Vector(x/S,y/S,z/S); }
-	
+
 	//! Vector addition
 	Vector operator +(const Vector<type> &V) const { return Vector(x+V.x, y+V.y, z+V.z); }
 	//! Cross product
@@ -152,12 +152,12 @@ template <typename type>
 struct Quaternion
 {
 	type a, b, c, d;
-	
+
 	Quaternion(type A = 1, type B = 0, type C = 0, type D = 0) : a(A), b(B), c(C), d(D) {}
 	Quaternion(type R, const Vector<type> &V) : a(R), b(V.x), c(V.y), d(V.z) {}
 	operator type() const { return a; }
 	operator Vector<type>() const { return Vector<type>(b,c,d); }
-	
+
 	//! Returns the conjungate
 	Quaternion operator -() const { return Quaternion(a,-b,-c,-d); }
 	//! Scalar multiplication
@@ -172,7 +172,7 @@ struct Quaternion
 		                a*Q.b + b*Q.a + c*Q.d - d*Q.c,
 						a*Q.c - b*Q.d + c*Q.a + d*Q.b,
 						a*Q.d + b*Q.c - c*Q.b + d*Q.a); }
-	//! Quaternion devision
+	//! Quaternion division
 	Quaternion operator /(const Quaternion &Q) const { return Quaternion((Q*Quaternion(a,b,c,d))/(a*a + b*b + c*c + d*d)); }
 	//! Vector multiplication
 	Vector<type> operator *(const Vector<type> &V) const { return (*this) * Quaternion(0,V) * -(*this); }
@@ -195,7 +195,7 @@ struct Rotation
 {
 	type a;
 	Vector<type> v;
-	
+
 	Rotation(type A = 0, const Vector<type> &V = Vector<type>(0,0,1)) : a(A), v(V) {}
 	Rotation(const Quaternion<type> &Q) : a(fmod(acos(Q.a) * 2.0f, Rad)) { v = Q; v = ~v; }
 	Rotation(const Vector<type> &U = Vector<type>(0,0,1),
@@ -221,10 +221,10 @@ struct Color
 		type v[4];
 		struct { type r, g, b, a; };
 	};
-	
+
 	Color(type R = 0, type G = 0, type B = 0, type A = 1)
 		: r(FCLAMP(R)), g(FCLAMP(G)), b(FCLAMP(B)), a(FCLAMP(A)) {}
-	
+
 	Color operator *(const type &S) const { return Color(r*S,g*S,b*S,a*S); }
 	Color operator /(const type &S) const { return Color(r/S,g/S,b/S,a/S); }
 	operator type *() { return &v[0]; }
