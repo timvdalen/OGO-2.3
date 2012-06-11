@@ -30,7 +30,7 @@ int modulo(int a, int b)
 
 //------------------------------------------------------------------------------
 
-HUD::HUD(int _width, int _height){
+HUD::HUD(int _width, int _height, World *_w){
 	resize(_width, _height);
 	// TODO FIX FOLLOWING REFERENCES
     currentPlayer = new Player();
@@ -58,6 +58,10 @@ HUD::HUD(int _width, int _height){
 	chHandle = CrossHair(0, 0, _width, _height);
 	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
 	children.insert(chHandle);
+    
+    ObjectHandle mmHandle;
+    mmHandle = MiniMap(40,40, _width, _height, _w);
+    children.insert(mmHandle);
 }
 
 //------------------------------------------------------------------------------
@@ -585,7 +589,78 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         }
   
 }
+    //------------------------------------------------------------------------------
     
+    
+    MiniMap::MiniMap(int _x, int _y, int _width, int _height, World *_w) : Widget(_x, _y, _width, _height)
+    {
+        w = _w;
+    }
+    
+    
+    //------------------------------------------------------------------------------
+    void MiniMap::draw(){
+        MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
+        MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        bg->select();
+        glBegin(GL_QUADS);
+        glVertex2i(0,0);
+        glVertex2i(0,320);
+        glVertex2i(320,320);
+        glVertex2i(320,0);
+        glEnd();
+        bg->unselect();
+        black->select();
+        glBegin(GL_LINE_STRIP);
+        glVertex2i(0,0);
+        glVertex2i(0,320);
+        glVertex2i(320,320);
+        glVertex2i(320,0);
+        glVertex2i(0,0);
+        glEnd();
+        black->unselect();
+        //*le buildings
+        multimap<GridPoint, ObjectHandle> *mapp = &w->terrain->structures;
+        //*le robots
+        map<Player::Id ,Player *>::iterator it;
+        for ( it=Player::list.begin() ; it != Player::list.end(); it++ ){
+            Player *p = (*it).second;
+            if(!p){
+                return;
+            }
+            if(p->team =='a'){
+                Assets::Robot_red->select();
+            }else{
+                Assets::Robot_blue->select();
+            }
+            int relx =  300*(p->origin.x + w->width/2.0)/w->width;
+            int rely =  300*(p->origin.y + w->height/2.0)/w->height;
+            glBegin(GL_QUADS);
+            glTexCoord2f(0,1);
+            glVertex2i(relx,rely);
+            glTexCoord2f(0,0);
+            glVertex2i(relx,rely + 20);
+            glTexCoord2f(1,0);
+            glVertex2i(relx + 20, rely + 20);
+            glTexCoord2f(1,1);
+            glVertex2i(relx + 20, rely);
+            glEnd();
+            if(p->team == 'a'){
+                Assets::Robot_red->unselect();
+            }else{
+                Assets::Robot_blue->unselect();
+            }
+        }        
+    }
+    
+    void MiniMap::render(){
+        //return;
+            glPushMatrix();
+            //Set to the right coordinates
+            glTranslatef(width - xOffset- 320,yOffset,0);
+            draw();
+            glPopMatrix();
+    }
     
     
 //------------------------------------------------------------------------------
@@ -630,6 +705,8 @@ void TextInput::draw(){
 		
 	glPopMatrix();
 }
+    
+
 
 //------------------------------------------------------------------------------
 

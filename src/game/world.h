@@ -10,8 +10,12 @@
 #ifndef _WORLD_H
 #define _WORLD_H
 
-#include <vector>
 
+namespace Objects{
+    class World;
+}
+
+#include <vector>
 #include "objects.h"
 #include "structures.h"
 #include "hud.h"
