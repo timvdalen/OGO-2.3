@@ -10,11 +10,14 @@
 #ifndef _GAME_H
 #define _GAME_H
 
+#include <map>
 #include <string>
 
 #include "core.h"
 #include "objects.h"
 #include "world.h"
+
+#define PLAYER(id) (game.players.count(id) ? TO(Player, game.players[id]) : 0)
 
 //! Definition of the game action
 //! \warning Do not use anything if not initialized \see Initialize
@@ -43,6 +46,8 @@ struct GameState
 	World *world;
 	Player *player;
 	string gameName;
+	
+	map<Player::Id,ObjectHandle> players;
 	
 	GameState() : world(0), player(0) {}
 } extern game; //! Current game state
@@ -94,6 +99,11 @@ void Tool(ToolType tool);       //!< Sets the primary build tool
 
 void DisplayChatMsg(Player *, string line);
 void DisplayTeamMsg(Player *, string line);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// Diagnostics
+
+void PrintFPS();
 
 //------------------------------------------------------------------------------
 

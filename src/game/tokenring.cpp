@@ -162,9 +162,9 @@ bool TokenRing::connect(const Address &remote, int timeout)
 	
 	pthread_mutex_lock(&td->lock);
 	{
-		success = clique->connect(remote, timeout);
-		
 		td->deciding = true;
+		
+		success = clique->connect(remote, timeout);
 		
 		// Build token ring
 		if (success) success = clique->sendto(remote, msg);
@@ -301,7 +301,7 @@ bool TokenRing::pass()
 	
 	pthread_mutex_lock(&td->lock);
 	{
-		if AUTHORIZED
+		if ((td->token == td->id) && !td->nodes.empty())
 		{
 			NodeID nextId = td->nextId();
 			msg.push_back((long) nextId);
@@ -491,6 +491,9 @@ void *TokenRing::process(void *obj)
 	clique->select();
 	
 	} // while (CONNECTED)
+	
+	td->deciding = false;
+	pthread_cond_broadcast(&td->decided);
 	
 	tokenring->close();
 	

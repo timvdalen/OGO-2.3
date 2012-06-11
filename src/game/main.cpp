@@ -123,6 +123,10 @@ int main(int argc, char *argv[])
 
 	world->children.insert(player);
 	world->children.insert(*npc);
+	
+	// hack
+	Game::game.world = TO(World, world);
+	Game::game.player = TO(Player, player);
 
 	v1.world = world;
 
@@ -213,6 +217,7 @@ void Frame()
 	
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
+	NetCode::Move(player->origin, Vd());
 	
 	int time = Video::ElapsedTime();
 	Objects::Player * pNPC = TO(Objects::Player, *npc);
@@ -442,13 +447,14 @@ static void getInput(string input){
 	HUD *h = TO(HUD, w->hud);
 	Player *p = TO(Player, controller->player);
 	if(!input.empty()){
-		ChatMessage m = ChatMessage(*p, input);
-		h->messageDisplayer->addMessage(m);
+		//ChatMessage m = ChatMessage(*p, input);
+		//h->messageDisplayer->addMessage(m);
 		if(input == "hi"){
 			Objects::Player * pNPC = TO(Objects::Player, *npc);
 			ChatMessage m = ChatMessage(*pNPC, "Hey man, what's up?");
 			h->messageDisplayer->addMessage(m);
 		}
+		Game::Call(input);
 	}
 
 	//Not so nice, but better than the old way

@@ -200,7 +200,6 @@ bool Clique::connect(const Address &remote, int timeout)
 	} while(0);
 	pthread_mutex_unlock(&qd->lock);
 	
-	
 	if (!success) close();
 	return (success);
 }

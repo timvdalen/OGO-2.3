@@ -238,7 +238,10 @@ void keyboard_down_event(unsigned char key, int x, int y)
 			input->textMode = false;
 		}
 		else if (key == '\b')
-			input->text.erase(input->text.end() - 1, input->text.end());
+		{
+			if(!input->text.empty())
+				input->text.erase(input->text.end() - 1, input->text.end());
+		}
 		else
 			input->text.push_back(key);
 		return;

@@ -47,6 +47,8 @@ bool Send(const Message &, bool reliable = false);
 void Chat(std::string line);
 void Move(Pd position, Vd velocity);
 
+void Debug();
+
 //------------------------------------------------------------------------------
 
 } // namespace NetCode

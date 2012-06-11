@@ -55,11 +55,6 @@ class Player: public BoundedObject
 	//! The ID of this player
 	//! \invariant !id || (list[id] == this)
 	Id id;
-	
-	//! Player list
-	static map<Id,Player *> list;
-	//! Gets a player pointer by player id
-	static Player *byId(Id id) { return list.count(id) ? list[id] : 0; }
 
 	//! The team of this player
 	unsigned char team;

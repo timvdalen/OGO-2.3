@@ -120,7 +120,7 @@ string to_lower_case(string str)
 CMD(Echo, 1, arg, (string) arg[0])
 void Echo(string msg)
 {
-	puts(msg.c_str());
+	game.world->hud->messageDisplayer->addMessage(SystemMessage(msg));
 }
 
 //------------------------------------------------------------------------------
@@ -128,7 +128,8 @@ void Echo(string msg)
 CMD(Notice, 1, arg, (string) arg[0])
 void Notice(string msg)
 {
-	printf("*** %s ***\n", msg.c_str());
+	// Temporarily
+	Echo(string("*** ") + msg + string(" ***"));
 }
 
 //------------------------------------------------------------------------------
@@ -163,7 +164,14 @@ void RQuit(string msg)
 CMD(Connect, 1, arg, (string) arg[0])
 void Connect(string address)
 {
-	NetCode::Connect(address);
+	Game::Notice(string("Connecting to ") + address + string("..."));
+	if (!NetCode::Connect(address))
+		Game::Notice(string("Unable to connect to " + address + string("!")));
+	else
+	{
+		Game::Notice(string("Connected to " + address + string("!")));
+		
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -179,6 +187,8 @@ void Disconnect()
 CMD(Say, 1, arg, (string) arg[0])
 void Say(string msg)
 {
+	NetCode::Chat(msg);
+	DisplayChatMsg(game.player, msg);
 }
 
 //------------------------------------------------------------------------------
@@ -287,7 +297,7 @@ void DisplayChatMsg(Player *player, string line)
 {
 	if (!player) return;
 	
-	// Display chat message in hud
+	game.world->hud->messageDisplayer->addMessage(ChatMessage(*player, line));
 }
 
 //------------------------------------------------------------------------------
@@ -295,15 +305,26 @@ void DisplayChatMsg(Player *player, string line)
 void DisplayTeamMsg(Player *player, string line)
 {
 	if (!player) return;
+	
+	game.world->hud->messageDisplayer->addMessage(ChatMessage(*player, line));
 }
 
 //------------------------------------------------------------------------------
 
-void KeyCode(string str)
+CMD(PrintFPS, 0, arg)
+void PrintFPS()
 {
-	printf("keycode: %d\n", Movement::ToButton(str));
+    double fps = 0.0;
+    Echo(string("Current FPS: ") + Argument((double) fps).str);
 }
-CMD(KeyCode, 1, arg, (string) arg[0])
+
+//------------------------------------------------------------------------------
+
+void NetDebug()
+{
+	NetCode::Debug();
+}
+CMD(NetDebug, 0, arg)
 
 //------------------------------------------------------------------------------
 

@@ -93,7 +93,9 @@ void Frame()
 	while (tokenring->entry(id))
 	{
 		// Temporarily add a player to the world
-		game.world->children.insert(Player(id));
+		ObjectHandle player = Player(id);
+		game.players[id] = player;
+		game.world->children.insert(player);
 	}
 }
 
@@ -132,15 +134,8 @@ void Disconnect()
 
 bool Connect(std::string host)
 {
-	if (CONNECTED) Disconnect();
-	Game::Notice(string("Connecting to ") + host + string("..."));
 	Address remote(host.c_str());
-	if (!tokenring->connect(remote), 30)
-	{
-		Game::Notice(string("Unable to connect to " + host + string("!")));
-		return false;
-	}
-	return true;
+	return tokenring->connect(remote, 10);
 }
 
 //==============================================================================
@@ -159,11 +154,11 @@ void Chat(string line)
 	msg.push_back("CHAT");
 	msg.push_back(line);
 	SEND(msg, false);
-	DisplayChatMsg(game.player, msg[1]);
 }
 RECEIVE(CHAT, id, msg, reliable)
 {
-	DisplayChatMsg(Player::byId((Player::Id) id), msg[1]);
+	Echo(msg[1]);
+	DisplayChatMsg(PLAYER((Player::Id) id), msg[1]);
 }
 
 //------------------------------------------------------------------------------
@@ -187,10 +182,17 @@ RECEIVE(MOVE, id, msg, reliable)
 	Pd position((double) msg[1], (double) msg[2], (double) msg[3]);
 	Vd velocity((double) msg[4], (double) msg[5], (double) msg[6]);
 	
-	Player *player = Player::byId(id);
+	Player *player = PLAYER(id);
 	if (!player) return;
 	
 	player->origin = position;
+}
+
+//------------------------------------------------------------------------------
+
+void Debug()
+{
+	if (tokenring) tokenring->debug();
 }
 
 //------------------------------------------------------------------------------

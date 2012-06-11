@@ -18,16 +18,12 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
-map<Player::Id,Player *> Player::list;
-
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBox B)
 	: BoundedObject(P, R, B)
 {
 	id = _id;
 	team = _team;
 	name = _name;
-	
-	list[id] = this;
 
 	model.head = Object();
 	model.body = Object();
@@ -56,7 +52,6 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 
 Player::~Player()
 {
-	if (list[id] == this) list.erase(id);
 }
 
 //------------------------------------------------------------------------------
