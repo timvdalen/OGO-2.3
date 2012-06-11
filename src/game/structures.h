@@ -17,6 +17,10 @@ namespace Objects {
 class Structure;
 class Building;
 class DefenseTower;
+class Mine;
+class HeadQuarters;
+class ResourceMine;
+    
 
 //------------------------------------------------------------------------------
 
