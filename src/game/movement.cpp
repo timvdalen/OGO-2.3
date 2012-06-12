@@ -10,10 +10,10 @@
 
 namespace Movement {
 
-	//double movespeed = 0.5;
-	//double jetpackspeed = 0.2;
-	//double lookspeed = 0.035;
-	//double zoomspeed = 0.5;
+	double movespeedmultiplier = 0.5;
+	double jetpackspeedmultiplier = 0.2;
+	double lookspeedmultiplier = 0.035;
+	double zoomspeedmultiplier = 0.5;
 
 	Point<double> offset = Pd(.5,.5,2);
 
@@ -37,7 +37,10 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 
 void Controller::moveX(double movespeed)
 {
+	movespeed = movespeedmultiplier * movespeed;
+
     Point<double> posrollback = Point<double>(pos);
+
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
@@ -60,6 +63,8 @@ void Controller::moveX(double movespeed)
 
 void Controller::moveY(double movespeed)
 {
+	movespeed = movespeedmultiplier * movespeed;
+
     Point<double> posrollback = Point<double>(pos);
 
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
@@ -82,6 +87,8 @@ void Controller::moveY(double movespeed)
 
 void Controller::moveZ(double jetpackspeed)
 {
+	jetpackspeed = jetpackspeedmultiplier * jetpackspeed;
+
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
 	double yaw = atan2(vec.x, vec.y);
 
@@ -96,6 +103,8 @@ void Controller::moveZ(double jetpackspeed)
 
 void Controller::lookX(double lookspeed)
 {
+	lookspeed = lookspeedmultiplier * lookspeed;
+
 	camAngle = Qd(Rd(lookspeed, Vd(0,0,1))) * camAngle;
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
@@ -116,6 +125,8 @@ void Controller::lookX(double lookspeed)
 
 void Controller::lookY(double zoomspeed)
 {
+	zoomspeed = zoomspeedmultiplier * zoomspeed;
+
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 	zoom += zoomspeed;
@@ -146,6 +157,8 @@ void Controller::lookY(double zoomspeed)
 
 void Controller::lookZ(double lookspeed)
 {
+	lookspeed = lookspeedmultiplier * lookspeed;
+
     Qd buffer = camAngle;//Used to rollback if out of bounds
 
 	Vector<double> mystery = ~(camAngle * Vector<double>(0,1,0));
