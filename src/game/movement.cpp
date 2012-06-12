@@ -15,12 +15,14 @@ namespace Movement {
 	double lookspeed = 0.035;
 	double zoomspeed = 0.5;
 
+	Point<double> offset = Pd(.5,.5,2);
+
 //------------------------------------------------------------------------------
 
 Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	firstPerson = false;
-	pos = player->origin;
+	pos = player->origin + offset;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
@@ -53,7 +55,7 @@ void Controller::moveX()
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
         
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirRight])
 	{
@@ -72,7 +74,7 @@ void Controller::moveX()
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
@@ -96,7 +98,7 @@ void Controller::moveY()
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirBackward])
 	{
@@ -113,7 +115,7 @@ void Controller::moveY()
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
@@ -123,19 +125,25 @@ void Controller::moveZ()
 {
 	if (move[dirUp])
 	{
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
+		double yaw = atan2(vec.x, vec.y);
+
 		pos.z = pos.z + jetpackspeed;
 		camera.origin.z = camera.origin.z + jetpackspeed;
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirDown])
 	{
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
+		double yaw = atan2(vec.x, vec.y);
+
 		pos.z = pos.z - jetpackspeed;
 		camera.origin.z = camera.origin.z - jetpackspeed;
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
@@ -151,7 +159,7 @@ void Controller::lookX()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -168,7 +176,7 @@ void Controller::lookX()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -198,7 +206,7 @@ void Controller::lookY()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -224,7 +232,7 @@ void Controller::lookY()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -253,7 +261,7 @@ void Controller::lookZ()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -276,7 +284,7 @@ void Controller::lookZ()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else

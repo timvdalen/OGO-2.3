@@ -180,7 +180,7 @@ void Input::frame()
 	if (!grabbing) return;
 	
 	const word &r = MouseResolution;
-	
+
 	uword width, height;
 	window.size(width = 0, height = 0);
 	width /= 2;
@@ -188,7 +188,7 @@ void Input::frame()
 	
 	dx += mouseX - width;
 	dy += mouseY - height;
-	
+
 	if (dx < -r)
 	{
 		CALL(onKeyDown, btnMouseMoveLeft);

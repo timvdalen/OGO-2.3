@@ -27,6 +27,7 @@ extern MaterialHandle Grid;
 extern MaterialHandle SelectedGrid;
 
 extern MaterialHandle WorldMaterial;
+extern MaterialHandle Star;
 
 extern MaterialHandle Test;
 

@@ -93,6 +93,42 @@ class Droppable: public BoundedObject
 
 //------------------------------------------------------------------------------
 
+//! Represents a star in the \ref Sky
+class Star: public Object{
+	public:
+
+	//! Constructs the star
+	Star(Pd P = Pd());
+
+	//! Draws the star
+	virtual void draw();
+};
+
+//------------------------------------------------------------------------------
+
+class Sky: public Object{
+	public:
+	//! The width of the sky
+	int width;
+
+	//! The height of the sky
+	int height;
+
+	//! Contains the stars in the sky
+	vector<Star> stars;
+
+	//! Constructs the sky
+	Sky(int _width, int _height);
+
+	//! Adds new stars, lets old ones fade
+	void frame();
+
+	//! Renders the sky
+	virtual void render();
+};
+
+//------------------------------------------------------------------------------
+
 } // namespace Objects
 
 #endif // _WORLD_H
