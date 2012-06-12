@@ -30,11 +30,11 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 	model.weapon = Object();
 	model.tool = Object();
 	model.wheel = Object();
-	model.head->children.insert(Assets::HeadObj);
-	model.body->children.insert(Assets::BodyObj);
-	model.weapon->children.insert(Assets::GunObj);
-	model.tool->children.insert(Assets::WrenchObj);
-	model.wheel->children.insert(Assets::WheelObj);
+	model.head->children.insert(Assets::Model::HeadObj);
+	model.body->children.insert(Assets::Model::BodyObj);
+	model.weapon->children.insert(Assets::Model::GunObj);
+	model.tool->children.insert(Assets::Model::WrenchObj);
+	model.wheel->children.insert(Assets::Model::WheelObj);
 	children.insert(model.head);
 	children.insert(model.body);
 	children.insert(model.weapon);
