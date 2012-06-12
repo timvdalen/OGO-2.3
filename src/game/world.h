@@ -74,6 +74,10 @@ class World: public BoundedObject
 
 //------------------------------------------------------------------------------
 
+
+
+//------------------------------------------------------------------------------
+
 //! Represents a droppable object
 class Droppable: public BoundedObject
 {

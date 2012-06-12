@@ -329,7 +329,7 @@ void handleMouse(bool left){
 				Camera &cam = v->camera;
 				GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
 				
-				ObjectHandle tower = Objects::DefenseTower(10);
+				ObjectHandle tower = Objects::DefenseTower();
 				{
 					MaterialHandle m = TwinMaterial(ShadedMaterial(Cf(0.5, 0.5, 0.5, 1)), Assets::Test);
 					tower->material = m;

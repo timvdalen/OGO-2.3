@@ -55,20 +55,21 @@ class Controller
 	//! Construct controller by assigning a player and camera
 	Controller(Camera &C, ObjectHandle P, ObjectHandle W);
 	
+	void moveX(double speed);
+	void moveY(double speed);
+	void moveZ(double speed);
+
+	void lookX(double speed);
+	void lookY(double speed);
+	void lookZ(double speed);
+	
 	void frame();         //!< Called everytime a frame passes in game
     
 	private:
 	Point<double> pos;
 	Qd camAngle;
 	double zoom;
-
-	void moveX(double movespeed);
-	void moveY(double movespeed);
-	void moveZ(double jetpackspeed);
-
-	void lookX(double lookspeed);
-	void lookY(double zoomspeed);
-	void lookZ(double lookspeed);
+	
     bool walkAble(Point<double> old, Point<double> p);
 };
 

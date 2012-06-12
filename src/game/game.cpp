@@ -307,6 +307,7 @@ void TeamSay(string msg)
 CMD(MoveX, 1, arg, (double) arg[0])
 void MoveX(double speed)
 {
+	game.controller->moveX(speed);
 }
 
 //------------------------------------------------------------------------------
@@ -314,6 +315,7 @@ void MoveX(double speed)
 CMD(MoveY, 1, arg, (double) arg[0])
 void MoveY(double speed)
 {
+	game.controller->moveY(speed);
 }
 
 //------------------------------------------------------------------------------
@@ -321,6 +323,7 @@ void MoveY(double speed)
 CMD(MoveZ, 1, arg, (double) arg[0])
 void MoveZ(double speed)
 {
+	game.controller->moveZ(speed);
 }
 
 //------------------------------------------------------------------------------
@@ -328,6 +331,7 @@ void MoveZ(double speed)
 CMD(LookX, 1, arg, (double) arg[0])
 void LookX(double speed)
 {
+	game.controller->lookX(speed);
 }
 
 //------------------------------------------------------------------------------
@@ -335,6 +339,7 @@ void LookX(double speed)
 CMD(LookY, 1, arg, (double) arg[0])
 void LookY(double speed)
 {
+	game.controller->lookY(speed);
 }
 
 //------------------------------------------------------------------------------
@@ -342,6 +347,7 @@ void LookY(double speed)
 CMD(LookZ, 1, arg, (double) arg[0])
 void LookZ(double speed)
 {
+	game.controller->lookZ(speed);
 }
 
 //------------------------------------------------------------------------------
