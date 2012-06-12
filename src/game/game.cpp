@@ -362,10 +362,20 @@ void Jump()
 CMD(Fire, 0, arg)
 void Fire()
 {
-	if (game.player->weapon == weapWrench)
-	{
-		Build();
-		return;
+	switch(game.player->weapon){
+	case weapWrench:{
+			Build();
+			return;
+		}
+		break;
+	case weapLaser:{
+			Pd gunLoc = game.player->origin + game.player->model.weapon->origin;
+			World *w = TO(World, game.controller->world);
+			Vd direction = ~(Vd(gunLoc-game.controller->target));
+			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, direction)));
+			return;
+		}
+		break;
 	}
 }
 
@@ -375,8 +385,7 @@ CMD(Build, 0, arg)
 void Build()
 {
 	Camera &cam = game.controller->camera;
-	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
-
+	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, game.controller->target);
 	ObjectHandle tower = Objects::DefenseTower();
 	if(clicked.isValid()){
 		bool done = game.world->terrain->placeStructure(clicked, tower);
@@ -401,6 +410,7 @@ void Weapon(WeaponType weapon)
 		// Goto build mode
 		terrain->showGrid = true;
         game.world->hud->buildselector->show = true;
+		game.controller->setView(true);
         // Todo: add controller
 	}
 	else if (prevWeapon == weapWrench)
@@ -408,6 +418,7 @@ void Weapon(WeaponType weapon)
 		// Leave build mode
 		terrain->showGrid = false;
 		game.world->hud->buildselector->show = false;
+		game.controller->restoreView();
 	}
 }
 

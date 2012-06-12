@@ -41,7 +41,17 @@ struct GridPoint
 //! Represents the terrain of the game
 class Terrain: public Object
 {
+
+	GLuint gridDL;
 	public:
+
+
+	//! Determines if the ground has been cached in a display list
+	
+	//! Determines if the gridlines has been cached in a display list
+	bool gridCached;
+
+
 	//! Size of the world in the X direction.
 
 	//! Needs to be a multiple GRID_SIZE
@@ -72,6 +82,12 @@ class Terrain: public Object
 	//! Draw the terrains chidlren
 	virtual void postRender();
 	
+	//!Draws the grid
+	void drawGround();
+
+	//!Draws the gridlines
+	void drawGridLines();
+			
 	//! Safe-places a Structure on the grid
 	
 	//! Returns false when adding fails

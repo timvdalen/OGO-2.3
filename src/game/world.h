@@ -100,6 +100,8 @@ class Droppable: public BoundedObject
 //! Represents a star in the \ref Sky
 class Star: public Object{
 	public:
+	//! Whether this star is big
+	bool big;
 
 	//! Constructs the star
 	Star(Pd P = Pd());

@@ -65,8 +65,17 @@ class Controller
 	
 	void frame();         //!< Called everytime a frame passes in game
     
+	Point<double> target;
+	
+	//! Sets the view
+	void setView(bool view = true);
+	
+	//! Restores the view to the previous state
+	void restoreView();
+
 	private:
-	Point<double> pos;
+	//! The last view (first person or third person) that was active before the current one
+	bool lastView;
 	Qd camAngle;
 	double zoom;
 	

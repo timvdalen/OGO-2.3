@@ -22,13 +22,14 @@ namespace Movement {
 Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	firstPerson = false;
-	pos = player->origin + offset;
+	lastView = false;
+	target = player->origin + offset;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
 	zoom = 10.0;
-	camera.origin = pos - (~vec * zoom);
-	camera.lookAt(pos);
+	camera.origin = target - (~vec * zoom);
+	camera.lookAt(target);
 
 	camAngle = Qd();
 }
@@ -39,24 +40,24 @@ void Controller::moveX(double movespeed)
 {
 	movespeed = movespeedmultiplier * movespeed;
 
-    Point<double> posrollback = Point<double>(pos);
+    Point<double> posrollback = Point<double>(target);
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
 	yaw += (.5 * Pi);
 
-	pos.x = pos.x + movespeed * sin(yaw);
-	pos.y = pos.y + movespeed * cos(yaw);
-       if(!walkAble(posrollback, pos)){
-           pos = posrollback;
+	target.x = target.x + movespeed * sin(yaw);
+	target.y = target.y + movespeed * cos(yaw);
+       if(!walkAble(posrollback, target)){
+           target = posrollback;
            return;
        }
 	camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
         
 	//test
-	player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -65,22 +66,22 @@ void Controller::moveY(double movespeed)
 {
 	movespeed = movespeedmultiplier * movespeed;
 
-    Point<double> posrollback = Point<double>(pos);
+    Point<double> posrollback = Point<double>(target);
 
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
-	pos.x = pos.x + movespeed * sin(yaw);
-	pos.y = pos.y + movespeed * cos(yaw);
+	target.x = target.x + movespeed * sin(yaw);
+	target.y = target.y + movespeed * cos(yaw);
         
-       if(!walkAble(posrollback, pos)){
-           pos = posrollback;
+       if(!walkAble(posrollback, target)){
+           target = posrollback;
            return;
        }
 	camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 	//test
-	player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -92,11 +93,11 @@ void Controller::moveZ(double jetpackspeed)
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
 	double yaw = atan2(vec.x, vec.y);
 
-	pos.z = pos.z + jetpackspeed;
+	target.z = target.z + jetpackspeed;
 	camera.origin.z = camera.origin.z + jetpackspeed;
 
 	//test
-	player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -112,12 +113,12 @@ void Controller::lookX(double lookspeed)
 	if (firstPerson == true)
 	{
 		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(pos + (vec * 5.0));
+		camera.lookAt(target + (vec * 5.0));
 	}
 	else
 	{
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		camera.origin = target - (vec * zoom);
+		camera.lookAt(target);
 	}
 }
 
@@ -129,7 +130,7 @@ void Controller::lookY(double zoomspeed)
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-	zoom += zoomspeed;
+	zoom -= zoomspeed;
 
 	if (zoom > 15.0)
 	{
@@ -140,16 +141,20 @@ void Controller::lookY(double zoomspeed)
 		firstPerson = true;
 		zoom = 5.0;
 	}
+	else
+	{
+		firstPerson = false;
+	}
 
 	if (firstPerson == true)
 	{
 		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(pos + (vec * 5.0));
+		camera.lookAt(target + (vec * 5.0));
 	}
 	else
 	{
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		camera.origin = target - (vec * zoom);
+		camera.lookAt(target);
 	}
 }
 
@@ -165,7 +170,7 @@ void Controller::lookZ(double lookspeed)
 	double mysteryYaw = atan2(mystery.x, mystery.y);
 
 	camAngle = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
-       if((camAngle*Vector<double>(0,1,0)).z > 0.99){
+       if((camAngle*Vector<double>(0,1,0)).z > 0.99 || (camAngle*Vector<double>(0,1,0)).z < -0.99){
            camAngle = buffer;
            return;
        }
@@ -174,12 +179,12 @@ void Controller::lookZ(double lookspeed)
 	if (firstPerson == true)
 	{
 		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(pos + (vec * 5.0));
+		camera.lookAt(target + (vec * 5.0));
 	}
 	else
 	{
-		camera.origin = pos - (vec * zoom);
-		camera.lookAt(pos);
+		camera.origin = target - (vec * zoom);
+		camera.lookAt(target);
 	}
 }
 
@@ -268,6 +273,19 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     return true;
 }
     
+//------------------------------------------------------------------------------
+
+void Controller::setView(bool view){
+	lastView = firstPerson;
+	firstPerson = view;
+}
+
+//------------------------------------------------------------------------------
+
+void Controller::restoreView(){
+	firstPerson = lastView;
+}
+
 //------------------------------------------------------------------------------
 
 } // namespace Movement
