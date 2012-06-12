@@ -410,6 +410,7 @@ void Weapon(WeaponType weapon)
 		// Goto build mode
 		terrain->showGrid = true;
         game.world->hud->buildselector->show = true;
+		game.controller->setView(true);
         // Todo: add controller
 	}
 	else if (prevWeapon == weapWrench)
@@ -417,6 +418,7 @@ void Weapon(WeaponType weapon)
 		// Leave build mode
 		terrain->showGrid = false;
 		game.world->hud->buildselector->show = false;
+		game.controller->restoreView();
 	}
 }
 
