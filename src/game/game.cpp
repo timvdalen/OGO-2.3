@@ -371,8 +371,8 @@ void Fire()
 	case weapLaser:{
 			Pd gunLoc = game.player->origin + game.player->model.weapon->origin;
 			World *w = TO(World, game.controller->world);
-			//TODO: Op basis van game.controller->target
-			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, -game.controller->camera.objective * Vd(0,10,0))));
+			Vd direction = ~(Vd(gunLoc-game.controller->target));
+			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, direction)));
 			return;
 		}
 		break;
@@ -386,7 +386,6 @@ void Build()
 {
 	Camera &cam = game.controller->camera;
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, game.controller->target);
-
 	ObjectHandle tower = Objects::DefenseTower();
 	if(clicked.isValid()){
 		bool done = game.world->terrain->placeStructure(clicked, tower);
