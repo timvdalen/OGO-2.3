@@ -169,7 +169,7 @@ void Controller::lookZ(double lookspeed)
 	double mysteryYaw = atan2(mystery.x, mystery.y);
 
 	camAngle = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
-       if((camAngle*Vector<double>(0,1,0)).z > 0.99){
+       if((camAngle*Vector<double>(0,1,0)).z > 0.99 || (camAngle*Vector<double>(0,1,0)).z < -0.99){
            camAngle = buffer;
            return;
        }
