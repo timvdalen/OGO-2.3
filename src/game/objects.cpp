@@ -99,6 +99,21 @@ bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b)
 
 //------------------------------------------------------------------------------
 
+void ModelObjectContainer::render()
+{
+	preRender();
+	
+	if (material) material->select();
+	
+	draw();
+	
+	postRender();
+
+	if (material) material->unselect();
+}
+
+//------------------------------------------------------------------------------
+
 LaserBeam::LaserBeam(Pd _origin, Vd _direction, int _fireTime, int _ttl)
 	: Object(_origin), direction(_direction)
 {

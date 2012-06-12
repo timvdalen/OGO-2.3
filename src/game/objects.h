@@ -79,6 +79,14 @@ class BoundedObject: public Object
 
 //------------------------------------------------------------------------------
 
+//! Represents an object that enables inheritance of materials
+class ModelObjectContainer: public Object {
+	//! Override the render function in Object to enable inheritance of materials
+	virtual void render();
+};
+
+//------------------------------------------------------------------------------
+
 //! Represents a team
 class Team: public Object
 {
