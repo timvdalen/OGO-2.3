@@ -127,6 +127,8 @@ class Building: public Structure
 	int buildDuration;
 	//! The attack power of this building
 	Power attackPower;
+	//! Owner of the building (player)
+	ObjectHandle owner;
 
 	//! Constructs a new building
 	Building(int _height, BoundingBox B = BoundingBox(),
