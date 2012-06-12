@@ -374,6 +374,16 @@ void Fire()
 CMD(Build, 0, arg)
 void Build()
 {
+	Camera &cam = game.controller->camera;
+	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+
+	ObjectHandle tower = Objects::DefenseTower();
+	if(clicked.isValid()){
+		bool done = game.world->terrain->placeStructure(clicked, tower);
+		if(!done) game.world->hud->messageDisplayer->addMessage(SystemMessage("There's already a tower there"));
+	}else{
+		game.world->hud->messageDisplayer->addMessage(SystemMessage("Invalid place to build"));
+	}
 }
 
 //------------------------------------------------------------------------------
