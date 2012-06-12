@@ -174,7 +174,6 @@ class HeadQuarters: public Building
 		  0, 0,
 		  0, 0,
 		  0) {}
-	
 		  
 	virtual void draw(){}
 };
@@ -185,7 +184,7 @@ class HeadQuarters: public Building
 class DefenseTower: public Building
 {
 	public:
-	DefenseTower();
+	DefenseTower(ObjectHandle _owner = ObjectHandle());
 		  
 	virtual void draw();
 	

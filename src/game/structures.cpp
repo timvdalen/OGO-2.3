@@ -242,11 +242,11 @@ void Building::preRender(){
 
 //------------------------------------------------------------------------------
 
-DefenseTower::DefenseTower()
+DefenseTower::DefenseTower(ObjectHandle _owner))
 		: Building(3, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
-			20) 
+			20, _owner) 
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
