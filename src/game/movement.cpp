@@ -103,7 +103,7 @@ void Controller::moveZ(double jetpackspeed)
 
 void Controller::lookX(double lookspeed)
 {
-	lookspeed = lookspeedmultiplier * lookspeed;
+	lookspeed = lookspeedmultiplier * -lookspeed;
 
 	camAngle = Qd(Rd(lookspeed, Vd(0,0,1))) * camAngle;
 
