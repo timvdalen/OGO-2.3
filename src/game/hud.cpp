@@ -42,22 +42,22 @@ HUD::HUD(int _width, int _height, World *_w){
     //END TODO
 	ObjectHandle mdHandle;
 	mdHandle = MessageDisplayer(100, 100, -1, -1); //Don't limit size for now
-	messageDisplayer = dynamic_cast<MessageDisplayer *>(&*mdHandle);
+	messageDisplayer = TO(MessageDisplayer,mdHandle);
 	children.insert(mdHandle);	
     
     ObjectHandle sdHandle;
     sdHandle = StatusDisplayer(50,50, _width, _height, currentTeam, currentPlayer);
-    statusDisplayer = dynamic_cast<StatusDisplayer *>(&*sdHandle);
+    statusDisplayer = TO(StatusDisplayer,sdHandle);
 	children.insert(sdHandle);	
     
     ObjectHandle bsHandle;
     bsHandle = BuildingSelection(0,100, _width, _height);
-    buildselector = dynamic_cast<BuildingSelection *>(&*bsHandle);
+    buildselector = TO(BuildingSelection,bsHandle);
 	children.insert(bsHandle);	
     
 	ObjectHandle chHandle;
 	chHandle = CrossHair(0, 0, _width, _height);
-	crossHair = dynamic_cast<CrossHair *>(&*chHandle);
+	crossHair = TO(CrossHair, chHandle);
 	children.insert(chHandle);
     
     ObjectHandle mmHandle;
@@ -521,9 +521,9 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             glVertex2i(370,0);
             glEnd();
             if(selected == i + 1){
-                bgselected->select();
+                bgselected->unselect();
             }else{
-                bgunselected->select();
+                bgunselected->unselect();
             }
             //*le table lines
             black->select();
@@ -619,7 +619,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glVertex2i((int)((relx+1)*xspacing), (int)((rely)*yspacing));
         glEnd();
         if(marked){
-            Assets::Robot_normal->select();
+            Assets::Robot_normal->unselect();
         }else if(p->team == 'a'){
             Assets::Robot_red->unselect();
         }else{
@@ -739,8 +739,8 @@ TextInput::TextInput(Input *_input, int _x, int _y, int _width, int _height)
 //------------------------------------------------------------------------------
 
 void TextInput::draw(){
-	string buffer = input->text;
 
+	string buffer = input->text;
 	//TODO: This should be implemented in Widget::preRender() and Widget::postRender()
 	glPushMatrix();
 		int maxchars = (int) ((0.36 * width) / 9);
@@ -766,7 +766,7 @@ void TextInput::draw(){
 				glRasterPos2i((int) (xOffset + 0.32 * width), (int) (yOffset + 0.50 * height + 15 * line));
 			}
 		}
-		
+		Assets::Font->unselect();
 	glPopMatrix();
 }
     
