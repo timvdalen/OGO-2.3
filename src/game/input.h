@@ -28,11 +28,11 @@ const word MouseResolution = 20; //!< Speed the mouse reacts with
 enum Button
 {
 	btnUnknown = 0,
-	btnMouseLeft = 1, btnMouseRight, btnMouseMiddle, btnMouseScrollUp,
+	btnMouseLeft = 192, btnMouseRight, btnMouseMiddle, btnMouseScrollUp,
 	btnMouseScrollDown, btnMouseMoveLeft, btnMouseMoveRight, btnMouseMoveUp,
 	btnMouseMoveDown,
 	
-	btnKeySpace = 32, btnKeyEscape = 27, btnKeyEnter = 13,
+	btnKeySpace = 32, btnKeyEscape = 27, btnKeyEnter = 13, btnKeyTab = 9,
 	
 	btnKey0 = 48, btnKey1, btnKey2, btnKey3, btnKey4, btnKey5, btnKey6,
 	btnKey7, btnKey8, btnKey9,

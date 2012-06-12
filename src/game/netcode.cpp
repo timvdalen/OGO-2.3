@@ -53,9 +53,9 @@ void Initialize(int argc, char *argv[])
 	
 	for (int i = 0; i < argc - 1; ++i)
 	{
-		if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--connect"))
+		if      (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--connect"))
 			host = argv[++i];
-		if (!strcmp(argv[i], "-P") || !strcmp(argv[i], "--port"))
+		else if (!strcmp(argv[i], "-P") || !strcmp(argv[i], "--port"))
 			port = atoi(argv[++i]);
 	}
 	

@@ -205,7 +205,7 @@ MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	curr = 0;
 	full = 0;
 	showAlways = false;
-	lastMessage = glutGet(GLUT_ELAPSED_TIME);
+	lastMessage = ElapsedTime();
 }
 
 //------------------------------------------------------------------------------
@@ -215,14 +215,14 @@ void MessageDisplayer::addMessage(Handle<DisplayMessage> m){
 	//Move head to next slot
 	curr = ((curr+1)%10);
 	if(full < 10) full++;
-	lastMessage = glutGet(GLUT_ELAPSED_TIME);
+	lastMessage = ElapsedTime();
 }
 
 //------------------------------------------------------------------------------
 
 void MessageDisplayer::setShowAlways(bool show){
 	if(!show){
-		lastMessage = glutGet(GLUT_ELAPSED_TIME) - 1000;
+		lastMessage = ElapsedTime() - 1000;
 	}
 	showAlways = show;
 }
@@ -262,7 +262,7 @@ void MessageDisplayer::render(){
 	if(showAlways){
 		font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	}else{
-		int now = glutGet(GLUT_ELAPSED_TIME);
+		int now = ElapsedTime();
 		if((now - lastMessage) > 2000){
 			return;
 		}else if((now - lastMessage) > 1000){

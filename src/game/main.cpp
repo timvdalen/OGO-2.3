@@ -33,7 +33,6 @@ using namespace Movement;
 Window *window = NULL;
 Controller *controller = NULL;
 Input *input = NULL;
-ObjectHandle *inputField = NULL;
 map<Button,Direction> movebind;
 map<Button,Direction> lookbind;
 map<Button,word> lookcount;
@@ -49,41 +48,15 @@ void Frame();
 void KeyUp(Button btn);
 void KeyDown(Button btn);
 void MouseMove(word x, word y);
-void toggleBuild();
 void handleMouse(bool left);
-void toggleShow();
-
-static void getInput(string input);
-void addInput();
 
 //------------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
     //parse arguments...
-    int width = 640;
-    int height = 480;
-    bool fullscreen = false;
-	for (int i = 0; i < argc; ++i){
-		if (!strcmp(argv[i], "-width") && i < argc - 1){
-			std::stringstream converter(argv[++i]);
-            converter >> width;
-            if (converter.fail()) {
-                width = 640;
-            }
-        }else if(!strcmp(argv[i], "-height") && i < argc - 1){
-            std::stringstream converter(argv[++i]);
-            converter >> height;
-            if(converter.fail()){
-                height = 480;
-            }
-        }else if(!strcmp(argv[i], "-fullscreen")){
-            fullscreen = true;
-        }
-    }
-
     Video::Initialize(argc, argv);
-	window = new Video::Window(width, height, GAME_NAME, fullscreen);
+	window = new Video::Window(800, 600, GAME_NAME, false);
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
 
@@ -100,9 +73,6 @@ int main(int argc, char *argv[])
 
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player();
-	ObjectHandle playercube = Cuboid(Pd(-.5,-.5,-1));
-	playercube->material = ShadedMaterial(Cf(1,0,0,1));
-	player->children.insert(playercube);
 	player->rotation = Rd(0,Vd(0,0,1));
 	
 	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
@@ -122,10 +92,6 @@ int main(int argc, char *argv[])
 	world->children.insert(player);
 	world->children.insert(npc);
 	
-	// hack
-	Game::game.world = TO(World, world);
-	Game::game.player = TO(Player, player);
-
 	v1.world = world;
 
 	v1.camera.lookAt(cube->origin);
@@ -135,6 +101,13 @@ int main(int argc, char *argv[])
 	input->onKeyUp = KeyUp;
 	input->onKeyDown = KeyDown;
 	input->onMouseMove = MouseMove;
+	
+	// hack
+	Game::game.world = TO(World, world);
+	Game::game.player = TO(Player, player);
+	Game::game.window = window;
+	Game::game.input = input;
+	Game::game.controller = controller;
 
 	movebind[btnKeyA] = dirLeft;
 	movebind[btnKeyD] = dirRight;
@@ -161,17 +134,6 @@ int main(int argc, char *argv[])
 	lookbind[btnKeyZ] = dirBackward;
 
 	OnFrame = Frame;
-	
-	/** /
-	char buffer[512];
-	while (fgets(buffer, sizeof (buffer), stdin))
-	{
-		size_t len = strlen(buffer);
-		if (buffer[len-1] == '\n') buffer[--len] = 0;
-		if (buffer[len-1] == '\r') buffer[--len] = 0;
-		Game::Call(buffer);
-	}
-	/**/
 	
 	Video::StartEventLoop();
 
@@ -308,10 +270,10 @@ void KeyUp(Button btn)
 {
 	//printf("key up: %d\n", btn);
 	
+	if (!controller) return;
+	
 	binds.processUp(btn);
 	
-	if (!controller) return;
-
 	if ((btn >= btnMouseScrollUp) && (btn <= btnMouseMoveDown)) return;
 
 	if (movebind.count(btn)) controller->move[movebind[btn]] = false;
@@ -324,21 +286,18 @@ void KeyDown(Button btn)
 {
 	//printf("key down: %d\n", btn);
 	
-	binds.processDown(btn);
-	
 	if (!controller) return;
 	if (!input) return;
-
+	
+	binds.processDown(btn);
+	
 	//Handle input
 	if (movebind.count(btn)) controller->move[movebind[btn]] = true;
 	if (lookbind.count(btn)) controller->look[lookbind[btn]] = true;
 	switch (btn)
 	{
-		case btnKeyB:       toggleBuild(); 						 break;
 		case btnMouseRight: handleMouse(false);               	 break;
 		case btnMouseLeft:  handleMouse(true);                   break;
-		case btnKeyEnter:	addInput();							 break;
-		case btnKeyT:		toggleShow();						 break;
 	}
 }
 
@@ -347,28 +306,6 @@ void KeyDown(Button btn)
 void MouseMove(word x, word y)
 {
 	//printf("mouse move: %d %d\n", x, y);
-}
-
-//------------------------------------------------------------------------------
-
-void toggleBuild(){
-	Video::Viewport *v = window->viewports.front();
-	World *world = TO(World, v->world);
-	Terrain *terrain = TO(Terrain, world->terrain);
-	
-	if(building){
-		terrain->showGrid = false;
-		//Restore view
-		controller->firstPerson = lastview;
-        world->hud->buildselector->show = false;
-	}else{
-		//Save view before entering building mode
-		lastview = controller->firstPerson;
-		terrain->showGrid = true;
-		controller->firstPerson = true;
-        world->hud->buildselector->show = true;
-	}
-	building = !building;
 }
 
 //------------------------------------------------------------------------------
@@ -405,7 +342,6 @@ void handleMouse(bool left){
 				}
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
                 controller->avoidPulverizebyBuilding();
-				toggleBuild();
 			}else{
 				//Shoot
 				Player *p = TO(Player, controller->player);
@@ -424,63 +360,3 @@ void handleMouse(bool left){
 }
 
 //------------------------------------------------------------------------------
-
-void addInput(){
-	uword width, height;
-	window->size(width = 0, height = 0);
-	Input *i = TO(Input, input);
-	i->onText = getInput;
-	inputField = new ObjectHandle(TextInput(&*input, 0, 0, width, height));
-	World *w = TO(World, controller->world);
-	w->hud->children.insert(*inputField);
-}
-
-//------------------------------------------------------------------------------
-
-static void getInput(string input){
-	TextInput *curInput;
-	curInput = TO(TextInput, *inputField);
-	curInput->done = true;
-	
-	World *w = TO(World, controller->world);
-	HUD *h = TO(HUD, w->hud);
-	Player *p = TO(Player, controller->player);
-	if(!input.empty()){
-		//ChatMessage m = ChatMessage(*p, input);
-		//h->messageDisplayer->addMessage(m);
-		if(input == "hi"){
-			Objects::Player * pNPC = TO(Objects::Player, npc);
-			ChatMessage m = ChatMessage(*pNPC, "Hey man, what's up?");
-			h->messageDisplayer->addMessage(m);
-		}
-		Game::Call(input);
-	}
-
-	//Not so nice, but better than the old way
-	set<ObjectHandle>::iterator it;
-	TextInput *tInput;
-	for (it = w->hud->children.begin(); it != w->hud->children.end();)
-	{
-		tInput = TO(TextInput, *it);
-		if (tInput){
-			if(tInput->done){
-				w->hud->children.erase(it);
-				break;
-			}else{
-				it++;
-			}
-		}else{
-			it++;
-		}
-	}
-	delete &**inputField;
-	inputField = NULL;
-}
-
-//------------------------------------------------------------------------------
-
-void toggleShow(){
-	World *w = TO(World, controller->world);
-	HUD *h = TO(HUD, w->hud);
-	h->messageDisplayer->setShowAlways(!h->messageDisplayer->getShowAlways());
-}

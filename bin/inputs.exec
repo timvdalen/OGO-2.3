@@ -29,11 +29,16 @@ bind Z :lookY -1.0
 bind LeftClick :Fire
 bind RightClick :Jump
 
+bind B :Toggle :Weapon 2 ^ Weapon 1
+
 # other
-bind Enter: Prompt
+bind U :Toggle :ShowLog ^ HideLog
+bind Tab :ShowLog | HideLog
+
+bind Enter :Prompt
 bind T :Prompt :say :
 bind Y :Prompt :teamsay :
-bind O :Prompt :Connect :
+bind O :Prompt :connect :
 
 bind F :PrintFPS
 bind Escape :Quit
