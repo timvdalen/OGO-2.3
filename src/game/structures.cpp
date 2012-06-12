@@ -252,7 +252,7 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.turret->children.insert(Assets::Model::TurretObj);
 	children.insert(model.turret);
-	int i = 1;
+	int i = 2;
 	if (owner) i = TO(Player,owner)->team-'a';
 	model.turret->material = Assets::Model::TurretTex[i];
 }
