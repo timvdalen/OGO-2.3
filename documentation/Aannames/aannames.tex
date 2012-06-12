@@ -1,0 +1,8 @@
+\section{Validatie van aannamen}
+Voordat we de aannamen kunnen valideren, moeten we deze aannamen natuurlijk eerst identificeren. De aannamen zijn al uitgebreid besproken in het document \emph{Het ontwerp van het spel}. We zullen hier de belangrijkste punten herhalen:
+\begin{enumerate}
+\item[(i)] Er kunnen elke seconde 300 berichten over het netwerk worden gestuurd. Deze aanname is natuurlijk alleen realistisch als we nog de grootte van de berichten beperken. Alle gebruikte berichten in het spel zijn zeer klein. Daarom beperken we de grootte van de berichten tot 100 bytes, wat ruim voldoende is voor alle besproken berichten in het ontwerp. Hierbij is de grootte exclusief eventuele overhead van bijvoorbeeld TCP of IP.
+\item[(ii)] Verder hebben we aangenomen dat de RTT, oftewel de \emph{Round-Trip Time}, kleiner is dan 200 ms. Dit betekent dus dat het niet langer duurt dan 100 ms om een bericht van speler A naar speler B te sturen.
+\end{enumerate}
+
+We hebben deze aannamen uitgebreid getest. Hiertoe hebben we een apart programma geschreven (INSERT TESTMATERIAAL).

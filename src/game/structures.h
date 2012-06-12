@@ -158,7 +158,7 @@ class HeadQuarters: public Building
 		  0) {}
 	
 		  
-	virtual void draw();
+	virtual void draw(){}
 };
 
 //------------------------------------------------------------------------------
