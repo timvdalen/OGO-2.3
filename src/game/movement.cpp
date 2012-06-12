@@ -22,6 +22,7 @@ namespace Movement {
 Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	firstPerson = false;
+	lastView = false;
 	target = player->origin + offset;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
@@ -272,6 +273,19 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     return true;
 }
     
+//------------------------------------------------------------------------------
+
+void Controller::setView(bool view){
+	lastView = firstPerson;
+	firstPerson = view;
+}
+
+//------------------------------------------------------------------------------
+
+void Controller::restoreView(){
+	firstPerson = lastView;
+}
+
 //------------------------------------------------------------------------------
 
 } // namespace Movement
