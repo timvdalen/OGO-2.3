@@ -116,8 +116,8 @@
     Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken.
 Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om
 uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus
-vooral aandacht worden besteed aan het modelleren van de scene en het maken van het spel.
-Het modelleren van de scene is vrij onafhankelijk van de andere activiteiten. Dit kan worden
+vooral aandacht worden besteed aan het modelleren van de sc`ene en het maken van het spel.
+Het modelleren van de sc`ene is vrij onafhankelijk van de andere activiteiten. Dit kan worden
 gebruikt door hier eventueel al eerder mee te beginnen, zeker als we in een van de eerdere fasen
 tijd over hebben. Een gedetailleerde beschrijving voor de taakverdeling wordt pas in week 6
 gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
@@ -125,30 +125,30 @@ gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
     \subsection{Taakanalyse}
     Voordat we het werkplan kunnen maken voor de implementatiefase, moeten we de belangrijkste taken identificeren. Bij de belangrijkste taken zullen we ook de deeltaken aangeven. Dit geeft de volgende lijst van taken:
     \begin{itemize}
-    \item Scene modelleren (Model). Hieronder valt niet alleen het maken van de modellen en textures, maar ook het inladen van de modellen in OpenGL.
-    \item Het maken van de basisklassen (Basis). Hiermee bedoelen we de lagere klassen, die worden gebruikt om de scene te modelleren. We denken hierbij bijvoorbeeld aan: \emph{Terrain}, \emph{Building}, \emph{Player} en \emph{Camera}.
+    \item Sc`ene modelleren (Model). Hieronder valt niet alleen het maken van de modellen en textures, maar ook het inladen van de modellen in OpenGL.
+    \item Het maken van de basisklassen (Basis). Hiermee bedoelen we de lagere klassen, die worden gebruikt om de sc`ene te modelleren. We denken hierbij bijvoorbeeld aan: \emph{Terrain}, \emph{Building}, \emph{Player} en \emph{Camera}.
     \item De netcode. De netcode verzorgt alle communicatie met andere gebruikes. Dit valt uit elkaar in twee delen: het implementeren van het protocol en het testen van het protocol. Zoals ook al is aangegeven in het document \emph{Werkplan}, wordt het protocol al ontwikkeld en getest tijdens de ontwerpfase. De deeltaken zijn dus:
         \begin{itemize}
         \item Protocol implementatie.
         \item Protocol testen.
         \end{itemize}
     \item De lobbycode (Lobby). Dit is alleen de grafische gebruikersinterface voor de lobby (immers, de communicatie wordt al verzorgd door de netcode). De lobby wordt gebruikt tijdens het opstarten van het spel.
-    \item De gebruikersomgeving tijdens het spel. Hieronder verstaan wij zowel het weergeven van de scene als het reageren op de gebruiker:
+    \item De gebruikersomgeving tijdens het spel. Hieronder verstaan wij zowel het weergeven van de sc`ene als het reageren op de gebruiker:
         \begin{itemize}
-        \item Weergeven van de scene (Scene). Bij het weergeven van de scene moet de informatie van de basisklassen worden gebruikt om de scene met openGL te tekenen. Hier vindt dus ook de conversie plaats tussen lokale co\"ordinaten en globale co\"ordinaten.
-        \item Reageren op de gebruiker (Gbr). De gebruiker kan door de scene lopen, gebouwen plaatsen en schieten. Bovendien kan de gebruiker de camera veranderen door de muis te bewegen. Het programma moet dan de basisklassen aanpassen om deze veranderingen door te voeren. Bovendien moet het programma deze informatie doorgeven aan de andere gebruikers, hiervoor kan natuurlijk de netocde worden gebruikt.
+        \item Weergeven van de sc`ene (Sc`ene). Bij het weergeven van de sc`ene moet de informatie van de basisklassen worden gebruikt om de sc`ene met openGL te tekenen. Hier vindt dus ook de conversie plaats tussen lokale co\"ordinaten en globale co\"ordinaten.
+        \item Reageren op de gebruiker (Gbr). De gebruiker kan door de sc`ene lopen, gebouwen plaatsen en schieten. Bovendien kan de gebruiker de camera veranderen door de muis te bewegen. Het programma moet dan de basisklassen aanpassen om deze veranderingen door te voeren. Bovendien moet het programma deze informatie doorgeven aan de andere gebruikers, hiervoor kan natuurlijk de netocde worden gebruikt.
         \end{itemize}
     \end{itemize}
- 
+
     \subsection{Taakverdeling}
-    Na het analyseren van de taken, is het nu mogelijk om ze zo goed mogelijk te verdelen. Het is daarbij belangrijk om in te zien dat de taken in de taakanalyse al redelijk onafhankelijk van elkaar zijn uit te voeren. We proberen er in de taakverdeling voor te zorgen dat een klein aantal groepen zo onafhankelijk mogelijk van de rest kan werken. Om dit te bereiken, werken we zoveel mogelijk \emph{bottom-up}. 
-    
+    Na het analyseren van de taken, is het nu mogelijk om ze zo goed mogelijk te verdelen. Het is daarbij belangrijk om in te zien dat de taken in de taakanalyse al redelijk onafhankelijk van elkaar zijn uit te voeren. We proberen er in de taakverdeling voor te zorgen dat een klein aantal groepen zo onafhankelijk mogelijk van de rest kan werken. Om dit te bereiken, werken we zoveel mogelijk \emph{bottom-up}.
+
     Verder hebben we als doel dat iedereen met de verschillende aspecten van het programma te maken krijgt. Het protocol is al gezamenlijk ontworpen en getest, zodat iedereen met het gedistribueerde aspect te maken heeft gehad. We zullen met deze taakverdeling proberen iedereen ook te laten werken aan het grafische aspect.
-    
+
     Aangezien ons plan is om het protocol voor de implementatiefase al af te hebben, zullen wij hier bij dit werkplan voor de implementatiefase natuurlijk geen rekening mee houden. We hebben besloten het protocol al eerder te maken om onverwachte vertragingen vanwege \emph{bugs} te voorkomen, die in onze mening het meest waarschijnlijk zijn bij dit onderdeel van het programma. Dit wordt uitgebreid besproken in het document \emph{Werkplan}.
-    
-    Bovendien kan er zonder problemen al eerder worden begonnen aan het modelleren van de scene, dit is namelijk volledig onafhankelijk van de rest. Daarom is tijdens de eerdere fasen een deel van het modelleren al gedaan. Dit geeft ons wat extra tijd tijdens de implementatiefase, die wordt gebruikt als uitloop. Ook hier verwijzen we voor een uitgebreide bespreking naar het document \emph{Werkplan}.
-    
+
+    Bovendien kan er zonder problemen al eerder worden begonnen aan het modelleren van de sc`ene, dit is namelijk volledig onafhankelijk van de rest. Daarom is tijdens de eerdere fasen een deel van het modelleren al gedaan. Dit geeft ons wat extra tijd tijdens de implementatiefase, die wordt gebruikt als uitloop. Ook hier verwijzen we voor een uitgebreide bespreking naar het document \emph{Werkplan}.
+
     We geven de volgende tabel voor de taakverdeling. Handl staat hier voor het maken van de gebruikershandleiding. In deze tabel is week 9 weggelaten. Die is in principe bedoeld voor het afronden van het verslag en het voorbereiden van de eindpresentatie. Echter, deze kan ook worden gebruikt als extra uitloop.
    \begin{figure}[H]
         \small
@@ -159,9 +159,9 @@ gemaakt, aangezien daarvoor een deel van de ontwerpfase al moet zijn voltooid.
         Week 7 05-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
         Week 7 06-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
         Week 7 07-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
-        Week 8 12-06-2012 & Handl & Scene & Scene & Gbr & Gbr & Hanld \\ \hline
-        Week 8 13-06-2012 & Handl & Scene & Scene & Gbr & Gbr & Handl \\ \hline
-        Week 8 14-06-2012 & Handl & Scene & Scene & Gbr & Gbr & Handl \\ \hline
+        Week 8 12-06-2012 & Handl & Sc\`ene & Sc\`ene & Gbr & Gbr & Hanld \\ \hline
+        Week 8 13-06-2012 & Handl & Sc\`ene & Sc\`ene & Gbr & Gbr & Handl \\ \hline
+        Week 8 14-06-2012 & Handl & Sc\`ene & Sc\`ene & Gbr & Gbr & Handl \\ \hline
         Week 8 14-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline implementatiefase eerste versie}} \\ \hline
         \end{tabular}
         \caption{Gedetailleerde taakverdeling per dag}
