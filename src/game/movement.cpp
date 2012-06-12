@@ -371,62 +371,6 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     
     return true;
 }
-
-//------------------------------------------------------------------------------
-
-void Controller::avoidPulverizebyBuilding(){
-    World *w = TO(World, world); 
-    Terrain *t = w->terrain; 
-    int xlength = (int) (w->width / GRID_SIZE);
-    int ylength = (int) (w->height / GRID_SIZE);
-    bool ** containsBuilding = new bool*[xlength];
-	for (int x = 0; x < xlength; x++){
-        containsBuilding[x] = new bool[ylength];
-        memset(containsBuilding[x], 0, sizeof containsBuilding[x]);
-    }
-    //create a mapping with all used grids
-    multimap<GridPoint, ObjectHandle>::iterator it;
-    for(it = t->structures.begin(); it != t->structures.end(); it++){
-        GridPoint p = it->first;
-        containsBuilding[p.x][p.y] = true;
-    }
-    //O(n^2) could be faster, alot faster, pruning could be applied extensively
-    int gridx = (int) ((pos.x + w->width / 2) / GRID_SIZE);
-    int gridy = (int) ((pos.y + w->height / 2) / GRID_SIZE);
-    if(containsBuilding[gridx][gridy]){
-        double min_distance = std::numeric_limits<double>::infinity();
-        int i, j;
-        for(i = 0; i < xlength; i++){
-            for(j = 0; j < ylength; j++){
-                if(!containsBuilding[i][j]){
-                    double x = GRID_SIZE*(i+0.5) - (w->width)/2;
-                    double y = GRID_SIZE*(j+0.5) - (w->height)/2;
-                    double d = (pos.x - x)*(pos.x - x) + (pos.y - y)*(pos.y - y);
-                    if(d < min_distance){
-                        min_distance = d;
-                        gridx = i;
-                        gridy = j;
-                    }
-               }
-            }
-        }
-        pos.x = GRID_SIZE*gridx - (w->width)/2 + GRID_SIZE*0.5;;
-        pos.y = GRID_SIZE*gridy - (w->height)/2 + GRID_SIZE*0.5;
-        player->origin = pos;
-        Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
-        if (firstPerson == true)
-		{
-			camera.origin = player->origin;
-			camera.lookAt(pos + (vec * 5.0));
-		}
-		else
-		{
-			camera.origin = pos - (vec * zoom);
-			camera.lookAt(pos);
-		}
-    }
-}
-
     
 //------------------------------------------------------------------------------
 } // namespace Movement

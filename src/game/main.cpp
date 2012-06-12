@@ -341,7 +341,6 @@ void handleMouse(bool left){
                     }
 				}
 				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
-                controller->avoidPulverizebyBuilding();
 			}else{
 				//Shoot
 				Player *p = TO(Player, controller->player);
