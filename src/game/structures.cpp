@@ -30,7 +30,7 @@ bool GridPoint::operator<(const GridPoint& p2) const
 
 bool GridPoint::isValid()
 {
-    return x == -1 && y == -1;
+    return !(x == -1 && y == -1);
 }
 
 //------------------------------------------------------------------------------
