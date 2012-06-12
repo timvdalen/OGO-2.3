@@ -25,11 +25,11 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 	team = _team;
 	name = _name;
 
-	model.head = Object();
-	model.body = Object();
-	model.weapon = Object();
-	model.tool = Object();
-	model.wheel = Object();
+	model.head = ModelObjectContainer();
+	model.body = ModelObjectContainer();
+	model.weapon = ModelObjectContainer();
+	model.tool = ModelObjectContainer();
+	model.wheel = ModelObjectContainer();
 	model.head->children.insert(Assets::Model::HeadObj);
 	model.body->children.insert(Assets::Model::BodyObj);
 	model.weapon->children.insert(Assets::Model::GunObj);
@@ -40,6 +40,13 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 	children.insert(model.weapon);
 	children.insert(model.tool);
 	children.insert(model.wheel);
+
+	//set textures
+	model.head->material = Assets::Model::HeadTex;
+	model.body->material = Assets::Model::BodyTex[team-'a'];
+	model.weapon->material = Assets::Model::GunTex;
+	model.wheel->material = Assets::Model::WheelTex[team-'a'];
+	model.tool->material = Assets::Model::WrenchTex;
 
 	//set position of seperate elements
 	velocity = Vd(0,0,0);

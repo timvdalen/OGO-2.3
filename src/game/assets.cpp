@@ -155,9 +155,9 @@ void Initialize(int argc, char *argv[])
 	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
 
 	//temp
-	Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
-	Model::BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
-	Model::GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
+	//Model::BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
+	//Model::GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 }
 
 //------------------------------------------------------------------------------
