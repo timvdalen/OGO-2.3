@@ -362,10 +362,20 @@ void Jump()
 CMD(Fire, 0, arg)
 void Fire()
 {
-	if (game.player->weapon == weapWrench)
-	{
-		Build();
-		return;
+	switch(game.player->weapon){
+	case weapWrench:{
+			Build();
+			return;
+		}
+		break;
+	case weapLaser:{
+			Pd gunLoc = game.player->origin + game.player->model.weapon->origin;
+			World *w = TO(World, game.controller->world);
+			//TODO: Op basis van game.controller->target
+			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, -game.controller->camera.objective * Vd(0,10,0))));
+			return;
+		}
+		break;
 	}
 }
 

@@ -81,7 +81,8 @@ int main(int argc, char *argv[])
 	cube = Cuboid(Pd(0,3,0));
 	ObjectHandle player = Objects::Player(0, 'a', pname);
 	player->rotation = Rd(0,Vd(0,0,1));
-	
+	Player *p = TO(Player, player);
+	p->weapon = weapLaser;	
 	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
 
 	cube->material = Assets::Test;
@@ -321,43 +322,7 @@ void handleMouse(bool left){
 	//If this ever gets called from anywhere but KeyDown, remember to check
 	//For !input
 	if(left){
-		if(input->grabbing){
-			if(building){
-				//Build something
-				Video::Viewport *v = window->viewports.front();
-				World *world = TO(World, v->world);
-				Camera &cam = v->camera;
-				GridPoint clicked = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
-				
-				ObjectHandle tower = Objects::DefenseTower();
-				{
-					MaterialHandle m = TwinMaterial(ShadedMaterial(Cf(0.5, 0.5, 0.5, 1)), Assets::Test);
-					tower->material = m;
-				}
-                stringstream ss;
-                if(clicked.isValid()){
-                    ss << "Invalid Place selected, building aborted";
-                }else{
-                    bool done = world->terrain->placeStructure(clicked, tower);
-				
-                    //Dit zou ik eigenlijk met std::to_string() willen doen
-                    if(done){
-                        ss << "Tower placed at  (" << clicked.x << ", " << clicked.y << ")";
-                    }else{
-                        ss << "Tower place failed, already there at (" << clicked.x << ", " <<  clicked.y << ")";
-                    }
-				}
-				world->hud->messageDisplayer->addMessage(SystemMessage(ss.str()));
-			}else{
-				//Shoot
-				Player *p = TO(Player, controller->player);
-				//This translation was copied from Player::translateModel
-				//That information should be accessible
-				Pd gunLoc = p->origin + Vd(-0.499,-0.037,1.333);
-				World *w = TO(World, controller->world);
-				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, -controller->camera.objective * Vd(0,10,0))));
-			}
-		}else{
+		if(!input->grabbing){
 			input->grabMouse();
 		}
 	}else{
