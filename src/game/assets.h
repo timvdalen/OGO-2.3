@@ -37,7 +37,9 @@ extern MaterialHandle Widget;
 extern MaterialHandle WidgetBG;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
-    
+
+namespace Icon{
+
 extern MaterialHandle Money;
 extern MaterialHandle Health;
 extern MaterialHandle Mine;
@@ -53,6 +55,8 @@ extern MaterialHandle Tower_blue;
 extern MaterialHandle HQ_normal;
 extern MaterialHandle HQ_blue;
 extern MaterialHandle HQ_red;
+
+}
 
 //------------------------------------------------------------------------------
 
