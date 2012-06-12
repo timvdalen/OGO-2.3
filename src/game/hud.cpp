@@ -363,7 +363,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glEnd();
         black->unselect();
         //Draw money icon
-        Assets::Money->select();
+        Assets::Icon::Money->select();
         glBegin(GL_QUADS);
         glTexCoord2f(0,1);
         glVertex2i(10,10);
@@ -374,9 +374,9 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glTexCoord2f(1,1);
         glVertex2i(50,10);
         glEnd();
-        Assets::Money->unselect();
+        Assets::Icon::Money->unselect();
         //Draw Health icon
-        Assets::Health->select();
+        Assets::Icon::Health->select();
         glBegin(GL_QUADS);
         glTexCoord2f(0,0);
         glVertex2i(10,60);
@@ -387,7 +387,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glTexCoord2f(1,0);
         glVertex2i(50,60);
         glEnd();
-        Assets::Health->unselect();
+        Assets::Icon::Health->unselect();
         //Draw amount of money
         black->select();
         stringstream ss;
@@ -499,7 +499,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     void BuildingSelection::draw(){
         //TODO link this with the interface
         MaterialHandle icons[2] = {
-            Assets::Pickaxe_normal,Assets::Tower_normal
+            Assets::Icon::Pickaxe_normal,Assets::Icon::Tower_normal
         };
         string buildingname[2] = {"Mine", "Tower"};
         int n = 2;
@@ -606,11 +606,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
         float rely = ((w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/(w->height));
         if(marked){
-            Assets::Robot_normal->select();
+            Assets::Icon::Robot_normal->select();
         }else if(p->team =='a'){
-            Assets::Robot_red->select();
+            Assets::Icon::Robot_red->select();
         }else{
-            Assets::Robot_blue->select();
+            Assets::Icon::Robot_blue->select();
         }
         glBegin(GL_QUADS);
         glTexCoord2f(0,1);
@@ -623,11 +623,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glVertex2i((int)((relx+1)*xspacing), (int)((rely)*yspacing));
         glEnd();
         if(marked){
-            Assets::Robot_normal->select();
+            Assets::Icon::Robot_normal->select();
         }else if(p->team == 'a'){
-            Assets::Robot_red->unselect();
+            Assets::Icon::Robot_red->unselect();
         }else{
-            Assets::Robot_blue->unselect();
+            Assets::Icon::Robot_blue->unselect();
         }
     }
     
@@ -673,16 +673,16 @@ void MiniMap::draw(){
 		//TODO team recognition.
 		if(TO(DefenseTower, s)){
 			progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
-			mat = Assets::Tower_normal;
+			mat = Assets::Icon::Tower_normal;
         }else if(TO(Mine, s)){
 			progress = 1;
-			mat = Assets::Mine;
+			mat = Assets::Icon::Mine;
 		}else if(TO(ResourceMine, s)){
 			progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
-			mat = Assets::Pickaxe_normal;
+			mat = Assets::Icon::Pickaxe_normal;
 		}else if(TO(HeadQuarters, s)){
 			progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
-			mat = Assets::HQ_normal;
+			mat = Assets::Icon::HQ_normal;
 		}
 		if(mat){
 			mat->select();
