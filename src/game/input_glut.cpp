@@ -268,7 +268,11 @@ void keyboard_down_event(unsigned char key, int x, int y)
 	
 	if (input->textMode)
 	{
+		#ifdef _MSC_VER
+		if (key == 27)
+		#else
 		if (key == '\e') //Aborted
+		#endif
 		{
 			input->text = "";
 			CALL(input->onText, input->text);
