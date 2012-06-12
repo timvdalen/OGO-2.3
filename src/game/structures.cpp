@@ -242,7 +242,7 @@ void Building::preRender(){
 
 //------------------------------------------------------------------------------
 
-DefenseTower::DefenseTower(ObjectHandle _owner))
+DefenseTower::DefenseTower(ObjectHandle _owner)
 		: Building(3, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
