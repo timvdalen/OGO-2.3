@@ -22,6 +22,7 @@ MaterialHandle Grid;
 MaterialHandle SelectedGrid;
 
 MaterialHandle WorldMaterial;
+MaterialHandle Star;
 
 MaterialHandle Test;
 MaterialHandle Cloud;
@@ -90,6 +91,12 @@ void Initialize(int argc, char *argv[])
 	Grass = TexturedMaterial(path + "assets/textures/terrain/grass.png");
 
 	WorldMaterial = TwinMaterial(Cloud, ShadedMaterial(Cf(0.5, 0.5, 0.5, 1.0)));
+	
+	{
+		ShadedMaterial light(Cf(1, 1, 1, 1));
+		light.emissive = Cf(1, 1, 1, 1);
+		Star = light;	
+	}
 
 	Widget =  ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	WidgetBG = ColorMaterial(0.184f, 0.31f, 0.31f, 0.7f);

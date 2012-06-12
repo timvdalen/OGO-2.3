@@ -2,11 +2,19 @@
  * World object -- see header file for more info
  */
 
+#include <cstdlib>
 #include <vector>
+#include <stdio.h>
+#include <GL/freeglut.h>
 
 #include "world.h"
 
 namespace Objects {
+
+#define HIGH 100
+
+class Sky;
+class Star;
 
 //------------------------------------------------------------------------------
 
@@ -25,6 +33,8 @@ World::World(double _width, double _height)
 	hud = TO(HUD, hudHandle);
 	children.insert(hudHandle);
 
+	children.insert(Sky(_width, _height));
+
 	width = _width;
 	height = _height;
 }
@@ -32,8 +42,6 @@ World::World(double _width, double _height)
 //------------------------------------------------------------------------------
 
 void World::draw(){
-	#define HIGH 100
-
 	double halfWidth = width/2;
 	double halfHeight = height/2;
 
@@ -94,8 +102,6 @@ void World::draw(){
 		glTexCoord2d(0.33, 0.66);
 		glVertex3f(-halfWidth, halfHeight, HIGH);
 	glEnd();
-
-	#undef HIGH
 }
 
 //------------------------------------------------------------------------------
@@ -141,6 +147,64 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 }
 
 //------------------------------------------------------------------------------
+
+Star::Star(Pd P)
+	: Object(P, Qd(), Assets::Star)
+{
+	printf("Star constructed\n");
+}
+
+//------------------------------------------------------------------------------
+
+void Star::draw(){
+	glBegin(GL_POINTS);
+		glVertex3i(0, 0, 0);
+	glEnd();
+}
+
+//------------------------------------------------------------------------------
+
+Sky::Sky(int _width, int _height){
+	width = _width;
+	height = _height;
+}
+
+//------------------------------------------------------------------------------
+
+void Sky::frame(){
+	if(stars.size() < 300){
+		int res = rand()%100;
+		if(res == 0){
+			int x = rand()%width - (int)width/2;
+			int y = rand()%height - (int)height/2;
+			int min = HIGH - (int)(HIGH/10);
+			int z = rand()%(HIGH-min) + min;
+			stars.push_back(Star(Pd(x, y, z)));
+			printf("Added a star at %d, %d, %d, %d\n", x, y, z, min);
+		}
+	}
+	if(stars.size() > 150){
+		int res = rand()%200;
+		if(res == 0){
+			stars.erase(stars.begin() + (rand()%stars.size()));
+		}
+		printf("Removed a star\n");
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void Sky::render(){
+	frame();
+	vector<Star>::iterator it;
+	for(it = stars.begin(); it != stars.end(); it++){
+		(*it).render();
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#undef HIGH
 
 } // namespace Objects
 
