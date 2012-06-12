@@ -65,8 +65,9 @@ class Controller
 	
 	void frame();         //!< Called everytime a frame passes in game
     
+	Point<double> target;
+
 	private:
-	Point<double> pos;
 	Qd camAngle;
 	double zoom;
 	

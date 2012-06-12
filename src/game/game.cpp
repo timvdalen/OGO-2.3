@@ -375,7 +375,7 @@ CMD(Build, 0, arg)
 void Build()
 {
 	Camera &cam = game.controller->camera;
-	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, game.controller->target);
 
 	ObjectHandle tower = Objects::DefenseTower();
 	if(clicked.isValid()){
