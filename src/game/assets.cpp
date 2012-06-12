@@ -63,7 +63,7 @@ MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 
 //structure objects
 ObjectHandle TurretObj, MineObj, DrillObj;
-MaterialHandle TurretTex[2], MineTex[2], DrillTex[2];
+MaterialHandle TurretTex[3], MineTex[2], DrillTex[2];
 
 }
 
@@ -92,8 +92,8 @@ void Initialize(int argc, char *argv[])
 
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));
-		shade.emissive = Cf(0,.5,0,1);
-		Test = TwinMaterial(shade, TexturedMaterial(path + "test.png"));
+		shade.emissive = Cf(1,1,0.8,1);
+		Test = TwinMaterial(shade, TexturedMaterial(path + "assets/textures/terrain/grass1.png"));
 	}
 	
 	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");
@@ -149,6 +149,7 @@ void Initialize(int argc, char *argv[])
 	
 	Model::TurretTex[0] = TexturedMaterial(path + "assets/textures/models/turrettered.png");
 	Model::TurretTex[1] = TexturedMaterial(path + "assets/textures/models/turretteblue.png");
+	Model::TurretTex[2] = TexturedMaterial(path + "assets/textures/models/turrettenormal.png");
 	Model::MineTex[0] = TexturedMaterial(path + "assets/textures/models/minetextred.png");
 	Model::MineTex[1] = TexturedMaterial(path + "assets/textures/models/minetextblue.png");
 	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
@@ -213,6 +214,7 @@ void Terminate()
 	
 	Model::TurretTex[0].clear();
 	Model::TurretTex[1].clear();
+	Model::TurretTex[2].clear();
 	Model::MineTex[0].clear();
 	Model::MineTex[1].clear();
 	Model::DrillTex[0].clear();

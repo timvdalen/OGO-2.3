@@ -9,6 +9,7 @@
 #include "objects.h"
 #include "structures.h"
 #include "materials.h"
+#include "player.h"
 
 namespace Objects {
 
@@ -176,54 +177,63 @@ void Building::preRender(){
 //------------------------------------------------------------------------------
 
 DefenseTower::DefenseTower()
-		: Building(10, BoundingBox(),
+		: Building(3, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
 			20) 
 {
-	height = 10;
+	model.turret = ModelObjectContainer();
+	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.turret->children.insert(Assets::Model::TurretObj);
+	children.insert(model.turret);
+	int i = 1;
+	if (owner) i = TO(Player,owner)->team-'a';
+	model.turret->material = Assets::Model::TurretTex[i];
 }
 
 //------------------------------------------------------------------------------
 
 void DefenseTower::draw()
 {
+	material = Assets::Grass;
+	float h = 1, a = 1, b = 0;
 	glBegin(GL_QUADS);
 		//Front side
 		glNormal3i(0, -1, 0);
 		glTexCoord2i(0, 0);	glVertex3i(0, 0, 0);
 		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, 0);
-		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, 0, height);
-		glTexCoord2i(1, 0);	glVertex3i(0, 0, height);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, h);
+		glTexCoord2i(0, 0);	glVertex3i(0, 0, h);
 		
 		//Right side
 		glNormal3i(1, 0, 0);
-		glTexCoord2i(0, 0);	glVertex3i(GRID_SIZE, 0, 0);
-		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
-		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, height);
-		glTexCoord2i(1, 0);	glVertex3i(GRID_SIZE, 0, height);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, 0);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, h);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, h);
 		
 		//Back side
 		glNormal3i(0, 1, 0);
-		glTexCoord2i(0, 0);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
-		glTexCoord2i(0, 1);	glVertex3i(0, GRID_SIZE, 0);
-		glTexCoord2i(1, 1);	glVertex3i(0, GRID_SIZE, height);
-		glTexCoord2i(1, 0);	glVertex3i(GRID_SIZE, GRID_SIZE, height);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
+		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, 0);
+		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, h);
 		
 		//Left side
 		glNormal3i(-1, 0, 0);
-		glTexCoord2i(0, 0); glVertex3i(0, GRID_SIZE, 0);
-		glTexCoord2i(0, 1);	glVertex3i(0, 0, 0);
-		glTexCoord2i(1, 1);	glVertex3i(0, 0, height);
-		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, height);
+		glTexCoord2i(1, 0); glVertex3i(0, GRID_SIZE, 0);
+		glTexCoord2i(0, 0);	glVertex3i(0, 0, 0);
+		glTexCoord2i(0, 0);	glVertex3i(0, 0, h);
+		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
 		
 		//Top side
 		glNormal3i(0, 0, 1);
-		glTexCoord2i(0, 0); glVertex3i(0, 0, height);
-		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, height);
-		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, height);
-		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, height);
+		glTexCoord2i(0, 0); glVertex3i(0, 0, h);
+		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, h);
+		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, h);
+		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
 	glEnd();
+	//*/
 }
 
 //------------------------------------------------------------------------------

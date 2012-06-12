@@ -133,11 +133,11 @@ class Building: public Structure
 	//! Constructs a new building
 	Building(int _height, BoundingBox B = BoundingBox(),
 	         Resource _cost = 0, Resource _income = 0, int _buildTime = 0,
-			 int _buildDuration = 0, Power _attackPower = 0)
+			 int _buildDuration = 0, Power _attackPower = 0, ObjectHandle _owner = ObjectHandle())
 		: height(_height), Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
-		  attackPower(_attackPower) {}
+		  attackPower(_attackPower), owner(_owner) {}
 
 	//! Sets up translations and rotations
 	virtual void preRender();
@@ -172,6 +172,9 @@ class DefenseTower: public Building
 	DefenseTower();
 		  
 	virtual void draw();
+	
+	//! Model
+	struct { ObjectHandle turret; } model;
 };
 
 //------------------------------------------------------------------------------
