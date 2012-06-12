@@ -133,7 +133,7 @@ void World::postRender(){
 
 ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 {
-	// Todo: implement
+	return ObjectHandle();// Todo: implement
 }
 
 //------------------------------------------------------------------------------

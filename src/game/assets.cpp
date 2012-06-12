@@ -33,7 +33,8 @@ MaterialHandle WidgetBG;
 MaterialHandle Font;
 MaterialHandle CrossHair;
     
-    
+namespace Icon{ 
+   
 MaterialHandle Money;
 MaterialHandle Health;
 MaterialHandle Mine;
@@ -49,6 +50,8 @@ MaterialHandle Tower_blue;
 MaterialHandle HQ_normal;
 MaterialHandle HQ_blue;
 MaterialHandle HQ_red;
+
+}
 
 //------------------------------------------------------------------------------
 
@@ -103,20 +106,20 @@ void Initialize(int argc, char *argv[])
 	Font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	CrossHair = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
     
-    Money = TexturedMaterial(path + "assets/textures/hud/money.png");
-    Health = TexturedMaterial(path+ "assets/textures/hud/health.png");
-    Mine = TexturedMaterial(path + "assets/textures/hud/mine.png");
-    Robot_red = TexturedMaterial(path + "assets/textures/hud/robot_red.png");
-    Robot_blue = TexturedMaterial(path + "assets/textures/hud/robot_blue.png");
-    Robot_normal = TexturedMaterial(path + "assets/textures/hud/robot_normal.png");
-    Pickaxe_normal = TexturedMaterial(path + "assets/textures/hud/pickaxe_normal.png");
-    Pickaxe_blue = TexturedMaterial(path + "assets/textures/hud/pickaxe_blue.png");
-    Pickaxe_red = TexturedMaterial(path + "assets/textures/hud/pickaxe_red.png");
-    Tower_normal = TexturedMaterial(path + "assets/textures/hud/tower_normal.png");
-    Tower_red = TexturedMaterial(path + "assets/textures/hud/tower_red.png");
-    HQ_normal = TexturedMaterial(path + "assets/textures/hud/headquarter_normal.png");
-    HQ_blue = TexturedMaterial(path + "assets/textures/hud/headquarter_blue.png");
-    HQ_red = TexturedMaterial(path + "assets/textures/hud/headquarter_red.png");
+    Icon::Money = TexturedMaterial(path + "assets/textures/hud/money.png");
+    Icon::Health = TexturedMaterial(path+ "assets/textures/hud/health.png");
+    Icon::Mine = TexturedMaterial(path + "assets/textures/hud/mine.png");
+    Icon::Robot_red = TexturedMaterial(path + "assets/textures/hud/robot_red.png");
+    Icon::Robot_blue = TexturedMaterial(path + "assets/textures/hud/robot_blue.png");
+    Icon::Robot_normal = TexturedMaterial(path + "assets/textures/hud/robot_normal.png");
+    Icon::Pickaxe_normal = TexturedMaterial(path + "assets/textures/hud/pickaxe_normal.png");
+    Icon::Pickaxe_blue = TexturedMaterial(path + "assets/textures/hud/pickaxe_blue.png");
+    Icon::Pickaxe_red = TexturedMaterial(path + "assets/textures/hud/pickaxe_red.png");
+    Icon::Tower_normal = TexturedMaterial(path + "assets/textures/hud/tower_normal.png");
+    Icon::Tower_red = TexturedMaterial(path + "assets/textures/hud/tower_red.png");
+    Icon::HQ_normal = TexturedMaterial(path + "assets/textures/hud/headquarter_normal.png");
+    Icon::HQ_blue = TexturedMaterial(path + "assets/textures/hud/headquarter_blue.png");
+    Icon::HQ_red = TexturedMaterial(path + "assets/textures/hud/headquarter_red.png");
     
 	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
 	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
@@ -145,8 +148,20 @@ void Terminate()
 	Font.clear();
 	CrossHair.clear();
 	
-	Money.clear();
-    Health.clear();
+	Icon::Money.clear();
+    Icon::Health.clear();
+	Icon::Mine.clear();
+    Icon::Robot_red.clear();
+    Icon::Robot_blue.clear();
+    Icon::Robot_normal.clear();
+    Icon::Pickaxe_normal.clear();
+    Icon::Pickaxe_blue.clear();
+    Icon::Pickaxe_red.clear();
+    Icon::Tower_normal.clear();
+    Icon::Tower_red.clear();
+    Icon::HQ_normal.clear();
+    Icon::HQ_blue.clear();
+    Icon::HQ_red.clear();
 
 	HeadObj.clear();
 	BodyObj.clear();

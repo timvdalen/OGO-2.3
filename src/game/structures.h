@@ -106,7 +106,7 @@ class Mine: public Structure
 		: Structure(B), maxIncome(_maxIncome) {}
 
 	//! Draws the mine
-	virtual void draw();
+	virtual void draw() {}
 };
 
 //------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ class HeadQuarters: public Building
 		  0) {}
 	
 		  
-	virtual void draw();
+	virtual void draw(){}
 };
 
 //------------------------------------------------------------------------------

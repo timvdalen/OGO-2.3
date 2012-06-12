@@ -15,12 +15,14 @@ namespace Movement {
 	double lookspeed = 0.035;
 	double zoomspeed = 0.5;
 
+	Point<double> offset = Pd(.5,.5,2);
+
 //------------------------------------------------------------------------------
 
 Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	firstPerson = false;
-	pos = player->origin;
+	pos = player->origin + offset;
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
@@ -53,7 +55,7 @@ void Controller::moveX()
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
         
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirRight])
 	{
@@ -72,7 +74,7 @@ void Controller::moveX()
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
@@ -96,7 +98,7 @@ void Controller::moveY()
 		camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirBackward])
 	{
@@ -113,7 +115,7 @@ void Controller::moveY()
 		camera.origin.y = camera.origin.y + movespeed * cos(yaw);
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
@@ -123,19 +125,25 @@ void Controller::moveZ()
 {
 	if (move[dirUp])
 	{
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
+		double yaw = atan2(vec.x, vec.y);
+
 		pos.z = pos.z + jetpackspeed;
 		camera.origin.z = camera.origin.z + jetpackspeed;
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirDown])
 	{
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
+		double yaw = atan2(vec.x, vec.y);
+
 		pos.z = pos.z - jetpackspeed;
 		camera.origin.z = camera.origin.z - jetpackspeed;
 
 		//test
-		player->origin = pos;
+		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
@@ -151,7 +159,7 @@ void Controller::lookX()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -168,7 +176,7 @@ void Controller::lookX()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -198,7 +206,7 @@ void Controller::lookY()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -224,7 +232,7 @@ void Controller::lookY()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -253,7 +261,7 @@ void Controller::lookZ()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -276,7 +284,7 @@ void Controller::lookZ()
 
 		if (firstPerson == true)
 		{
-			camera.origin = player->origin;
+			camera.origin = player->origin + Pd(0,0,2) + vec;
 			camera.lookAt(pos + (vec * 5.0));
 		}
 		else
@@ -371,62 +379,6 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     
     return true;
 }
-
-//------------------------------------------------------------------------------
-
-void Controller::avoidPulverizebyBuilding(){
-    World *w = TO(World, world); 
-    Terrain *t = w->terrain; 
-    int xlength = (int) (w->width / GRID_SIZE);
-    int ylength = (int) (w->height / GRID_SIZE);
-    bool ** containsBuilding = new bool*[xlength];
-	for (int x = 0; x < xlength; x++){
-        containsBuilding[x] = new bool[ylength];
-        memset(containsBuilding[x], 0, sizeof containsBuilding[x]);
-    }
-    //create a mapping with all used grids
-    multimap<GridPoint, ObjectHandle>::iterator it;
-    for(it = t->structures.begin(); it != t->structures.end(); it++){
-        GridPoint p = it->first;
-        containsBuilding[p.x][p.y] = true;
-    }
-    //O(n^2) could be faster, alot faster, pruning could be applied extensively
-    int gridx = (int) ((pos.x + w->width / 2) / GRID_SIZE);
-    int gridy = (int) ((pos.y + w->height / 2) / GRID_SIZE);
-    if(containsBuilding[gridx][gridy]){
-        double min_distance = std::numeric_limits<double>::infinity();
-        int i, j;
-        for(i = 0; i < xlength; i++){
-            for(j = 0; j < ylength; j++){
-                if(!containsBuilding[i][j]){
-                    double x = GRID_SIZE*(i+0.5) - (w->width)/2;
-                    double y = GRID_SIZE*(j+0.5) - (w->height)/2;
-                    double d = (pos.x - x)*(pos.x - x) + (pos.y - y)*(pos.y - y);
-                    if(d < min_distance){
-                        min_distance = d;
-                        gridx = i;
-                        gridy = j;
-                    }
-               }
-            }
-        }
-        pos.x = GRID_SIZE*gridx - (w->width)/2 + GRID_SIZE*0.5;;
-        pos.y = GRID_SIZE*gridy - (w->height)/2 + GRID_SIZE*0.5;
-        player->origin = pos;
-        Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
-        if (firstPerson == true)
-		{
-			camera.origin = player->origin;
-			camera.lookAt(pos + (vec * 5.0));
-		}
-		else
-		{
-			camera.origin = pos - (vec * zoom);
-			camera.lookAt(pos);
-		}
-    }
-}
-
     
 //------------------------------------------------------------------------------
 } // namespace Movement
