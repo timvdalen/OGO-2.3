@@ -62,13 +62,13 @@ class Controller
 	Qd camAngle;
 	double zoom;
 
-	void moveX();
-	void moveY();
-	void moveZ();
+	void moveX(double movespeed);
+	void moveY(double movespeed);
+	void moveZ(double jetpackspeed);
 
-	void lookX();
-	void lookY();
-	void lookZ();
+	void lookX(double lookspeed);
+	void lookY(double zoomspeed);
+	void lookZ(double lookspeed);
     bool walkAble(Point<double> old, Point<double> p);
 };
 
