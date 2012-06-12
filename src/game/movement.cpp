@@ -380,8 +380,10 @@ void Controller::avoidPulverizebyBuilding(){
     int xlength = (int) (w->width / GRID_SIZE);
     int ylength = (int) (w->height / GRID_SIZE);
     bool ** containsBuilding = new bool*[xlength];
-	for (int x = 0; x < xlength; x++) containsBuilding[x] = new bool[ylength];
-    //memset(containsBuilding, 0, sizeof containsBuilding);
+	for (int x = 0; x < xlength; x++){
+        containsBuilding[x] = new bool[ylength];
+        memset(containsBuilding[x], 0, sizeof containsBuilding[x]);
+    }
     //create a mapping with all used grids
     multimap<GridPoint, ObjectHandle>::iterator it;
     for(it = t->structures.begin(); it != t->structures.end(); it++){
