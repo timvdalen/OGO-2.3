@@ -1,12 +1,12 @@
 \documentclass[a4paper,11pt, twoside]{article}
-\usepackage{graphicx,listings,float,geometry, amsmath,placeins}
+\usepackage{graphicx,listings,float,epstopdf,geometry,amsmath,placeins,caption,subcaption,placeins}
 %\usepackage[firstpage]{draftwatermark}
 %\SetWatermarkLightness{0.5}
 %\SetWatermarkScale{4}
 \setcounter{tocdepth}{2}
 \usepackage[dutch]{babel}
-\usepackage{xspace, color,mdframed}
-\usepackage[usenames,dvipsnames]{xcolor}
+%\usepackage{xspace, color, mdframed}
+%\usepackage[usenames, dvipsnames]{xcolor}
 
 \geometry{
 	includeheadfoot,
@@ -148,18 +148,19 @@
     Het terrein kan in wezen allerlei vormen hebben, voorwaarde hierbij is dat het een eerlijk terrein is voor beide teams. Een team mag dus geen voordeel hebben dankzij de kaart. Een mogelijke manier om dit te bereiken is door de kaart symmetrisch te maken. We eisen bovendien dat de kaart rechthoekig is.
 
     Op het terrein zijn twee commandocentra geplaatst, voor beide teams een commandocentrum. Het kan gewenst zijn dat elk team bij de start van het spel ook al een aantal extra torens heeft ter bescherming van het commandocentrum. Over het terrein zijn een aantal delfplaatsen verdeeld. Deze zijn eerlijk verdeeld over de kaart. Andere obstakels mogen aanwezig zijn, maar zijn niet noodzakelijkerwijs aanwezig. Alle objecten met uitzondering van spelers worden geplaatst op een rooster. In figuur \ref{fig:map1} en \ref{fig:map2} zijn twee mogelijke beginconfiguraties van het spel getoond.
+    
     \begin{figure}[h]
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\textwidth]{Graphics/Map1.eps}
-    \caption{Een bijna vierkant terrein met vier spelers}
-    \label{fig:map1}
-    \end{subfigure}\hspace{10mm}
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\textwidth]{Graphics/Map2.eps}
-    \caption{Een breed terrein met drie spelers}
-    \label{fig:map2}
-    \end{subfigure}
-    \caption{Twee verschillende beginconfiguraties van het spel}
+        \begin{subfigure}{0.5\linewidth}
+            \includegraphics[width=\textwidth]{../Graphics/Map1.eps}
+            \caption{Een bijna vierkant terrein met vier spelers}
+            \label{fig:map1}
+        \end{subfigure}\hspace{10mm}
+        \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth]{../Graphics/Map2.eps}
+                \caption{Een breed terrein met drie spelers}
+                \label{fig:map2}
+        \end{subfigure}
+        \caption{Twee verschillende beginconfiguraties van het spel}
     \end{figure}
 
     \subsubsection{Spelers}
@@ -197,7 +198,7 @@
 
     We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in sectie \ref{sec:OPT}: \emph{Optioneel}, wordt ook aangegeven in figuur \ref{fig:UI}.
     \begin{figure}[H]
-    \includegraphics[width=0.9\textwidth]{Graphics/UI.eps}
+    \includegraphics[width=0.9\textwidth]{../Graphics/UI.eps}
     \caption{De gebruikersomgeving tijdens het spel}
     \label{fig:UI}
     \end{figure}
@@ -223,23 +224,23 @@
     Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duidelijk uit de gebruikersomgeving wordt. Immers, het vizier wordt niet op hetzelfde punt als het wapen op het scherm afgebeeld. Aangezien het vizier eenvoudiger is om mee te richten dan het wapen, wordt bij het schieten een laserstraal afgevuurd vanuit het wapen naar het punt waar het vizier op gericht staat. Dit is te zien in figuur \ref{fig:COL}. Als het vizier niet op een object gericht staat, dan zal, bij het schieten, de laserstraal uit het wapen afgevuurd worden in de kijkrichting.
 
     \begin{figure}[H]
-    \includegraphics[width=0.9\textwidth]{Graphics/Collision.eps}
+    \includegraphics[width=0.9\textwidth]{../Graphics/Collision.eps}
     \caption{Een voorbeeld van het schieten van het wapen, de blauwe lijn is niet zichtbaar tijdens het spelen}
     \label{fig:COL}
     \end{figure}
 
     Een probleem ontstaat wanneer er een object de laserstraal vanaf het wapen naar het punt, waar het vizier op gericht staat, blokkeert. Het object zou dan geraakt moeten worden en niet het punt waar het vizier op gericht staat. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
-    \FloatBarrier
+    \FloatBarrier    
     \begin{figure}[h]
     \begin{subfigure}{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{Graphics/Collision2.eps}
+    \includegraphics[width=\textwidth]{../Graphics/Collision2.eps}
     \caption{De laser komt altijd aan op het punt aangewezen door het vizier}
     \label{fig:COL2}
     \end{subfigure}
     \begin{subfigure}{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{Graphics/Collision3.eps}
+    \includegraphics[width=\textwidth]{../Graphics/Collision3.eps}
     \caption{De laser stopt zodra hij een ander object raakt}
     \label{fig:COL3}
     \end{subfigure}
@@ -256,7 +257,7 @@
 
     \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{Graphics/UI2.pdf}
+    \includegraphics[width=\textwidth]{../Graphics/UI2.pdf}
     \caption{Een voorbeeld van het neerzetten van een gebouw in de gebruikersomgeving}
     \label{fig:gebouw}
     \end{figure}
