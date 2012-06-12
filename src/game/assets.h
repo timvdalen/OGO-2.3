@@ -60,11 +60,17 @@ extern MaterialHandle HQ_red;
 
 //------------------------------------------------------------------------------
 
-extern ObjectHandle HeadObj;
-extern ObjectHandle BodyObj;
-extern ObjectHandle GunObj;
-extern ObjectHandle WrenchObj;
-extern ObjectHandle WheelObj;
+namespace Model {
+
+//player objects
+extern ObjectHandle HeadObj, BodyObj, GunObj, WrenchObj, WheelObj;
+extern MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
+
+//structure objects
+extern ObjectHandle TurretObj, MineObj, DrillObj;
+extern MaterialHandle TurretTex[2], MineTex[2], DrillTex[2];
+
+}
 
 //------------------------------------------------------------------------------
 

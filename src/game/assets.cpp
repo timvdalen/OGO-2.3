@@ -54,11 +54,17 @@ MaterialHandle HQ_red;
 
 //------------------------------------------------------------------------------
 
-ObjectHandle HeadObj;
-ObjectHandle BodyObj;
-ObjectHandle GunObj;
-ObjectHandle WrenchObj;
-ObjectHandle WheelObj;
+namespace Model {
+
+//player objects
+ObjectHandle HeadObj, BodyObj, GunObj, WrenchObj, WheelObj;
+MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
+
+//structure objects
+ObjectHandle TurretObj, MineObj, DrillObj;
+MaterialHandle TurretTex[2], MineTex[2], DrillTex[2];
+
+}
 
 //------------------------------------------------------------------------------
 
@@ -114,15 +120,37 @@ void Initialize(int argc, char *argv[])
     Icon::HQ_blue = TexturedMaterial(path + "assets/textures/hud/headquarter_blue.png");
     Icon::HQ_red = TexturedMaterial(path + "assets/textures/hud/headquarter_red.png");
     
-	HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
-	BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
-	GunObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/gun.3DS");
-	WrenchObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wrench.3DS");
-	WheelObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wheel.3DS");
+	//Model objects
+	Model::HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
+	Model::BodyObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/body.3DS");
+	Model::GunObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/gun.3DS");
+	Model::WrenchObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wrench.3DS");
+	Model::WheelObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/wheel.3DS");
 	
-	HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
-	BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
-	GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+	Model::TurretObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/turret.3DS");
+	Model::MineObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/mine.3DS");
+	Model::DrillObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/drill.3DS");
+
+	//Model textures
+	Model::HeadTex = TexturedMaterial(path + "assets/textures/models/headtext.png");
+	Model::BodyTex[0] = TexturedMaterial(path + "assets/textures/models/robottexred.png");
+	Model::BodyTex[1] = TexturedMaterial(path + "assets/textures/models/robottexblue.png");
+	Model::GunTex = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+	Model::WrenchTex = TexturedMaterial(path + "assets/textures/models/wrenchte.png");
+	Model::WheelTex[0] = TexturedMaterial(path + "assets/textures/models/wheeltexred.png");
+	Model::WheelTex[1] = TexturedMaterial(path + "assets/textures/models/wheeltexblue.png");
+	
+	Model::TurretTex[0] = TexturedMaterial(path + "assets/textures/models/turrettered.png");
+	Model::TurretTex[1] = TexturedMaterial(path + "assets/textures/models/turretteblue.png");
+	Model::MineTex[0] = TexturedMaterial(path + "assets/textures/models/minetextred.png");
+	Model::MineTex[1] = TexturedMaterial(path + "assets/textures/models/minetextblue.png");
+	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
+	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
+
+	//temp
+	Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
+	Model::BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
+	Model::GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
 }
 
 //------------------------------------------------------------------------------
@@ -156,11 +184,32 @@ void Terminate()
     Icon::HQ_blue.clear();
     Icon::HQ_red.clear();
 
-	HeadObj.clear();
-	BodyObj.clear();
-	GunObj.clear();
-	WrenchObj.clear();
-	WheelObj.clear();
+	//Model objects
+	Model::HeadObj.clear();
+	Model::BodyObj.clear();
+	Model::GunObj.clear();
+	Model::WrenchObj.clear();
+	Model::WheelObj.clear();
+	
+	Model::TurretObj.clear();
+	Model::MineObj.clear();
+	Model::DrillObj.clear();
+
+	//Model textures
+	Model::HeadTex.clear();
+	Model::BodyTex[0].clear();
+	Model::BodyTex[1].clear();
+	Model::GunTex.clear();
+	Model::WrenchTex.clear();
+	Model::WheelTex[0].clear();
+	Model::WheelTex[1].clear();
+	
+	Model::TurretTex[0].clear();
+	Model::TurretTex[1].clear();
+	Model::MineTex[0].clear();
+	Model::MineTex[1].clear();
+	Model::DrillTex[0].clear();
+	Model::DrillTex[1].clear();
 }
 
 //------------------------------------------------------------------------------
