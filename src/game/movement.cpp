@@ -129,7 +129,7 @@ void Controller::lookY(double zoomspeed)
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-	zoom += zoomspeed;
+	zoom -= zoomspeed;
 
 	if (zoom > 15.0)
 	{
@@ -139,6 +139,10 @@ void Controller::lookY(double zoomspeed)
 	{
 		firstPerson = true;
 		zoom = 5.0;
+	}
+	else
+	{
+		firstPerson = false;
 	}
 
 	if (firstPerson == true)
