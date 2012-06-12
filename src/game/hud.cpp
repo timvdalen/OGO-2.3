@@ -329,9 +329,10 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     void StatusDisplayer::draw(){
         glRasterPos2i(0,0);
         //Cache them somewere?
-        MaterialHandle bg = ColorMaterial(254.0/255.0, 251.0/255, 225.0/255.0,0.8f);
+       // MaterialHandle bg = ColorMaterial(254.0/255.0, 251.0/255, 225.0/255.0,0.8f);
+		MaterialHandle bg = ColorMaterial(20.0/255.0, 20.0/255, 20.0/255.0,0.8f);
         MaterialHandle white = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
-        MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        MaterialHandle black = ColorMaterial(1.0f,1.0f,1.0f,1.0f);
         MaterialHandle darkred = ColorMaterial(138.0/255.0,24.0/255.0,18.0/255.0,1.0);
         MaterialHandle red = ColorMaterial(229.0/255.0,37.0/255.0,32.0/255.0,1.0);
         MaterialHandle darkgreen = ColorMaterial(19.0/255.0,51.0/255.0,36.0/255.0, 1.0);
@@ -352,6 +353,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glVertex2i(5,105);
         glVertex2i(205,105);
         glVertex2i(205,5);
+        glVertex2i(5,5);
         glEnd();
         glBegin(GL_LINES);
         glVertex2i(60, 5);
@@ -503,9 +505,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         int n = 2;
         //Init ended, real code started:
         glTranslatef(-185,-n*70,0);
-        MaterialHandle bgselected = ColorMaterial(255.0/255.0, 255.0/255.0, 190.0/255.0,1.0f);
-        MaterialHandle bgunselected = ColorMaterial(254.0/255.0, 251.0/255.0, 225.0/255.0, 0.8f);
-        MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+        //MaterialHandle bgselected = ColorMaterial(255.0/255.0, 255.0/255.0, 190.0/255.0,1.0f);
+		MaterialHandle bgselected = ColorMaterial(20.0/255.0, 20.0/255.0, 20.0/255.0,1.0f);
+		MaterialHandle bgunselected = ColorMaterial(50.0/255.0, 50.0/255.0, 50.0/255.0, 0.8f);
+//        MaterialHandle bgunselected = ColorMaterial(254.0/255.0, 251.0/255.0, 225.0/255.0, 0.8f);
+        MaterialHandle black = ColorMaterial(1.0f,1.0f,1.0f,1.0f);
         int i;
         for(i = 0; i < n; i++){
             //*le background
@@ -630,8 +634,9 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     
 //------------------------------------------------------------------------------
 void MiniMap::draw(){
-	MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
-    MaterialHandle black = ColorMaterial(0.0f,0.0f,0.0f,1.0f);
+	//MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
+	MaterialHandle bg = ColorMaterial(20.0/255.0, 20.0/255.0, 20.0/255.0, 0.8f);
+    MaterialHandle black = ColorMaterial(1.0f,1.0f,1.0f,1.0f);
     if(w->width > w->height){
 		glScalef(1.0f, w->height/w->width,1.0f);
 	}else{
