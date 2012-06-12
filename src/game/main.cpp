@@ -14,6 +14,8 @@
 #include <sstream>
 #include <string>
 
+#include "ConfigFile.h"
+
 #include "common.h"
 #include "netalg.h"
 #include "objects.h"
@@ -54,8 +56,13 @@ void handleMouse(bool left);
 
 int main(int argc, char *argv[])
 {
-    //parse arguments...
-    Video::Initialize(argc, argv);
+	//Config file
+	ConfigFile config("game.conf");
+	string pname;
+	config.readInto(pname, "playername");
+
+	//parse arguments...
+	Video::Initialize(argc, argv);
 	window = new Video::Window(800, 600, GAME_NAME, false);
 	Video::Viewport v1(1,1);
 	window->viewports.push_back(&v1);
@@ -72,7 +79,7 @@ int main(int argc, char *argv[])
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 
 	cube = Cuboid(Pd(0,3,0));
-	ObjectHandle player = Objects::Player();
+	ObjectHandle player = Objects::Player(0, 'a', pname);
 	player->rotation = Rd(0,Vd(0,0,1));
 	
 	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
