@@ -49,6 +49,8 @@ Terrain::Terrain(double _width, double _height)
 //------------------------------------------------------------------------------
 void Terrain::drawGround()
 {
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(2,2);
 	int noX = (int) width / GRID_SIZE;
 	int noY = (int) height / GRID_SIZE;
 	glBegin(GL_QUADS);
@@ -61,7 +63,8 @@ void Terrain::drawGround()
 	glTexCoord2f(0, noY);
 	glVertex3f(-width/2, height/2, 0.0f);
 	glEnd();
-	
+	glPolygonOffset(0,0);
+	glDisable(GL_POLYGON_OFFSET_FILL);
 	/*if(groundCached && glIsList(groundDL)){
 		glCallList(groundDL);
 	}else{
@@ -112,8 +115,8 @@ void Terrain::drawGridLines(){
 		glLineWidth(2);
 		glBegin(GL_LINES);
 		for(int i=0; i <= noX; i++){
-			glVertex3f(i*GRID_SIZE - halfWidth, -halfHeight/2,0.0f);
-			glVertex3f(i*GRID_SIZE - halfWidth, halfHeight/2,0.0f);
+			glVertex3f(i*GRID_SIZE - halfWidth, -halfHeight,0.0f);
+			glVertex3f(i*GRID_SIZE - halfWidth, halfHeight,0.0f);
 		}
 		glEnd();
 		glBegin(GL_LINES);
@@ -142,22 +145,23 @@ void Terrain::draw()
 	if(showGrid){
 		drawGridLines();
 		if(selected.isValid()){
-		int i = selected.x;
-		int j = selected.y;
-		double halfWidth = width/2;
-		double halfHeight = height/2;
-		material->unselect();
-		MaterialHandle gridMat = Assets::SelectedGrid;
-		gridMat->select();
-		glBegin(GL_LINE_STRIP);
-		glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
-		glVertex3f(((i+1) * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
-		glVertex3f(((i+1) * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
-		glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
-		glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
-		glEnd();
-		gridMat->unselect();
-		material->select();
+			glPolygonOffset(-5,-5);
+			int i = selected.x;
+			int j = selected.y;
+			double halfWidth = width/2;
+			double halfHeight = height/2;
+			material->unselect();
+			MaterialHandle gridMat = Assets::SelectedGrid;
+			gridMat->select();
+			glBegin(GL_LINE_STRIP);
+			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
+			glVertex3f(((i+1) * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
+			glVertex3f(((i+1) * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
+			glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
+			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
+			glEnd();
+			gridMat->unselect();
+			material->select();
 		}
 	}
 	

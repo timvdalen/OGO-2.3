@@ -45,7 +45,8 @@ void World::draw(){
 	double halfWidth = width/2;
 	double halfHeight = height/2;
 
-
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(2,2);
 	glBegin(GL_QUADS);
 		//Back side
 		glNormal3i(0, 1, 0);
@@ -102,6 +103,8 @@ void World::draw(){
 		glTexCoord2d(0.33, 0.66);
 		glVertex3f(-halfWidth, halfHeight, HIGH);
 	glEnd();
+	glPolygonOffset(0,0);
+	glDisable(GL_POLYGON_OFFSET_FILL);
 }
 
 //------------------------------------------------------------------------------
