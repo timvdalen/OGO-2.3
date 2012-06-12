@@ -167,7 +167,7 @@ class HeadQuarters: public Building
 class DefenseTower: public Building
 {
 	public:
-	DefenseTower(int _height, BoundingBox B = BoundingBox());
+	DefenseTower();
 		  
 	virtual void draw();
 };

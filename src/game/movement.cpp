@@ -10,10 +10,10 @@
 
 namespace Movement {
 
-	double movespeed = 0.5;
-	double jetpackspeed = 0.2;
-	double lookspeed = 0.035;
-	double zoomspeed = 0.5;
+	//double movespeed = 0.5;
+	//double jetpackspeed = 0.2;
+	//double lookspeed = 0.035;
+	//double zoomspeed = 0.5;
 
 	Point<double> offset = Pd(.5,.5,2);
 
@@ -35,7 +35,7 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 
 //------------------------------------------------------------------------------
 
-void Controller::moveX()
+void Controller::moveX(double movespeed)
 {
     Point<double> posrollback = Point<double>(pos);
 	if (move[dirLeft])
@@ -43,7 +43,7 @@ void Controller::moveX()
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
-		yaw -= (.5 * Pi);
+		yaw += (.5 * Pi);
 
 		pos.x = pos.x + movespeed * sin(yaw);
 		pos.y = pos.y + movespeed * cos(yaw);
@@ -80,7 +80,7 @@ void Controller::moveX()
 
 //------------------------------------------------------------------------------
 
-void Controller::moveY()
+void Controller::moveY(double movespeed)
 {
     Point<double> posrollback = Point<double>(pos);
 	if (move[dirForward])
@@ -102,7 +102,7 @@ void Controller::moveY()
 	}
 	else if (move[dirBackward])
 	{
-		Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
+		Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 		double yaw = atan2(vec.x, vec.y);
 
 		pos.x = pos.x + movespeed * sin(yaw);
@@ -121,7 +121,7 @@ void Controller::moveY()
 
 //------------------------------------------------------------------------------
 
-void Controller::moveZ()
+void Controller::moveZ(double jetpackspeed)
 {
 	if (move[dirUp])
 	{
@@ -149,7 +149,7 @@ void Controller::moveZ()
 
 //------------------------------------------------------------------------------
 
-void Controller::lookX()
+void Controller::lookX(double lookspeed)
 {
 	if (look[dirLeft])
 	{
@@ -170,7 +170,7 @@ void Controller::lookX()
 	}
 	else if (look[dirRight])
 	{
-		camAngle = Qd(Rd(-lookspeed, Vd(0,0,1))) * camAngle;
+		camAngle = Qd(Rd(lookspeed, Vd(0,0,1))) * camAngle;
 
 		Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
@@ -189,7 +189,7 @@ void Controller::lookX()
 
 //------------------------------------------------------------------------------
 
-void Controller::lookY()
+void Controller::lookY(double zoomspeed)
 {
 	if (look[dirForward]) // Zoom in
 	{
@@ -197,7 +197,7 @@ void Controller::lookY()
 
 		if (zoom > 5.0)
 		{
-			zoom -= zoomspeed;
+			zoom += zoomspeed;
 		}
 		else if (zoom <= 5.0)
 		{
@@ -245,7 +245,7 @@ void Controller::lookY()
 
 //------------------------------------------------------------------------------
 
-void Controller::lookZ()
+void Controller::lookZ(double lookspeed)
 {
     Qd buffer = camAngle;//Used to rollback if out of bounds
 	if (look[dirUp])
@@ -275,7 +275,7 @@ void Controller::lookZ()
 		Vector<double> mystery = ~(camAngle * Vector<double>(0,1,0));
 		double mysteryYaw = atan2(mystery.x, mystery.y);
 
-		camAngle = Qd(Rd(-lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
+		camAngle = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
         if((camAngle*Vector<double>(0,1,0)).z < -0.99){
             camAngle = buffer;
             return;
@@ -303,7 +303,7 @@ void Controller::frame()
 	{
 		moveX();
 	}*/
-	if (move[dirForward] || move[dirBackward])
+	/*if (move[dirForward] || move[dirBackward])
 	{
 		moveY();
 		if (move[dirLeft]) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
@@ -346,7 +346,7 @@ void Controller::frame()
 	}
 	
 	Objects::Player * p = TO(Objects::Player,player);
-	p->velocity = Vd(0,movespeed,0);
+	p->velocity = Vd(0,movespeed,0);*/
 }
 
 //------------------------------------------------------------------------------
