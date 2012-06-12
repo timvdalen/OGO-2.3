@@ -246,8 +246,9 @@ void Controller::frame()
 
 bool Controller::walkAble(Point<double> old, Point<double> updated){
     World *w = TO(World, world);
-    if(!(-(w->width)/2 < updated.x && updated.x < (w->width)/2//Inside x-interval
-        && -(w->height)/2 < updated.y && updated.y < (w->height)/2))//Inside y-interval
+	double extrabounding = 0.1*GRID_SIZE;
+    if(!((-(w->width)/2 +extrabounding) < updated.x && updated.x < ((w->width)/2 - extrabounding)//Inside x-interval
+        && (-(w->height)/2 +extrabounding) < updated.y && updated.y < ((w->height)/2) - extrabounding))//Inside y-interval
     {
         return false;
     }
@@ -261,10 +262,10 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
         double worldy = GRID_SIZE*p.y - (w->height)/2;
 		//Process them
         //TODO:Maybe use bounding boxes? Should be straightforward to implement this
-        if(   worldx < updated.x && updated.x < worldx + GRID_SIZE
-           && worldy < updated.y && updated.y < worldy + GRID_SIZE//update in bounds
-           &&!(   worldx < old.x && old.x < worldx + GRID_SIZE
-               && worldy < old.y && old.y < worldy + GRID_SIZE )       //old not in bounds
+        if(   (worldx -extrabounding) < updated.x && updated.x < (worldx + GRID_SIZE + extrabounding)
+           && (worldy - extrabounding) < updated.y && updated.y < (worldy + GRID_SIZE +extrabounding)//update in bounds
+           &&!(   (worldx - extrabounding) < old.x && old.x < (worldx + GRID_SIZE +extrabounding)
+               && (worldy -extrabounding) < old.y && old.y < (worldy + GRID_SIZE +extrabounding) )       //old not in bounds
            ){
             return false;
         }
