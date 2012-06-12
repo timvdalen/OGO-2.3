@@ -150,13 +150,21 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 
 Star::Star(Pd P)
 	: Object(P, Qd(), Assets::Star)
-{}
+{
+	big = false;
+}
 
 //------------------------------------------------------------------------------
 
 void Star::draw(){
 	glBegin(GL_POINTS);
 		glVertex3i(0, 0, 0);
+		if(big){
+			glVertex3f(-0.1, 0, 0);
+			glVertex3f(0, -0.1, 0);
+			glVertex3f(0.1, 0, 0);
+			glVertex3f(0, 0.1, 0);
+		}
 	glEnd();
 }
 
@@ -184,6 +192,14 @@ void Sky::frame(){
 		int res = rand()%200;
 		if(res == 0){
 			stars.erase(stars.begin() + (rand()%stars.size()));
+		}
+	}
+	if(stars.size() > 100){
+		int res = rand()%60;
+		if(res == 0){
+			vector<Star>::iterator it;
+			it = stars.begin() + (rand()%stars.size());
+			it->big = !it->big;
 		}
 	}
 }
