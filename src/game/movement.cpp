@@ -132,7 +132,7 @@ void Controller::moveZ()
 		camera.origin.z = camera.origin.z + jetpackspeed;
 
 		//test
-		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+		player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 	}
 	else if (move[dirDown])
 	{
@@ -143,7 +143,7 @@ void Controller::moveZ()
 		camera.origin.z = camera.origin.z - jetpackspeed;
 
 		//test
-		player->origin = pos - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+		player->origin = pos - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
 	}
 }
 
