@@ -175,13 +175,13 @@ void Building::preRender(){
 
 //------------------------------------------------------------------------------
 
-DefenseTower::DefenseTower(int _height, BoundingBox B)
-		: Building(_height, B,
+DefenseTower::DefenseTower()
+		: Building(10, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
 			20) 
 {
-	height = _height;
+	height = 10;
 }
 
 //------------------------------------------------------------------------------
