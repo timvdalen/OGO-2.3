@@ -150,9 +150,7 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 
 Star::Star(Pd P)
 	: Object(P, Qd(), Assets::Star)
-{
-	printf("Star constructed\n");
-}
+{}
 
 //------------------------------------------------------------------------------
 
@@ -180,7 +178,6 @@ void Sky::frame(){
 			int min = HIGH - (int)(HIGH/10);
 			int z = rand()%(HIGH-min) + min;
 			stars.push_back(Star(Pd(x, y, z)));
-			printf("Added a star at %d, %d, %d, %d\n", x, y, z, min);
 		}
 	}
 	if(stars.size() > 150){
@@ -188,7 +185,6 @@ void Sky::frame(){
 		if(res == 0){
 			stars.erase(stars.begin() + (rand()%stars.size()));
 		}
-		printf("Removed a star\n");
 	}
 }
 
