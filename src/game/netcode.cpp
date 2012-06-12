@@ -10,6 +10,7 @@
 #include "common.h"
 #include "netalg.h"
 #include "netcode.h"
+#include "video.h"
 #include "game.h"
 
 #define CONNECTED (tokenring && tokenring->connected())
@@ -21,6 +22,7 @@ using namespace Game;
 
 TokenRing *tokenring = NULL;
 uword port = GAME_PORT;
+FPS cps;
 
 //------------------------------------------------------------------------------
 
@@ -51,9 +53,9 @@ void Initialize(int argc, char *argv[])
 	
 	for (int i = 0; i < argc - 1; ++i)
 	{
-		if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--connect"))
+		if      (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--connect"))
 			host = argv[++i];
-		if (!strcmp(argv[i], "-P") || !strcmp(argv[i], "--port"))
+		else if (!strcmp(argv[i], "-P") || !strcmp(argv[i], "--port"))
 			port = atoi(argv[++i]);
 	}
 	
@@ -88,6 +90,12 @@ void Frame()
 	
 	while (tokenring->loss(id))
 	{
+		// Temporarily remove a player from the world
+		if (game.players.count(id))
+		{
+			game.world->children.erase(game.players[id]);
+			game.players.erase(id);
+		}
 	}
 	
 	while (tokenring->entry(id))
@@ -111,7 +119,7 @@ bool TryLock()
 
 void Unlock()
 {
-	if (tokenring) tokenring->pass();
+	if (tokenring && tokenring->pass()) cps();
 }
 
 //==============================================================================
@@ -119,6 +127,13 @@ void Unlock()
 bool Connected()
 {
 	return CONNECTED;
+}
+
+//------------------------------------------------------------------------------
+
+double CurrentCPS()
+{
+	return cps;
 }
 
 //------------------------------------------------------------------------------
@@ -169,12 +184,12 @@ void Move(Pd position, Vd velocity)
 	
 	Message msg;
 	msg.push_back("MOVE");
-	msg.push_back(game.player->origin.x);
-	msg.push_back(game.player->origin.y);
-	msg.push_back(game.player->origin.z);
-	msg.push_back(0);
-	msg.push_back(0);
-	msg.push_back(0);
+	msg.push_back(position.x);
+	msg.push_back(position.y);
+	msg.push_back(position.z);
+	msg.push_back(velocity.x);
+	msg.push_back(velocity.y);
+	msg.push_back(velocity.z);
 	SEND(msg, false);
 }
 RECEIVE(MOVE, id, msg, reliable)
@@ -186,6 +201,27 @@ RECEIVE(MOVE, id, msg, reliable)
 	if (!player) return;
 	
 	player->origin = position;
+}
+
+//------------------------------------------------------------------------------
+
+void Look(Qd rotation)
+{
+	Message msg;
+	msg.push_back(rotation.a);
+	msg.push_back(rotation.b);
+	msg.push_back(rotation.c);
+	msg.push_back(rotation.d);
+	SEND(msg, false);
+}
+RECEIVE(LOOK, id, msg, reliable)
+{
+	Qd rotation((double) msg[1], (double) msg[2], (double) msg[3], (double) msg[4]);
+	
+	Player *player = PLAYER(id);
+	if (!player) return;
+	
+	player->rotation = rotation;
 }
 
 //------------------------------------------------------------------------------

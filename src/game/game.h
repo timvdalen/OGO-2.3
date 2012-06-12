@@ -14,8 +14,12 @@
 #include <string>
 
 #include "core.h"
+#include "video.h"
+#include "input.h"
+#include "movement.h"
 #include "objects.h"
 #include "world.h"
+#include "player.h"
 
 #define PLAYER(id) (game.players.count(id) ? TO(Player, game.players[id]) : 0)
 
@@ -24,7 +28,9 @@
 namespace Game {
 
 using namespace Core;
+using namespace Video;
 using namespace Objects;
+using namespace Movement;
 
 //------------------------------------------------------------------------------
 
@@ -43,6 +49,10 @@ bool Callable(std::string command);
 //! Game state data set
 struct GameState
 {
+	Window *window;
+	Input *input;
+	Controller *controller;
+	
 	World *world;
 	Player *player;
 	string gameName;
@@ -59,15 +69,19 @@ void Echo(string msg);   //!< Prints a message in the hud
 void Notice(string msg); //!< Prints a notice on screen
 void Prompt(string cmd); //!< Opens the console with the specified string in place
 
-void Quit();              //!< Quits to game
-void RQuit(string msg);   //!< Rage quits with the supplied swear words
+void ShowLog();          //!< Shows the message log
+void HideLog();          //!< Hides the message log
+
+void Quit();             //!< Quits to game
+void RQuit(string msg);  //!< Rage quits with the supplied swear words
 
 //! Adds a bind to the default binding
 //! \see Binding::bind
 void Bind(string button, string line);
 
-//! Executes each line of a file
-void Exec(string filename);
+void Exec(string filename); //!< Executes each line of a file
+
+// Commands not in header: Chain, Toggle
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Network
@@ -110,7 +124,10 @@ void DisplayTeamMsg(Player *, string line);
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Diagnostics
 
-void PrintFPS();
+void PrintFPS(); //!< Prints current frame rate (frames per second)
+void PrintCPS(); //!< Prints current net speed (cycles per second)
+
+void NetDebug();
 
 //------------------------------------------------------------------------------
 

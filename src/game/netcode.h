@@ -36,6 +36,7 @@ void Unlock();
 //------------------------------------------------------------------------------
 
 bool Connected();
+double CurrentCPS();
 
 void Disconnect();
 bool Connect(std::string host);
@@ -46,6 +47,7 @@ bool Send(const Message &, bool reliable = false);
 
 void Chat(std::string line);
 void Move(Pd position, Vd velocity);
+void Look(Qd rotation);
 
 void Debug();
 

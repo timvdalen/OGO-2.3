@@ -148,7 +148,7 @@ void Widget::render(){
 
 //------------------------------------------------------------------------------
 
-ChatMessage::ChatMessage(Player _player, string _message)
+ChatMessage::ChatMessage(const Player &_player, string _message)
 	: player(_player)
 {
 	message = _message;
@@ -163,7 +163,7 @@ string ChatMessage::toString(){
 
 //------------------------------------------------------------------------------
 
-PlayerFragMessage::PlayerFragMessage(Player _killer, Player _victim)
+PlayerFragMessage::PlayerFragMessage(const Player &_killer, const Player &_victim)
 	: killer(_killer), victim(_victim)
 {}
 
@@ -175,7 +175,7 @@ string PlayerFragMessage::toString(){
 
 //------------------------------------------------------------------------------
 
-TowerFragMessage::TowerFragMessage(Player _player)
+TowerFragMessage::TowerFragMessage(const Player &_player)
 	: player(_player)
 {}
 
@@ -205,7 +205,7 @@ MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	curr = 0;
 	full = 0;
 	showAlways = false;
-	lastMessage = glutGet(GLUT_ELAPSED_TIME);
+	lastMessage = ElapsedTime();
 }
 
 //------------------------------------------------------------------------------
@@ -215,14 +215,14 @@ void MessageDisplayer::addMessage(Handle<DisplayMessage> m){
 	//Move head to next slot
 	curr = ((curr+1)%10);
 	if(full < 10) full++;
-	lastMessage = glutGet(GLUT_ELAPSED_TIME);
+	lastMessage = ElapsedTime();
 }
 
 //------------------------------------------------------------------------------
 
 void MessageDisplayer::setShowAlways(bool show){
 	if(!show){
-		lastMessage = glutGet(GLUT_ELAPSED_TIME) - 1000;
+		lastMessage = ElapsedTime() - 1000;
 	}
 	showAlways = show;
 }
@@ -262,7 +262,7 @@ void MessageDisplayer::render(){
 	if(showAlways){
 		font = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
 	}else{
-		int now = glutGet(GLUT_ELAPSED_TIME);
+		int now = ElapsedTime();
 		if((now - lastMessage) > 2000){
 			return;
 		}else if((now - lastMessage) > 1000){
@@ -597,6 +597,35 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     {
         w = _w;
     }
+    //------------------------------------------------------------------------------
+    void drawPlayer(Player *p, int xspacing, int yspacing, World* w, bool marked){
+        float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
+        float rely = ((w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/(w->height));
+        if(marked){
+            Assets::Robot_normal->select();
+        }else if(p->team =='a'){
+            Assets::Robot_red->select();
+        }else{
+            Assets::Robot_blue->select();
+        }
+        glBegin(GL_QUADS);
+        glTexCoord2f(0,1);
+        glVertex2i((int)(relx*xspacing),(int)(rely*yspacing));
+        glTexCoord2f(0,0);
+        glVertex2i((int)(relx*xspacing),(int)((rely+1)*yspacing));
+        glTexCoord2f(1,0);
+        glVertex2i((int)((relx+1)*xspacing), (int)((rely+1)*yspacing));
+        glTexCoord2f(1,1);
+        glVertex2i((int)((relx+1)*xspacing), (int)((rely)*yspacing));
+        glEnd();
+        if(marked){
+            Assets::Robot_normal->select();
+        }else if(p->team == 'a'){
+            Assets::Robot_red->unselect();
+        }else{
+            Assets::Robot_blue->unselect();
+        }
+    }
     
     
     //------------------------------------------------------------------------------
@@ -628,8 +657,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         //*le buildings
         multimap<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
         multimap<GridPoint, ObjectHandle>::iterator itt;
-        int xspacing = (int) 320.0/(w->width/GRID_SIZE);
-        int yspacing = (int) 320.0/(w->height/GRID_SIZE);
+        int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
+        int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
         for(itt = structs->begin(); itt != structs->end(); itt++){
             GridPoint p = itt->first;
             ObjectHandle s = itt->second;
@@ -668,8 +697,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             }
         }
         
-        xspacing = (int) 320.0/(w->width/GRID_SIZE   + 1);
-        yspacing = (int) 320.0/(w->height/GRID_SIZE  + 1);
+        xspacing = (int) (320.0 / (w->width / GRID_SIZE  + 1));
+        yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
         //*le robots
         map<Player::Id,ObjectHandle>::iterator it;
         for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
@@ -678,30 +707,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
             if(!p){
                 return;
             }
-            if(p->team =='a'){
-                Assets::Robot_red->select();
-            }else{
-                Assets::Robot_blue->select();
-            }
-            int relx =  (w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/w->width;
-            int rely =  (w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/w->height;
-            glBegin(GL_QUADS);
-            glTexCoord2f(0,1);
-            glVertex2i(relx*xspacing,rely*yspacing);
-            glTexCoord2f(0,0);
-            glVertex2i(relx*xspacing,(rely+1)*yspacing);
-            glTexCoord2f(1,0);
-            glVertex2i((relx+1)*xspacing, (rely+1)*yspacing);
-            glTexCoord2f(1,1);
-            glVertex2i((relx+1)*xspacing, (rely)*yspacing);
-            glEnd();
-            if(p->team == 'a'){
-                Assets::Robot_red->unselect();
-            }else{
-                Assets::Robot_blue->unselect();
-            }
+            drawPlayer(p,xspacing,yspacing,w,false);
         }        
+        drawPlayer(Game::game.player, xspacing, yspacing, w, true);
     }
+    
     
     void MiniMap::render(){
         //scale width

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <time.h>
 
+#include <vector>
 #include <algorithm>
 
 #include "video.h"
@@ -22,10 +23,15 @@ namespace Game {
 using namespace std;
 using namespace Protocol;
 
+static void getInput(string input);
 string to_lower_case(string str);
 
-double defWidth = 100;
-double defHeight = 100;
+int windowWidth = 640;
+int windowHeight = 480;
+bool fullscreen = false;
+
+double gameWidth = 100;
+double gameHeight = 100;
 string path = "./";
 
 GameState game;
@@ -57,17 +63,27 @@ void Initialize(int argc, char *argv[])
 {
 	for (int i = 0; i < argc - 1; ++i)
 	{
-		if (!strcmp(argv[i], "-x") || !strcmp(argv[i], "--map-width"))
-			defWidth = atof(argv[++i]);
-		if (!strcmp(argv[i], "-y") || !strcmp(argv[i], "--map-height"))
-			defHeight = atof(argv[++i]);
-		if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--path"))
+		if      (!strcmp(argv[i], "-x") || !strcmp(argv[i], "--map-width"))
+			gameWidth = atof(argv[++i]);
+		else if (!strcmp(argv[i], "-y") || !strcmp(argv[i], "--map-height"))
+			gameHeight = atof(argv[++i]);
+		else if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--path"))
 			path = argv[++i];
+		else if (!strcmp(argv[i], "-w") || !strcmp(argv[i], "--screen-width"))
+			windowWidth = atoi(argv[++i]);
+		else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--screen-height"))
+			windowHeight = atoi(argv[++i]);
+	}
+	
+	for (int i = 0; i < argc; ++i)
+	{
+		if (!strcmp(argv[i], "--fullscreen"))
+			fullscreen = true;
 	}
 	
 	srand(time(NULL));
 	
-	game.world = new World(defWidth, defHeight);
+	game.world = new World(gameWidth, gameHeight);
 }
 
 //------------------------------------------------------------------------------
@@ -82,7 +98,7 @@ void Terminate()
 //------------------------------------------------------------------------------
 
 void Call(string command)
-{
+{	
 	Protocol::Message args = command;
 	if (args.size() < 1) return;
 	
@@ -121,6 +137,29 @@ string to_lower_case(string str)
 	return str;
 }
 
+//------------------------------------------------------------------------------
+
+static void getInput(string input)
+{
+	HUD *hud = game.world->hud;
+	
+	if(!input.empty()) Game::Call(input);
+	
+	set<ObjectHandle>::iterator it;
+	TextInput *tInput;
+	for (it = hud->children.begin(); it != hud->children.end();)
+	{
+		tInput = TO(TextInput, *it);
+		if (tInput)
+		{
+			hud->children.erase(it);
+			break;
+		}
+		else
+			++it;
+	}
+}
+
 //==============================================================================
 
 CMD(Echo, 1, arg, (string) arg[0])
@@ -143,6 +182,27 @@ void Notice(string msg)
 CMD(Prompt, 0, arg, (arg.empty() ? "" : (string) arg[0]))
 void Prompt(string cmd)
 {
+	int &width = game.world->hud->width;
+	int &height = game.world->hud->height;
+	game.input->text = cmd;
+	game.input->onText = getInput; // Move this to init
+	game.world->hud->children.insert(TextInput(game.input, 0, 0, width, height));
+}
+
+//------------------------------------------------------------------------------
+
+CMD(ShowLog, 0, arg)
+void ShowLog()
+{
+	game.world->hud->messageDisplayer->setShowAlways(true);
+}
+
+//------------------------------------------------------------------------------
+
+CMD(HideLog, 0, arg)
+void HideLog()
+{
+	game.world->hud->messageDisplayer->setShowAlways(false);
 }
 
 //------------------------------------------------------------------------------
@@ -296,6 +356,11 @@ void Jump()
 CMD(Fire, 0, arg)
 void Fire()
 {
+	if (game.player->weapon == weapWrench)
+	{
+		Build();
+		return;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -311,16 +376,22 @@ CMD(Weapon, 1, arg, (WeaponType) (int) arg[0])
 void Weapon(WeaponType weapon)
 {
 	WeaponType prevWeapon = game.player->weapon;
+	Terrain *terrain = TO(Terrain, game.world->terrain);
 	if (prevWeapon == weapon) return;
 	
 	game.player->weapon = weapon;
 	if (weapon == weapWrench)
 	{
 		// Goto build mode
+		terrain->showGrid = true;
+        game.world->hud->buildselector->show = true;
+        // Todo: add controller
 	}
 	else if (prevWeapon == weapWrench)
 	{
 		// Leave build mode
+		terrain->showGrid = false;
+		game.world->hud->buildselector->show = false;
 	}
 }
 
@@ -363,11 +434,75 @@ void PrintFPS()
 
 //------------------------------------------------------------------------------
 
+CMD(PrintCPS, 0, arg)
+void PrintCPS()
+{
+    Echo(string("Current CPS: ") + Argument((double) NetCode::CurrentCPS()).str);
+}
+
+//------------------------------------------------------------------------------
+
+CMD(NetDebug, 0, arg)
 void NetDebug()
 {
 	NetCode::Debug();
 }
-CMD(NetDebug, 0, arg)
+
+//==============================================================================
+
+void Chain(string line)
+{
+	size_t pos;
+	while ((pos = line.find(';')) != string::npos)
+	{
+		size_t pos2 = pos;
+		while (line[--pos]  == ' ');
+		while (line[++pos2] == ' ');
+		Call(line.substr(0, pos + 1));
+		line = line.substr(pos2);
+	}
+	Call(line);
+}
+CMD(Chain, 1, arg, (string) arg[0])
+
+//------------------------------------------------------------------------------
+
+struct Toggler
+{
+	vector<string> cmd;
+	int last;
+	Toggler() : last(0) {}
+};
+
+map<string,Toggler> toggles;
+
+void Toggle(string line)
+{
+	if (!toggles.count(line))
+	{
+		Toggler &toggler = toggles[line];
+		
+		size_t pos;
+		while ((pos = line.find('^')) != string::npos)
+		{
+			size_t pos2 = pos;
+			while (line[--pos]  == ' ');
+			while (line[++pos2] == ' ');
+			toggler.cmd.push_back(line.substr(0, pos + 1));
+			line = line.substr(pos2);
+		}
+		toggler.cmd.push_back(line);
+		
+		Call(toggler.cmd[toggler.last++]);
+		toggler.last %= toggler.cmd.size();
+		return;
+	}
+	
+	Toggler &toggler = toggles[line];
+	Call(toggler.cmd[toggler.last++]);
+	toggler.last %= toggler.cmd.size();
+}
+CMD(Toggle, 1, arg, (string) arg[0])
 
 //------------------------------------------------------------------------------
 

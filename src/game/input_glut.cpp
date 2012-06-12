@@ -72,6 +72,7 @@ BTN(MouseUp,   btnMouseMoveUp)   BTN(MouseDown,  btnMouseMoveDown)
 BTN(Space,  btnKeySpace)
 BTN(Escape, btnKeyEscape)
 BTN(Enter,  btnKeyEnter)
+BTN(Tab,    btnKeyTab)
 
 BTN(UpArrow,   btnKeyArrowUp)   BTN(DownArrow,  btnKeyArrowDown)
 BTN(LeftArrow, btnKeyArrowLeft) BTN(RightArrow, btnKeyArrowRight)
@@ -160,7 +161,6 @@ void Input::releaseMouse()
 
 void Input::grabText()
 {
-	text = "";
 	textMode = true;
 }
 
@@ -170,6 +170,7 @@ void Input::releaseText()
 {
 	textMode = false;
 	CALL(onText, text);
+	text = "";
 }
 
 //------------------------------------------------------------------------------
@@ -273,7 +274,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 			CALL(input->onText, input->text);
 			input->textMode = false;
 		}
-		else if (key == '\n' || key == 13) // Enter
+		else if (key == '\r' || key == '\n') // Enter
 		{
 			CALL(input->onText, input->text);
 			input->text = "";
@@ -293,8 +294,10 @@ void keyboard_down_event(unsigned char key, int x, int y)
 		CALL(input->onKeyDown, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyDown, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (key == '\n') || (key == 13))
-		CALL(input->onKeyDown, (Button) key);
+	else if ((key == ' ') || (key == '\e') || (key == '\t'))
+		CALL(input->onKeyDown, (Button) key)
+	else if ((key == '\r') || (key == '\n'))
+		CALL(input->onKeyDown, btnKeyEnter)
 }
 
 //------------------------------------------------------------------------------
@@ -306,12 +309,16 @@ void keyboard_up_event(unsigned char key, int x, int y)
 	
 	if (input->textMode) return;
 	
+	if (key == '\r') key = '\n';
+	
 	if ((key >= 'a') && (key <= 'z'))
 		CALL(input->onKeyUp, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyUp, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (key == '\n') || (key == 13))
-		CALL(input->onKeyUp, (Button) key);
+	else if ((key == ' ') || (key == '\e') || (key == '\t'))
+		CALL(input->onKeyUp, (Button) key)
+	else if ((key == '\r') || (key == '\n'))
+		CALL(input->onKeyUp, btnKeyEnter)
 }
 
 //------------------------------------------------------------------------------
