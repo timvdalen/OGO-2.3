@@ -215,7 +215,7 @@ class ResourceMine: public Building
 	ResourceMine(BoundingBox B = BoundingBox());
 
 	//! Model
-	struct { ObjectHandle rig, drill; } model;
+	struct { ObjectHandle rock, rig, drill; } model;
 };
 
 //------------------------------------------------------------------------------
