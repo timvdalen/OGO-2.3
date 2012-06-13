@@ -6,7 +6,7 @@
  * Description: Building and structural objects
  *
  */
- 
+
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
 
@@ -20,7 +20,7 @@ class DefenseTower;
 class Mine;
 class HeadQuarters;
 class ResourceMine;
-    
+
 
 //------------------------------------------------------------------------------
 
@@ -28,11 +28,11 @@ class ResourceMine;
 struct GridPoint
 {
 	int x, y;
-	
+
 	GridPoint(int X = 0, int Y = 0) : x(X), y(Y) {}
-	
+
 	bool operator<(const GridPoint& p2) const;
-    
+
     bool isValid();
 };
 
@@ -47,7 +47,7 @@ class Terrain: public Object
 
 
 	//! Determines if the ground has been cached in a display list
-	
+
 	//! Determines if the gridlines has been cached in a display list
 	bool gridCached;
 
@@ -75,16 +75,16 @@ class Terrain: public Object
 
 	//! A ghosted tower displayed on the terrain
 	pair<GridPoint, ObjectHandle> ghost;
-	
+
 	//! Constructs a new Terrain
 	Terrain(double _width, double _height);
 
 	//! Draws the terrain
 	virtual void draw();
-	
+
 	//! Draw the terrains chidlren
 	virtual void postRender();
-	
+
 	//!Draws the grid
 	void drawGround();
 
@@ -93,17 +93,17 @@ class Terrain: public Object
 
 	//! Sets the selected grid points
 	void setSelected(GridPoint p);
-		
+
 	//! Returns whether or not a tower can be built on \ref GridPoint p
 	bool canPlaceStructure(GridPoint p);
 
 	//! Safe-places a Structure on the grid
-	
+
 	//! Returns false when adding fails
 	bool placeStructure(GridPoint p, ObjectHandle s);
 
 	//! Gives the grid coordinates corresponding to a mouse click
-	GridPoint getGridCoordinates(Vd camera, Vd pos);
+	GridPoint getGridCoordinates(Pd camera, Qd rot);
 };
 
 //------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ class Building: public Structure
 
 	//! Sets up translations and rotations
 	virtual void preRender();
-		  
+
 	//! Draws the building
 	virtual void draw(){}
 
@@ -185,7 +185,7 @@ class HeadQuarters: public Building
 		  0, 0,
 		  0, 0,
 		  0) {}
-		  
+
 	virtual void draw(){}
 };
 
@@ -196,12 +196,12 @@ class DefenseTower: public Building
 {
 	public:
 	DefenseTower(ObjectHandle _owner = ObjectHandle());
-		 
+
 	//! Constructs a DefenseTower that is not owned with a shorter build time
 	DefenseTower(int buildTime);
 
 	virtual void draw();
-	
+
 	//! Model
 	struct { ObjectHandle turret; } model;
 };

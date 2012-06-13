@@ -40,7 +40,6 @@ map<Button,Direction> lookbind;
 map<Button,word> lookcount;
 ObjectHandle cube;
 
-ObjectHandle npc;
 int lastmess = 0;
 
 bool building = false;
@@ -69,10 +68,10 @@ int main(int argc, char *argv[])
 	window->viewports.push_back(&v1);
 
 	Assets::Initialize(argc, argv); // after the viewports have been initialized!
-	
+
 	Game::Initialize(argc, argv);
 	Game::Exec("inputs.exec");
-	
+
 	Net::Initialize();
 	NetCode::Initialize(argc, argv);
 
@@ -83,12 +82,11 @@ int main(int argc, char *argv[])
 	ObjectHandle player = Objects::Player(0, 'a', pname);
 	player->rotation = Rd(0,Vd(0,0,1));
 	Player *p = TO(Player, player);
-	p->weapon = weapLaser;	
-	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
+	p->weapon = weapLaser;
 
 	cube->material = Assets::Test;
 
-	ObjectHandle world = Objects::World(100, 150);
+	ObjectHandle world = Objects::World(200, 200);
 
 	{
 		World *w = TO(World, world);
@@ -99,8 +97,7 @@ int main(int argc, char *argv[])
 	}
 
 	world->children.insert(player);
-	world->children.insert(npc);
-	
+
 	v1.world = world;
 
 	v1.camera.lookAt(cube->origin);
@@ -110,7 +107,7 @@ int main(int argc, char *argv[])
 	input->onKeyUp = KeyUp;
 	input->onKeyDown = KeyDown;
 	input->onMouseMove = MouseMove;
-	
+
 	// hack
 	Game::game.world = TO(World, world);
 	Game::game.player = TO(Player, player);
@@ -119,7 +116,7 @@ int main(int argc, char *argv[])
 	Game::game.controller = controller;
 
 	OnFrame = Frame;
-	
+
 	Video::StartEventLoop();
 
 	puts("Press any key...");
@@ -141,25 +138,25 @@ void Frame()
 	if (NetCode::TryLock())
 	{
 		// Critical section
-		
+
 		NetCode::Unlock();
 	}
-	
+
 	World *world = TO(World, window->viewports[0]->world);
 	Camera &cam = window->viewports[0]->camera;
-	
+
 	if(Game::game.player->weapon == weapWrench)
-		world->terrain->setSelected(world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0)));
-	
+		world->terrain->setSelected(world->terrain->getGridCoordinates(cam.origin, cam.objective));
+
 	if (window->resized)
 	{
 		uword width, height;
 		window->size(width = 0, height = 0);
 		world->hud->resize(width, height);
 	}
-	
+
 	controller->frame();
-	
+
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
 	Vd velocity;
@@ -176,79 +173,7 @@ void Frame()
 		case 2:  NetCode::Look(player->rotation); break;
 		case 5: loop = 0; break;
 	}
-	
-	int time = Video::ElapsedTime();
-	Objects::Player * pNPC = TO(Objects::Player, npc);
-	World *w = TO(World, controller->world);
-	HUD *h = TO(HUD, w->hud);
-	if(time > 900 && time < 1100){
-		if(lastmess == 0){
-			ChatMessage m = ChatMessage(*pNPC, "Hey man, welcome to the game!");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 2900 && time < 3100){
-		if(lastmess == 1){
-			ChatMessage m = ChatMessage(*pNPC, "So your name is " + player->name + "?");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 4900 && time < 5100){
-		if(lastmess == 2){
-			ChatMessage m = ChatMessage(*pNPC, "Try to look around with the mouse");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 6900 && time < 7100){
-		if(lastmess == 3){
-			ChatMessage m = ChatMessage(*pNPC, "If you press W you will roll in the direction");
-			ChatMessage m2 = ChatMessage(*pNPC, "you're looking in");
-			h->messageDisplayer->addMessage(m);
-			h->messageDisplayer->addMessage(m2);
-			lastmess++;
-		}
-	}else if(time > 8900 && time < 9100){
-		if(lastmess == 4){
-			ChatMessage m = ChatMessage(*pNPC, "Left clicking will make you shoot a laser beam");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 10900 && time < 11100){
-		if(lastmess == 5){
-			ChatMessage m = ChatMessage(*pNPC, "Pressing B will enter build mode");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 12900 && time < 13100){
-		if(lastmess == 6){
-			ChatMessage m = ChatMessage(*pNPC, "Try to build some towers");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 13900 && time < 14100){
-		if(lastmess == 7){
-			ChatMessage m = ChatMessage(*pNPC, "They're of a special stealth");
-			ChatMessage m2 = ChatMessage(*pNPC, "kind that looks like a box.");
-			h->messageDisplayer->addMessage(m);
-			h->messageDisplayer->addMessage(m2);
-			lastmess++;
-		}
-	}else if(time > 16900 && time < 17100){
-		if(lastmess == 8){
-			ChatMessage m = ChatMessage(*pNPC, "Anyway. Have fun!");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 19900 && time < 20100){
-		if(lastmess == 9){
-			ChatMessage m = ChatMessage(*pNPC, "Oh, one last thing. You can press [enter] if");
-			ChatMessage m2 = ChatMessage(*pNPC, "you ever want to talk to me!");
-			h->messageDisplayer->addMessage(m);
-			h->messageDisplayer->addMessage(m2);
-			lastmess++;
-		}
-	}
-	updatePlayers();
+
 	window->render();
 }
 
@@ -257,9 +182,9 @@ void Frame()
 void KeyUp(Button btn)
 {
 	//printf("key up: %d\n", btn);
-	
+
 	if (!controller) return;
-	
+
 	binds.processUp(btn);
 }
 
@@ -268,12 +193,12 @@ void KeyUp(Button btn)
 void KeyDown(Button btn)
 {
 	//printf("key down: %d\n", btn);
-	
+
 	if (!controller) return;
 	if (!input) return;
-	
+
 	binds.processDown(btn);
-	
+
 	//Handle input
 	switch (btn)
 	{

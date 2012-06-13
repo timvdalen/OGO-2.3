@@ -10,12 +10,7 @@
 
 namespace Movement {
 
-	double movespeedmultiplier = 0.5;
-	double jetpackspeedmultiplier = 0.2;
-	double lookspeedmultiplier = 0.0175;
-	double zoomspeedmultiplier = 0.5;
 
-	Point<double> offset = Pd(.5,.5,2);
 
 //------------------------------------------------------------------------------
 
@@ -23,7 +18,7 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 {
 	firstPerson = false;
 	lastView = false;
-	target = player->origin + offset;
+	target = player->origin + Pd(-.5,-.5,2);
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
@@ -36,9 +31,9 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 
 //------------------------------------------------------------------------------
 
-void Controller::moveX(double movespeed)
+void Controller::moveX(double speed)
 {
-	movespeed = movespeedmultiplier * movespeed;
+	speed *= MoveSpeed;
 
     Point<double> posrollback = Point<double>(target);
 
@@ -47,72 +42,78 @@ void Controller::moveX(double movespeed)
 
 	yaw += (.5 * Pi);
 
-	target.x = target.x + movespeed * sin(yaw);
-	target.y = target.y + movespeed * cos(yaw);
+	target.x = target.x + speed * sin(yaw);
+	target.y = target.y + speed * cos(yaw);
        if(!walkAble(posrollback, target)){
            target = posrollback;
            return;
        }
-	camera.origin.x = camera.origin.x + movespeed * sin(yaw);
-	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
+	camera.origin.x = camera.origin.x + speed * sin(yaw);
+	camera.origin.y = camera.origin.y + speed * cos(yaw);
         
 	//test
-	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::moveY(double movespeed)
+void Controller::moveY(double speed)
 {
-	movespeed = movespeedmultiplier * movespeed;
+	speed *= MoveSpeed;
 
     Point<double> posrollback = Point<double>(player->origin);
 	Point<double> tarrollback = Point<double>(target);
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
+<<<<<<< HEAD
 	target.x = target.x + movespeed * sin(yaw);
 	target.y = target.y + movespeed * cos(yaw);
+   	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
+=======
+	target.x = target.x + speed * sin(yaw);
+	target.y = target.y + speed * cos(yaw);
    	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+>>>>>>> bfb03a029b72dc28d7d6c1ef62bf74c6b2aafe14
 	if(!walkAble(posrollback, target)){
 		player->origin = posrollback;
     	target = tarrollback;
     	return;
 	}
-	camera.origin.x = camera.origin.x + movespeed * sin(yaw);
-	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
+	camera.origin.x = camera.origin.x + speed * sin(yaw);
+	camera.origin.y = camera.origin.y + speed * cos(yaw);
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::moveZ(double jetpackspeed)
+void Controller::moveZ(double speed)
 {
-	jetpackspeed = jetpackspeedmultiplier * jetpackspeed;
+	speed *= JetpackSpeed;
 
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
 	double yaw = atan2(vec.x, vec.y);
 
-	target.z = target.z + jetpackspeed;
-	camera.origin.z = camera.origin.z + jetpackspeed;
+	target.z = target.z + speed;
+	camera.origin.z = camera.origin.z + speed;
 
 	//test
-	player->origin = target - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(-.75 * sin(yaw - .25*Pi), -.75 * cos(yaw - .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
 
-void Controller::lookX(double lookspeed)
+void Controller::lookX(double speed)
 {
-	lookspeed = lookspeedmultiplier * -lookspeed;
+	speed *= -LookSpeed;
 
-	camAngle = Qd(Rd(lookspeed, Vd(0,0,1))) * camAngle;
+	camAngle = Qd(Rd(speed, Vd(0,0,1))) * camAngle;
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
 	if (firstPerson == true)
 	{
-		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(target + (vec * 5.0));
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
+		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
 	{
@@ -123,17 +124,17 @@ void Controller::lookX(double lookspeed)
 
 //------------------------------------------------------------------------------
 
-void Controller::lookY(double zoomspeed)
+void Controller::lookY(double speed)
 {
-	zoomspeed = zoomspeedmultiplier * zoomspeed;
+	speed *= ZoomSpeed;
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
-	zoom -= zoomspeed;
+	zoom -= speed;
 
-	if (zoom > 15.0)
+	if (zoom > 25.0)
 	{
-		zoom = 15.0;
+		zoom = 25.0;
 	}
 	else if (zoom <= 5.0)
 	{
@@ -147,8 +148,8 @@ void Controller::lookY(double zoomspeed)
 
 	if (firstPerson == true)
 	{
-		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(target + (vec * 5.0));
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
+		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
 	{
@@ -159,16 +160,16 @@ void Controller::lookY(double zoomspeed)
 
 //------------------------------------------------------------------------------
 
-void Controller::lookZ(double lookspeed)
+void Controller::lookZ(double speed)
 {
-	lookspeed = lookspeedmultiplier * lookspeed;
+	speed *= LookSpeed;
 
     Qd buffer = camAngle;//Used to rollback if out of bounds
 
 	Vector<double> mystery = ~(camAngle * Vector<double>(0,1,0));
 	double mysteryYaw = atan2(mystery.x, mystery.y);
 
-	camAngle = Qd(Rd(lookspeed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
+	camAngle = Qd(Rd(speed, Vd(cos(mysteryYaw),-sin(mysteryYaw),0))) * camAngle;
        if((camAngle*Vector<double>(0,1,0)).z > 0.99 || (camAngle*Vector<double>(0,1,0)).z < -0.99){
            camAngle = buffer;
            return;
@@ -177,8 +178,8 @@ void Controller::lookZ(double lookspeed)
 
 	if (firstPerson == true)
 	{
-		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(target + (vec * 5.0));
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
+		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
 	{
@@ -191,7 +192,6 @@ void Controller::lookZ(double lookspeed)
     
 void Controller::frame()
 {
-	//if (move[dirX] != 0.0) moveX(move[dirX]);
 	if (move[dirY] != 0.0) moveY(move[dirY]);
 	if (move[dirZ] != 0.0) moveZ(move[dirZ]);
 	
@@ -220,7 +220,7 @@ void Controller::frame()
 	}
 	
 	Objects::Player * p = TO(Objects::Player,player);
-	p->velocity = Vd(0,movespeedmultiplier,0);
+	p->velocity = Vd(0,MoveSpeed,0);
 }
 
 //------------------------------------------------------------------------------

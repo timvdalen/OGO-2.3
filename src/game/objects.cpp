@@ -102,11 +102,11 @@ bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b)
 void ModelObjectContainer::render()
 {
 	preRender();
-	
+
 	if (material) material->select();
-	
+
 	draw();
-	
+
 	postRender();
 
 	if (material) material->unselect();
@@ -114,7 +114,7 @@ void ModelObjectContainer::render()
 
 //------------------------------------------------------------------------------
 
-LaserBeam::LaserBeam(Pd _origin, Vd _direction, int _fireTime, int _ttl)
+LaserBeam::LaserBeam(Pd _origin, Qd _direction, int _fireTime, int _ttl)
 	: Object(_origin), direction(_direction)
 {
 	fireTime = _fireTime;
@@ -168,7 +168,8 @@ void LaserBeam::preRender(){
 void LaserBeam::draw(){
 	glBegin(GL_LINES);
 		glVertex3f(0.0, 0.0, 0.0);
-		Vd endpoint = direction*10;
+		Vd dir = -direction*Vd(0, 1, 0);
+        Vd endpoint = ~dir*1000;
 		glVertex3f(endpoint.x, endpoint.y, endpoint.z);
 	glEnd();
 }
