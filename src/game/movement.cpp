@@ -33,10 +33,12 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 
 void Controller::moveX(double speed)
 {
+	return;//You dont move in the x-direction you just turn
+	/*
 	speed *= MoveSpeed;
 
-    Point<double> posrollback = Point<double>(target);
-
+    Point<double> posrollback = Point<double>(player->origin);
+	Point<double> tarrollback = Point<double>(target);
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
@@ -47,11 +49,12 @@ void Controller::moveX(double speed)
 	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
 	
     if(!walkAble(posrollback, player->origin)){
-        target = posrollback;
+        player->origin = posrollback;
+		target = tarrollback;
     	return;
     }
 	camera.origin.x = camera.origin.x + speed * sin(yaw);
-	camera.origin.y = camera.origin.y + speed * cos(yaw);
+	camera.origin.y = camera.origin.y + speed * cos(yaw);*/
 }
 
 //------------------------------------------------------------------------------
@@ -62,21 +65,21 @@ void Controller::moveY(double speed)
 
     Point<double> posrollback = Point<double>(player->origin);
 	Point<double> tarrollback = Point<double>(target);
-	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
+	Vector<double> vec = (-player->rotation * Vector<double>(0,1,0));
+	vec.z = 0;
+	vec = ~vec;
 	double yaw = atan2(vec.x, vec.y);
-
-	target.x = target.x + speed * sin(yaw);
-	target.y = target.y + speed * cos(yaw);
-
-   	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
-
+	player->origin = player->origin + vec*speed;
+	target = player->origin + Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw-.25*Pi), 2);
+	
 	if(!walkAble(posrollback, player->origin)){
 		player->origin = posrollback;
     	target = tarrollback;
     	return;
 	}
-	camera.origin.x = camera.origin.x + speed * sin(yaw);
-	camera.origin.y = camera.origin.y + speed * cos(yaw);
+	vec = ~(camAngle * Vector<double>(0,1,0));
+	camera.origin = target - (vec * zoom);
+	camera.lookAt(target);
 }
 
 //------------------------------------------------------------------------------
@@ -87,12 +90,10 @@ void Controller::moveZ(double speed)
 
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
 	double yaw = atan2(vec.x, vec.y);
-
+	player->origin.z += speed;
 	target.z = target.z + speed;
 	camera.origin.z = camera.origin.z + speed;
-
-	//test
-	player->origin = target - Pd(-.75 * sin(yaw - .25*Pi), -.75 * cos(yaw - .25*Pi), 2);
+	camera.lookAt(target);
 }
 
 //------------------------------------------------------------------------------
@@ -213,7 +214,12 @@ void Controller::frame()
             }
 		}
 	}
-	
+	Vector<double> vec = (-player->rotation * Vector<double>(0,1,0));
+	vec.z = 0;
+	vec = ~vec;
+	double yaw = atan2(vec.x, vec.y);
+	target = player->origin + Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw-.25*Pi), 2);
+	camera.lookAt(target);
 	Objects::Player * p = TO(Objects::Player,player);
 	p->velocity = Vd(0,MoveSpeed,0);
 }
@@ -222,7 +228,7 @@ void Controller::frame()
 
 bool Controller::walkAble(Point<double> old, Point<double> updated){
     World *w = TO(World, world);
-	double extrabounding = 0.1*GRID_SIZE;
+	double extrabounding = 2;
     if(!((-(w->width)/2 +extrabounding) < updated.x && updated.x < ((w->width)/2 - extrabounding)//Inside x-interval
         && (-(w->height)/2 +extrabounding) < updated.y && updated.y < ((w->height)/2) - extrabounding))//Inside y-interval
     {
