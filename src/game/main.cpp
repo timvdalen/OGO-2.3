@@ -49,7 +49,6 @@ void Frame();
 void KeyUp(Button btn);
 void KeyDown(Button btn);
 void MouseMove(word x, word y);
-void handleMouse(bool left);
 void updatePlayers();
 
 //------------------------------------------------------------------------------
@@ -173,7 +172,7 @@ void Frame()
 		case 2:  NetCode::Look(player->rotation); break;
 		case 5: loop = 0; break;
 	}
-
+	updatePlayers();
 	window->render();
 }
 
@@ -197,13 +196,19 @@ void KeyDown(Button btn)
 	if (!controller) return;
 	if (!input) return;
 
-	binds.processDown(btn);
-
-	//Handle input
-	switch (btn)
-	{
-		case btnMouseRight: handleMouse(false);               	 break;
-		case btnMouseLeft:  handleMouse(true);                   break;
+	if(btn >= btnMouseLeft){
+		if(input->grabbing){
+			if(btn == btnMouseRight){
+				input->releaseMouse();
+			}else{
+				binds.processDown(btn);
+			}
+		}else{
+			if(btn == btnMouseLeft)
+				input->grabMouse();
+		}
+	}else{
+		binds.processDown(btn);
 	}
 }
 
@@ -215,18 +220,6 @@ void MouseMove(word x, word y)
 }
 
 //------------------------------------------------------------------------------
-
-void handleMouse(bool left){
-	//If this ever gets called from anywhere but KeyDown, remember to check
-	//For !input
-	if(left){
-		if(!input->grabbing){
-			input->grabMouse();
-		}
-	}else{
-		input->releaseMouse();
-	}
-}
 
 void updatePlayers(){
 	map<Player::Id,ObjectHandle>::iterator it;
