@@ -93,9 +93,10 @@ void Player::update(const Qd &camobj) {
 		
 		model.weapon->rotation = -rotation;
 		model.tool->rotation = -rotation;
-		model.head->rotation = -rotation;
+		//model.head->rotation = -rotation;
 	}
 	//model.head->rotation = camobj / rotation;
+	model.head->rotation = camobj * -rotation;
 }
 
 //------------------------------------------------------------------------------
