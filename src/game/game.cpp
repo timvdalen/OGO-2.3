@@ -375,10 +375,10 @@ void Fire()
 		}
 		break;
 	case weapLaser:{
+            Camera &cam = game.controller->camera;
 			Pd gunLoc = game.player->origin + game.player->model.weapon->origin;
 			World *w = TO(World, game.controller->world);
-			Vd direction = ~(Vd(gunLoc-game.controller->target));
-			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, direction)));
+			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
 			return;
 		}
 		break;

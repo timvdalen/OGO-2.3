@@ -118,6 +118,8 @@ Input::Input(Window &W)
 	glutPassiveMotionFunc(motion_event);
 	glutMotionFunc(motion_event);
 	
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
+	
 	inputs.insert(this);
 }
 
@@ -127,6 +129,8 @@ Input::~Input()
 {
 	inputs.erase(this);
 	window.select();
+	
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_DEFAULT);
 	
 	glutSpecialFunc(NULL);
 	glutSpecialUpFunc(NULL);

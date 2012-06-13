@@ -40,7 +40,6 @@ map<Button,Direction> lookbind;
 map<Button,word> lookcount;
 ObjectHandle cube;
 
-ObjectHandle npc;
 int lastmess = 0;
 
 bool building = false;
@@ -51,6 +50,7 @@ void KeyUp(Button btn);
 void KeyDown(Button btn);
 void MouseMove(word x, word y);
 void handleMouse(bool left);
+void updatePlayers();
 
 //------------------------------------------------------------------------------
 
@@ -83,11 +83,10 @@ int main(int argc, char *argv[])
 	player->rotation = Rd(0,Vd(0,0,1));
 	Player *p = TO(Player, player);
 	p->weapon = weapLaser;
-	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
 
 	cube->material = Assets::Test;
 
-	ObjectHandle world = Objects::World(700, 700);
+	ObjectHandle world = Objects::World(200, 200);
 
 	{
 		World *w = TO(World, world);
@@ -98,7 +97,6 @@ int main(int argc, char *argv[])
 	}
 
 	world->children.insert(player);
-	world->children.insert(npc);
 
 	v1.world = world;
 
@@ -161,84 +159,19 @@ void Frame()
 
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
-
+	Vd velocity;
 	switch (++loop)
 	{
-		case 1:  NetCode::Move(player->origin, Vd()); break;
+		case 1: 
+			velocity = ((-player->rotation)*Vd(0,1,0))*controller->move[dirY];
+			if(!velocity){
+				velocity.z = 0;
+				velocity = ~velocity;
+			}
+			NetCode::Move(player->origin, velocity);
+			break;
 		case 2:  NetCode::Look(player->rotation); break;
 		case 5: loop = 0; break;
-	}
-
-	int time = Video::ElapsedTime();
-	Objects::Player * pNPC = TO(Objects::Player, npc);
-	World *w = TO(World, controller->world);
-	HUD *h = TO(HUD, w->hud);
-	if(time > 900 && time < 1100){
-		if(lastmess == 0){
-			ChatMessage m = ChatMessage(*pNPC, "Hey man, welcome to the game!");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 2900 && time < 3100){
-		if(lastmess == 1){
-			ChatMessage m = ChatMessage(*pNPC, "So your name is " + player->name + "?");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 4900 && time < 5100){
-		if(lastmess == 2){
-			ChatMessage m = ChatMessage(*pNPC, "Try to look around with the mouse");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 6900 && time < 7100){
-		if(lastmess == 3){
-			ChatMessage m = ChatMessage(*pNPC, "If you press W you will roll in the direction");
-			ChatMessage m2 = ChatMessage(*pNPC, "you're looking in");
-			h->messageDisplayer->addMessage(m);
-			h->messageDisplayer->addMessage(m2);
-			lastmess++;
-		}
-	}else if(time > 8900 && time < 9100){
-		if(lastmess == 4){
-			ChatMessage m = ChatMessage(*pNPC, "Left clicking will make you shoot a laser beam");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 10900 && time < 11100){
-		if(lastmess == 5){
-			ChatMessage m = ChatMessage(*pNPC, "Pressing B will enter build mode");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 12900 && time < 13100){
-		if(lastmess == 6){
-			ChatMessage m = ChatMessage(*pNPC, "Try to build some towers");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 13900 && time < 14100){
-		if(lastmess == 7){
-			ChatMessage m = ChatMessage(*pNPC, "They're of a special stealth");
-			ChatMessage m2 = ChatMessage(*pNPC, "kind that looks like a box.");
-			h->messageDisplayer->addMessage(m);
-			h->messageDisplayer->addMessage(m2);
-			lastmess++;
-		}
-	}else if(time > 16900 && time < 17100){
-		if(lastmess == 8){
-			ChatMessage m = ChatMessage(*pNPC, "Anyway. Have fun!");
-			h->messageDisplayer->addMessage(m);
-			lastmess++;
-		}
-	}else if(time > 19900 && time < 20100){
-		if(lastmess == 9){
-			ChatMessage m = ChatMessage(*pNPC, "Oh, one last thing. You can press [enter] if");
-			ChatMessage m2 = ChatMessage(*pNPC, "you ever want to talk to me!");
-			h->messageDisplayer->addMessage(m);
-			h->messageDisplayer->addMessage(m2);
-			lastmess++;
-		}
 	}
 
 	window->render();
@@ -292,6 +225,18 @@ void handleMouse(bool left){
 		}
 	}else{
 		input->releaseMouse();
+	}
+}
+
+void updatePlayers(){
+	map<Player::Id,ObjectHandle>::iterator it;
+	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
+	{
+		Player *p = TO(Player,it->second);
+		if(!p){
+			return;
+		}
+		p->interpolate();
 	}
 }
 

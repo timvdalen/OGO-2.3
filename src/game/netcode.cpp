@@ -199,7 +199,7 @@ RECEIVE(MOVE, id, msg, reliable)
 	
 	Player *player = PLAYER(id);
 	if (!player) return;
-	
+	player->velocity = velocity;
 	player->origin = position;
 }
 
@@ -208,6 +208,7 @@ RECEIVE(MOVE, id, msg, reliable)
 void Look(Qd rotation)
 {
 	Message msg;
+	msg.push_back("LOOK");
 	msg.push_back(rotation.a);
 	msg.push_back(rotation.b);
 	msg.push_back(rotation.c);
@@ -217,10 +218,8 @@ void Look(Qd rotation)
 RECEIVE(LOOK, id, msg, reliable)
 {
 	Qd rotation((double) msg[1], (double) msg[2], (double) msg[3], (double) msg[4]);
-	
 	Player *player = PLAYER(id);
 	if (!player) return;
-	
 	player->rotation = rotation;
 }
 
