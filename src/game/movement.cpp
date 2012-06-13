@@ -12,7 +12,7 @@ namespace Movement {
 
 	double movespeedmultiplier = 0.5;
 	double jetpackspeedmultiplier = 0.2;
-	double lookspeedmultiplier = 0.035;
+	double lookspeedmultiplier = 0.0175;
 	double zoomspeedmultiplier = 0.5;
 
 	Point<double> offset = Pd(.5,.5,2);
@@ -237,7 +237,7 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     Terrain *t = w->terrain; 
     //check every terrain item, we return false if and only if updated is in a object
     //and old is not in that object
-    multimap<GridPoint, ObjectHandle>::iterator it;
+    map<GridPoint, ObjectHandle>::iterator it;
 	for(it = t->structures.begin(); it != t->structures.end(); it++){
 		GridPoint p = it->first;
         double worldx = GRID_SIZE*p.x - (w->width)/2;
