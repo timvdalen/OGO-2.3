@@ -13,7 +13,7 @@ namespace Movement {
 	double movespeedmultiplier = 0.3;
 	double jetpackspeedmultiplier = 0.2;
 	double lookspeedmultiplier = 0.0175;
-	double zoomspeedmultiplier = 0.2;
+	double zoomspeedmultiplier = 0.3;
 
 	Point<double> offset = Pd(.5,.5,2);
 
