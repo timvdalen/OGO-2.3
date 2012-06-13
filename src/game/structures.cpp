@@ -218,7 +218,7 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 //------------------------------------------------------------------------------
 
 void Terrain::setSelected(GridPoint p){
-	if(selected.x != p.x && selected.y != p.y){
+	if(selected.x != p.x || selected.y != p.y){
 		selected = p;
 		if(canPlaceStructure(p)){
 			ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0)));
