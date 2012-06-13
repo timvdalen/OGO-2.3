@@ -11,6 +11,7 @@
 #endif
 
 #include "player.h"
+#include "movement.h"
 
 namespace Objects {
 
@@ -175,7 +176,7 @@ void Player::render(){
 }
 
 void Player::interpolate(){
-	origin = origin + velocity*(Movement::MoveSpeed*(currentFPS()/60.0);
+	origin = origin + velocity*(Movement::MoveSpeed*(Video::CurrentFPS()/60.0));
 }
 
 //------------------------------------------------------------------------------
