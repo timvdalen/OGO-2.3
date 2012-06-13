@@ -68,10 +68,10 @@ int main(int argc, char *argv[])
 	window->viewports.push_back(&v1);
 
 	Assets::Initialize(argc, argv); // after the viewports have been initialized!
-	
+
 	Game::Initialize(argc, argv);
 	Game::Exec("inputs.exec");
-	
+
 	Net::Initialize();
 	NetCode::Initialize(argc, argv);
 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 	ObjectHandle player = Objects::Player(0, 'a', pname);
 	player->rotation = Rd(0,Vd(0,0,1));
 	Player *p = TO(Player, player);
-	p->weapon = weapLaser;	
+	p->weapon = weapLaser;
 	npc = Objects::Player(1, 'b', "NPC", Pd(30, 40, 0));
 
 	cube->material = Assets::Test;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
 	world->children.insert(player);
 	world->children.insert(npc);
-	
+
 	v1.world = world;
 
 	v1.camera.lookAt(cube->origin);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	input->onKeyUp = KeyUp;
 	input->onKeyDown = KeyDown;
 	input->onMouseMove = MouseMove;
-	
+
 	// hack
 	Game::game.world = TO(World, world);
 	Game::game.player = TO(Player, player);
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	Game::game.controller = controller;
 
 	OnFrame = Frame;
-	
+
 	Video::StartEventLoop();
 
 	puts("Press any key...");
@@ -140,35 +140,35 @@ void Frame()
 	if (NetCode::TryLock())
 	{
 		// Critical section
-		
+
 		NetCode::Unlock();
 	}
-	
+
 	World *world = TO(World, window->viewports[0]->world);
 	Camera &cam = window->viewports[0]->camera;
-	
+
 	if(Game::game.player->weapon == weapWrench)
-		world->terrain->setSelected(world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0)));
-	
+		world->terrain->setSelected(world->terrain->getGridCoordinates(cam.origin, cam.objective));
+
 	if (window->resized)
 	{
 		uword width, height;
 		window->size(width = 0, height = 0);
 		world->hud->resize(width, height);
 	}
-	
+
 	controller->frame();
-	
+
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
-	
+
 	switch (++loop)
 	{
 		case 1:  NetCode::Move(player->origin, Vd()); break;
 		case 2:  NetCode::Look(player->rotation); break;
 		case 5: loop = 0; break;
 	}
-	
+
 	int time = Video::ElapsedTime();
 	Objects::Player * pNPC = TO(Objects::Player, npc);
 	World *w = TO(World, controller->world);
@@ -240,7 +240,7 @@ void Frame()
 			lastmess++;
 		}
 	}
-	
+
 	window->render();
 }
 
@@ -249,9 +249,9 @@ void Frame()
 void KeyUp(Button btn)
 {
 	//printf("key up: %d\n", btn);
-	
+
 	if (!controller) return;
-	
+
 	binds.processUp(btn);
 }
 
@@ -260,12 +260,12 @@ void KeyUp(Button btn)
 void KeyDown(Button btn)
 {
 	//printf("key down: %d\n", btn);
-	
+
 	if (!controller) return;
 	if (!input) return;
-	
+
 	binds.processDown(btn);
-	
+
 	//Handle input
 	switch (btn)
 	{

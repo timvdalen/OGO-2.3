@@ -43,9 +43,9 @@ class Command
 	public:
 	typedef void (*Func)(const Message &);
 	typedef map<string, pair<Func,size_t> > List;
-	
+
 	static List list;
-	
+
 	Command(string name, Func func, size_t count)
 		{ list[to_lower_case(name)] = make_pair(func,count); }
 };
@@ -55,7 +55,7 @@ Command::List Command::list;
 #define CMD(name, count, arg, ...)                                   \
 	void _ ## name(const Message &arg) { name(__VA_ARGS__); }        \
 	Command _cmd_ ## name(#name, _ ## name, count);
-	
+
 
 //------------------------------------------------------------------------------
 
@@ -74,15 +74,15 @@ void Initialize(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--screen-height"))
 			windowHeight = atoi(argv[++i]);
 	}
-	
+
 	for (int i = 0; i < argc; ++i)
 	{
 		if (!strcmp(argv[i], "--fullscreen"))
 			fullscreen = true;
 	}
-	
+
 	srand(time(NULL));
-	
+
 	game.world = new World(gameWidth, gameHeight);
 }
 
@@ -98,13 +98,13 @@ void Terminate()
 //------------------------------------------------------------------------------
 
 void Call(string command)
-{	
+{
 	Protocol::Message args = command;
 	if (args.size() < 1) return;
-	
+
 	string cmd = to_lower_case(args[0]);
 	args.erase(args.begin());
-	
+
 	if (!Command::list.count(cmd))
 		Echo(string("Unknown command: ") + cmd);
 	else
@@ -123,9 +123,9 @@ bool Callable(std::string command)
 {
 	Protocol::Message args = command;
 	if (args.size() < 1) return false;
-	
+
 	string cmd = to_lower_case(args[0]);
-	
+
 	return !!Command::list.count(cmd);
 }
 
@@ -142,9 +142,9 @@ string to_lower_case(string str)
 static void getInput(string input)
 {
 	HUD *hud = game.world->hud;
-	
+
 	if(!input.empty()) Game::Call(input);
-	
+
 	set<ObjectHandle>::iterator it;
 	TextInput *tInput;
 	for (it = hud->children.begin(); it != hud->children.end();)
@@ -219,9 +219,9 @@ CMD(RQuit, 0, arg, (arg.size() < 1 ? "AAAAaaaRRGG!!" : arg[0]))
 void RQuit(string msg)
 {
 	Say(msg);
-	
+
 	// Let player explode
-	
+
 	Quit();
 }
 
@@ -244,20 +244,20 @@ void Exec(string filename)
 		Echo(string("Unable to open script file: " + filename));
 		return;
 	}
-	
+
 	Echo(string("Executing ") + filename + string("..."));
-	
+
 	char buffer[1024], *ptr;
 	while(fgets(buffer, sizeof (buffer), fp))
 	{
 		ptr = buffer;
 		while ((*ptr == ' ') || (*ptr == '\t')) ptr++;
 		if (!*ptr || (*ptr == '#')) continue;
-		
+
 		int len = strlen(ptr) - 1;
 		if (ptr[len] == '\n') ptr[len--] = 0;
 		if (ptr[len] == '\r') ptr[len--] = 0;
-		
+
 		if (len >= 0) Call(string(ptr));
 	}
 	fclose(fp);
@@ -274,7 +274,7 @@ void Connect(string address)
 	else
 	{
 		Game::Notice(string("Connected to " + address + string("!")));
-		
+
 	}
 }
 
@@ -391,7 +391,7 @@ CMD(Build, 0, arg)
 void Build()
 {
 	Camera &cam = game.controller->camera;
-	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, game.controller->target);
+	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.objective);
 	ObjectHandle tower = Objects::DefenseTower(ObjectHandle(*game.player));
 	if(clicked.isValid()){
 		game.world->terrain->setSelected(GridPoint(-1, -1));
@@ -410,7 +410,7 @@ void Weapon(WeaponType weapon)
 	WeaponType prevWeapon = game.player->weapon;
 	Terrain *terrain = TO(Terrain, game.world->terrain);
 	if (prevWeapon == weapon) return;
-	
+
 	game.player->weapon = weapon;
 	if (weapon == weapWrench)
 	{
@@ -437,7 +437,7 @@ void Tool(ToolType tool)
 {
 	ToolType prevTool = game.player->tool;
 	if (prevTool == tool) return;
-	
+
 	game.player->tool = tool;
 }
 
@@ -446,7 +446,7 @@ void Tool(ToolType tool)
 void DisplayChatMsg(Player *player, string line)
 {
 	if (!player) return;
-	
+
 	game.world->hud->messageDisplayer->addMessage(ChatMessage(*player, line));
 }
 
@@ -455,7 +455,7 @@ void DisplayChatMsg(Player *player, string line)
 void DisplayTeamMsg(Player *player, string line)
 {
 	if (!player) return;
-	
+
 	game.world->hud->messageDisplayer->addMessage(ChatMessage(*player, line));
 }
 
@@ -516,7 +516,7 @@ void Toggle(string line)
 	if (!toggles.count(line))
 	{
 		Toggler &toggler = toggles[line];
-		
+
 		size_t pos;
 		while ((pos = line.find('^')) != string::npos)
 		{
@@ -527,12 +527,12 @@ void Toggle(string line)
 			line = line.substr(pos2);
 		}
 		toggler.cmd.push_back(line);
-		
+
 		Call(toggler.cmd[toggler.last++]);
 		toggler.last %= toggler.cmd.size();
 		return;
 	}
-	
+
 	Toggler &toggler = toggles[line];
 	Call(toggler.cmd[toggler.last++]);
 	toggler.last %= toggler.cmd.size();
