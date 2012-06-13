@@ -171,7 +171,7 @@ void Terrain::draw()
 
 void Terrain::postRender()
 {
-	multimap<GridPoint, ObjectHandle>::iterator it;
+	map<GridPoint, ObjectHandle>::iterator it;
 	for(it = structures.begin(); it != structures.end(); it++){
 		GridPoint p = it->first;
 		ObjectHandle s = it->second;
@@ -221,10 +221,12 @@ void Terrain::setSelected(GridPoint p){
 	if(selected.x != p.x && selected.y != p.y){
 		selected = p;
 		if(canPlaceStructure(p)){
-			ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(500)));
+			ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0)));
 		}else{
 			ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle());
 		}
+	}else if(p.x == -1, p.y == -1){
+		ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle());
 	}
 }
 
@@ -311,6 +313,7 @@ DefenseTower::DefenseTower(int buildTime)
 	model.turret->children.insert(Assets::Model::TurretObj);
 	children.insert(model.turret);
 	model.turret->material = Assets::Model::GhostTurretTex;
+	material = Assets::Model::GhostTurretTex;
 }
 
 
@@ -318,7 +321,6 @@ DefenseTower::DefenseTower(int buildTime)
 
 void DefenseTower::draw()
 {
-	material = Assets::Grass;
 	const int h = 1, a = 1, b = 0;
 	glBegin(GL_QUADS);
 		//Front side

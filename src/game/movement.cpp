@@ -10,10 +10,10 @@
 
 namespace Movement {
 
-	double movespeedmultiplier = 0.5;
+	double movespeedmultiplier = 0.3;
 	double jetpackspeedmultiplier = 0.2;
-	double lookspeedmultiplier = 0.035;
-	double zoomspeedmultiplier = 0.5;
+	double lookspeedmultiplier = 0.0175;
+	double zoomspeedmultiplier = 0.2;
 
 	Point<double> offset = Pd(.5,.5,2);
 
@@ -66,22 +66,21 @@ void Controller::moveY(double movespeed)
 {
 	movespeed = movespeedmultiplier * movespeed;
 
-    Point<double> posrollback = Point<double>(target);
-
+    Point<double> posrollback = Point<double>(player->origin);
+	Point<double> tarrollback = Point<double>(target);
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
 	target.x = target.x + movespeed * sin(yaw);
 	target.y = target.y + movespeed * cos(yaw);
-        
-       if(!walkAble(posrollback, target)){
-           target = posrollback;
-           return;
-       }
+   	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+	if(!walkAble(posrollback, target)){
+		player->origin = posrollback;
+    	target = tarrollback;
+    	return;
+	}
 	camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
-	//test
-	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -132,9 +131,9 @@ void Controller::lookY(double zoomspeed)
 
 	zoom -= zoomspeed;
 
-	if (zoom > 15.0)
+	if (zoom > 25.0)
 	{
-		zoom = 15.0;
+		zoom = 25.0;
 	}
 	else if (zoom <= 5.0)
 	{
@@ -237,7 +236,7 @@ bool Controller::walkAble(Point<double> old, Point<double> updated){
     Terrain *t = w->terrain; 
     //check every terrain item, we return false if and only if updated is in a object
     //and old is not in that object
-    multimap<GridPoint, ObjectHandle>::iterator it;
+    map<GridPoint, ObjectHandle>::iterator it;
 	for(it = t->structures.begin(); it != t->structures.end(); it++){
 		GridPoint p = it->first;
         double worldx = GRID_SIZE*p.x - (w->width)/2;
