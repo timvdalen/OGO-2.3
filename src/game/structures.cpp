@@ -5,7 +5,7 @@
 
 #include <stdlib.h>
 
-#include "video.h" 
+#include "video.h"
 #include "objects.h"
 #include "structures.h"
 #include "materials.h"
@@ -164,7 +164,7 @@ void Terrain::draw()
 			material->select();
 		}
 	}
-	
+
 }
 
 //------------------------------------------------------------------------------
@@ -191,20 +191,20 @@ void Terrain::postRender()
 
 //------------------------------------------------------------------------------
 
-//! This function draws the line from camera to pos. It then finds the intersection
+//! This function draws the line from camera in direction rot. It then finds the intersection
 //! with the ground: the corresponding grid coordinates are returned.
 //! If there is no intersection within the bounds of the grounds
 //! a gridPoint(-1,-1) is returned
-GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
+GridPoint Terrain::getGridCoordinates(Pd camera, Qd rot)
 {
-    Vd dir = pos + -camera;
+    Vd dir = -rot * Vd(0, 1, 0);
     if(dir.z >= 0){//We are looking in the sky
         return GridPoint(-1,-1);
     }
     double lambda = -camera.z / dir.z;
     double intersecx = camera.x + dir.x * lambda;
     double intersecy = camera.y + dir.y * lambda;
-    
+
     int noX = (int) width / GRID_SIZE;
     int noY = (int) height / GRID_SIZE;
     int x = (int) (floor(intersecx / (double) GRID_SIZE) + width/(2*GRID_SIZE));
@@ -257,11 +257,11 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 
 void Building::preRender(){
 	Object::preRender();
-	
+
 	int now = Video::ElapsedTime();
-	if((now-buildTime) > buildDuration) 
+	if((now-buildTime) > buildDuration)
 		return;
-		
+
 	float animationHeight = ((float)height/(float)buildDuration)*(float)now
 		 - ((float)buildTime*((float)height/(float)buildDuration));
 	float randX = (((float)rand()/RAND_MAX)-0.5);
@@ -271,7 +271,7 @@ void Building::preRender(){
 
 //------------------------------------------------------------------------------
 
-Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome) 
+Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
 		: Structure(B), maxIncome(_maxIncome)
 {
 	model.rock = ModelObjectContainer();
@@ -286,7 +286,7 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
-			20, _owner) 
+			20, _owner)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -304,7 +304,7 @@ DefenseTower::DefenseTower(int buildTime)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), buildTime,
-			20, ObjectHandle()) 
+			20, ObjectHandle())
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -327,28 +327,28 @@ void DefenseTower::draw()
 		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, 0);
 		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, h);
 		glTexCoord2i(0, 0);	glVertex3i(0, 0, h);
-		
+
 		//Right side
 		glNormal3i(1, 0, 0);
 		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, 0);
 		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
 		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, h);
 		glTexCoord2i(0, 1);	glVertex3i(GRID_SIZE, 0, h);
-		
+
 		//Back side
 		glNormal3i(0, 1, 0);
 		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, 0);
 		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, 0);
 		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
 		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, h);
-		
+
 		//Left side
 		glNormal3i(-1, 0, 0);
 		glTexCoord2i(1, 0); glVertex3i(0, GRID_SIZE, 0);
 		glTexCoord2i(0, 0);	glVertex3i(0, 0, 0);
 		glTexCoord2i(0, 0);	glVertex3i(0, 0, h);
 		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
-		
+
 		//Top side
 		glNormal3i(0, 0, 1);
 		glTexCoord2i(0, 0); glVertex3i(0, 0, h);
@@ -361,7 +361,7 @@ void DefenseTower::draw()
 
 //------------------------------------------------------------------------------
 
-ResourceMine::ResourceMine(BoundingBox B) 
+ResourceMine::ResourceMine(BoundingBox B)
 		: Building(15, B)
 {
 	model.rig = ModelObjectContainer();
