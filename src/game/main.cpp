@@ -173,7 +173,7 @@ void Frame()
 		case 2:  NetCode::Look(player->rotation); break;
 		case 5: loop = 0; break;
 	}
-
+	updatePlayers();
 	window->render();
 }
 

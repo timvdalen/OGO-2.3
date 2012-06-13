@@ -44,15 +44,14 @@ void Controller::moveX(double speed)
 
 	target.x = target.x + speed * sin(yaw);
 	target.y = target.y + speed * cos(yaw);
-       if(!walkAble(posrollback, target)){
-           target = posrollback;
-           return;
-       }
+	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
+	
+    if(!walkAble(posrollback, player->origin)){
+        target = posrollback;
+    	return;
+    }
 	camera.origin.x = camera.origin.x + speed * sin(yaw);
 	camera.origin.y = camera.origin.y + speed * cos(yaw);
-        
-	//test
-	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -71,7 +70,7 @@ void Controller::moveY(double speed)
 
    	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
 
-	if(!walkAble(posrollback, target)){
+	if(!walkAble(posrollback, player->origin)){
 		player->origin = posrollback;
     	target = tarrollback;
     	return;
