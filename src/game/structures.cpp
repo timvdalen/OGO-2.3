@@ -280,6 +280,7 @@ Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
 	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.rock->children.insert(Assets::Model::RockObj);
 	children.insert(model.rock);
+	model.rock->material = Assets::Model::RockTex;
 }
 
 //------------------------------------------------------------------------------
@@ -366,14 +367,25 @@ void DefenseTower::draw()
 ResourceMine::ResourceMine(BoundingBox B)
 		: Building(15, B)
 {
+	model.rock = ModelObjectContainer();
 	model.rig = ModelObjectContainer();
 	model.drill = ModelObjectContainer();
+	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
-	model.rig->children.insert(Assets::Model::RockObj);
-	model.drill->children.insert(Assets::Model::RockObj);
+	model.rock->children.insert(Assets::Model::RockObj);
+	model.rig->children.insert(Assets::Model::MineObj);
+	model.drill->children.insert(Assets::Model::DrillObj);
+	children.insert(model.rock);
 	children.insert(model.rig);
 	children.insert(model.drill);
+
+	model.rock->material = Assets::Model::RockTex;
+
+	int i = 1;
+	if (owner) i = TO(Player,owner)->team-'a';
+	model.rig->material = Assets::Model::MineTex[i];
+	model.drill->material = Assets::Model::DrillTex[i];
 }
 
 //------------------------------------------------------------------------------

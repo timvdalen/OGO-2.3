@@ -97,6 +97,8 @@ class Player: public BoundedObject
 
 	//! Draw the joints between the tools and the body.
 	void draw();
+	
+	void interpolate();
 };
 
 //------------------------------------------------------------------------------
