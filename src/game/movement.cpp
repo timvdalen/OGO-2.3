@@ -67,7 +67,7 @@ void Controller::moveY(double movespeed)
 	movespeed = movespeedmultiplier * movespeed;
 
     Point<double> posrollback = Point<double>(player->origin);
-	Point<double> tarrollback = Point<double>(target)
+	Point<double> tarrollback = Point<double>(target);
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
