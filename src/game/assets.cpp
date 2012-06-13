@@ -20,6 +20,7 @@ using namespace Materials;
 
 MaterialHandle Grid;
 MaterialHandle SelectedGrid;
+MaterialHandle ErrorGrid;
 
 MaterialHandle WorldMaterial;
 MaterialHandle Star;
@@ -89,6 +90,13 @@ void Initialize(int argc, char *argv[])
 	                   Cf(0.01,0.31,0.58,1), //Specular
 	                   Cf(0.49,0.97,1,1),    //Emissive,
 	                   100.0));              //Shininess
+
+	ErrorGrid = TwinMaterial(GridMaterial(10),
+		ShadedMaterial(Cf(1, 0.14, 0),
+			Cf(1, 0.14, 0),
+			Cf(1, 0.14, 0),
+			Cf(1, 0.14, 0),
+			100.0));
 
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));

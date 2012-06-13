@@ -25,6 +25,7 @@ void Terminate();
 
 extern MaterialHandle Grid;
 extern MaterialHandle SelectedGrid;
+extern MaterialHandle ErrorGrid;
 
 extern MaterialHandle WorldMaterial;
 extern MaterialHandle Star;
