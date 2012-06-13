@@ -660,8 +660,8 @@ void MiniMap::draw(){
 	glEnd();
 	black->unselect();
 	//*le buildings
-	multimap<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
-	multimap<GridPoint, ObjectHandle>::iterator itt;
+	map<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
+	map<GridPoint, ObjectHandle>::iterator itt;
 	int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
 	int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
 	for(itt = structs->begin(); itt != structs->end(); itt++){

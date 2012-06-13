@@ -132,12 +132,6 @@ void Terrain::drawGridLines(){
 	}
 }
 
-
-
-
-
-
-
 //------------------------------------------------------------------------------
 
 void Terrain::draw()
@@ -186,6 +180,11 @@ void Terrain::postRender()
 			s->render();
 		glPopMatrix();
 	}
+	if(ghost.second){
+		GridPoint p = ghost.first;
+		glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
+		(ghost.second)->render();
+	}
 
 	Object::postRender();
 }
@@ -214,6 +213,19 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
         return GridPoint(-1,-1);
     }
     return GridPoint(x, y);
+}
+
+//------------------------------------------------------------------------------
+
+void Terrain::setSelected(GridPoint p){
+	if(selected.x != p.x && selected.y != p.y){
+		selected = p;
+		if(canPlaceStructure(p)){
+			ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(500)));
+		}else{
+			ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle());
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -273,6 +285,22 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 	if (owner) i = TO(Player,owner)->team-'a';
 	model.turret->material = Assets::Model::TurretTex[i];
 }
+
+//------------------------------------------------------------------------------
+
+DefenseTower::DefenseTower(int buildTime)
+		: Building(3, BoundingBox(),
+			100, 0,
+			Video::ElapsedTime(), buildTime,
+			20, ObjectHandle()) 
+{
+	model.turret = ModelObjectContainer();
+	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.turret->children.insert(Assets::Model::TurretObj);
+	children.insert(model.turret);
+	model.turret->material = Assets::Model::GhostTurretTex;
+}
+
 
 //------------------------------------------------------------------------------
 

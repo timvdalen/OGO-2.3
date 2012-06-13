@@ -72,6 +72,9 @@ class Terrain: public Object
 
 	//! Represents the \ref Structure "Structures" on the grid of the terrain
 	map<GridPoint, ObjectHandle> structures;
+
+	//! A ghosted tower displayed on the terrain
+	pair<GridPoint, ObjectHandle> ghost;
 	
 	//! Constructs a new Terrain
 	Terrain(double _width, double _height);
@@ -87,6 +90,9 @@ class Terrain: public Object
 
 	//!Draws the gridlines
 	void drawGridLines();
+
+	//! Sets the selected grid points
+	void setSelected(GridPoint p);
 		
 	//! Returns whether or not a tower can be built on \ref GridPoint p
 	bool canPlaceStructure(GridPoint p);
@@ -188,7 +194,10 @@ class DefenseTower: public Building
 {
 	public:
 	DefenseTower(ObjectHandle _owner = ObjectHandle());
-		  
+		 
+	//! Constructs a DefenseTower that is not owned with a shorter build time
+	DefenseTower(int buildTime);
+
 	virtual void draw();
 	
 	//! Model

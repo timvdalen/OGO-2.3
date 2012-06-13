@@ -71,6 +71,7 @@ extern MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 extern ObjectHandle TurretObj, MineObj, DrillObj;
 extern MaterialHandle TurretTex[3], MineTex[2], DrillTex[2];
+extern MaterialHandle GhostTurretTex;
 
 }
 

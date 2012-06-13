@@ -65,6 +65,7 @@ MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 ObjectHandle TurretObj, MineObj, DrillObj;
 MaterialHandle TurretTex[3], MineTex[2], DrillTex[2];
+MaterialHandle GhostTurretTex;
 
 }
 
@@ -162,6 +163,8 @@ void Initialize(int argc, char *argv[])
 	Model::MineTex[1] = TexturedMaterial(path + "assets/textures/models/minetextblue.png");
 	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
 	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
+
+	Model::GhostTurretTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
 
 	//temp
 	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
