@@ -378,6 +378,7 @@ void Viewport::render()
         if(p.z < LOWERBOUND && v.z != 0){
             p = p + (v*(-(p.z-LOWERBOUND)/v.z));
         }
+		if(p.x 
 		glTranslated(-p.x, -p.y, -p.z);
         #undef LOWERBOUND
 	}
