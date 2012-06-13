@@ -174,6 +174,10 @@ void Player::render(){
     Object::render();
 }
 
+void Player::interpolate(){
+	origin = origin + velocity*(Movement::MoveSpeed*(currentFPS()/60.0);
+}
+
 //------------------------------------------------------------------------------
 
 } // namespace Objects

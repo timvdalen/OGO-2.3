@@ -51,6 +51,7 @@ void KeyUp(Button btn);
 void KeyDown(Button btn);
 void MouseMove(word x, word y);
 void handleMouse(bool left);
+void updatePlayers();
 
 //------------------------------------------------------------------------------
 
@@ -161,10 +162,17 @@ void Frame()
 	
 	Objects::Player * player = TO(Objects::Player,controller->player);
 	player->update(controller->camera.objective);
-	
+	Vd velocity;
 	switch (++loop)
 	{
-		case 1:  NetCode::Move(player->origin, Vd()); break;
+		case 1: 
+			velocity = ((-player->rotation)*Vd(0,1,0))*controller->move[dirY];
+			if(!velocity){
+				velocity.z = 0;
+				velocity = ~velocity;
+			}
+			NetCode::Move(player->origin, velocity);
+			break;
 		case 2:  NetCode::Look(player->rotation); break;
 		case 5: loop = 0; break;
 	}
@@ -240,7 +248,7 @@ void Frame()
 			lastmess++;
 		}
 	}
-	
+	updatePlayers();
 	window->render();
 }
 
@@ -292,6 +300,18 @@ void handleMouse(bool left){
 		}
 	}else{
 		input->releaseMouse();
+	}
+}
+
+void updatePlayers(){
+	map<Player::Id,ObjectHandle>::iterator it;
+	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
+	{
+		Player *p = TO(Player,it->second);
+		if(!p){
+			return;
+		}
+		p->interpolate();
 	}
 }
 
