@@ -394,6 +394,7 @@ void Build()
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, game.controller->target);
 	ObjectHandle tower = Objects::DefenseTower(ObjectHandle(*game.player));
 	if(clicked.isValid()){
+		game.world->terrain->setSelected(GridPoint(-1, -1));
 		bool done = game.world->terrain->placeStructure(clicked, tower);
 		if(!done) game.world->hud->messageDisplayer->addMessage(SystemMessage("There's already a tower there"));
 	}else{
@@ -424,6 +425,7 @@ void Weapon(WeaponType weapon)
 		// Leave build mode
 		terrain->showGrid = false;
 		game.world->hud->buildselector->show = false;
+		game.world->terrain->setSelected(GridPoint(-1, -1));
 		game.controller->restoreView();
 	}
 }
