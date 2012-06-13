@@ -41,6 +41,7 @@
 
 	\section{Lijst symbolen en afkortingen}
     % Verklaring van alle gebruikte symbolen	
+    \newpage
 
     \section{Summary}
     % Engelstalige samenvatting
@@ -54,19 +55,18 @@
     % Waarschijnlijk beter aparte sections
 
     \subsection{Werkplan}
-    % Intro werkplan.
-    INSERT INTRO WERKPLAN.
-    
+    In het werkplan hebben wij de kritieke punten in het project geïdentificeerd. Vervolgens is er een analyse gemaakt van de verschillende taken gedurende het project. Op basis van de kritieke punten en de taakanalyse is het werkplan opgesteld. We hebben hierin ook al het werkplan voor de implementatiefase opgenomen.
+
     \subsubsection{Kritieke punten}
-    We identificeren eerst de kritieke punten in dit project, voordat we het werkplan geven. Dit zijn:
+    Door de kritieke punten zo vroeg mogelijk te identificeren zijn we in staat om deze in onze planning zo goed mogelijk te verwerken. We zullen nu de door ons gevonden kritieke punten geven:
     \begin{enumerate}
     \item[(a)] Het eerste kritieke punt is het netwerk aspect. Ten eerste moet het mogelijk zijn om elkaar te kunnen vinden over het netwerk. Dit is zeker geen triviale taak. Ten tweede geldt dat gedurende het spel alle machines op gelijke voet staan. Er mag dus geen server worden gebruikt, wat het ontwerp van het spel moeilijker maakt.
     \item[(b)] Een ander groot gevaar is complexiteit. Bij het ontwikkelen van een spel kan men al snel uit enthousiasme hoge verwachtingen krijgen en hoge eisen stellen. Deze overmaat aan eisen kan later te veel werk blijken.
-    \item[(c)] Een laatste hindernis is het gedistribueerde aspect met name in conflictsituaties. Een goed voorbeeld hiervan is als twee spelers op hetzelfde moment voedsel proberen te pakken. 
+    \item[(c)] Een laatste hindernis is het gedistribueerde aspect met name in conflictsituaties. Een goed voorbeeld hiervan is als twee spelers op hetzelfde moment voedsel proberen te pakken.
     \end{enumerate}
-    
+
     We willen zo vroeg mogelijk aan deze kritieke punten werken. Aangezien we (a) als het voornaamste probleem beschouwen, zullen we in week 1 ons al ori\"enteren op het probleem. We zullen vooral kijken naar de mogelijkheden voor broadcast om andere spelers te vinden.
-    
+
     \subsubsection{De taken}
     Nu we de mogelijke problemen hebben bekeken, zijn we klaar om een lijst met taken op te stellen met afkortingen. De genoemde taken staan ruwweg in chronologische volgorde:
     \begin{enumerate}
@@ -84,7 +84,7 @@
     \item[-] Maken modellen en textures, inladen in openGL (\emph{Model}).
     \item[-] Maken basisklassen (\emph{Basis}).
     \item[-] Maken lobby (\emph{Lobby}).
-    \item[-] Maken gebruikersomgeving (\emph{Gbr}).    
+    \item[-] Maken gebruikersomgeving (\emph{Gbr}).
     \item[-] Bijwerken gebruikershandleiding, validatie aannames en motivering implementatie (\emph{\BG}).
     \item[-] Afronden verslag (\emph{\AV}).
     \item[-] Maken eindpresentatie (\emph{\ME}).
@@ -92,12 +92,12 @@
     \end{enumerate}
 
     \subsubsection{Het werkplan}
-    Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs). 
-    
+    Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs).
+
     Het is daarbij belangrijk om in te zien dat de genoemde taken redelijk onafhankelijk van elkaar zijn uit te voeren. We proberen er in de taakverdeling voor te zorgen dat een klein aantal groepen zo onafhankelijk mogelijk van de rest kan werken. Om dit te bereiken, werken we zoveel mogelijk \emph{bottom-up}. Verder hebben we als doel dat iedereen met de verschillende aspecten van het programma te maken krijgt. Het protocol is al gezamenlijk ontworpen en getest, zodat iedereen met het gedistribueerde aspect te maken heeft gehad. We zullen met deze taakverdeling proberen iedereen ook te laten werken aan het grafische aspect.
 
     We hebben besloten om drie belangrijke zaken samen te doen. Ten eerste is het natuurlijk erg logisch dat het brainstormen samen gebeurt. Hierdoor weten we allemaal in welke richting het spel zal gaan, wat bij alle volgende stappen van belang zal zijn. Ten tweede wordt het communicatieprotocol samen ontworpen. Dit heeft tot doel zodat iedereen het communicatieprotocol goed snapt, zodat iedereen hiermee overweg kan met de implementatie. Ten derde wordt het testen van het communicatieprotocol samen gedaan. De voornaamste reden hiervoor is vanwege de grote diversiteit aan operating systemen in onze groep, wat eventueel problemen kan geven bij de implementatie. We zijn nu klaar om het volledige werkplan te geven, we gebruiken hierbij de eerder gegeven afkortingen. De deadlines staan op een aparte regel en zijn schuin gedrukt:
-    \begin{figure}[H]
+    \begin{table}[H]
         \small
         \centering
         \begin{tabular}{| l | l | l | l | l | l | l |}
@@ -136,19 +136,20 @@
         \end{tabular}
         \caption{Gedetailleerde taakverdeling per dag}
         \label{tab:planning}
-    \end{figure}
+    \end{table}
 
     Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de sc`ene en het maken van het spel. Het modelleren van de sc`ene is vrij onafhankelijk van de andere activiteiten. Dit kan worden gebruikt door hier eventueel al eerder mee te beginnen, zeker als we in een van de eerdere fasen tijd over hebben. We hebben besloten het protocol al eerder te maken om onverwachte vertragingen vanwege \emph{bugs} op te kunnen vangen, die in onze mening het meest waarschijnlijk zijn bij dit onderdeel van het programma.
-    
+
     \subsection{Specificaties}
-    % Intro specificatie.
-    INSERT INTRO SPECIFICATIE.
+    Het spel, \emph{Grudge of the Oblivious} (\textsc{goto}), dat wij van plan zijn om te ontwerpen, is een combinatie van een \textsc{fps} spel en een \textsc{rts} spel. Dit betekent dat de gebruiker van het spel zowel kan schieten als gebouwen kan bouwen. Het spel speelt zich af in een oorlog tussen twee rivaliserende robot-bendes. Deze robot-bendes hebben een corresponderend commandocentrum. In het spel kan een robot-bende als team gezien worden, een dergelijk team bestaat uit meerdere robots en spelers. Elke speler bestuurt \'e\'en robot. Er zijn evenveel robots als spelers.
+
+    Een team heeft minstens \'e\'en speler. Het doel van het spel is om het commandocentrum van de tegenstander te vernietigen. De spelers behoren tot precies \'e\'en van de twee teams en hebben lasergeweren om de tegenstanders dood te schieten en torens aan te vallen. Torens kunnen door spelers worden neergezet op het terrein. Deze torens kosten goud om te bouwen. De spelers verdienen goud in een gezamenlijke kas door mijnen te bouwen over delfplaatsen. Verder kan goud worden verdiend door tegenstanders te doden en hun torens te vernietigen. Als een speler dood gaat of een toren kapot gaat, zal deze een muntje achterlaten dat vervolgens door alle spelers kan worden opgepakt. Wij richten ons met dit spel voornamelijk op jongeren van 14 tot 25 jaar.
 
 	\subsubsection{Terrein}
-    Het terrein kan in wezen allerlei vormen hebben, voorwaarde hierbij is dat het een eerlijk terrein is voor beide teams. Een team mag dus geen voordeel hebben dankzij de kaart. Een mogelijke manier om dit te bereiken is door de kaart symmetrisch te maken. We eisen bovendien dat de kaart rechthoekig is.
+    Het terrein kan in wezen allerlei vormen hebben, we leggen hier slechts twee simpele restricties op. Allereerst moet het terrein eerlijk zijn: dit betekent dat een team geen voordeel mag hebben vanwege de kaart. We eisen bovendien dat de kaart rechthoekig is.
 
-    Op het terrein zijn twee commandocentra geplaatst, voor beide teams een commandocentrum. Het kan gewenst zijn dat elk team bij de start van het spel ook al een aantal extra torens heeft ter bescherming van het commandocentrum. Over het terrein zijn een aantal delfplaatsen verdeeld. Deze zijn eerlijk verdeeld over de kaart. Andere obstakels mogen aanwezig zijn, maar zijn niet noodzakelijkerwijs aanwezig. Alle objecten met uitzondering van spelers worden geplaatst op een rooster. In figuur \ref{fig:map1} en \ref{fig:map2} zijn twee mogelijke beginconfiguraties van het spel getoond.
-    
+    Op het terrein zijn twee commandocentra geplaatst, voor beide teams een commandocentrum. Het kan gewenst zijn dat elk team bij de start van het spel ook al een aantal extra torens heeft ter bescherming van het commandocentrum. Over het terrein zijn een aantal delfplaatsen verdeeld. Andere obstakels mogen aanwezig zijn, maar zijn niet noodzakelijkerwijs aanwezig. Alle objecten met uitzondering van spelers worden geplaatst op een rooster. In figuur \ref{fig:map1} en \ref{fig:map2} zijn twee mogelijke beginconfiguraties van het spel getoond.
+
     \begin{figure}[h]
         \begin{subfigure}{0.5\linewidth}
             \includegraphics[width=\textwidth]{../Graphics/Map1.eps}
@@ -173,7 +174,7 @@
 
     Uit sommige delfplaatsen kan maar een bepaalde hoeveelheid goud worden gehaald, daarna is de delfplaats op. Dan zal de mijn over die delfplaats geen verdere bijdrage meer leveren voor de gezamenlijke kas. We staan echter ook delfplaatsen toe die een onbeperkte hoeveelheid goud bevatten. Standaard levert elke mijn hetzelfde bedrag op met dezelfde periode, maar dit kan later nog worden aangepast.
 
-    Het commandocentrum is het belangrijkste gebouw voor het team. Als dit gebouw kapot is, heeft het bijbehorende team verloren. Gebouwen kunnen door spelers worden beschoten, waardoor deze worden beschadigd. Gebouwen kunnen op geen enkele mogelijke manier hersteld worden. Optioneel zou men mechanismen in het spel kunnen toevoegen om deze gebouwen te herstellen. Alle gebouwen behoren tot \'e\'en van beide teams, deze gebouwen kunnen weer ge\"identificeerd worden door de kleur van het gebouw.
+    Het commandocentrum is het belangrijkste gebouw van het team. Als dit gebouw kapot is, heeft het bijbehorende team verloren. Gebouwen kunnen door spelers worden beschoten, waardoor deze worden beschadigd. Gebouwen kunnen op geen enkele mogelijke manier hersteld worden. Optioneel zou men mechanismen in het spel kunnen toevoegen om deze gebouwen te herstellen. Alle gebouwen behoren tot \'e\'en van beide teams, deze gebouwen kunnen weer ge\"identificeerd worden door de kleur van het gebouw.
 
     \subsubsection{Verzamelbare voorwerpen}
     Er is maar \'e\'en verzamelbaar voorwerp: een muntje. E\'en of meerdere muntjes worden achtergelaten door spelers die dood gaan en torens die worden vernietigd. Een muntje heeft een bepaalde waarde in goud. De waarde van de muntjes zijn proportioneel aan de gezamenlijke kas van het team waarvan de speler is doodgegaan. Als een toren is vernietigd, dan is de waarde van de muntjes proportioneel aan de kosten van de toren. De waarde van de muntjes moet echter altijd kleiner zijn dan de kosten van de toren. Gedurende een spel moeten deze proporties vast zijn.
@@ -196,7 +197,8 @@
 
     De hoeveelheid goud van het team wordt weergegeven met behulp van een getal na een speciaal symbool linksboven: een goudstaaf. De sterkte van het harnas geven wij ook linksboven weer. De sterkte van het harnas wordt gerepresenteerd met een statusbalk. Hoe voller de balk is, hoe sterker het harnas is. We eisen dat dit verband recht evenredig is. Hierbij representeert een volle balk dat de speler nog een volledig harnas heeft. Als de balk leeg is, gaat de speler dood.
 
-    We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart, zoals wordt besproken in sectie \ref{sec:OPT}: \emph{Optioneel}, wordt ook aangegeven in figuur \ref{fig:UI}.
+    We plaatsen het vizier van de speler altijd in het midden van het scherm. Hierdoor weet de speler dus in welke richting wordt geschoten. De speler wordt altijd iets links van dit vizier getekend. Voor de duidelijkheid hebben wij hier ook een figuur van gemaakt. Een plattegrond van de kaart wordt ook aangegeven in figuur \ref{fig:UI}. De plattegrond is een extra optie in het spel. (INSERT REFERENCE OPTIONEEL)
+    % Insert reference optioneel.
     \begin{figure}[H]
     \includegraphics[width=0.9\textwidth]{../Graphics/UI.eps}
     \caption{De gebruikersomgeving tijdens het spel}
@@ -219,35 +221,7 @@
     \end{table}
 
     De speler kan schieten door op de muis te drukken. Door de muis naar boven of naar beneden te bewegen, kijkt de speler verder omhoog of omlaag respectievelijk. Op analoge wijze kan de speler naar links of naar rechts draaien door respectievelijk de muis naar links of naar rechts te bewegen. Merk op dat het vizier altijd in het midden van het scherm blijft. De speler ziet dit dus doordat de horizon omlaag of omhoog schuift.
-    \FloatBarrier
-    \subsubsection{Schieten met het lasergeweer}
-    Men kan opmerken uit figuur \ref{fig:UI} dat de schietrichting niet meteen duidelijk uit de gebruikersomgeving wordt. Immers, het vizier wordt niet op hetzelfde punt als het wapen op het scherm afgebeeld. Aangezien het vizier eenvoudiger is om mee te richten dan het wapen, wordt bij het schieten een laserstraal afgevuurd vanuit het wapen naar het punt waar het vizier op gericht staat. Dit is te zien in figuur \ref{fig:COL}. Als het vizier niet op een object gericht staat, dan zal, bij het schieten, de laserstraal uit het wapen afgevuurd worden in de kijkrichting.
 
-    \begin{figure}[H]
-    \includegraphics[width=0.9\textwidth]{../Graphics/Collision.eps}
-    \caption{Een voorbeeld van het schieten van het wapen, de blauwe lijn is niet zichtbaar tijdens het spelen}
-    \label{fig:COL}
-    \end{figure}
-
-    Een probleem ontstaat wanneer er een object de laserstraal vanaf het wapen naar het punt, waar het vizier op gericht staat, blokkeert. Het object zou dan geraakt moeten worden en niet het punt waar het vizier op gericht staat. Er zijn twee manieren om dit op te lossen, men kan zeggen dat de laser altijd het punt van de vizier raakt. Dit is makkelijker te implementeren, aangezien we maar \'e\'en keer hoeven te bepalen waar een lijn een object raakt. Dit is te zien in figuur \ref{fig:COL2}. Een andere oplossing is dat in dit geval de laser alleen het object, dat in de weg staat, raakt. Dit is natuurlijk realistischer, maar minder makkelijk te implementeren. Dit is te zien in figuur \ref{fig:COL3}. In eerste instantie kiezen wij voor de eerste methode. Echter, indien de tijd ons de mogelijkheid gunt om de tweede oplossing te kunnen implementeren, zullen wij de tweede oplossing implementeren.
-    \FloatBarrier    
-    \begin{figure}[h]
-    \begin{subfigure}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../Graphics/Collision2.eps}
-    \caption{De laser komt altijd aan op het punt aangewezen door het vizier}
-    \label{fig:COL2}
-    \end{subfigure}
-    \begin{subfigure}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../Graphics/Collision3.eps}
-    \caption{De laser stopt zodra hij een ander object raakt}
-    \label{fig:COL3}
-    \end{subfigure}
-    \caption{Oplossingen voor de problemen bij het schieten}
-    \end{figure}
-
-    \FloatBarrier
     \subsubsection{Het neerzetten van gebouwen}
     De speler kan ook opdracht geven om op een bepaalde plek een gebouw neer te laten zetten. Om een gebouw neer te zetten moet de speler eerst op de knop \textsc{b} drukken. Dan gaat de speler in de zogenaamde \emph{bouw-modus}. Op dat moment wordt er een klein menu onderaan het scherm van de speler afgebeeld. Door middel van sneltoetsen kan de speler een gebouw van dit menu kiezen.
 
@@ -261,20 +235,6 @@
     \caption{Een voorbeeld van het neerzetten van een gebouw in de gebruikersomgeving}
     \label{fig:gebouw}
     \end{figure}
-
-    \subsubsection{Optioneel}
-    \label{sec:OPT}
-    We hebben ook een aantal plannen voor uitbreiding van het spel. De volgende idee\"en zouden wij graag extra implementeren. De idee\"en zijn gesorteerd op aflopende volgorde van belangrijkheid.
-
-    \begin{itemize}
-    \item Extra goud, de gezamenlijke kas wordt periodiek met een vaste hoeveelheid verhoogd. Dit is dan additief met eventuele mijnen. Wij verwachten dat dit weinig tijd kost.
-    \item Oorlogsmist, de robots hebben een beperkt zichtveld. Dit voorkomt dat spelers vanaf hun commandocentrum alle activiteiten van de tegenstanders kunnen zien. Wij denken dat dit weinig tijd kost.
-    \item Plattegrond, zodat spelers een globaal overzicht krijgen van wat er op de kaart gebeurt. Dit kan eventueel ook weer met een oorlogsmist zijn, zodat de spelers alleen een gedeelte van het plattegrond kunnen zien, waar teamgenoten in de buurt staan. Wij vermoeden dat dit niet veel tijd kost.
-    \item Muren, als een extra type gebouw. Onze bedoeling hierbij is dat deze muren relatief goedkoop zijn om te bouwen. Dit geeft een team meer opties om hun commandocentrum of delfplaatsen te beschermen. Bovendien geeft het de extra mogelijkheid om een veilige plek te cre\"eren, waarvandaan tegenstanders aangevallen kunnen worden. Wij voorzien dat dit een kleine hoeveelheid tijd kost.
-    \item Ontwikkelingen, de spelers krijgen ontwikkelingspunten tijdens het spel. Deze kunnen worden verdiend door het uitschakelen van spelers, werkers, infanterie en het vernietigen van gebouwen. Werkers en infanterie worden uitgelegd in de volgende twee idee\"en. Hiermee kunnen de spelers bijvoorbeeld de eigenschappen van hun robot verbeteren, zoals de snelheid van lopen en hoe sterk het harnas is. Ook is het mogelijk om sterkere wapens te kopen. Wij denken dat dit veel tijd kost, aangezien een `winkel' gemaakt moet worden waar deze punten gespendeerd kunnen worden. Ook moeten de eigenschappen van een speler dynamisch gemaakt worden.
-    \item Werkers, dit zijn computergestuurde robots. Zodra een speler daartoe opdracht geeft, komen werkers uit het commandocentrum van het bijbehorende team om een gebouw neer te zetten. Dit vervangt de oude mogelijkheid van spelers om te bouwen. Een gevolg van deze aanpassing is dat het langer duurt om een gebouw te bouwen als de afstand van de bouwplaats tot het commandocentrum groter is. Bovendien wordt het mogelijk om het bouwen van het andere team te vertragen door de werkers uit te schakelen. Dit kost heel veel tijd, aangezien de werkers gedistribueerd bestuurd worden. Hiervoor is dus een soort gedistribueerde kunstmatige intelligentie nodig. Dit is een uitdaging. Merk ook op, dat deze computergestuurde robots niet door de gebouwen horen te lopen, waardoor deze kunstmatige intelligentie totaal niet triviaal is.
-    \item Infanterie, ook dit zijn computergestuurde robots. Deze kunnen door spelers worden gekocht, vanaf het commandocentrum lopen ze naar gebouwen van het andere team om deze gebouwen aan te vallen. Dit kost nog meer tijd dan de werkers, aangezien de infanterie niet tussen twee vaste punten zich moeten verplaatsen, maar ook gebouwen moeten kunnen aanvallen.
-    \end{itemize} 
 
     \subsection{Het ontwerp}
     % Inclusief alternatieven, motivering van keuzes, aannames en communicatieprotocol
