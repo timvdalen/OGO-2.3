@@ -166,7 +166,6 @@ void Terrain::draw()
 			material->select();
 		}
 	}
-
 }
 
 //------------------------------------------------------------------------------
@@ -336,8 +335,8 @@ void DefenseTower::draw()
 
 //------------------------------------------------------------------------------
 
-ResourceMine::ResourceMine(BoundingBox B)
-		: Building(15, B)
+ResourceMine::ResourceMine(BoundingBox B, ObjectHandle _owner)
+		: Building(15, B, _owner)
 {
 	model.rock = ModelObjectContainer();
 	model.rig = ModelObjectContainer();
