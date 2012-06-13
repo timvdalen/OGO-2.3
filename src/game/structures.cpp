@@ -203,7 +203,6 @@ void Terrain::draw()
 			material->select();
 		}
 	}
-
 }
 
 //------------------------------------------------------------------------------
@@ -320,6 +319,7 @@ Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
 	model.rock->children.insert(Assets::Model::RockObj);
 	children.insert(model.rock);
 	model.rock->material = Assets::Model::RockTex;
+	material = Assets::Grass;
 }
 
 //------------------------------------------------------------------------------
@@ -372,8 +372,8 @@ void DefenseTower::draw()
 
 //------------------------------------------------------------------------------
 
-ResourceMine::ResourceMine(BoundingBox B)
-		: Building(15, B)
+ResourceMine::ResourceMine(BoundingBox B, ObjectHandle _owner)
+		: Building(15, B, _owner)
 {
 	model.rock = ModelObjectContainer();
 	model.rig = ModelObjectContainer();
@@ -394,12 +394,15 @@ ResourceMine::ResourceMine(BoundingBox B)
 	if (owner) i = TO(Player,owner)->team-'a';
 	model.rig->material = Assets::Model::MineTex[i];
 	model.drill->material = Assets::Model::DrillTex[i];
+
+	material = Assets::Grass;
 }
 
 //------------------------------------------------------------------------------
 
 void ResourceMine::draw() 
 {
+	model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
 	drawFoundation(1);
 }
 

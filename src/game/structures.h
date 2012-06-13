@@ -222,7 +222,7 @@ class DefenseTower: public Building
 class ResourceMine: public Building
 {
 	public:
-	ResourceMine(BoundingBox B = BoundingBox());
+	ResourceMine(BoundingBox B = BoundingBox(), ObjectHandle _owner = ObjectHandle());
 
 	virtual void draw();
 
