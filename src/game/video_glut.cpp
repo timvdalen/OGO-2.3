@@ -15,10 +15,14 @@
 
 #include "objects.h"
 #include "video.h"
+#include "game.h"
+#include "structures.h"
+#include "world.h"
 
 #define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
 #define PRIV(T,x) T *x = (T *) data;
+
 
 namespace Video {
 
@@ -241,6 +245,7 @@ void Camera::lookAt(const Point<double> &target)
 
 }
 
+
 //==============================================================================
 
 struct ViewportData
@@ -370,15 +375,9 @@ void Viewport::render()
 			           0,           0,           0, aa+bb+cc+dd};
 
 		glMultMatrixd(m2);
-        #define LOWERBOUND 0.1
 		// Camera position
-        Point<double> p = Point<double>(camera.origin);
-        Vd v = q*Vd(0,1,0);
-        if(p.z < LOWERBOUND && v.z != 0){
-            p = p + (v*(-(p.z-LOWERBOUND)/v.z));
-        }
+        Point<double> p = TO(Objects::World , world)->getCorrectedOrigin(q, camera.origin);
 		glTranslated(-p.x, -p.y, -p.z);
-        #undef LOWERBOUND
 	}
 
 	// Enable lighting
