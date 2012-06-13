@@ -15,15 +15,13 @@ namespace Movement {
 	double lookspeedmultiplier = 0.0175;
 	double zoomspeedmultiplier = 0.3;
 
-	Point<double> offset = Pd(.5,.5,2);
-
 //------------------------------------------------------------------------------
 
 Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
 {
 	firstPerson = false;
 	lastView = false;
-	target = player->origin + offset;
+	target = player->origin + Pd(-.5,-.5,2);
 
 	Vector<double> vec = camAngle * Vector<double>(0,1,0);
 
@@ -57,7 +55,7 @@ void Controller::moveX(double movespeed)
 	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
         
 	//test
-	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -73,7 +71,7 @@ void Controller::moveY(double movespeed)
 
 	target.x = target.x + movespeed * sin(yaw);
 	target.y = target.y + movespeed * cos(yaw);
-   	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+   	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
 	if(!walkAble(posrollback, target)){
 		player->origin = posrollback;
     	target = tarrollback;
@@ -96,7 +94,7 @@ void Controller::moveZ(double jetpackspeed)
 	camera.origin.z = camera.origin.z + jetpackspeed;
 
 	//test
-	player->origin = target - Pd(-.75 * sin(yaw + .25*Pi), -.75 * cos(yaw + .25*Pi), 2);
+	player->origin = target - Pd(-.75 * sin(yaw - .25*Pi), -.75 * cos(yaw - .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
@@ -111,7 +109,7 @@ void Controller::lookX(double lookspeed)
 
 	if (firstPerson == true)
 	{
-		camera.origin = player->origin + Pd(0,0,2) + vec;
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
 		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
@@ -147,7 +145,7 @@ void Controller::lookY(double zoomspeed)
 
 	if (firstPerson == true)
 	{
-		camera.origin = player->origin + Pd(0,0,2) + vec;
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
 		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
@@ -177,7 +175,7 @@ void Controller::lookZ(double lookspeed)
 
 	if (firstPerson == true)
 	{
-		camera.origin = player->origin + Pd(0,0,2) + vec;
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
 		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
