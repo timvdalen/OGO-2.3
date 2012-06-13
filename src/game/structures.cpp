@@ -132,12 +132,6 @@ void Terrain::drawGridLines(){
 	}
 }
 
-
-
-
-
-
-
 //------------------------------------------------------------------------------
 
 void Terrain::draw()
@@ -152,7 +146,12 @@ void Terrain::draw()
 			double halfWidth = width/2;
 			double halfHeight = height/2;
 			material->unselect();
-			MaterialHandle gridMat = Assets::SelectedGrid;
+			MaterialHandle gridMat;
+			if(canPlaceStructure(selected)){
+			       	gridMat = Assets::SelectedGrid;
+			}else{
+				gridMat = Assets::ErrorGrid;
+			}
 			gridMat->select();
 			glBegin(GL_LINE_STRIP);
 			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
@@ -180,6 +179,11 @@ void Terrain::postRender()
 			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 			s->render();
 		glPopMatrix();
+	}
+	if(ghost.second){
+		GridPoint p = ghost.first;
+		glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
+		(ghost.second)->render();
 	}
 
 	Object::postRender();
@@ -213,9 +217,34 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 
 //------------------------------------------------------------------------------
 
+void Terrain::setSelected(GridPoint p){
+	if(selected.x != p.x && selected.y != p.y){
+		selected = p;
+		if(canPlaceStructure(p)){
+			ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(500)));
+		}else{
+			ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle());
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+bool Terrain::canPlaceStructure(GridPoint p){
+	map<GridPoint, ObjectHandle>::iterator it;
+	it = structures.find(p);
+	if(it != structures.end()){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+//------------------------------------------------------------------------------
+
 bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
-    multimap<GridPoint, ObjectHandle>::iterator it;
-    it = structures.find(p);
+	map<GridPoint, ObjectHandle>::iterator it;
+	it = structures.find(p);
 	if(it != structures.end()){
 		return false;
 	}
@@ -256,6 +285,22 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 	if (owner) i = TO(Player,owner)->team-'a';
 	model.turret->material = Assets::Model::TurretTex[i];
 }
+
+//------------------------------------------------------------------------------
+
+DefenseTower::DefenseTower(int buildTime)
+		: Building(3, BoundingBox(),
+			100, 0,
+			Video::ElapsedTime(), buildTime,
+			20, ObjectHandle()) 
+{
+	model.turret = ModelObjectContainer();
+	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.turret->children.insert(Assets::Model::TurretObj);
+	children.insert(model.turret);
+	model.turret->material = Assets::Model::GhostTurretTex;
+}
+
 
 //------------------------------------------------------------------------------
 

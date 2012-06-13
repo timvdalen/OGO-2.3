@@ -148,7 +148,7 @@ void Frame()
 	Camera &cam = window->viewports[0]->camera;
 	
 	if(Game::game.player->weapon == weapWrench)
-		world->terrain->selected = world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0));
+		world->terrain->setSelected(world->terrain->getGridCoordinates(cam.origin, cam.origin + -cam.objective * Vd(0,10,0)));
 	
 	if (window->resized)
 	{
