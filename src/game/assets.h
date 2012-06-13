@@ -25,6 +25,7 @@ void Terminate();
 
 extern MaterialHandle Grid;
 extern MaterialHandle SelectedGrid;
+extern MaterialHandle ErrorGrid;
 
 extern MaterialHandle WorldMaterial;
 extern MaterialHandle Star;
@@ -70,6 +71,7 @@ extern MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 extern ObjectHandle TurretObj, MineObj, DrillObj, RockObj;
 extern MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex;
+extern MaterialHandle GhostTurretTex;
 
 }
 

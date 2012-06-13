@@ -33,20 +33,13 @@ int modulo(int a, int b)
 
 HUD::HUD(int _width, int _height, World *_w){
 	resize(_width, _height);
-	// TODO FIX FOLLOWING REFERENCES
-    currentPlayer = new Player();
-    currentPlayer->maxHealth = 100;
-    currentPlayer->health = 10;
-    currentTeam = new Team();
-    currentTeam->resources = 100;
-    //END TODO
 	ObjectHandle mdHandle;
 	mdHandle = MessageDisplayer(100, 100, -1, -1); //Don't limit size for now
 	messageDisplayer = TO(MessageDisplayer,mdHandle);
 	children.insert(mdHandle);	
     
     ObjectHandle sdHandle;
-    sdHandle = StatusDisplayer(50,50, _width, _height, currentTeam, currentPlayer);
+    sdHandle = StatusDisplayer(50,50, _width, _height);
     statusDisplayer = TO(StatusDisplayer,sdHandle);
 	children.insert(sdHandle);	
     
@@ -313,10 +306,8 @@ void CrossHair::draw(){
 //------------------------------------------------------------------------------
     
     
-StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* _t, Player *_p) : Widget(_x, _y, _width, _height)
+StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widget(_x, _y, _width, _height)
     {
-        p = _p;
-        t = _t;
     }
     
     
@@ -391,7 +382,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         //Draw amount of money
         black->select();
         stringstream ss;
-        ss << t->resources << "f";
+        ss << 100 << "f";
 		string message = ss.str();
         glPushMatrix();
         glTranslatef(65,45,0);
@@ -441,7 +432,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
         glEnd();
         darkred->unselect();
         //draw-live health bar
-        double factor = ((double)p->health)/((double)p->maxHealth);
+        double factor = ((double)Game::game.player->health)/((double)Game::game.player->maxHealth);
         green->select();
         glBegin(GL_QUADS);
         glVertex2i(72,67);
@@ -601,6 +592,71 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height, Team* 
     {
         w = _w;
     }
+	
+
+void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
+	Building *b = TO(Building, s);
+	Player* player;
+	if(b){
+		player = TO(Player, b->owner);
+	}
+	MaterialHandle mat;
+	float progress;
+	//TODO team recognition.
+	if(TO(DefenseTower, s)){
+		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+		if(player){
+			if(player->team == 'a'){
+				mat = Assets::Icon::Tower_red;
+			}else{
+				mat = Assets::Icon::Tower_blue;
+			}
+		}else{
+			mat = Assets::Icon::Tower_normal;
+		}
+    }else if(TO(Mine, s)){
+		progress = 1;
+		mat = Assets::Icon::Mine;
+	}else if(TO(ResourceMine, s)){
+		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+		if(player){
+			if(player->team == 'a'){
+				mat = Assets::Icon::Pickaxe_red;
+			}else{
+				mat = Assets::Icon::Pickaxe_blue;
+			}
+		}else{
+			mat = Assets::Icon::Pickaxe_normal;
+		}
+	}else if(TO(HeadQuarters, s)){
+		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+		if(player){
+			if(player->team == 'a'){
+				mat = Assets::Icon::HQ_red;
+			}else{
+				mat = Assets::Icon::HQ_blue;
+			}
+		}else{
+			mat = Assets::Icon::HQ_normal;
+		}
+	}
+	if(mat){
+		mat->select();
+		glColor4f(1.0f,1.0f,1.0f,0.7f*progress+0.3f);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0,1);
+		glVertex2i(p.x*xspacing,p.y*yspacing);
+		glTexCoord2f(0,0);
+		glVertex2i(p.x*xspacing,(p.y+1)*yspacing);
+		glTexCoord2f(1,0);
+		glVertex2i((p.x+1)*xspacing, (p.y+1)*yspacing);
+		glTexCoord2f(1,1);
+		glVertex2i((p.x+1)*xspacing, (p.y)*yspacing);
+		glEnd();
+		glColor4f(1.0f,1.0f,1.0f,1.0f);
+		mat->unselect();
+	}
+}
     //------------------------------------------------------------------------------
     void drawPlayer(Player *p, int xspacing, int yspacing, World* w, bool marked){
         float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
@@ -660,46 +716,14 @@ void MiniMap::draw(){
 	glEnd();
 	black->unselect();
 	//*le buildings
-	multimap<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
-	multimap<GridPoint, ObjectHandle>::iterator itt;
+	map<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
+	map<GridPoint, ObjectHandle>::iterator itt;
 	int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
 	int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
 	for(itt = structs->begin(); itt != structs->end(); itt++){
 		GridPoint p = itt->first;
 		ObjectHandle s = itt->second;
-		Building *b = TO(Building, s);
-		MaterialHandle mat;
-		float progress;
-		//TODO team recognition.
-		if(TO(DefenseTower, s)){
-			progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
-			mat = Assets::Icon::Tower_normal;
-        }else if(TO(Mine, s)){
-			progress = 1;
-			mat = Assets::Icon::Mine;
-		}else if(TO(ResourceMine, s)){
-			progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
-			mat = Assets::Icon::Pickaxe_normal;
-		}else if(TO(HeadQuarters, s)){
-			progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
-			mat = Assets::Icon::HQ_normal;
-		}
-		if(mat){
-			mat->select();
-			glColor4f(1.0f,1.0f,1.0f,0.7f*progress+0.3f);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0,1);
-			glVertex2i(p.x*xspacing,p.y*yspacing);
-			glTexCoord2f(0,0);
-			glVertex2i(p.x*xspacing,(p.y+1)*yspacing);
-			glTexCoord2f(1,0);
-			glVertex2i((p.x+1)*xspacing, (p.y+1)*yspacing);
-			glTexCoord2f(1,1);
-			glVertex2i((p.x+1)*xspacing, (p.y)*yspacing);
-			glEnd();
-			glColor4f(1.0f,1.0f,1.0f,1.0f);
-			mat->unselect();
-		}
+		drawStructure(p, s, xspacing, yspacing);
 	}
 	xspacing = (int) (320.0 / (w->width / GRID_SIZE  + 1));
 	yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));

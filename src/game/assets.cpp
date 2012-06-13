@@ -20,6 +20,7 @@ using namespace Materials;
 
 MaterialHandle Grid;
 MaterialHandle SelectedGrid;
+MaterialHandle ErrorGrid;
 
 MaterialHandle WorldMaterial;
 MaterialHandle Star;
@@ -64,6 +65,7 @@ MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 ObjectHandle TurretObj, MineObj, DrillObj, RockObj;
 MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex;
+MaterialHandle GhostTurretTex;
 
 }
 
@@ -89,6 +91,13 @@ void Initialize(int argc, char *argv[])
 	                   Cf(0.01,0.31,0.58,1), //Specular
 	                   Cf(0.49,0.97,1,1),    //Emissive,
 	                   100.0));              //Shininess
+
+	ErrorGrid = TwinMaterial(GridMaterial(10),
+		ShadedMaterial(Cf(1, 0.14, 0),
+			Cf(1, 0.14, 0),
+			Cf(1, 0.14, 0),
+			Cf(1, 0.14, 0),
+			100.0));
 
 	{
 		ShadedMaterial shade(Cf(1,0,0,1));
@@ -156,6 +165,8 @@ void Initialize(int argc, char *argv[])
 	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
 	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
 	Model::RockTex = TexturedMaterial(path + "assets/textures/models/rocktext.png");
+
+	Model::GhostTurretTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
 
 	//temp
 	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
