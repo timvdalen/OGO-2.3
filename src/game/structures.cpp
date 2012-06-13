@@ -13,6 +13,8 @@
 
 namespace Objects {
 
+void drawFoundation(int h);
+
 //------------------------------------------------------------------------------
 
 bool GridPoint::operator<(const GridPoint& p2) const
@@ -285,6 +287,12 @@ Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
 
 //------------------------------------------------------------------------------
 
+void Mine::draw() {
+	drawFoundation(1);
+}
+
+//------------------------------------------------------------------------------
+
 DefenseTower::DefenseTower(ObjectHandle _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
@@ -322,7 +330,45 @@ DefenseTower::DefenseTower(int buildTime)
 
 void DefenseTower::draw()
 {
-	const int h = 1, a = 1, b = 0;
+	drawFoundation(1);
+}
+
+//------------------------------------------------------------------------------
+
+ResourceMine::ResourceMine(BoundingBox B)
+		: Building(15, B)
+{
+	model.rock = ModelObjectContainer();
+	model.rig = ModelObjectContainer();
+	model.drill = ModelObjectContainer();
+	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rock->children.insert(Assets::Model::RockObj);
+	model.rig->children.insert(Assets::Model::MineObj);
+	model.drill->children.insert(Assets::Model::DrillObj);
+	children.insert(model.rock);
+	children.insert(model.rig);
+	children.insert(model.drill);
+
+	model.rock->material = Assets::Model::RockTex;
+
+	int i = 1;
+	if (owner) i = TO(Player,owner)->team-'a';
+	model.rig->material = Assets::Model::MineTex[i];
+	model.drill->material = Assets::Model::DrillTex[i];
+}
+
+//------------------------------------------------------------------------------
+
+void ResourceMine::draw() 
+{
+	drawFoundation(1);
+}
+
+//------------------------------------------------------------------------------
+
+void drawFoundation(int h) {
 	glBegin(GL_QUADS);
 		//Front side
 		glNormal3i(0, -1, 0);
@@ -359,33 +405,6 @@ void DefenseTower::draw()
 		glTexCoord2i(1, 1);	glVertex3i(GRID_SIZE, GRID_SIZE, h);
 		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
 	glEnd();
-	//*/
-}
-
-//------------------------------------------------------------------------------
-
-ResourceMine::ResourceMine(BoundingBox B)
-		: Building(15, B)
-{
-	model.rock = ModelObjectContainer();
-	model.rig = ModelObjectContainer();
-	model.drill = ModelObjectContainer();
-	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
-	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
-	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
-	model.rock->children.insert(Assets::Model::RockObj);
-	model.rig->children.insert(Assets::Model::MineObj);
-	model.drill->children.insert(Assets::Model::DrillObj);
-	children.insert(model.rock);
-	children.insert(model.rig);
-	children.insert(model.drill);
-
-	model.rock->material = Assets::Model::RockTex;
-
-	int i = 1;
-	if (owner) i = TO(Player,owner)->team-'a';
-	model.rig->material = Assets::Model::MineTex[i];
-	model.drill->material = Assets::Model::DrillTex[i];
 }
 
 //------------------------------------------------------------------------------
@@ -393,3 +412,4 @@ ResourceMine::ResourceMine(BoundingBox B)
 } // namespace Objects
 
 //------------------------------------------------------------------------------
+

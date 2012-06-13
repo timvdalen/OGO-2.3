@@ -130,7 +130,7 @@ class Mine: public Structure
 	     Resource _maxIncome = 0);
 
 	//! Draws the mine
-	virtual void draw() {}
+	virtual void draw();
 
 	//! Model
 	struct { ObjectHandle rock; } model;
@@ -213,6 +213,8 @@ class ResourceMine: public Building
 {
 	public:
 	ResourceMine(BoundingBox B = BoundingBox());
+
+	virtual void draw();
 
 	//! Model
 	struct { ObjectHandle rock, rig, drill; } model;
