@@ -30,7 +30,7 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
            $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o                  \
            $(OBJDIR)loader3ds.o $(OBJDIR)structures.o $(OBJDIR)world.o         \
-		   $(OBJDIR)player.o
+		   $(OBJDIR)player.o $(OBJDIR)minion.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz -l3ds
@@ -152,3 +152,6 @@ $(OBJDIR)world.o: world.cpp
 
 $(OBJDIR)player.o: player.cpp
 	$(CPP) -c player.cpp -o $(OBJDIR)player.o $(CXXFLAGS) 
+	
+$(OBJDIR)minion.o: minion.cpp
+	$(CPP) -c minion.cpp -o $(OBJDIR)minion.o $(CXXFLAGS) 

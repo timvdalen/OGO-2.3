@@ -27,6 +27,7 @@
 #include "movement.h"
 #include "game.h"
 #include "netcode.h"
+#include "minion.h"
 
 using namespace Core;
 using namespace Base::Alias;
@@ -96,6 +97,13 @@ int main(int argc, char *argv[])
 	}
 
 	world->children.insert(player);
+	
+	ArenaGuard g1 = ArenaGuard(world, 200, 200, Pd(-100, -100, 0), Qd());
+	ArenaGuard g3 = ArenaGuard(world, 200, 200, Pd(100, 100, 0), Qd());
+	DefenseMinion d1 = DefenseMinion(player, world, 200, 200, Pd(50, 50, 0), Qd());
+	world->children.insert(g1);
+	world->children.insert(g3);
+	world->children.insert(d1);
 
 	v1.world = world;
 
