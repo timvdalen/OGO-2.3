@@ -32,6 +32,16 @@ struct GridPoint
 	GridPoint(int X = 0, int Y = 0) : x(X), y(Y) {}
 
 	bool operator<(const GridPoint& p2) const;
+	
+	bool operator==(const GridPoint& other) const;
+	
+	bool operator!=(const GridPoint& other) const;
+	
+	GridPoint operator+(const GridPoint& other) const;
+	
+	GridPoint operator-(const GridPoint& other) const;
+	
+	void operator+=(const GridPoint& other);
 
     bool isValid();
 };

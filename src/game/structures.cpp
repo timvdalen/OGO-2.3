@@ -29,6 +29,43 @@ bool GridPoint::operator<(const GridPoint& p2) const
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
+
+bool GridPoint::operator== (const GridPoint& other) const
+{
+	return (x == other.x && y == other.y);
+}
+
+//------------------------------------------------------------------------------
+
+bool GridPoint::operator!= (const GridPoint& other) const
+{
+	return !(x == other.x && y == other.y);
+}
+
+//------------------------------------------------------------------------------
+
+GridPoint GridPoint::operator+ (const GridPoint& other) const
+{
+	return GridPoint(x+other.x, y+other.y);
+}
+
+//------------------------------------------------------------------------------
+
+void GridPoint::operator+= (const GridPoint& other)
+{
+	x += other.x;
+	y += other.y;
+}
+
+//------------------------------------------------------------------------------
+
+GridPoint GridPoint::operator- (const GridPoint& other) const
+{
+	return GridPoint(x-other.x, y-other.y);
+}
+
 //------------------------------------------------------------------------------
 
 bool GridPoint::isValid()
