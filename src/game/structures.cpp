@@ -171,7 +171,7 @@ void Terrain::draw()
 
 void Terrain::postRender()
 {
-	multimap<GridPoint, ObjectHandle>::iterator it;
+	map<GridPoint, ObjectHandle>::iterator it;
 	for(it = structures.begin(); it != structures.end(); it++){
 		GridPoint p = it->first;
 		ObjectHandle s = it->second;
