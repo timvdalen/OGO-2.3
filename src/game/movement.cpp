@@ -66,22 +66,21 @@ void Controller::moveY(double movespeed)
 {
 	movespeed = movespeedmultiplier * movespeed;
 
-    Point<double> posrollback = Point<double>(target);
-
+    Point<double> posrollback = Point<double>(player->origin);
+	Point<double> tarrollback = Point<double>(target);
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
 	target.x = target.x + movespeed * sin(yaw);
 	target.y = target.y + movespeed * cos(yaw);
-        
-       if(!walkAble(posrollback, target)){
-           target = posrollback;
-           return;
-       }
+   	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
+	if(!walkAble(posrollback, target)){
+		player->origin = posrollback;
+    	target = tarrollback;
+    	return;
+	}
 	camera.origin.x = camera.origin.x + movespeed * sin(yaw);
 	camera.origin.y = camera.origin.y + movespeed * cos(yaw);
-	//test
-	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
 }
 
 //------------------------------------------------------------------------------
