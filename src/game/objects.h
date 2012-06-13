@@ -57,7 +57,7 @@ class BoundedObject: public Object
     //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
     bool insideBox(Point<double> p, Point<double> a, Point<double> b);
     pair<ObjectHandle, double> findCollision(Point<double> origin, Vector<double> direction);
-    
+
     public:
 	//! The boundingbox for this object
 	BoundingBox bb;
@@ -106,25 +106,25 @@ class LaserBeam: public Object
 	public:
 	//! Wether or not the parent can remove this LaserBeam
 	bool done;
-	
+
 	//! The time in milliseconds since the start of the glut event loop this laser was fired
 	int fireTime;
 
 	//! The time in milliseconds this laser lives
 	int ttl;
-	
+
 	//! The direction (in normalized object coordinates) that his laser was fired in
-	Vd direction;
-	
+	Qd direction;
+
 	//! Constructs a new LaserBeam, the origin is the point from which this laser was fired
-	LaserBeam(Pd _origin, Vd _direction, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
-	
+	LaserBeam(Pd _origin, Qd _direction, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
+
 	//! Sets up the translations and material for the LaserBeam
 	virtual void preRender();
-	
+
 	//! Draws the LaserBeam
 	virtual void draw();
-	
+
 };
 
 //------------------------------------------------------------------------------
