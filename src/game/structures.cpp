@@ -318,7 +318,6 @@ DefenseTower::DefenseTower(int buildTime)
 
 void DefenseTower::draw()
 {
-	material = Assets::Grass;
 	const int h = 1, a = 1, b = 0;
 	glBegin(GL_QUADS);
 		//Front side
