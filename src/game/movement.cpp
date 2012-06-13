@@ -66,15 +66,11 @@ void Controller::moveY(double speed)
 	Vector<double> vec = ~(-player->rotation * Vector<double>(0,1,0));
 	double yaw = atan2(vec.x, vec.y);
 
-<<<<<<< HEAD
-	target.x = target.x + movespeed * sin(yaw);
-	target.y = target.y + movespeed * cos(yaw);
-   	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
-=======
 	target.x = target.x + speed * sin(yaw);
 	target.y = target.y + speed * cos(yaw);
-   	player->origin = target - Pd(.75 * sin(yaw + .25*Pi), .75 * cos(yaw + .25*Pi), 2);
->>>>>>> bfb03a029b72dc28d7d6c1ef62bf74c6b2aafe14
+
+   	player->origin = target - Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw - .25*Pi), 2);
+
 	if(!walkAble(posrollback, target)){
 		player->origin = posrollback;
     	target = tarrollback;
