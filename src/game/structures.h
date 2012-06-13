@@ -71,7 +71,7 @@ class Terrain: public Object
 	bool showGrid;
 
 	//! Represents the \ref Structure "Structures" on the grid of the terrain
-	multimap<GridPoint, ObjectHandle> structures;
+	map<GridPoint, ObjectHandle> structures;
 	
 	//! Constructs a new Terrain
 	Terrain(double _width, double _height);
@@ -87,7 +87,10 @@ class Terrain: public Object
 
 	//!Draws the gridlines
 	void drawGridLines();
-			
+		
+	//! Returns whether or not a tower can be built on \ref GridPoint p
+	bool canPlaceStructure(GridPoint p);
+
 	//! Safe-places a Structure on the grid
 	
 	//! Returns false when adding fails

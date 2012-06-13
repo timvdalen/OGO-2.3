@@ -152,7 +152,12 @@ void Terrain::draw()
 			double halfWidth = width/2;
 			double halfHeight = height/2;
 			material->unselect();
-			MaterialHandle gridMat = Assets::SelectedGrid;
+			MaterialHandle gridMat;
+			if(canPlaceStructure(selected)){
+			       	gridMat = Assets::SelectedGrid;
+			}else{
+				gridMat = Assets::ErrorGrid;
+			}
 			gridMat->select();
 			glBegin(GL_LINE_STRIP);
 			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
@@ -213,9 +218,21 @@ GridPoint Terrain::getGridCoordinates(Vd camera, Vd pos)
 
 //------------------------------------------------------------------------------
 
+bool Terrain::canPlaceStructure(GridPoint p){
+	map<GridPoint, ObjectHandle>::iterator it;
+	it = structures.find(p);
+	if(it != structures.end()){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+//------------------------------------------------------------------------------
+
 bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
-    multimap<GridPoint, ObjectHandle>::iterator it;
-    it = structures.find(p);
+	map<GridPoint, ObjectHandle>::iterator it;
+	it = structures.find(p);
 	if(it != structures.end()){
 		return false;
 	}
