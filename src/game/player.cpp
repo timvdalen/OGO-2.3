@@ -42,6 +42,8 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 	children.insert(model.wheel);
 
 	//set textures
+	if (team - 'a' == 0) material = ShadedMaterial(Cf(0.847,0,0,1));
+	else material = ShadedMaterial(Cf(0,0,1,1));
 	model.head->material = Assets::Model::HeadTex;
 	model.body->material = Assets::Model::BodyTex[team-'a'];
 	model.weapon->material = Assets::Model::GunTex;
@@ -93,7 +95,40 @@ void Player::update(const Qd &camobj) {
 		model.tool->rotation = -rotation;
 	}
 
-	model.head->rotation = camobj;
+	model.head->rotation = camobj / rotation;
+}
+
+//------------------------------------------------------------------------------
+
+void Player::draw() {
+	const Pd h = model.head->origin, 
+			 w = model.weapon->origin,
+			 t = model.tool->origin;
+	glBegin(GL_TRIANGLES);
+	glNormal3f(0,0,1);
+	glVertex3f(w.x, w.y+0.04, w.z);
+	glVertex3f(w.x, w.y-0.04, w.z);
+	glVertex3f((h.x+w.x)/2, (h.y+w.y)/2, (h.z+w.z)/2);
+	glNormal3f(0,0,-1);
+	glVertex3f(w.x, w.y, w.z-0.04);
+	glVertex3f(w.x, w.y+0.04, w.z);
+	glVertex3f((h.x+w.x)/2, (h.y+w.y)/2, (h.z+w.z)/2);
+	glVertex3f(w.x, w.y-0.04, w.z);
+	glVertex3f(w.x, w.y, w.z-0.04);
+	glVertex3f((h.x+w.x)/2, (h.y+w.y)/2, (h.z+w.z)/2);
+
+	glNormal3f(0,0,1);
+	glVertex3f(t.x, t.y-0.04, t.z);
+	glVertex3f(t.x, t.y+0.04, t.z);
+	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
+	glNormal3f(0,0,-1);
+	glVertex3f(t.x, t.y+0.04, t.z);
+	glVertex3f(t.x, t.y, t.z-0.04);
+	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
+	glVertex3f(t.x, t.y, t.z-0.04);
+	glVertex3f(t.x, t.y-0.04, t.z);
+	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
+	glEnd();
 }
 
 //------------------------------------------------------------------------------

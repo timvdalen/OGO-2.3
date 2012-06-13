@@ -92,9 +92,11 @@ class Player: public BoundedObject
 	//! Update model transformations according to velocity and the camera direction
 	void update(const Qd &camobj);
     
-    
     //! Needed to draw the names. We need an un rotated object to face the camera
     virtual void render();
+
+	//! Draw the joints between the tools and the body.
+	void draw();
 };
 
 //------------------------------------------------------------------------------

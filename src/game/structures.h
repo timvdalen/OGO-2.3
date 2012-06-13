@@ -118,11 +118,13 @@ class Mine: public Structure
 
 	//! Constructs a new mine
 	Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-	     Resource _maxIncome = 0)
-		: Structure(B), maxIncome(_maxIncome) {}
+	     Resource _maxIncome = 0);
 
 	//! Draws the mine
 	virtual void draw() {}
+
+	//! Model
+	struct { ObjectHandle rock; } model;
 };
 
 //------------------------------------------------------------------------------
@@ -198,11 +200,10 @@ class DefenseTower: public Building
 class ResourceMine: public Building
 {
 	public:
-	ResourceMine(BoundingBox B = BoundingBox())
-		: Building(15, B,
-		  0, 0,
-		  0, 0,
-		  0) {}
+	ResourceMine(BoundingBox B = BoundingBox());
+
+	//! Model
+	struct { ObjectHandle rig, drill; } model;
 };
 
 //------------------------------------------------------------------------------

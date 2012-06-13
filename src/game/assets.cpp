@@ -62,8 +62,8 @@ ObjectHandle HeadObj, BodyObj, GunObj, WrenchObj, WheelObj;
 MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 
 //structure objects
-ObjectHandle TurretObj, MineObj, DrillObj;
-MaterialHandle TurretTex[3], MineTex[2], DrillTex[2];
+ObjectHandle TurretObj, MineObj, DrillObj, RockObj;
+MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex;
 
 }
 
@@ -137,6 +137,7 @@ void Initialize(int argc, char *argv[])
 	Model::TurretObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/turret.3DS");
 	Model::MineObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/mine.3DS");
 	Model::DrillObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/drill.3DS");
+	Model::RockObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/rock.3DS");
 
 	//Model textures
 	Model::HeadTex = TexturedMaterial(path + "assets/textures/models/headtext.png");
@@ -154,6 +155,7 @@ void Initialize(int argc, char *argv[])
 	Model::MineTex[1] = TexturedMaterial(path + "assets/textures/models/minetextblue.png");
 	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
 	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
+	Model::RockTex = TexturedMaterial(path + "assets/textures/models/rocktext.png");
 
 	//temp
 	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");

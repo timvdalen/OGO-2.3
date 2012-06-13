@@ -242,8 +242,19 @@ void Building::preRender(){
 
 //------------------------------------------------------------------------------
 
+Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome) 
+		: Structure(B), maxIncome(_maxIncome)
+{
+	model.rock = ModelObjectContainer();
+	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rock->children.insert(Assets::Model::RockObj);
+	children.insert(model.rock);
+}
+
+//------------------------------------------------------------------------------
+
 DefenseTower::DefenseTower(ObjectHandle _owner)
-		: Building(3, BoundingBox(),
+		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
 			20, _owner) 
@@ -255,13 +266,13 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 	int i = 2;
 	if (owner) i = TO(Player,owner)->team-'a';
 	model.turret->material = Assets::Model::TurretTex[i];
+	material = Assets::Grass;
 }
 
 //------------------------------------------------------------------------------
 
 void DefenseTower::draw()
 {
-	material = Assets::Grass;
 	float h = 1, a = 1, b = 0;
 	glBegin(GL_QUADS);
 		//Front side
@@ -300,6 +311,21 @@ void DefenseTower::draw()
 		glTexCoord2i(1, 0);	glVertex3i(0, GRID_SIZE, h);
 	glEnd();
 	//*/
+}
+
+//------------------------------------------------------------------------------
+
+ResourceMine::ResourceMine(BoundingBox B) 
+		: Building(15, B)
+{
+	model.rig = ModelObjectContainer();
+	model.drill = ModelObjectContainer();
+	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rig->children.insert(Assets::Model::RockObj);
+	model.drill->children.insert(Assets::Model::RockObj);
+	children.insert(model.rig);
+	children.insert(model.drill);
 }
 
 //------------------------------------------------------------------------------
