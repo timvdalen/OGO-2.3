@@ -33,7 +33,7 @@ World::World(double _width, double _height)
 	hud = TO(HUD, hudHandle);
 	children.insert(hudHandle);
 
-	children.insert(Sky(_width, _height));
+	children.insert(Sky((int) _width, (int) _height));
 
 	width = _width;
 	height = _height;

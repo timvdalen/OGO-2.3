@@ -24,6 +24,8 @@
 
 #define CALL(x, ...) { if (x) (x)(__VA_ARGS__); }
 
+#define ESC 27
+
 namespace Movement {
 
 using namespace std;
@@ -104,7 +106,7 @@ std::string convert(Button btn)
 
 Input::Input(Window &W)
 	: window(W), onKeyDown(NULL), onKeyUp(NULL), onMouseMove(NULL),
-	  mouseX(0), mouseY(0), dx(0), dy(0), grabbing(false), textMode(false), text()
+	  mouseX(0), mouseY(0), grabbing(false), textMode(false), text()
 {
 	window.select();
 	
@@ -138,8 +140,6 @@ Input::~Input()
 
 void Input::grabMouse()
 {
-	dx = 0.0;
-	dy = 0.0;
 	grabbing = true;
 	
 	uword width, height;
@@ -175,47 +175,42 @@ void Input::releaseText()
 
 //------------------------------------------------------------------------------
 
-void Input::frame()
+void Input::mouseEvents()
 {
 	if (!grabbing) return;
-	
-	const word &r = MouseResolution;
 
 	uword width, height;
 	window.size(width = 0, height = 0);
 	width /= 2;
 	height /= 2;
 	
-	dx += mouseX - width;
-	dy += mouseY - height;
+	word dx = mouseX - width;
+	word dy = mouseY - height;
 
-	if (dx < -r)
+	if (dx < 0)
 	{
 		CALL(onKeyDown, btnMouseMoveLeft);
 		CALL(onKeyUp,   btnMouseMoveLeft);
 	}
-	else if (dx > r)
+	else if (dx > 0)
 	{
 		CALL(onKeyDown, btnMouseMoveRight);
 		CALL(onKeyUp,   btnMouseMoveRight);
 	}
 	
-	if (dy < -r)
+	if (dy < 0)
 	{
 		CALL(onKeyDown, btnMouseMoveUp);
 		CALL(onKeyUp,   btnMouseMoveUp);
 	}
-	else if (dy > r)
+	else if (dy > 0)
 	{
 		CALL(onKeyDown, btnMouseMoveDown);
 		CALL(onKeyUp,   btnMouseMoveDown);
 	}
 	
-	dx *= .75;
-	dy *= .75;
-	
-	
-	glutWarpPointer(width, height);
+	if (dx || dy)
+		glutWarpPointer(width, height);
 }
 
 //------------------------------------------------------------------------------
@@ -268,11 +263,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 	
 	if (input->textMode)
 	{
-		#ifdef _MSC_VER
-		if (key == 27)
-		#else
-		if (key == '\e') //Aborted
-		#endif
+		if (key == ESC) //Aborted
 		{
 			input->text = "";
 			CALL(input->onText, input->text);
@@ -298,7 +289,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 		CALL(input->onKeyDown, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyDown, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (key == '\t'))
+	else if ((key == ' ') || (key == ESC) || (key == '\t'))
 		CALL(input->onKeyDown, (Button) key)
 	else if ((key == '\r') || (key == '\n'))
 		CALL(input->onKeyDown, btnKeyEnter)
@@ -319,7 +310,7 @@ void keyboard_up_event(unsigned char key, int x, int y)
 		CALL(input->onKeyUp, (Button) (key - ('a'-'A')))
 	else if (((key >= 'A') && (key <= 'Z')) || ((key >= '0') && (key <= '9')))
 		CALL(input->onKeyUp, (Button) (key))
-	else if ((key == ' ') || (key == '\e') || (key == '\t'))
+	else if ((key == ' ') || (key == ESC) || (key == '\t'))
 		CALL(input->onKeyUp, (Button) key)
 	else if ((key == '\r') || (key == '\n'))
 		CALL(input->onKeyUp, btnKeyEnter)
@@ -391,6 +382,7 @@ void motion_event(int x, int y)
 	
 	input->mouseX = x;
 	input->mouseY = y;
+	input->mouseEvents();
 }
 
 //------------------------------------------------------------------------------

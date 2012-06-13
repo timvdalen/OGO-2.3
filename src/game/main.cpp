@@ -117,30 +117,6 @@ int main(int argc, char *argv[])
 	Game::game.input = input;
 	Game::game.controller = controller;
 
-	movebind[btnKeyA] = dirLeft;
-	movebind[btnKeyD] = dirRight;
-	movebind[btnKeyW] = dirForward;
-	movebind[btnKeyS] = dirBackward;
-
-	movebind[btnKeyArrowLeft] = dirLeft;
-	movebind[btnKeyArrowRight] = dirRight;
-	movebind[btnKeyArrowUp] = dirForward;
-	movebind[btnKeyArrowDown] = dirBackward;
-
-	movebind[btnKeySpace] = dirUp;
-	movebind[btnKeyC] = dirDown;
-
-	lookbind[btnMouseMoveLeft] = dirLeft;
-	lookbind[btnMouseMoveRight] = dirRight;
-	lookbind[btnMouseMoveUp] = dirUp;
-	lookbind[btnMouseMoveDown] = dirDown;
-
-	lookbind[btnMouseScrollUp] = dirForward;
-	lookbind[btnMouseScrollDown] = dirBackward;
-	
-	lookbind[btnKeyQ] = dirForward;
-	lookbind[btnKeyZ] = dirBackward;
-
 	OnFrame = Frame;
 	
 	Video::StartEventLoop();
@@ -167,8 +143,6 @@ void Frame()
 		
 		NetCode::Unlock();
 	}
-
-	input->frame();
 	
 	World *world = TO(World, window->viewports[0]->world);
 	Camera &cam = window->viewports[0]->camera;
@@ -267,8 +241,6 @@ void Frame()
 		}
 	}
 	
-
-	controller->look.reset();
 	window->render();
 }
 
@@ -281,11 +253,6 @@ void KeyUp(Button btn)
 	if (!controller) return;
 	
 	binds.processUp(btn);
-	
-	if ((btn >= btnMouseScrollUp) && (btn <= btnMouseMoveDown)) return;
-
-	if (movebind.count(btn)) controller->move[movebind[btn]] = false;
-	if (lookbind.count(btn)) controller->look[lookbind[btn]] = false;
 }
 
 //------------------------------------------------------------------------------
@@ -300,8 +267,6 @@ void KeyDown(Button btn)
 	binds.processDown(btn);
 	
 	//Handle input
-	if (movebind.count(btn)) controller->move[movebind[btn]] = true;
-	if (lookbind.count(btn)) controller->look[lookbind[btn]] = true;
 	switch (btn)
 	{
 		case btnMouseRight: handleMouse(false);               	 break;

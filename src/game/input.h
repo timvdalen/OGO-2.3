@@ -20,8 +20,6 @@ namespace Movement {
 
 using namespace Video;
 
-const word MouseResolution = 20; //!< Speed the mouse reacts with
-
 //------------------------------------------------------------------------------
 
 //! Button enumeration
@@ -82,12 +80,11 @@ class Input
 	//! Stops grabbing text input and fire the onText event.
 	void releaseText();
 	
-	//! A game frame has passed \note this will update the mouse motion events
-	void frame();
+	//! Processes internal mouse events
+	void mouseEvents();
 	
 	private:
 	void *data;
-	double dx, dy;
 };
 
 //------------------------------------------------------------------------------

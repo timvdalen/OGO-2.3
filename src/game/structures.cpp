@@ -262,7 +262,7 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 void DefenseTower::draw()
 {
 	material = Assets::Grass;
-	float h = 1, a = 1, b = 0;
+	const int h = 1, a = 1, b = 0;
 	glBegin(GL_QUADS);
 		//Front side
 		glNormal3i(0, -1, 0);

@@ -192,15 +192,18 @@ void Controller::lookZ(double lookspeed)
     
 void Controller::frame()
 {
-	/*if (move[dirLeft] || move[dirRight])
+	//if (move[dirX] != 0.0) moveX(move[dirX]);
+	if (move[dirY] != 0.0) moveY(move[dirY]);
+	if (move[dirZ] != 0.0) moveZ(move[dirZ]);
+	
+	if (look[dirX] != 0.0) lookX(look[dirX]);
+	if (look[dirY] != 0.0) lookY(look[dirY]);
+	if (look[dirZ] != 0.0) lookZ(look[dirZ]);
+	
+	if (move[dirY] != 0.0)
 	{
-		moveX();
-	}*/
-	/*if (move[dirForward] || move[dirBackward])
-	{
-		moveY();
-		if (move[dirLeft]) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
-		else if (move[dirRight]) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
+		if (move[dirX] < 0.0) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
+		else if (move[dirX] > 0.0) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
 		else {
             Vd camv = camAngle*Vd(0,1,0);
             Vd plav = player->rotation*Vd(0,1,0);
@@ -216,30 +219,9 @@ void Controller::frame()
             }
 		}
 	}
-
-	if (move[dirUp] || move[dirDown])
-	{
-		moveZ();
-	}
-
-
-	if (look[dirLeft] || look[dirRight])
-	{
-		lookX();
-	}
-
-	if (look[dirForward] || look[dirBackward])
-	{
-		lookY();
-	}
-
-	if (look[dirUp] || look[dirDown])
-	{
-		lookZ();
-	}
 	
 	Objects::Player * p = TO(Objects::Player,player);
-	p->velocity = Vd(0,movespeed,0);*/
+	p->velocity = Vd(0,movespeedmultiplier,0);
 }
 
 //------------------------------------------------------------------------------

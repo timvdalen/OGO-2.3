@@ -9,7 +9,7 @@
 #ifndef _MOVEMENT_H
 #define _MOVEMENT_H
 
-#include <bitset>
+#include <map>
 
 #include "objects.h"
 #include "video.h"
@@ -28,12 +28,9 @@ using namespace Objects;
 //! Movement directions
 enum Direction
 {
-	dirUp,   
-	dirDown,
-	dirLeft,
-	dirRight,
-	dirBackward,
-	dirForward,
+	dirX,   
+	dirY,
+	dirZ,
 	dirLast
 };
 
@@ -43,29 +40,29 @@ enum Direction
 class Controller
 {
 	public:
-	Camera &camera;      //!< Assigned camera
-	ObjectHandle player; //!< Assigned player
-	ObjectHandle world;  //!< Needed to be able to check were we can walk
+	Camera &camera;             //!< Assigned camera
+	ObjectHandle player;        //!< Assigned player
+	ObjectHandle world;         //!< Needed to be able to check were we can walk
     
-	bitset<dirLast> move; //!< Current comera movement
-	bitset<dirLast> look; //!< Current camera target movement
+	map<Direction,double> move; //!< Current comera movement
+	map<Direction,double> look; //!< Current camera target movement
 	
-	bool firstPerson;     //!< selects first person view instead of third person
+	bool firstPerson;           //!< selects first person view instead of third person
 	
 	//! Construct controller by assigning a player and camera
 	Controller(Camera &C, ObjectHandle P, ObjectHandle W);
 	
-	void moveX(double speed);
-	void moveY(double speed);
-	void moveZ(double speed);
+	void moveX(double speed); //!< Moves the player left and right
+	void moveY(double speed); //!< Moves the player forwards and backwards
+	void moveZ(double speed); //!< Moves the player up and down
 
-	void lookX(double speed);
-	void lookY(double speed);
-	void lookZ(double speed);
+	void lookX(double speed); //!< Rotates the camera left and right
+	void lookY(double speed); //!< Zooms the camera in and out
+	void lookZ(double speed); //!< Rotates the camera up and down
 	
-	void frame();         //!< Called everytime a frame passes in game
+	void frame();             //!< Called everytime a frame passes in game
     
-	Point<double> target;
+	Point<double> target;     //!< The point the camera looks at
 	
 	//! Sets the view
 	void setView(bool view = true);
