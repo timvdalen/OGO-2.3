@@ -1,16 +1,15 @@
-\section{Het ontwerp}
+    \section{Het ontwerp}
     % Inclusief alternatieven, motivering van keuzes, aannames en communicatieprotocol
-    \subsection{Beschrijving onderdelen}
-    Wij verdelen het programma in drie zoveel mogelijk onafhankelijke onderdelen. Hierbij onderscheiden wij:
+    Nu zijn we klaar om het ontwerp van ons spel \textsc{GOTO} te bespreken. We zullen beginnen door de verschillende componenten te analyseren. Het programma is hierbij verdeeld in drie zo onafhankelijk mogelijke componenten. Wij onderscheiden de volgende componenten:
     \begin{itemize}
-    \item Een onderdeel die het communiceren naar andere spelers mogelijk maakt;
+    \item Een component die het communiceren naar andere spelers mogelijk maakt;
 	\item Het model van de sc\`ene. Denk hierbij aan de staat, locatie en grafische modellen van gebouwen, spelers en het terrein;
 	\item De gebruikersomgeving die de interactie van de speler met het spel mogelijk maakt en ook het grafische model weergeeft tijdens het spel.
     \end{itemize}
 
-    Als uitgangspunt ontwerpen wij de verschillende onderdelen zodanig dat elk van de onderdelen zo onafhankelijk mogelijk ontwikkeld kunnen worden.
+    Als uitgangspunt ontwerpen wij de verschillende componenten zodanig dat elke component zo onafhankelijk mogelijk ontwikkeld kan worden.
     	
-    \subsubsection{Protocol module}
+    \subsection{Protocol module}
     De protocol module is het onderdeel die het mogelijk maakt om:
 	\begin{itemize}
     \item Een nieuw spel op te starten. Het spel komt dan in de zogenaamde opstart fase. Andere spelers kunnen dan aan dit spel meedoen, ze komen dan in de lobby van dat spel;
@@ -21,7 +20,7 @@
 	\end{itemize}
     De manier, waarop deze communicatie verloopt, is beschreven vanaf \protoref. De gebruikersomgeving kan de protocol module een opdracht geven. Deze    opdracht zal dan asynchroon worden uitgevoerd door de protocol module. Dit betekent dat het protocol uit zichzelf berichten kan ontvangen en verwerken. Door middel van threads wordt er voor gezorgd dat het protocol de taken onafhankelijk kan uitvoeren.
 	
-    \subsubsection{Het model van de sc\`ene}
+    \subsection{Het model van de sc\`ene}
     Het model van de sc\`ene vervult twee rollen. Het houdt de huidige staat van het spel bij en zorgt ervoor dat de huidige staat van het spel afgebeeld kan worden op het scherm. Het model is dus in principe een passief element, het zal niet uit zichzelf acties uitvoeren (uitzonderingen daargelaten). Een diepgaande beschrijving van het model kan gevonden worden in sectie \ref{sec:model}
 
     \subsection{Gebruikersomgeving}
@@ -53,7 +52,7 @@
     De sc\`ene zullen wij beschrijven aan de hand van een klassendiagram, dit bespreken we op een \emph{top-down} manier. Het klassendiagram zelf is toegevoegd in appendix A.3. Een aantal basisklassen, zoals $Point2d, Point3d$ en $Vector3d$, zijn hierin voor de overzichtelijkheid niet aangegeven. We maken bovendien de afspraak dat de types $Percentage/Power/Time/Duration$ vrij kunnen worden gebruikt. Deze kunnen bijvoorbeeld \emph{Reals} of \emph{Integers} zijn, afhankelijk van de implementatie. We zijn nu klaar om de gebruikte interfaces te bespreken.
 
     \subsection{Interfaces}
-    Er zijn twee interfaces in het klassendiagram: de zogenaamde $Object$ interface en $BoundingObject$ interface. We geven het implementeren van een interface aan door $\langle\langle$ interface naam$\rangle \rangle$ voor de naam van de klasse, die de interface implementeert.  De klasse Object bevat een aantal standaard attributen om de conversie tussen globale en lokale co\"ordinaten te bewerkstelligen. Dit zijn $origin, yaw, patch$ en $roll$. Hier zijn de hoeken yaw, pitch en roll in graden tussen 0 en 360. 0 is in dit geval inclusief, 360 is exclusief.
+    Er zijn twee interfaces in het klassendiagram: de zogenaamde $Object$ interface en $BoundingObject$ interface. We geven het implementeren van een interface aan door $\langle\langle$ interface naam $\rangle \rangle$ voor de naam van de klasse, die de interface implementeert.  De klasse Object bevat een aantal standaard attributen om de conversie tussen globale en lokale co\"ordinaten te bewerkstelligen. Dit zijn $origin, yaw, patch$ en $roll$. Hier zijn de hoeken yaw, pitch en roll in graden tussen 0 en 360. 0 is in dit geval inclusief, 360 is exclusief.
 
     Bovendien bevat Object nog het attribuut $children$, dit is een array van Objects. De reden hiervoor is dat dit hi\"erarchisch modelleren mogelijk maakt. Vervolgens bevat Object nog een aantal methoden: $draw, render, prerender$ en $postrender$. De prerender methode zorgt voor de transformatie van globale co\"ordinaten naar lokale co\"ordinaten. De postrender methode zorgt voor de transformatie van lokale co\"ordinaten naar globale co\"ordinaten.
 
