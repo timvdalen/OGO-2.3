@@ -1,0 +1,85 @@
+    \section{Werkplan}
+    In het werkplan hebben wij de kritieke punten in het project geïdentificeerd. Vervolgens is er een analyse gemaakt van de verschillende taken gedurende het project. Op basis van de kritieke punten en de taakanalyse is het werkplan opgesteld. We hebben hierin ook al het werkplan voor de implementatiefase opgenomen.
+
+    \subsection{Kritieke punten}
+    Door de kritieke punten zo vroeg mogelijk te identificeren zijn we in staat om deze in onze planning zo goed mogelijk te verwerken. We zullen nu de door ons gevonden kritieke punten geven:
+    \begin{enumerate}
+    \item[(a)] Het eerste kritieke punt is het netwerk aspect. Ten eerste moet het mogelijk zijn om elkaar te kunnen vinden over het netwerk. Dit is zeker geen triviale taak. Ten tweede geldt dat gedurende het spel alle machines op gelijke voet staan. Er mag dus geen server worden gebruikt, wat het ontwerp van het spel moeilijker maakt.
+    \item[(b)] Een ander groot gevaar is complexiteit. Bij het ontwikkelen van een spel kan men al snel uit enthousiasme hoge verwachtingen krijgen en hoge eisen stellen. Deze overmaat aan eisen kan later te veel werk blijken.
+    \item[(c)] Een laatste hindernis is het gedistribueerde aspect met name in conflictsituaties. Een goed voorbeeld hiervan is als twee spelers op hetzelfde moment voedsel proberen te pakken.
+    \end{enumerate}
+
+    We willen zo vroeg mogelijk aan deze kritieke punten werken. Aangezien we (a) als het voornaamste probleem beschouwen, zullen we in week 1 ons al ori\"enteren op het probleem. We zullen vooral kijken naar de mogelijkheden voor broadcast om andere spelers te vinden.
+
+    \subsection{De taken}
+    Nu we de mogelijke problemen hebben bekeken, zijn we klaar om een lijst met taken op te stellen met afkortingen. De genoemde taken staan ruwweg in chronologische volgorde:
+    \begin{enumerate}
+    \item[-] Brainstormen over spelidee (\emph{\BS}).
+    \item[-] Ori\"entatie op netwerk aspect door het maken van eenvoudig chat programma (\emph{\ON}).
+    \item[-] Maken werkplan met taakverdeling (\emph{\MW}).
+    \item[-] Maken spelspecificatie en gebruikershandleiding (\emph{\MS}).
+    \item[-] Maken alternatieven en motivering van spelkeuze (\emph{\MA}).
+    \item[-] Beschrijving onderdelen en onderlinge samenhang (\emph{\BO}).
+    \item[-] Ontwerpen communicatieprotocol (\emph{\OC}).
+    \item[-] Maken onderliggende netwerkcommunicatie (\emph{\MN}).
+    \item[-] Communicatieprotocol testen (\emph{\CT}).
+    \item[-] Maken klassendiagram (\emph{\MK}).
+    \item[-] Maken taakverdeling voor implementatie (\emph{\MT}).
+    \item[-] Maken modellen en textures, inladen in openGL (\emph{Model}).
+    \item[-] Maken basisklassen (\emph{Basis}).
+    \item[-] Maken lobby (\emph{Lobby}).
+    \item[-] Maken gebruikersomgeving (\emph{Gbr}).
+    \item[-] Bijwerken gebruikershandleiding, validatie aannames en motivering implementatie (\emph{\BG}).
+    \item[-] Afronden verslag (\emph{\AV}).
+    \item[-] Maken eindpresentatie (\emph{\ME}).
+    \item[-] Eindpresentatie (\emph{\EP}).
+    \end{enumerate}
+
+    \subsection{Het werkplan}
+    Als laatste moeten de taken nog over de personen worden verdeeld. Hierbij zullen we taken proberen te rouleren zodanig dat iedereen zowel taken heeft voor programmeren als documenteren. Aangezien wij allemaal zowel ervaring hebben met programmeren als met documenteren, zullen we bij de taakverdeling geen speciale rekening houden met de koppels (bijvoorbeeld relatief goede programmeurs bij relatief zwakke programmeurs).
+
+    Het is daarbij belangrijk om in te zien dat de genoemde taken redelijk onafhankelijk van elkaar zijn uit te voeren. We proberen er in de taakverdeling voor te zorgen dat een klein aantal groepen zo onafhankelijk mogelijk van de rest kan werken. Om dit te bereiken, werken we zoveel mogelijk \emph{bottom-up}. Verder hebben we als doel dat iedereen met de verschillende aspecten van het programma te maken krijgt. Het protocol is al gezamenlijk ontworpen en getest, zodat iedereen met het gedistribueerde aspect te maken heeft gehad. We zullen met deze taakverdeling proberen iedereen ook te laten werken aan het grafische aspect.
+
+    We hebben besloten om drie belangrijke zaken samen te doen. Ten eerste is het natuurlijk erg logisch dat het brainstormen samen gebeurt. Hierdoor weten we allemaal in welke richting het spel zal gaan, wat bij alle volgende stappen van belang zal zijn. Ten tweede wordt het communicatieprotocol samen ontworpen. Dit heeft tot doel zodat iedereen het communicatieprotocol goed snapt, zodat iedereen hiermee overweg kan met de implementatie. Ten derde wordt het testen van het communicatieprotocol samen gedaan. De voornaamste reden hiervoor is vanwege de grote diversiteit aan operating systemen in onze groep, wat eventueel problemen kan geven bij de implementatie. We zijn nu klaar om het volledige werkplan te geven, we gebruiken hierbij de eerder gegeven afkortingen. De deadlines staan op een aparte regel en zijn schuin gedrukt:
+    \begin{table}[H]
+        \small
+        \centering
+        \begin{tabular}{| l | l | l | l | l | l | l |}
+        \hline
+        Week & Carl & Ferry & Kay & Luca & Peter & Tim \\ \hline
+        Week 1 24-04-2012 & \BS & \BS & \BS & \BS & \BS & \BS \\ \hline
+        Week 1 25-04-2012 & \ON & \ON & \ON & \ON & \MW & \ON \\ \hline
+        Week 1 26-04-2012 & \ON & \ON & \ON & \ON & \MW & \ON \\ \hline
+        Week 2 01-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 2 02-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 2 03-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 2 04-05-2012 & \multicolumn{6}{|c|}{\emph{Deadline ori\"entatiefase}} \\ \hline
+        Week 3 08-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 3 09-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 3 10-05-2012 & \MS & \MA & \MA & \MS & \MA & \MS \\ \hline
+        Week 4 15-05-2012 & \OC & \OC & \OC & \OC & \OC & \OC \\ \hline
+        Week 4 16-05-2012 & \OC & \OC & \OC & \OC & \OC & \OC \\ \hline
+        Week 4 16-05-2012 & \multicolumn{6}{|c|}{\emph{Deadline specificatiefase}} \\ \hline
+        Week 5 22-05-2012 & \BO & \MN & \MK & \MK & \BO & \MN \\ \hline
+        Week 5 23-05-2012 & \BO & \MN & \MK & \MK & \BO & \MN \\ \hline
+        Week 5 24-05-2012 & \BO & \MN & \MK & \MT & \BO & \MN \\ \hline
+        Week 6 30-05-2012 & \BO & \MN & \MK & \MT & \BO & \MN \\ \hline
+        Week 6 31-05-2012 & \CT & \CT & \CT & \CT & \CT & \CT \\ \hline
+        Week 6 01-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline ontwerpfase}} \\ \hline
+        Week 7 05-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
+        Week 7 06-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
+        Week 7 07-06-2012 & Model & Basis & Lobby & Basis & Basis & Lobby \\ \hline
+        Week 8 12-06-2012 & \BG & Sc\`ene & Sc\`ene & Gbr & Gbr & \BG \\ \hline
+        Week 8 13-06-2012 & \BG & Sc\`ene & Sc\`ene & Gbr & Gbr & \BG \\ \hline
+        Week 8 14-06-2012 & \BG & Sc\`ene & Sc\`ene & Gbr & Gbr & \BG \\ \hline
+        Week 8 14-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline implementatiefase eerste versie}} \\ \hline
+        Week 9 19-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
+        Week 9 20-06-2012 & \AV & \AV & \ME & \AV & \AV & \ME \\ \hline
+        Week 9 21-06-2012 & \EP & \EP & \EP & \EP & \EP & \EP \\ \hline
+        Week 9 22-06-2012 & \multicolumn{6}{|c|}{\emph{Deadline verslag}} \\ \hline
+        \end{tabular}
+        \caption{Gedetailleerde taakverdeling per dag}
+        \label{tab:planning}
+    \end{table}
+
+    Zoals in de tabel is te zien, zijn er ongeveer twee weken om aan de implementatie te werken. Het idee is dat dan een groot deel van het netwerk aspect, wat het grootste risico heeft om uit te lopen, daarvoor al af te hebben om dit op te vangen. Bij de implementatie moet dus vooral aandacht worden besteed aan het modelleren van de sc`ene en het maken van het spel. Het modelleren van de sc`ene is vrij onafhankelijk van de andere activiteiten. Dit kan worden gebruikt door hier eventueel al eerder mee te beginnen, zeker als we in een van de eerdere fasen tijd over hebben. We hebben besloten het protocol al eerder te maken om onverwachte vertragingen vanwege \emph{bugs} op te kunnen vangen, die in onze mening het meest waarschijnlijk zijn bij dit onderdeel van het programma. 
