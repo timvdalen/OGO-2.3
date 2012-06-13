@@ -112,7 +112,7 @@ void Controller::lookX(double lookspeed)
 	if (firstPerson == true)
 	{
 		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(target + (vec * 5.0));
+		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
 	{
@@ -148,7 +148,7 @@ void Controller::lookY(double zoomspeed)
 	if (firstPerson == true)
 	{
 		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(target + (vec * 5.0));
+		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
 	{
@@ -178,7 +178,7 @@ void Controller::lookZ(double lookspeed)
 	if (firstPerson == true)
 	{
 		camera.origin = player->origin + Pd(0,0,2) + vec;
-		camera.lookAt(target + (vec * 5.0));
+		camera.lookAt(camera.origin + (vec * 5.0));
 	}
 	else
 	{
