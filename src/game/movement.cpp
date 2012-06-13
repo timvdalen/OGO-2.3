@@ -10,10 +10,10 @@
 
 namespace Movement {
 
-	double movespeedmultiplier = 0.5;
+	double movespeedmultiplier = 0.3;
 	double jetpackspeedmultiplier = 0.2;
 	double lookspeedmultiplier = 0.0175;
-	double zoomspeedmultiplier = 0.5;
+	double zoomspeedmultiplier = 0.2;
 
 	Point<double> offset = Pd(.5,.5,2);
 
@@ -132,9 +132,9 @@ void Controller::lookY(double zoomspeed)
 
 	zoom -= zoomspeed;
 
-	if (zoom > 15.0)
+	if (zoom > 25.0)
 	{
-		zoom = 15.0;
+		zoom = 25.0;
 	}
 	else if (zoom <= 5.0)
 	{
