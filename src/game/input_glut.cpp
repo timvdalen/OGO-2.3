@@ -166,6 +166,7 @@ void Input::releaseMouse()
 void Input::grabText()
 {
 	textMode = true;
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
 }
 
 //------------------------------------------------------------------------------
@@ -175,6 +176,7 @@ void Input::releaseText()
 	textMode = false;
 	CALL(onText, text);
 	text = "";
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 }
 
 //------------------------------------------------------------------------------
@@ -272,12 +274,14 @@ void keyboard_down_event(unsigned char key, int x, int y)
 			input->text = "";
 			CALL(input->onText, input->text);
 			input->textMode = false;
+			glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 		}
 		else if (key == '\r' || key == '\n') // Enter
 		{
 			CALL(input->onText, input->text);
 			input->text = "";
 			input->textMode = false;
+			glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 		}
 		else if (key == '\b')
 		{
