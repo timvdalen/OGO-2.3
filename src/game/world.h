@@ -67,6 +67,9 @@ class World: public BoundedObject
 	//! \returns the first colliding object or an empty handle when no object was found
 	ObjectHandle trace(Point<double> origin, Vector<double> &path);
 	
+	//! Corrects origin in such a way that the camera cannot be placed outside the world bounds or inside a structure
+	Point<double> getCorrectedOrigin(Qd q, Pd p);
+	
 	//! Adds a LaserBeam to this World
 	void addLaserBeam(ObjectHandle laserBeam);
 	

@@ -503,7 +503,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
         MaterialHandle black = ColorMaterial(1.0f,1.0f,1.0f,1.0f);
         int i;
         for(i = 0; i < n; i++){
-            //*le background
+            //The background
             if(selected == i + 1){
                 bgselected->select();
             }else{
@@ -520,7 +520,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
             }else{
                 bgunselected->unselect();
             }
-            //*le table lines
+            //The table lines
             black->select();
             glBegin(GL_LINES);
             //Top-line
@@ -537,7 +537,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
             glVertex2i(370,70);
             glEnd();
             black->unselect();
-            //*le icon
+            //The icon
             icons[i]->select();
             glBegin(GL_QUADS);
             glTexCoord2f(0,1);
@@ -550,7 +550,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
             glVertex2i(60,10);
             glEnd();
             icons[i]->unselect();
-            //*le text
+            //The text
             black->select();
             glPushMatrix();
                 glTranslatef(80,40,0);
@@ -566,7 +566,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
             glPopMatrix();
             glTranslatef(0,70,0);
         }
-        //*le last table lines
+        //The last table lines
         black->select();
         glBegin(GL_LINES);
         glVertex2i(0,0);
@@ -715,7 +715,7 @@ void MiniMap::draw(){
 	glVertex2i(0,0);
 	glEnd();
 	black->unselect();
-	//*le buildings
+	//The buildings
 	map<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
 	map<GridPoint, ObjectHandle>::iterator itt;
 	int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
@@ -727,7 +727,7 @@ void MiniMap::draw(){
 	}
 	xspacing = (int) (320.0 / (w->width / GRID_SIZE  + 1));
 	yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
-	//*le robots
+	//The robots
 	map<Player::Id,ObjectHandle>::iterator it;
 	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
 	{

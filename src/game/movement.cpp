@@ -78,8 +78,16 @@ void Controller::moveY(double speed)
     	return;
 	}
 	vec = ~(camAngle * Vector<double>(0,1,0));
-	camera.origin = target - (vec * zoom);
-	camera.lookAt(target);
+	if (firstPerson)
+	{
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
+		camera.lookAt(camera.origin + (vec * 5.0));
+	}
+	else
+	{
+		camera.origin = target - (vec * zoom);
+		camera.lookAt(target);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -93,7 +101,16 @@ void Controller::moveZ(double speed)
 	player->origin.z += speed;
 	target.z = target.z + speed;
 	camera.origin.z = camera.origin.z + speed;
-	camera.lookAt(target);
+	if (firstPerson)
+	{
+		camera.origin = player->origin + Pd(0,0,2.5) + vec;
+		camera.lookAt(camera.origin + (vec * 5.0));
+	}
+	else
+	{
+		camera.origin = target - (vec * zoom);
+		camera.lookAt(target);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -197,8 +214,8 @@ void Controller::frame()
 	
 	if (move[dirY] != 0.0)
 	{
-		if (move[dirX] < 0.0) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
-		else if (move[dirX] > 0.0) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
+		if ((move[dirX] < 0.0 && move[dirY] > 0.0) || (move[dirX] > 0.0 && move[dirY] < 0.0)) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
+		else if ((move[dirX] > 0.0 && move[dirY] > 0.0) || (move[dirX] < 0.0 && move[dirY] < 0.0)) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
 		else {
             Vd camv = camAngle*Vd(0,1,0);
             Vd plav = player->rotation*Vd(0,1,0);
@@ -219,7 +236,15 @@ void Controller::frame()
 	vec = ~vec;
 	double yaw = atan2(vec.x, vec.y);
 	target = player->origin + Pd(.75 * sin(yaw - .25*Pi), .75 * cos(yaw-.25*Pi), 2);
-	camera.lookAt(target);
+	vec = ~(camAngle * Vector<double>(0,1,0));
+	if (firstPerson)
+	{
+		camera.lookAt(camera.origin + (vec * 5.0));
+	}
+	else
+	{
+		camera.lookAt(target);
+	}
 	Objects::Player * p = TO(Objects::Player,player);
 	p->velocity = Vd(0,MoveSpeed,0);
 }

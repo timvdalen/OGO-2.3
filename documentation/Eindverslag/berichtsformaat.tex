@@ -1,0 +1,20 @@
+    \section{Het berichtsformaat}
+    \label{app:berichtsformaat}
+    We zijn nu klaar om het formaat van de berichten formeel te defini\"eren. Hiervoor gebruiken we BNF (\emph{Backus-Naur Form}):
+	
+	\begin{center} \boxed{\begin{aligned}
+    <\textsc{message}> &::= <\textsc{command}> <\textsc{args}> <\textsc{crlf}> \\
+    <\textsc{command}> &::= \text{``A''...``Z''} <\textsc{command}> | \text{``A''...``Z''} \\
+    <\textsc{args}>    &::= \text{`` ''} | <\textsc{string}> | <\textsc{value}> <\textsc{args}> \\
+    <\textsc{string}>  &::= \text{`` :''} <\text{printable characters}>^{*} \\
+    <\textsc{value}>   &::= \text{`` ''}  <\text{graphical characters}>^{*} \\
+    <\textsc{crlf}>    &::= \textsc{cr lf}
+    \end{aligned} }\end{center}
+
+    Een bericht bestaat uit een commando met argumenten. Na het commando en argumenten komt het einde van de regel: \textsc{crlf}. Met ``A''...``Z'' bedoelen we een willekeurige hoofdletter. Een commando is dus een hoofdletter of een hoofdletter gevolgd door een commando. Hieruit volgt dat een commando een niet-lege reeks van hoofdletters is.
+
+    Het argument van een commando is alleen een spatie, een string of een waarde gevolgd door een argument. Een string begint altijd met een spatie gevolgd door een dubbele punt. Vervolgens volgt een willekeurige reeks van ``printable characters''. Hiermee bedoelen we letters, cijfers en spaties. Een waarde begint ook altijd met een spatie. Daarna volgt een reeks van ``graphical characters''. Daarmee bedoelen we letters en cijfers.
+
+    We merken nog op dat het mogelijk is om een bericht te sturen zonder argumenten. Dit kan wel degelijk nuttig zijn, aangezien er bijvoorbeeld ook informatie kan worden gehaald uit het commando zelf.
+
+    Het onderscheid tussen een value en een string is dus klein. Een string is altijd het laatste onderdeel van een argument. Merk op dat de verschillende argumenten worden onderscheiden door spaties. Aangezien er nog een dubbele punt voor de string staat, mag een string wel spaties bevatten zonder dat hierdoor onze berichten meerdere betekenissen krijgen. Immers, zodra we een spatie gevolgd door een dubbele punt tegenkomen, kunnen we concluderen dat we aan het laatste argument zijn begonnen. Een spatie is dan onderdeel van het argument zelf en betekent dus niet dat een nieuw argument is begonnen. Op deze manier kunnen namen van spelers en de naam van het spel spaties bevatten. 
