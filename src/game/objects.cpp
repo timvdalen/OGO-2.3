@@ -49,7 +49,7 @@ pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Ve
         }
     }
     //--- z direction
-    if(v.z != 0 && !collision){
+    if(v.z != 0){
         lambda1 = (a.z - p.z)/(v.z);//intersection with axis in lbl.z
         lambda2 = (b.z - p.z)/(v.z);
         if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
