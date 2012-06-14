@@ -383,8 +383,8 @@ void Fire()
 			gunLoc.y = gunLoc.y + game.player->model.weapon->origin.x * sin(yaw) + game.player->model.weapon->origin.y * cos(yaw);
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
 
-			Vd lookVec = ~(Vd(cam.origin) + -Vd(game.controller->target));
-			pair<ObjectHandle, double> collision = game.player->findCollision(game.controller->target, lookVec);
+			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin));
+			pair<ObjectHandle, double> collision = game.world->findCollision(game.controller->target, lookVec);
 
 			if (collision.first)
 			{
