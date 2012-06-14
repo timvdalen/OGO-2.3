@@ -173,8 +173,10 @@ class Object
 		T *operator->() { return &*p.top().first(); }
 	};
 	
-	iterator begin() { return iterator(children.begin(), children.end()); }
-	iterator end() { return iterator(children.end(), children.end()); }
+	template <class T> iterator<T> begin()
+		{ return iterator<T>(children.begin(), children.end()); }
+	template <class T> iterator<T> end()
+		{ return iterator<T>(children.end(), children.end()); }
 };
 
 //------------------------------------------------------------------------------
