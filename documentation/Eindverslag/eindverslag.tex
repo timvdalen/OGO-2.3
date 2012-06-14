@@ -1,12 +1,12 @@
 \documentclass[a4paper,11pt, twoside]{article}
-\usepackage{graphicx,listings,float,epstopdf,geometry,amsmath,placeins,caption,subcaption,placeins}
+\usepackage{graphicx,listings,float,epstopdf,geometry,amsmath,placeins,caption,subcaption,placeins,pdfpages}
 %\usepackage[firstpage]{draftwatermark}
 %\SetWatermarkLightness{0.5}
 %\SetWatermarkScale{4}
 \setcounter{tocdepth}{2}
 \usepackage[dutch]{babel}
 \usepackage{xspace, color, mdframed}
-\usepackage[usenames, dvipsnames]{xcolor}
+%\usepackage[usenames, dvipsnames]{xcolor}
 
 \geometry{
 	includeheadfoot,
@@ -33,11 +33,16 @@
 
 % Commando's ontwerp
 \newcommand{\protoref}{sectie \ref{sec:protocol}}
+
+% Box om bericht faalt om vreemde redenen
 \newcommand{\bericht}[1]{
-    \begin{center}
-        \colorbox{YellowGreen!20}{\makebox[\textwidth][c]{{\textsc{#1}}}}
+    {\begin{center}
+        %\colorbox{YellowGreen!20}{\makebox[\textwidth][c]{{
+            \textsc{#1}
+        %}}}
     \end{center}
-}
+}}
+
 \newcommand{\udp}{\textsc{udp}\xspace}
 \newcommand{\tcp}{\textsc{tcp}\xspace}
 
@@ -47,17 +52,20 @@
     % - Nummer vak (2IO46)
     % - Identiteitsnummers groepsleden
     % -	Naam tutor (Mels van Broekhoven)
-    % Schieten veranderd.
+    % Schieten veranderd
+    % Nieuwe documenten
 
 	\tableofcontents
 	\newpage
 
 	\section{Lijst symbolen en afkortingen}
-    % Verklaring van alle gebruikte symbolen	
+    % Verklaring van alle gebruikte symbolen
+    \input{symbolen}	
     \newpage
 
     \section{Summary}
     % Engelstalige samenvatting
+    \newpage
 
     \section{Inleiding}
     \input{introduction}
@@ -65,28 +73,109 @@
     % Opbouw
 
     \input{werkplan}
-    % REFERENCE optioneel
     \input{specificatie}
     \input{alternatieven}
-    % Reference berichten
-    % Appendices in ontwerp verkeerde REFERENCE
     \input{ontwerp}
 
     \section{Conclusie}
     % Met daarin reflectie over het verloop van het project en het groepsproces daarbij
+    We zijn erin geslaagd om een interactief, gedistribueerd 3D-spel te ontwikkelen. Dit spel voldoet aan de door ons gegeven specificatie van het spel op een kleine wijziging na. We hebben besloten om de speler rechts van het vizier te plaatsen. Daardoor staat het lasergeweer van de speler aan dezelfde kant als het vizier. Dit maakt het schieten intuïtiever in onze mening.
+
+    Verder zijn er nog een aantal extra's ge\"implementeerd. Zo wordt er een plattegrond van de wereld op het scherm getoond: dit was een van de mogelijke uitbreidingen van het spel genoemd in de specificatie. Tijdens het spel is het ook nog mogelijk om net als in de lobby met andere spelers te \emph{chatten}. Bovendien zijn er nog verscheidene aspecten van de ster ge\"implementeerd. Spelers kunnen tijdens het spel nog meedoen of het spel onverwachts verlaten.
 
     \section{Evaluatie}
-    % Wat is bereikt
-    % Hoe het project is verlopen
+    % Misschien ster weglaten/alles bereikt?
+    % Welke wijzigingen? Geweer?
+    % Script taal?
+    Achteraf bezien was het netwerk aspect het grootste obstakel voor ons. Dit hadden wij van tevoren ook al verwacht. Dit is dan ook de reden dat we hier al zeer vroeg mee zijn begonnen: in de oriëntatiefase zijn we al bezig geweest met het maken van een \emph{chatprogramma}. Voor de implementatie van het protocol zijn verschillende testprogramma's gemaakt, die zeer nuttig zijn gebleken. Door deze testprogramma's konden we effici\"ent fouten opsporen in de implementatie van het protocol. Goede planning en testen zijn hier van groot belang geweest. 
+    
+    Een ander obstakel voor ons was de complexiteit van het spel. We waren zelf enthousiast over ons spel. Hierdoor is onze specificatie vrij uitgebreid geworden. Een ander gevolg hiervan is dat er relatief veel tijd aan de implementatie is besteed, voor een groot deel ook buiten de OGO-tijden. Door hard werk en strakke planning hebben we uiteindelijk het door ons beoogde spel kunnen ontwikkelen.
+    
+    De samenwerking in de groep is goed verlopen. Iedereen in deze groep had ongeveer evenveel ervaring met programmeren. Echter, C++ was nieuw voor een aantal groepsleden. Dit was echter nauwelijks een probleem. Bij het begin van de implementatie zijn er verschillende groepen gemaakt. Hierbij is ervoor gezorgd dat er minstens \'e\'en groepslid al ervaring had met C++. Al snel werd deze nieuwe programmeertaal opgepikt door de andere groepsleden. Later tijdens de implementatiefase was deze groepsindeling ook niet meer nodig.
 
     \section{Literatuurlijst}
-
     \newpage
+
     \appendix
-    \section{Begrippenlijst}
+    
+    % Nog geen verwijzing naar deze appendix
+    \input{begrippen}
+    \newpage
+
+    \input{schieten}
+    \newpage
+    
+    \input{optioneel}
+    \newpage
+
+    \input{klassenbeschrijving}
+    \newpage
+
+    \section{Klassendiagrammen in UML}
+    \label{app:klassendiagram}
+    
+    \subsection{Interfaces}
+    \begin{figure}[h]
+    \centering
+    	\includegraphics[width=0.9\textwidth]{../Class-diagram/Interfaces.pdf}
+    	\caption{De verscheidene interfaces die ge\"implementeerd worden door klassen in het model van de sc\`ene.}
+    \end{figure}\FloatBarrier    \label{app:Interfaces}
+    \begin{samepage}
+    
+    \subsection{Communicatie klassen} \begin{figure}[h]
+        \centering  	\includegraphics[width=1.05\textwidth]{../Class-diagram/NetCommunication.pdf}
+	\caption{De globale klasse die methoden verschaft om te kunnen communiceren met de medespelers.}
+    \end{figure}
+    \label{app:Comm}
+    \end{samepage}
+    \FloatBarrier
+    \newpage
+    
+    \subsection{Klassendiagram voor de sc\`ene}
+    \begin{figure}[h]
+        \centering
+    	\includegraphics[height=0.72\textheight]{../Class-diagram/ClassDiagram1.pdf}
+	\caption{Het klassendiagram voor het model van de sc\`ene.}
+    \end{figure}
+    
+    \label{app:Scene}
+    \FloatBarrier
+    \newpage
+     \ \\[5mm]
+    \includegraphics[height=0.6\textheight]{../Class-diagram/ClassDiagram2.pdf}
+    \newpage
+    
+    \input{berichtsformaat}
+    \newpage
+    
+    \input{berichten}
+    \newpage
+    
+    \section{Voorbeeld van de interactie tussen de gebruikersomgeving en de protocolmodule}
+    \label{sec:interactscenmodel}
+    \begin{figure}[h]
+    	\centering
+	\includegraphics[height=0.7\textheight]{../Class-diagram/MSCLobby-console.eps}
+	\caption{Voorbeeld van een interactie van de gebruikersomgeving en de protocolmodule.}
+    \end{figure}
+    \label{app:MSCLobbyCon}
+       
     % Andere appendices
-    \section{Verslag werkplan}
-    \section{Verslag specificatie}
-    \section{Verslag alternatieven}    
-    \section{Verslag ontwerp}
+    % Invoegen gaat nog erg slecht
+%    \section{Verslag werkplan}
+%    \input{../../werkplan/werkplan.pdf}
+%    \includepdf[pages={-}]{../../werkplan/werkplan.pdf}
+%    \newpage
+%
+%    \section{Verslag specificatie}
+%    \includepdf[pages={-}]{../documentation.pdf}
+%    \newpage
+%
+%    \section{Verslag alternatieven}
+%    \includepdf[pages={-}]{../../keuze/documentation.pdf}
+%    \newpage
+%
+%    \section{Verslag ontwerp}
+%    \includepdf[pages={-}]{../Design/report.pdf}
+%    \newpage
 \end{document} 

@@ -85,7 +85,7 @@
     De sc\`ene zullen wij beschrijven aan de hand van een klassendiagram, dit bespreken we op een \emph{top-down} manier. Het klassendiagram zelf is toegevoegd in appendix A.3. Een aantal basisklassen, zoals $Point2d, Point3d$ en $Vector3d$, zijn hierin voor de overzichtelijkheid niet aangegeven. We maken bovendien de afspraak dat de types $Percentage/Power/Time/Duration$ vrij kunnen worden gebruikt. Deze kunnen bijvoorbeeld \emph{Reals} of \emph{Integers} zijn, afhankelijk van de implementatie. We zijn nu klaar om de gebruikte interfaces te bespreken.
 
 \subsection{Interfaces}
-Er zijn twee interfaces in het klassendiagram: de zogenaamde $Object$ interface en $BoundingObject$ interface. We geven het implementeren van een interface aan door $\langle\langle$ interface naam$\rangle \rangle$ voor de naam van de klasse, die de interface implementeert.  De klasse Object bevat een aantal standaard attributen om de conversie tussen globale en lokale co\"ordinaten te bewerkstelligen. Dit zijn $origin, yaw, patch$ en $roll$. Hier zijn de hoeken yaw, pitch en roll in graden tussen 0 en 360. 0 is in dit geval inclusief, 360 is exclusief.
+Er zijn twee interfaces in het klassendiagram: de zogenaamde $Object$ interface en $BoundingObject$ interface. We geven het implementeren van een interface aan door $\langle\langle$ interface naam$\rangle\rangle$ voor de naam van de klasse, die de interface implementeert.  De klasse Object bevat een aantal standaard attributen om de conversie tussen globale en lokale co\"ordinaten te bewerkstelligen. Dit zijn $origin, yaw, patch$ en $roll$. Hier zijn de hoeken yaw, pitch en roll in graden tussen 0 en 360. 0 is in dit geval inclusief, 360 is exclusief.
 
 Bovendien bevat Object nog het attribuut $children$, dit is een array van Objects. De reden hiervoor is dat dit hi\"erarchisch modelleren mogelijk maakt. Vervolgens bevat Object nog een aantal methoden: $draw, render, prerender$ en $postrender$. De prerender methode zorgt voor de transformatie van globale co\"ordinaten naar lokale co\"ordinaten. De postrender methode zorgt voor de transformatie van lokale co\"ordinaten naar globale co\"ordinaten.
 
@@ -307,10 +307,10 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
     \label{app:Comm}
     \end{samepage}
     \FloatBarrier
-    
-    
+
+
     \newpage
-    
+
     \subsection{Klassendiagram voor de sc\`ene}
     \begin{figure}[h]
         \centering
@@ -331,4 +331,4 @@ Als laatste is er nog het \emph{End} bericht. Dit bericht wordt verstuurd zodra 
 	\caption{Voorbeeld van een interactie van de gebruikersomgeving en de protocolmodule.}
     \end{figure}
     \label{app:MSCLobbyCon}
-    \end{document}
+    \end{document} 
