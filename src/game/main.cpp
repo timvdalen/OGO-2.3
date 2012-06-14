@@ -182,6 +182,9 @@ void Frame()
 				velocity.z = 0;
 				velocity = ~velocity;
 			}
+			if(controller->blocked){
+				velocity = Vd(0,0,0);
+			}
 			NetCode::Move(player->origin, velocity);
 			break;
 		case 2:  NetCode::Look(player->rotation); break;

@@ -738,6 +738,8 @@ void MiniMap::draw()
 		ObjectHandle s = itt->second;
 		drawStructure(p, s, xspacing, yspacing);
 	}
+	xspacing = (int) (320.0 / (w->width / GRID_SIZE + 1));
+	yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
 	//The robots
 	map<Player::Id,ObjectHandle>::iterator it;
 	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
