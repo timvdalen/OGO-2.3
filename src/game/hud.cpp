@@ -599,7 +599,8 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 	if(b && b->owner){
 		player = TO(Player, b->owner);
 	}
-	double enlarge = 0;
+	double enlargedown = 0;
+	double enlargeup = 0;
 	MaterialHandle mat;
 	float progress;
 	//TODO team recognition.
@@ -615,11 +616,13 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Tower_normal;
 		}
     }else if(TO(Mine, s)){
-		enlarge = 0.5;
+		enlargeup = 0.5;
+		enlargedown = 0.5;
 		progress = 1;
 		mat = Assets::Icon::Mine;
 	}else if(TO(ResourceMine, s)){
-		enlarge = 0.5;
+		enlargeup = 0.5;
+		enlargedown = 0.5;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){
@@ -631,7 +634,8 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Pickaxe_normal;
 		}
 	}else if(TO(HeadQuarters, s)){
-		enlarge = 0.5;
+		enlargeup = 1;
+		enlargedown = 0;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){
@@ -648,13 +652,13 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 		glColor4f(1.0f,1.0f,1.0f,0.7f*progress+0.3f);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0,1);
-		glVertex2i((p.x-enlarge)*xspacing,(p.y-enlarge)*yspacing);
+		glVertex2i((p.x-enlargedown)*xspacing,(p.y-enlargedown)*yspacing);
 		glTexCoord2f(0,0);
-		glVertex2i((p.x-enlarge)*xspacing,(p.y+1+enlarge)*yspacing);
+		glVertex2i((p.x-enlargedown)*xspacing,(p.y+1+enlargeup)*yspacing);
 		glTexCoord2f(1,0);
-		glVertex2i((p.x+1+enlarge)*xspacing, (p.y+1+enlarge)*yspacing);
+		glVertex2i((p.x+1+enlargeup)*xspacing, (p.y+1+enlargeup)*yspacing);
 		glTexCoord2f(1,1);
-		glVertex2i((p.x+1+enlarge)*xspacing, (p.y-enlarge)*yspacing);
+		glVertex2i((p.x+1+enlargeup)*xspacing, (p.y-enlargedown)*yspacing);
 		glEnd();
 		glColor4f(1.0f,1.0f,1.0f,1.0f);
 		mat->unselect();
