@@ -397,8 +397,8 @@ void Build()
 {
 	Camera &cam = game.controller->camera;
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.objective);
-	ObjectHandle tower = Objects::DefenseTower(ObjectHandle(*game.player));
 	if(clicked.isValid()){
+		ObjectHandle tower = Objects::DefenseTower(ObjectHandle(*game.player));
 		game.world->terrain->setSelected(GridPoint(-1, -1));
 		bool done = game.world->terrain->placeStructure(clicked, tower);
 		if(!done) game.world->hud->messageDisplayer->addMessage(SystemMessage("There's already a tower there"));

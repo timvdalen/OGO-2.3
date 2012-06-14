@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
 	Player *p = TO(Player, player);
 	p->weapon = weapLaser;
 
+	ObjectHandle p2 = Objects::Player(1, 'b', "LOSAH", Pd(50, 50, 0));
+
 	cube->material = Assets::Test;
 
 	ObjectHandle world = Objects::World(200, 200);
@@ -93,18 +95,20 @@ int main(int argc, char *argv[])
 		w->hud->messageDisplayer->addMessage(SystemMessage("Loading assets..."));
 		w->hud->messageDisplayer->addMessage(SystemMessage("Everything loaded!"));
 		w->hud->messageDisplayer->addMessage(SystemMessage("Welcome to the game"));
+	
+		ArenaGuard g1 = ArenaGuard(world, Pd(-100, -100, 0), Qd());
+		ArenaGuard g3 = ArenaGuard(world, Pd(100, 100, 0), Qd());
+		DefenseMinion d1 = DefenseMinion(player, world, Pd(50, 50, 0), Qd());
+		world->children.insert(g1);
+		world->children.insert(g3);
+		world->children.insert(d1);
+
 		w->children.insert(cube);
 	}
 
 	world->children.insert(player);
+	world->children.insert(p2);
 	
-	ArenaGuard g1 = ArenaGuard(world, 200, 200, Pd(-100, -100, 0), Qd());
-	ArenaGuard g3 = ArenaGuard(world, 200, 200, Pd(100, 100, 0), Qd());
-	DefenseMinion d1 = DefenseMinion(player, world, 200, 200, Pd(50, 50, 0), Qd());
-	world->children.insert(g1);
-	world->children.insert(g3);
-	world->children.insert(d1);
-
 	v1.world = world;
 
 	v1.camera.lookAt(cube->origin);
