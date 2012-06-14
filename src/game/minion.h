@@ -11,12 +11,6 @@ namespace Objects{
 class Minion: public BoundedObject{
 	protected:
 	
-	//! Converts world coordinates to grid coordinates
-	GridPoint toGrid(Pd p);
-	
-	//! Converts grid coordinates to world coordinates
-	Pd toPointD(GridPoint p);
-
 	//! Waypoints for this Minion to follow
 	vector<GridPoint> waypoints;
 	
@@ -28,14 +22,8 @@ class Minion: public BoundedObject{
 	
 	public:
 	
-	//! The width of the terrain this minion will be placed on
-	int w;
-	
-	//! The height of the terrain this minion will be placed on
-	int h;
-	
 	//! Constructs a new minion
-	Minion(int _w, int _h, Pd origin, Qd rotation);
+	Minion(Pd origin, Qd rotation);
 	
 	//! Called before every render
 	virtual void frame();
@@ -58,7 +46,7 @@ class ArenaGuard: public Minion{
 	public:
 	
 	//! Constructs a new AreaGuard
-	ArenaGuard(ObjectHandle _world, int _w, int _h, Pd origin, Qd rotation);
+	ArenaGuard(ObjectHandle _world, Pd origin, Qd rotation);
 };
 
 //! A minion that will follow its owner around
@@ -80,7 +68,7 @@ class DefenseMinion: public Minion{
 	public:
 	
 	//! Constructs a new AreaGuard
-	DefenseMinion(ObjectHandle _owner, ObjectHandle _world, int _w, int _h, Pd origin, Qd rotation);
+	DefenseMinion(ObjectHandle _owner, ObjectHandle _world, Pd origin, Qd rotation);
 };
 
 }
