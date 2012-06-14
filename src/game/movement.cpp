@@ -253,7 +253,7 @@ void Controller::frame()
 
 bool Controller::walkAble(Point<double> old, Point<double> updated){
     World *w = TO(World, world);
-	double extrabounding = 2;
+	double extrabounding = 0.5;
     if(!((-(w->width)/2 +extrabounding) < updated.x && updated.x < ((w->width)/2 - extrabounding)//Inside x-interval
         && (-(w->height)/2 +extrabounding) < updated.y && updated.y < ((w->height)/2) - extrabounding))//Inside y-interval
     {
