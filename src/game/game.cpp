@@ -382,8 +382,23 @@ void Fire()
 			gunLoc.x = gunLoc.x + game.player->model.weapon->origin.x * cos(yaw) + game.player->model.weapon->origin.y * sin(yaw);
 			gunLoc.y = gunLoc.y + game.player->model.weapon->origin.x * sin(yaw) + game.player->model.weapon->origin.y * cos(yaw);
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
-			World *w = TO(World, game.controller->world);
-			w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
+
+			Vd lookVec = ~(Vd(cam.origin) + -Vd(game.controller->target));
+			pair<ObjectHandle, double> collision = game.player->findCollision(game.controller->target, lookVec);
+
+			if (collision.first)
+			{
+				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
+				Qd beam = gunLoc.lookAt(collisionPoint);
+
+				World *w = TO(World, game.controller->world);
+				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
+			}
+			else
+			{
+				World *w = TO(World, game.controller->world);
+				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
+			}
 			return;
 		}
 		break;
