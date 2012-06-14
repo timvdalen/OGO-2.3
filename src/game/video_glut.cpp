@@ -23,7 +23,6 @@
 
 #define PRIV(T,x) T *x = (T *) data;
 
-
 namespace Video {
 
 using namespace std;
@@ -31,6 +30,7 @@ using namespace Base::Alias;
 
 void(*OnFrame) () = NULL;
 
+double GameSpeed = 60.0;
 FPS fps;
 
 //------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ void StartEventLoop()
 {
 	glutDisplayFunc(Window::display);
 	glutReshapeFunc(Window::resize);
-	glutTimerFunc(16, Window::timer, 0);
+	glutTimerFunc((int) (1000 / GameSpeed), Window::timer, 0);
 
 	glutMainLoop();
 }
@@ -228,7 +228,7 @@ void Window::timer(int state)
 	for (set<Window *>::iterator it = windows.begin(); it != windows.end(); ++it)
 		(*it)->resized = false;
 
-	glutTimerFunc(16, Window::timer, 0);
+	glutTimerFunc((int) (1000 / GameSpeed), Window::timer, 0);
 }
 
 //==============================================================================

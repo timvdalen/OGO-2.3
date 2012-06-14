@@ -4,14 +4,18 @@
 
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "video.h"
 #include "objects.h"
 #include "structures.h"
 #include "materials.h"
 #include "player.h"
+#include "world.h"
+#include "game.h"
 
 namespace Objects {
+
 
 void drawFoundation(int h);
 
@@ -288,6 +292,10 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 	if(it != structures.end()){
 		return false;
 	}
+	Building *b = TO(Building, s);
+	if(b){
+		b->loc = p;
+	}
 	const GridPoint ip = GridPoint(p);
 	structures.insert(make_pair(ip, s));
 	return true;
@@ -295,12 +303,32 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 
 //------------------------------------------------------------------------------
 
+GridPoint Terrain::ToGrid(Pd point){
+	int x = ((point.x+(width/2))/GRID_SIZE);
+	int y = ((point.y+(height/2))/GRID_SIZE) + 1;
+	return GridPoint(x, y);
+}
+
+//------------------------------------------------------------------------------
+
+Pd Terrain::ToPointD(GridPoint point){
+	int x = (point.x*GRID_SIZE)-(width/2);
+	int y = (point.y*GRID_SIZE)-(height/2);
+	return Pd(x, y, 0);
+}
+
+//------------------------------------------------------------------------------
+
 void Building::preRender(){
 	Object::preRender();
 
+	if(built) return;
+
 	int now = Video::ElapsedTime();
-	if((now-buildTime) > buildDuration)
+	if((now-buildTime) > buildDuration){       
+		built = true; 
 		return;
+	}
 
 	float animationHeight = ((float)height/(float)buildDuration)*(float)now
 		 - ((float)buildTime*((float)height/(float)buildDuration));
@@ -334,7 +362,7 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
-			20, _owner)
+			20, _owner) 
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -344,6 +372,7 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 	if (owner) i = TO(Player,owner)->team-'a';
 	model.turret->material = Assets::Model::TurretTex[i];
 	material = Assets::Grass;
+	lastshot = Video::ElapsedTime();
 }
 
 //------------------------------------------------------------------------------
@@ -362,12 +391,97 @@ DefenseTower::DefenseTower(int buildTime)
 	material = Assets::Model::GhostTurretTex;
 }
 
+//------------------------------------------------------------------------------
+
+
+void DefenseTower::frame()
+{
+	#define RANGE 40.0
+	#define ROF 1000
+
+	float movemulti = Video::CurrentFPS()/60;
+	float movespeed = movemulti*0.2;
+
+	World *w = TO(World, Game::game.world);
+	if(!w) return;
+
+	Pd worldcoord = w->terrain->ToPointD(loc);
+	worldcoord.x += (int)GRID_SIZE/2;
+	worldcoord.y += (int)GRID_SIZE/2;
+	worldcoord.z = 0.0;
+
+	Player *own = NULL;
+	if(owner)
+		own = TO(Player, owner); 
+
+	//Find nearest player
+	if(own && built){
+		ObjectHandle closest;
+		double distance = RANGE;
+		set<ObjectHandle>::iterator it;
+		for(it = w->children.begin(); it != w->children.end(); it++){
+			Player *p = TO(Player, *it);
+			DefenseTower *t = TO(DefenseTower, *it);
+			if(p){
+				if(p->team != own->team){
+					//Enemy player found
+					double curr_dist = !(Vd(p->origin) + -Vd(worldcoord));
+					if(curr_dist < distance){
+						distance = curr_dist;
+						closest = *it;
+						continue;
+					}
+				}
+			}else if(t){
+				Player *t_own = TO(Player, t->owner);
+				if(t_own && t_own->team != own->team){
+					//Enemy tower found
+					double curr_dist =!(Vd(t->origin) + -Vd(worldcoord));
+					if(curr_dist < distance){
+						distance = curr_dist;
+						closest = *it;
+						continue;
+					}
+				}
+			}
+		}
+		if(closest){
+			Qd target = worldcoord.lookAt(closest->origin);
+			
+			Rd angleRot = (~model.turret->rotation) * -(~target);
+
+			double angle = fmod(angleRot.a, 2*Pi);
+
+			if(angle < 0.07){
+				//Locked
+				int now = Video::ElapsedTime();
+				if(now - lastshot > ROF){
+					//Shoot
+					lastshot = now;
+					w->addLaserBeam(LaserBeam(worldcoord, target));
+				}
+			}else{
+				if(angleRot.v.z == 1) movespeed *= -1;
+				model.turret->rotation = model.turret->rotation * Rd(movespeed, Vd(0, 0, 1));
+			}
+		}
+	}
+}
+
 
 //------------------------------------------------------------------------------
 
 void DefenseTower::draw()
 {
 	drawFoundation(1);
+}
+
+//------------------------------------------------------------------------------
+
+void DefenseTower::render()
+{
+	frame();
+	Object::render();
 }
 
 //------------------------------------------------------------------------------

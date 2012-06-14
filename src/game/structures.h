@@ -21,7 +21,6 @@ class Mine;
 class HeadQuarters;
 class ResourceMine;
 
-
 //------------------------------------------------------------------------------
 
 //! Represents a point on a grid
@@ -114,6 +113,12 @@ class Terrain: public Object
 
 	//! Gives the grid coordinates corresponding to a mouse click
 	GridPoint getGridCoordinates(Pd camera, Qd rot);
+
+	//! Converts a GridPoint to a Point<double>
+	Pd ToPointD(GridPoint p);
+
+	//! Converts a Point<double> to a GridPoint
+	GridPoint ToGrid(Pd point);
 };
 
 //------------------------------------------------------------------------------
@@ -151,7 +156,13 @@ class Mine: public Structure
 //! Represents a building on the terrain
 class Building: public Structure
 {
+	protected:
+	//! If the building is built
+	bool built;
+
 	public:
+	//! The GridPoint this building is at
+	GridPoint loc;
 	//! Height of this building in local object coordinates
 	int height;
 	//! The cost of this building
@@ -174,7 +185,9 @@ class Building: public Structure
 		: height(_height), Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
-		  attackPower(_attackPower), owner(_owner) {}
+		  attackPower(_attackPower), owner(_owner), loc(GridPoint(-1, -1)) {
+			  built = false;
+		  }
 
 	//! Sets up translations and rotations
 	virtual void preRender();
@@ -204,13 +217,24 @@ class HeadQuarters: public Building
 //! Represents a defense tower
 class DefenseTower: public Building
 {
+	//! The time (in milliseconds since the glut event loop was started) that the last shot was fired 
+	int lastshot;
+
 	public:
+	//! Constructs a DefenseTower
 	DefenseTower(ObjectHandle _owner = ObjectHandle());
 
-	//! Constructs a DefenseTower that is not owned with a shorter build time
+	//! Constructs a ghost DefenseTower
 	DefenseTower(int buildTime);
 
+	//! Performs calculations
+	void frame();
+
+	//! Draws the DefenseTower
 	virtual void draw();
+
+	//! Renders the DefenseTower
+	virtual void render();
 
 	//! Model
 	struct { ObjectHandle turret; } model;

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "game.h"
 #include "minion.h"
 #include "player.h"
 #include "world.h"
@@ -17,24 +18,14 @@
 
 namespace Objects{
 
-GridPoint Minion::toGrid(Pd point){
-	int x = ((point.x+(w/2))/GRID_SIZE);
-	int y = ((point.y+(h/2))/GRID_SIZE) + 1;
-	return GridPoint(x, y);
-}
-
-Pd Minion::toPointD(GridPoint point){
-	int x = (point.x*GRID_SIZE)-(w/2);
-	int y = (point.y*GRID_SIZE)-(h/2);
-	return Pd(x, y, 0);
-}
+using namespace Game;
 
 void Minion::moveTo(GridPoint p){
 	waypoints.clear();
 	//Dumb way for now
 	GridPoint current;
 	int i = 0;
-	for(current = toGrid(origin); current != p; i++){
+	for(current = game.world->terrain->ToGrid(origin); current != p; i++){
 		//Greedy find next point
 		GridPoint difference = p-current;
 		if(abs(difference.x) > abs(difference.y)){
@@ -62,11 +53,9 @@ void Minion::moveTo(GridPoint p){
 
 void Minion::setNewTarget(){}
 
-Minion::Minion(int _w, int _h, Pd origin, Qd rotation)
+Minion::Minion(Pd origin, Qd rotation)
 	: BoundedObject(origin, rotation)
 {
-	w = _w;
-	h = _h;
 	moveTo(GridPoint(0, 0));
 }
 
@@ -75,15 +64,15 @@ void Minion::frame(){
 		setNewTarget();
 		return;
 	}
-
+	
 	const double movespeed = 0.25;
 	GridPoint current = waypoints.front();
-	if(current == toGrid(origin)){
+	if(current == game.world->terrain->ToGrid(origin)){
 		waypoints.erase(waypoints.begin());
 		setNewTarget();
 	}else{
 		//Start moving
-		Pd target = toPointD(current);
+		Pd target = game.world->terrain->ToPointD(current);
 		Pd difference = target-origin;
 		if(abs(difference.x) > abs(difference.y)){
 			//printf("x > y\n");
@@ -123,15 +112,15 @@ void Minion::draw(){
 	glutSolidSphere(0.5, 15, 15);
 }
 
-ArenaGuard::ArenaGuard(ObjectHandle _world, int _w, int _h, Pd origin, Qd rotation)
-	: Minion(_w, _h, origin, rotation), world(_world)
+ArenaGuard::ArenaGuard(ObjectHandle _world, Pd origin, Qd rotation)
+	: Minion(origin, rotation), world(_world)
 {}
 
 void ArenaGuard::setNewTarget(){
-	const double gw = (w/GRID_SIZE);
-	const double gh = (h/GRID_SIZE);
+	const double gw = (game.world->terrain->width/GRID_SIZE);
+	const double gh = (game.world->terrain->height/GRID_SIZE);
 	
-	GridPoint curr = toGrid(origin);
+	GridPoint curr = game.world->terrain->ToGrid(origin);
 	
 	if(curr == GridPoint(0, 0)){
 		moveTo(GridPoint(gw, 0));
@@ -160,9 +149,9 @@ void ArenaGuard::setNewTarget(){
 }
 
 void DefenseMinion::setNewTarget(){
-	moveTo(toGrid(owner->origin));
+	moveTo(game.world->terrain->ToGrid(owner->origin));
 	
-	if(last != toGrid(origin)){
+	if(last != game.world->terrain->ToGrid(origin)){
 		set<ObjectHandle>::iterator it;
 		World *w = TO(World, world);
 		if(w){
@@ -179,13 +168,13 @@ void DefenseMinion::setNewTarget(){
 			}
 		}
 	}
-	last = toGrid(origin);
+	last = game.world->terrain->ToGrid(origin);
 }
 
-DefenseMinion::DefenseMinion(ObjectHandle _owner, ObjectHandle _world, int _w, int _h, Pd origin, Qd rotation)
-	: Minion(_w, _h, origin, rotation), owner(_owner), world(_world)
+DefenseMinion::DefenseMinion(ObjectHandle _owner, ObjectHandle _world, Pd origin, Qd rotation)
+	: Minion(origin, rotation), owner(_owner), world(_world)
 {
-	last = toGrid(origin);
+	last = game.world->terrain->ToGrid(origin);
 }
 
 }
