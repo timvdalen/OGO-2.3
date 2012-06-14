@@ -136,7 +136,7 @@ void World::postRender(){
 
 Point<double> World::getCorrectedOrigin(Qd q, Pd p){
     #define LOWERBOUND 0.25
-	#define ZLEVEL 1
+	#define ZLEVEL 1.2
 	#define ZLEVEL2 3.5
 	#define INTRNBND GRID_SIZE/5.0
 	#define newp (p + (v*lambda))
@@ -167,32 +167,31 @@ Point<double> World::getCorrectedOrigin(Qd q, Pd p){
     	    double worldy = GRID_SIZE*gp.y - (height)/2;
 			double sigma = 100000.0;
 			double buff;
-			if(p.z > ZLEVEL){
-				if((worldx + INTRNBND -LOWERBOUND) < p.x && p.x < (worldx + GRID_SIZE + LOWERBOUND -  INTRNBND)
+			if((worldx + INTRNBND -LOWERBOUND) < p.x && p.x < (worldx + GRID_SIZE + LOWERBOUND -  INTRNBND)
           		 && (worldy + INTRNBND- LOWERBOUND) < p.y && p.y < (worldy - INTRNBND + GRID_SIZE + LOWERBOUND)){
-					buff = (-(p.z-ZLEVEL2)/v.z);
-					if(0 < buff && buff < sigma){
-						sigma = buff;
-					}
-					buff = (-(p.x-worldx - INTRNBND+ LOWERBOUND)/v.x);
-					if(0 < buff && buff < sigma){
-						sigma = buff;
-					}
-					buff = (-(p.x-worldx + INTRNBND -GRID_SIZE- LOWERBOUND)/v.x);
-					if(0 < buff && buff < sigma){
-						sigma = buff;
-					}
-					buff = (-(p.y-worldy- INTRNBND + LOWERBOUND)/v.y);
-					if(0 < buff && buff < sigma){
-						sigma = buff;
-					}
-					buff = (-(p.y-worldy+INTRNBND -GRID_SIZE-LOWERBOUND)/v.y);
-					if(0 < buff && buff < sigma){
-						sigma = buff;
-					}
-					lambda = max(lambda,sigma);
+				buff = (-(p.z-ZLEVEL2)/v.z);
+				if(0 < buff && buff < sigma){
+					sigma = buff;
 				}
+				buff = (-(p.x-worldx - INTRNBND+ LOWERBOUND)/v.x);
+				if(0 < buff && buff < sigma){
+					sigma = buff;
+				}
+				buff = (-(p.x-worldx + INTRNBND -GRID_SIZE- LOWERBOUND)/v.x);
+				if(0 < buff && buff < sigma){
+					sigma = buff;
+				}
+				buff = (-(p.y-worldy- INTRNBND + LOWERBOUND)/v.y);
+				if(0 < buff && buff < sigma){
+					sigma = buff;
+				}
+				buff = (-(p.y-worldy+INTRNBND -GRID_SIZE-LOWERBOUND)/v.y);
+				if(0 < buff && buff < sigma){
+					sigma = buff;
+				}
+				lambda = max(lambda,sigma);
 			}
+			sigma = 1000000;
 			if(p.z < ZLEVEL || newp.z < ZLEVEL){
 				if(((worldx - LOWERBOUND) < p.x && p.x < (worldx + GRID_SIZE + LOWERBOUND)
           		 && (worldy - LOWERBOUND) < p.y && p.y < (worldy + GRID_SIZE + LOWERBOUND))
@@ -200,29 +199,54 @@ Point<double> World::getCorrectedOrigin(Qd q, Pd p){
 				 ((worldx - LOWERBOUND) < newp.x && newp.x < (worldx + GRID_SIZE + LOWERBOUND)
           		 && (worldy - LOWERBOUND) < newp.y && newp.y < (worldy + GRID_SIZE + LOWERBOUND))){
 					buff = (-(p.z-ZLEVEL)/v.z);
-					if(0 < buff && buff < sigma){
+					if(lambda < buff && buff < sigma){
 						sigma = buff;
 					}
 					buff = (-(p.x-worldx + LOWERBOUND)/v.x);
-					if(0 < buff && buff < sigma){
+					if(lambda < buff && buff < sigma){
 						sigma = buff;
 					}
 					buff = (-(p.x-worldx-GRID_SIZE- LOWERBOUND)/v.x);
-					if(0 < buff && buff < sigma){
+					if(lambda < buff && buff < sigma){
 						sigma = buff;
 					}
 					buff = (-(p.y-worldy+LOWERBOUND)/v.y);
-					if(0 < buff && buff < sigma){
+					if(lambda < buff && buff < sigma){
 						sigma = buff;
 					}
 					buff = (-(p.y-worldy-GRID_SIZE-LOWERBOUND)/v.y);
-					if(0 < buff && buff < sigma){
+					if(lambda < buff && buff < sigma){
 						sigma = buff;
 					}
-		 			lambda = max(lambda,sigma);
-					break;
+					if(sigma != 1000000) lambda = max(lambda,sigma);
+				sigma = 100000.0;
+				if((worldx + INTRNBND -LOWERBOUND) < newp.x && newp.x < (worldx + GRID_SIZE + LOWERBOUND -  INTRNBND)
+          			 && (worldy + INTRNBND- LOWERBOUND) < newp.y && newp.y < (worldy - INTRNBND + GRID_SIZE + LOWERBOUND)){
+					buff = (-(p.z-ZLEVEL2)/v.z);
+					if(lambda < buff && buff < sigma){
+						sigma = buff;
+					}
+					buff = (-(p.x-worldx - INTRNBND+ LOWERBOUND)/v.x);
+					if(lambda < buff && buff < sigma){
+						sigma = buff;
+					}
+					buff = (-(p.x-worldx + INTRNBND -GRID_SIZE- LOWERBOUND)/v.x);
+					if(lambda < buff && buff < sigma){
+						sigma = buff;
+					}
+					buff = (-(p.y-worldy- INTRNBND + LOWERBOUND)/v.y);
+					if(lambda < buff && buff < sigma){
+						sigma = buff;
+					}
+					buff = (-(p.y-worldy+INTRNBND -GRID_SIZE-LOWERBOUND)/v.y);
+					if(lambda < buff && buff < sigma){
+						sigma = buff;
+					}
+					if(sigma != 100000.0) lambda = max(lambda,sigma);
+					}
 				}
 			}
+
 		}
 	}
 	p = p + (v*lambda);
