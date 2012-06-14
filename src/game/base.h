@@ -84,6 +84,8 @@ const double Deg2Rad = Rad / Deg; //!< Multiply to convert degrees to radians
 
 template <typename type> struct Point;
 template <typename type> struct Vector;
+template <typename type> struct Quaternion;
+template <typename type> struct Rotation;
 
 //------------------------------------------------------------------------------
 //                                Point
@@ -102,7 +104,18 @@ struct Point
 	//! Vector subtraction
 	Point operator -(const Vector<type> &V) const { return Point(x-V.x, y-V.y, z-V.z); }
 	template <typename T> operator Point<T>() const { return Point<T>((T) x,(T) y,(T) z); }
-
+	
+	//! Return a rotation from this point to another point
+	Quaternion<type> lookAt(const Point &P) const
+	{
+	    Vector<type> dir = ~Vector<type>(P - *this);
+	    double len = sqrt(dir.x * dir.x + dir.y * dir.y);
+	    double pitch = atan2(dir.z, len);
+	    double pan = atan2(dir.x, dir.y);
+	    return Quaternion<type>(Rotation<type>(-pitch, Vector<type>(1, 0, 0)))
+		     * Quaternion<type>(Rotation<type>(pan,    Vector<type>(0, 0, 1)));
+	}
+	
 	operator Vector<type>() const { return Vector<type>(x,y,z); }
 };
 
