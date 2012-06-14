@@ -214,8 +214,8 @@ void Controller::frame()
 	
 	if (move[dirY] != 0.0)
 	{
-		if (move[dirX] < 0.0) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
-		else if (move[dirX] > 0.0) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
+		if ((move[dirX] < 0.0 && move[dirY] > 0.0) || (move[dirX] > 0.0 && move[dirY] < 0.0)) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
+		else if ((move[dirX] > 0.0 && move[dirY] > 0.0) || (move[dirX] < 0.0 && move[dirY] < 0.0)) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
 		else {
             Vd camv = camAngle*Vd(0,1,0);
             Vd plav = player->rotation*Vd(0,1,0);
