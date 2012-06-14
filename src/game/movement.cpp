@@ -27,6 +27,7 @@ Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), p
 	camera.lookAt(target);
 
 	camAngle = Qd();
+	blocked = false;
 }
 
 //------------------------------------------------------------------------------
@@ -75,6 +76,7 @@ void Controller::moveY(double speed)
 	if(!walkAble(posrollback, player->origin)){
 		player->origin = posrollback;
     	target = tarrollback;
+		blocked = true;
     	return;
 	}
 	vec = ~(camAngle * Vector<double>(0,1,0));
@@ -88,6 +90,7 @@ void Controller::moveY(double speed)
 		camera.origin = target - (vec * zoom);
 		camera.lookAt(target);
 	}
+	blocked = false;
 }
 
 //------------------------------------------------------------------------------

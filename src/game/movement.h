@@ -52,6 +52,8 @@ class Controller
 	map<Direction,double> move; //!< Current comera movement
 	map<Direction,double> look; //!< Current camera target movement
 	
+	bool blocked;
+	
 	bool firstPerson;           //!< selects first person view instead of third person
 	
 	//! Construct controller by assigning a player and camera
