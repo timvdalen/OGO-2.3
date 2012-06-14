@@ -6,7 +6,6 @@
 \setcounter{tocdepth}{2}
 \usepackage[dutch]{babel}
 \usepackage{xspace, color, mdframed}
-%\usepackage[usenames, dvipsnames]{xcolor}
 
 \geometry{
 	includeheadfoot,
@@ -46,45 +45,46 @@
 \newcommand{\udp}{\textsc{udp}\xspace}
 \newcommand{\tcp}{\textsc{tcp}\xspace}
 
+% Schieten veranderd
 \begin{document}
 	\input{title}
-    % Mist nog:
-    % - Nummer vak (2IO46)
-    % - Identiteitsnummers groepsleden
-    % -	Naam tutor (Mels van Broekhoven)
-    % Schieten veranderd
-    % Nieuwe documenten
 
 	\tableofcontents
 	\newpage
 
 	\section{Lijst symbolen en afkortingen}
     % Verklaring van alle gebruikte symbolen
+    % Nog eventueel extra elementen aan lijst toevoegen
     \input{symbolen}	
     \newpage
 
     \section{Summary}
     % Engelstalige samenvatting
+    \emph{Grudge of the Oblivious} (\textsc{goto}) is a multiplayer 3D game. It combines elements of First-Person Shooters and RTS Real-Time Strategy. Two robot gangs 
     \newpage
 
     \section{Inleiding}
-    \input{introduction}
     % Probleem- of vraagstelling
     % Opbouw
+    \input{introduction}
 
     \input{werkplan}
     \input{specificatie}
     \input{alternatieven}
     \input{ontwerp}
+    
+    % Aannamen verder uitwerken
+    \input{../Aannamen/aannamen}
+    \input{../Motivering/motivering}
 
     \section{Conclusie}
     % Met daarin reflectie over het verloop van het project en het groepsproces daarbij
+    % Misschien ster weglaten/alles bereikt?
     We zijn erin geslaagd om een interactief, gedistribueerd 3D-spel te ontwikkelen. Dit spel voldoet aan de door ons gegeven specificatie van het spel op een kleine wijziging na. We hebben besloten om de speler rechts van het vizier te plaatsen. Daardoor staat het lasergeweer van de speler aan dezelfde kant als het vizier. Dit maakt het schieten intuïtiever in onze mening.
 
     Verder zijn er nog een aantal extra's ge\"implementeerd. Zo wordt er een plattegrond van de wereld op het scherm getoond: dit was een van de mogelijke uitbreidingen van het spel genoemd in de specificatie. Tijdens het spel is het ook nog mogelijk om net als in de lobby met andere spelers te \emph{chatten}. Bovendien zijn er nog verscheidene aspecten van de ster ge\"implementeerd. Spelers kunnen tijdens het spel nog meedoen of het spel onverwachts verlaten.
 
     \section{Evaluatie}
-    % Misschien ster weglaten/alles bereikt?
     % Welke wijzigingen? Geweer?
     % Script taal?
     Achteraf bezien was het netwerk aspect het grootste obstakel voor ons. Dit hadden wij van tevoren ook al verwacht. Dit is dan ook de reden dat we hier al zeer vroeg mee zijn begonnen: in de oriëntatiefase zijn we al bezig geweest met het maken van een \emph{chatprogramma}. Voor de implementatie van het protocol zijn verschillende testprogramma's gemaakt, die zeer nuttig zijn gebleken. Door deze testprogramma's konden we effici\"ent fouten opsporen in de implementatie van het protocol. Goede planning en testen zijn hier van groot belang geweest. 
@@ -160,8 +160,8 @@
     \end{figure}
     \label{app:MSCLobbyCon}
        
-    % Andere appendices
-    % Invoegen gaat nog erg slecht
+%    Andere appendices
+%    Invoegen gaat nog erg slecht
 %    \section{Verslag werkplan}
 %    \input{../../werkplan/werkplan.pdf}
 %    \includepdf[pages={-}]{../../werkplan/werkplan.pdf}

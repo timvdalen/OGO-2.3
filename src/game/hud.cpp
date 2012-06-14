@@ -31,7 +31,7 @@ int modulo(int a, int b)
 
 //------------------------------------------------------------------------------
 
-HUD::HUD(int _width, int _height, World *_w){
+HUD::HUD(int _width, int _height){
 	resize(_width, _height);
 	ObjectHandle mdHandle;
 	mdHandle = MessageDisplayer(100, 100, -1, -1); //Don't limit size for now
@@ -54,7 +54,7 @@ HUD::HUD(int _width, int _height, World *_w){
 	children.insert(chHandle);
     
     ObjectHandle mmHandle;
-    mmHandle = MiniMap(40,40, _width, _height, _w);
+    mmHandle = MiniMap(40,40, _width, _height);
     children.insert(mmHandle);
 }
 
@@ -588,9 +588,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
     //------------------------------------------------------------------------------
     
     
-    MiniMap::MiniMap(int _x, int _y, int _width, int _height, World *_w) : Widget(_x, _y, _width, _height)
+    MiniMap::MiniMap(int _x, int _y, int _width, int _height) : Widget(_x, _y, _width, _height)
     {
-        w = _w;
     }
 	
 
@@ -693,7 +692,11 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
     
     
 //------------------------------------------------------------------------------
-void MiniMap::draw(){
+void MiniMap::draw()
+{
+	World *w = TO(World,Game::game.world);
+	if (!w) return;
+	
 	//MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
 	MaterialHandle bg = ColorMaterial(20.0/255.0, 20.0/255.0, 20.0/255.0, 0.8f);
     MaterialHandle black = ColorMaterial(1.0f,1.0f,1.0f,1.0f);
@@ -720,11 +723,13 @@ void MiniMap::draw(){
 	glEnd();
 	black->unselect();
 	//The buildings
-	map<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
+	map<GridPoint, ObjectHandle> &structs = w->terrain->structures;
 	map<GridPoint, ObjectHandle>::iterator itt;
-	int xspacing = (int) (320.0 / (w->width / GRID_SIZE + 1));
-	int yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
-	for(itt = structs->begin(); itt != structs->end(); itt++){
+	int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
+	int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
+	for(itt = structs.begin(); itt != structs.end(); itt++)
+	{
+		if (!itt->second) continue;
 		GridPoint p = itt->first;
 		ObjectHandle s = itt->second;
 		drawStructure(p, s, xspacing, yspacing);
