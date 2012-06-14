@@ -20,9 +20,10 @@ class Star;
 
 World::World(double _width, double _height)
 	: BoundedObject(Pd(), Qd(),
-	  BoundingBox(Pd(), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0)),
+	  BoundingBox(Pd(-_width/2, -_height/2, 0), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0), Pd(), Pd(), Pd(), Pd(_width/2, _height/2, HIGH)),
 	  Assets::WorldMaterial)
 {
+
 	ObjectHandle tHandle;
 	tHandle = Terrain(_width, _height);
 	terrain = TO(Terrain, tHandle);
