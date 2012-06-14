@@ -49,7 +49,7 @@ class HUD: public Object{
 	//! The main CrossHair for this HUD
 	CrossHair *crossHair;
 	//! Constructs the HUD with width _width and height _height. 
-	HUD(int _width, int _height, World* _w);
+	HUD(int _width, int _height);
 
 	//! Notifies the HUD that the screen size has changed
 	void resize(int _width, int _height);
@@ -255,11 +255,9 @@ class TextInput: public Widget{
     
 class MiniMap: public Widget{
     
-    World* w;
-    
     public:     
     //! Constructs the status displayer
-    MiniMap(int _x, int _y, int _width, int _height, World* _w);
+    MiniMap(int _x, int _y, int _width, int _height);
         
     //! Displays the status
     virtual void draw();
