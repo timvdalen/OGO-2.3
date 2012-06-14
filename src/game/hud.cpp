@@ -596,10 +596,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
 
 void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 	Building *b = TO(Building, s);
-	Player* player;
-	if(b){
+	Player* player = 0;
+	if(b && b->owner){
 		player = TO(Player, b->owner);
 	}
+	double enlarge = 0;
 	MaterialHandle mat;
 	float progress;
 	//TODO team recognition.
@@ -615,9 +616,11 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Tower_normal;
 		}
     }else if(TO(Mine, s)){
+		enlarge = 0.5;
 		progress = 1;
 		mat = Assets::Icon::Mine;
 	}else if(TO(ResourceMine, s)){
+		enlarge = 0.5;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){
@@ -629,6 +632,7 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Pickaxe_normal;
 		}
 	}else if(TO(HeadQuarters, s)){
+		enlarge = 0.5;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){
@@ -645,13 +649,13 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 		glColor4f(1.0f,1.0f,1.0f,0.7f*progress+0.3f);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0,1);
-		glVertex2i(p.x*xspacing,p.y*yspacing);
+		glVertex2i((p.x-enlarge)*xspacing,(p.y-enlarge)*yspacing);
 		glTexCoord2f(0,0);
-		glVertex2i(p.x*xspacing,(p.y+1)*yspacing);
+		glVertex2i((p.x-enlarge)*xspacing,(p.y+1+enlarge)*yspacing);
 		glTexCoord2f(1,0);
-		glVertex2i((p.x+1)*xspacing, (p.y+1)*yspacing);
+		glVertex2i((p.x+1+enlarge)*xspacing, (p.y+1+enlarge)*yspacing);
 		glTexCoord2f(1,1);
-		glVertex2i((p.x+1)*xspacing, (p.y)*yspacing);
+		glVertex2i((p.x+1+enlarge)*xspacing, (p.y-enlarge)*yspacing);
 		glEnd();
 		glColor4f(1.0f,1.0f,1.0f,1.0f);
 		mat->unselect();
@@ -718,15 +722,13 @@ void MiniMap::draw(){
 	//The buildings
 	map<GridPoint, ObjectHandle> *structs = &w->terrain->structures;
 	map<GridPoint, ObjectHandle>::iterator itt;
-	int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
-	int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
+	int xspacing = (int) (320.0 / (w->width / GRID_SIZE + 1));
+	int yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
 	for(itt = structs->begin(); itt != structs->end(); itt++){
 		GridPoint p = itt->first;
 		ObjectHandle s = itt->second;
 		drawStructure(p, s, xspacing, yspacing);
 	}
-	xspacing = (int) (320.0 / (w->width / GRID_SIZE  + 1));
-	yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
 	//The robots
 	map<Player::Id,ObjectHandle>::iterator it;
 	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
