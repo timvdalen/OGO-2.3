@@ -15,6 +15,8 @@
 //------------------------------------------------------------------------------
 
 #include <string>
+#include <stack>
+#include <map>
 #include <set>
 
 #include "base.h"
@@ -145,7 +147,34 @@ class Object
 	//! Renders the object. This calls preRender(), draw() and postRender() in that order
 	virtual void render();
 
-
+	template <class T> class iterator : public std::iterator<input_iterator_tag, T>
+	{
+		typedef set<ObjectHandle> I;
+		stack< pair<I,I> > p;
+		public:
+		iterator(I begin, I end) { p.push(make_pair(begin,end)); }
+		iterator(const iterator &it) : p(it.p) {}
+		iterator &operator ++()
+		{
+			++p.top().first();
+			if ((p.top().first() == p.top().second()) && (p.size() > 1))
+				{ p.pop(); ++p.top().first(); }
+			
+			if (!TO(T,*p.top().first()))
+				if ((p.top().first() != p.top().second()) || (p.size() > 1))
+					++*this;
+			
+			return *this;
+		}
+		iterator operator ++(T) { iterator tmp(*this); operator++(); return tmp; }
+		bool operator ==(const iterator &rhs) { return p.top() == rhs.p.top(); }
+		bool operator !=(const iterator &rhs) { return p.top() != rhs.p.top(); }
+		T &operator*() { return *p.top().first(); }
+		T *operator->() { return &*p.top().first(); }
+	};
+	
+	iterator begin() { return iterator(children.begin(), children.end()); }
+	iterator end() { return iterator(children.end(), children.end()); }
 };
 
 //------------------------------------------------------------------------------
