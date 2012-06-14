@@ -130,6 +130,7 @@ void Initialize(int argc, char *argv[])
     Icon::Pickaxe_normal = TexturedMaterial(path + "assets/textures/hud/pickaxe_normal.png");
     Icon::Pickaxe_blue = TexturedMaterial(path + "assets/textures/hud/pickaxe_blue.png");
     Icon::Pickaxe_red = TexturedMaterial(path + "assets/textures/hud/pickaxe_red.png");
+    Icon::Tower_blue = TexturedMaterial(path + "assets/textures/hud/tower_blue.png");
     Icon::Tower_normal = TexturedMaterial(path + "assets/textures/hud/tower_normal.png");
     Icon::Tower_red = TexturedMaterial(path + "assets/textures/hud/tower_red.png");
     Icon::HQ_normal = TexturedMaterial(path + "assets/textures/hud/headquarter_normal.png");
