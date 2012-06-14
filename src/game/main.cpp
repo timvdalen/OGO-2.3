@@ -56,10 +56,18 @@ void updatePlayers();
 
 int main(int argc, char *argv[])
 {
-	//Config file
-	ConfigFile config("game.conf");
 	string pname;
-	config.readInto(pname, "playername");
+	char team;
+	//Config file
+	try{
+		ConfigFile config("game.conf");
+		config.readInto(pname, "playername", string("Unnamed"));
+		team = config.read("team", 'a');
+	}catch(ConfigFile::file_not_found e){
+		printf("No config file found. Please add a game.conf (in INI format) with values player and team.");
+		pname = string("Unnamed");
+		team = 'a';
+	}
 
 	//parse arguments...
 	Video::Initialize(argc, argv);
@@ -79,12 +87,10 @@ int main(int argc, char *argv[])
 	v1.camera.objective = Rd(0.0 * Deg2Rad, Vd(0,0,1));
 
 	cube = Cuboid(Pd(0,3,0));
-	ObjectHandle player = Objects::Player(0, 'a', pname);
+	ObjectHandle player = Objects::Player(0, team, pname);
 	player->rotation = Rd(0,Vd(0,0,1));
 	Player *p = TO(Player, player);
 	p->weapon = weapLaser;
-
-	ObjectHandle p2 = Objects::Player(1, 'b', "LOSAH", Pd(50, 50, 0));
 
 	cube->material = Assets::Test;
 
@@ -107,7 +113,6 @@ int main(int argc, char *argv[])
 	}
 
 	world->children.insert(player);
-	world->children.insert(p2);
 	
 	v1.world = world;
 
