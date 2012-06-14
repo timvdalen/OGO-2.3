@@ -30,6 +30,8 @@
 #include "base.h"
 #include "core.h"
 
+#define FRATE (Video::GameSpeed / Video::CurrentFPS())
+
 //!Video subsystem
 namespace Video {
 
@@ -38,6 +40,8 @@ using namespace Core;
 class Window;
 class Viewport;
 struct Camera;
+
+extern double GameSpeed;
 
 //------------------------------------------------------------------------------
 

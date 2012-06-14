@@ -482,6 +482,14 @@ void PrintCPS()
 
 //------------------------------------------------------------------------------
 
+CMD(GameSpeed, 1, arg, (double) arg[0]);
+void GameSpeed(double speed)
+{
+	Video::GameSpeed = speed;
+}
+
+//------------------------------------------------------------------------------
+
 CMD(NetDebug, 0, arg)
 void NetDebug()
 {

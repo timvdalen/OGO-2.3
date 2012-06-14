@@ -176,7 +176,7 @@ void Player::render(){
 }
 
 void Player::interpolate(){
-	origin = origin + velocity*(Movement::MoveSpeed*(Video::CurrentFPS()/60.0));
+	origin = origin + velocity * (Movement::MoveSpeed / FRATE);
 }
 
 //------------------------------------------------------------------------------
