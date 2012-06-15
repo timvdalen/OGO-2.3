@@ -2,10 +2,11 @@
  * World object -- see header file for more info
  */
 
-#include <cstdlib>
-#include <vector>
+#include <stdlib.h>
 #include <stdio.h>
-#include <GL/freeglut.h>
+
+#include <limits>
+#include <vector>
 
 #include "world.h"
 
@@ -259,12 +260,43 @@ Point<double> World::getCorrectedOrigin(Qd q, Pd p){
 	#undef LOWERBOUND
 }
 
-
 //------------------------------------------------------------------------------
 
 ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 {
-	return ObjectHandle();// Todo: implement
+	pair<ObjectHandle, double> closest = make_pair(ObjectHandle(), !path);
+	
+	BoundedObject *bo;
+	pair<ObjectHandle, double> ret;
+	for (Object::iterator it = begin(); it != end(); ++it)
+	{
+		if (!(bo = TO(BoundedObject,*it))) continue;
+		ret = bo->checkCollision(origin, path);
+		if (ret.second < closest.second)
+			closest = ret;
+	}
+	path = ~path * closest.second;
+	return closest.first;
+}
+
+//------------------------------------------------------------------------------
+
+set<ObjectHandle> World::sense(ObjectHandle &target)
+{
+	set<ObjectHandle> objects;
+	
+	Object::iterator it;
+	BoundedObject *bo = TO(BoundedObject,target);
+	if (!bo) for (it = begin(); it != end(); ++it)
+	{
+		BoundedObject *bo = TO(BoundedObject,*it);
+		if (bo && bo->checkCollision(target))
+			objects.insert(*it);
+	}
+	else  for (it = begin(); it != end(); ++it)
+		if (bo->checkCollision(*it));
+	
+	return objects;
 }
 
 //------------------------------------------------------------------------------

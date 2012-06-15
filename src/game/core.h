@@ -26,22 +26,48 @@ namespace Core {
 
 using namespace std;
 using namespace Base;
-
 //------------------------------------------------------------------------------
-//                                Basic types
-
-// Forward declarations
+//                                Forward declarations
 
 template <class type> class Handle;
 class Object; typedef Handle<Object> ObjectHandle;
 class Material; typedef Handle<Material> MaterialHandle;
-typedef int Resource;
-typedef float Power;
+
+//------------------------------------------------------------------------------
+//                                Basic types
+
+typedef float Resource; //!< Resource type
+typedef float Power;    //!< Power type
+
+//------------------------------------------------------------------------------
+//                                Conversions
+
+string convert(const Point<double> &);
+string convert(const Vector<double> &);
+string convert(const Quaternion<double> &);
+string convert(const Rotation<double> &);
+string convert(const Color<float> &);
+string convert(const double &);
+string convert(const long &);
+
+Point<double>      ToPoint(const string &);
+Vector<double>     ToVector(const string &);
+Quaternion<double> ToQuaternion(const string &);
+Rotation<double>   ToRotation(const string &);
+Color<float>       ToColor(const string &);
+double             ToFloat(const string &);
+long               ToInteger(const string &);
+
+inline string operator |(const string &lhs, const string &rhs)
+	{ return lhs + string("|") + rhs; }
+
+#define NAME(x) virtual string type() const { return #x; }
+#define SERIAL(x) virtual operator string() const { return x; }
 
 //------------------------------------------------------------------------------
 //                                Handle
-// Provides basic garbage collection
 
+//! Handle: Provides basic garbage collection
 template <class type>
 class Handle
 {
@@ -112,8 +138,8 @@ class Material
 //! Represents an object in the game
 class Object
 {
-	public:
-
+	public: NAME(Object) SERIAL(type() | convert(origin) | convert(rotation))
+	
 	//! The origin of this object
 	Point<double> origin;
 
@@ -146,37 +172,36 @@ class Object
 
 	//! Renders the object. This calls preRender(), draw() and postRender() in that order
 	virtual void render();
-
-	template <class T> class iterator : public std::iterator<input_iterator_tag, T>
+	
+	class iterator : public std::iterator<input_iterator_tag,ObjectHandle>
 	{
-		typedef set<ObjectHandle> I;
+		typedef set<ObjectHandle>::iterator I;
 		stack< pair<I,I> > p;
 		public:
-		iterator(I begin, I end) { p.push(make_pair(begin,end)); }
+		size_t level() { return p.size(); }
+		iterator() {}
+		iterator(const I &begin, const I &end) { p.push(make_pair(begin,end)); }
 		iterator(const iterator &it) : p(it.p) {}
 		iterator &operator ++()
 		{
-			++p.top().first();
-			if ((p.top().first() == p.top().second()) && (p.size() > 1))
-				{ p.pop(); ++p.top().first(); }
-			
-			if (!TO(T,*p.top().first()))
-				if ((p.top().first() != p.top().second()) || (p.size() > 1))
-					++*this;
-			
+			if (!(*p.top().first)->children.empty())                 // Push
+				p.push(make_pair((*p.top().first)->children.begin(),
+				                 (*p.top().first)->children.end()));
+			else if (++p.top().first != p.top().second);             // Step
+			else                                                     // Pop
+				while ((p.top().first == p.top().second) && (p.size() > 1))
+					{ p.pop(); ++p.top().first; }
 			return *this;
 		}
-		iterator operator ++(T) { iterator tmp(*this); operator++(); return tmp; }
-		bool operator ==(const iterator &rhs) { return p.top() == rhs.p.top(); }
-		bool operator !=(const iterator &rhs) { return p.top() != rhs.p.top(); }
-		T &operator*() { return *p.top().first(); }
-		T *operator->() { return &*p.top().first(); }
+		iterator operator ++(int) { iterator tmp(*this); operator++(); return tmp; }
+		bool operator ==(const iterator &rhs) const { return p.top() == rhs.p.top(); }
+		bool operator !=(const iterator &rhs) const { return p.top() != rhs.p.top(); }
+		ObjectHandle operator *() { return *p.top().first; }
+		const ObjectHandle *operator ->() { return &*p.top().first; }
 	};
 	
-	template <class T> iterator<T> begin()
-		{ return iterator<T>(children.begin(), children.end()); }
-	template <class T> iterator<T> end()
-		{ return iterator<T>(children.end(), children.end()); }
+	iterator begin() { return iterator(children.begin(), children.end()); }
+	iterator end() { return iterator(children.end(), children.end()); }
 };
 
 //------------------------------------------------------------------------------

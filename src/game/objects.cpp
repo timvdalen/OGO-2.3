@@ -14,7 +14,7 @@ namespace Objects {
 
 //------------------------------------------------------------------------------
 
-pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Vector<double> direction)
+pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
 {
     double collision = numeric_limits<double>::infinity();
     //--- We only check lbl rbh, could be improved-----
@@ -67,7 +67,7 @@ pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Ve
         for (it = children.begin(); it != children.end(); ++it){
             BoundedObject* child = TO(BoundedObject, *it);
             if(child){
-                pair<ObjectHandle, double> childcollision = child->findCollision(p, v);
+                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
                 if(childcollision.second < collision2){ //We have a collision with a child
                     colobject.clear();
                     collision2 = childcollision.second;
@@ -85,9 +85,24 @@ pair<ObjectHandle, double> BoundedObject::findCollision(Point<double> origin, Ve
     return make_pair(ObjectHandle(),collision);
 }
 
-    ObjectHandle BoundedObject::checkCollision(Point<double> origin, Vector<double> direction){
-        return findCollision(origin,direction).first;
-    }
+//------------------------------------------------------------------------------
+
+ObjectHandle BoundedObject::checkCollision2(Pd origin, Vd direction)
+{
+    return checkCollision(origin,direction).first;
+}
+
+//------------------------------------------------------------------------------
+
+bool BoundedObject::checkCollision(const ObjectHandle &target)
+{
+	BoundedObject *bo = TO(BoundedObject, target);
+	if (bo)
+	{
+		// Todo: implement
+	}
+	else return insideBox(target->origin, bb.lbl, bb.rth);
+}
 
 //------------------------------------------------------------------------------
 

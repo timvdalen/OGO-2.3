@@ -29,7 +29,7 @@ using namespace HUD_objects;
 //! Represents the world of the game
 class World: public BoundedObject
 {
-	public:
+	public: NAME(World)
 	//! Size of the world in the X direction.
 
 	//! Needs to be a multiple of GRID_SIZE
@@ -62,10 +62,14 @@ class World: public BoundedObject
 	//! \par origin will define the starting point in the world for the lookpath
 	//! \par path is a vector that is searched
 	//! \note the norm of path defines the length that is searched.
-	//!       When the function returns witha object the path value will be set
+	//!       When the function returns with an object the path value will be set
 	//!       to the vector pointing to collision spot
 	//! \returns the first colliding object or an empty handle when no object was found
 	ObjectHandle trace(Point<double> origin, Vector<double> &path);
+	
+	//! Gets a set of objects that touch the given object
+	//! \note When the traget is not bounded it only check for the origin
+	set<ObjectHandle> sense(ObjectHandle &target);
 	
 	//! Corrects origin in such a way that the camera cannot be placed outside the world bounds or inside a structure
 	Point<double> getCorrectedOrigin(Qd q, Pd p);
@@ -77,14 +81,10 @@ class World: public BoundedObject
 
 //------------------------------------------------------------------------------
 
-
-
-//------------------------------------------------------------------------------
-
 //! Represents a droppable object
 class Droppable: public BoundedObject
 {
-	public:
+	public: NAME(Droppable) SERIAL(type() | convert(worth) | convert(ttl))
 	//! The worth of this droppable
 	Resource worth;
 
@@ -101,8 +101,9 @@ class Droppable: public BoundedObject
 //------------------------------------------------------------------------------
 
 //! Represents a star in the \ref Sky
-class Star: public Object{
-	public:
+class Star: public Object
+{
+	public: NAME(Star)
 	//! Whether this star is big
 	bool big;
 
@@ -115,8 +116,9 @@ class Star: public Object{
 
 //------------------------------------------------------------------------------
 
-class Sky: public Object{
-	public:
+class Sky: public Object
+{
+	public: NAME(Sky)
 	//! The width of the sky
 	int width;
 

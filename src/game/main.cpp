@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	Game::Initialize(argc, argv);
 	Game::Exec("inputs.exec");
 
-	Net::Initialize();
+	//Net::Initialize();
 	NetCode::Initialize(argc, argv);
 
 	v1.camera.origin = Pd(0,0.1,0);

@@ -29,7 +29,7 @@ class Widget;
 
 //! Main class for the Heads-up display
 class HUD: public Object{
-	public:
+	public: NAME(HUD) SERIAL(type())
 
 	//! Width of the screen in pixels
 	int width;
@@ -63,7 +63,7 @@ class HUD: public Object{
 
 //! Object for display on the HUD
 class Widget: public Object{
-	public:
+	public: NAME(Widget) SERIAL(type())
 	//! X offset of this widget in pixels
 	int xOffset;
 
@@ -162,7 +162,7 @@ class MessageDisplayer: public Widget{
 	//! The last time a message was added
 	int lastMessage;
 
-	public:
+	public: NAME(MessageDisplayer)
 	//! Circluar array that contains the messages
 	Handle<DisplayMessage> messages[10];
 
@@ -198,7 +198,7 @@ class MessageDisplayer: public Widget{
 };
 
 class CrossHair: public Widget{
-	public:
+	public: NAME(CrossHair)
 
 	//! Constructs the crosshair
 	CrossHair(int _x, int _y, int _width, int _height);
@@ -208,7 +208,7 @@ class CrossHair: public Widget{
 };
 
 class BuildingSelection: public Widget{
-    public:
+    public: NAME(BuildingSelection)
     
     bool show;
     
@@ -227,7 +227,7 @@ class BuildingSelection: public Widget{
     
     
 class StatusDisplayer: public Widget{
-    public:
+    public: NAME(StatusDisplayer)
     //! Constructs the status displayer
     StatusDisplayer(int _x, int _y, int _width, int _height);
         
@@ -242,7 +242,7 @@ class TextInput: public Widget{
 	//! The \ref Input this TextInput reads from
 	Input *input;
 	
-	public:
+	public: NAME(TextInput)
 	//! Marks the TextInput as done
 	bool done;
 	
@@ -255,7 +255,7 @@ class TextInput: public Widget{
     
 class MiniMap: public Widget{
     
-    public:     
+    public: NAME(MiniMap)
     //! Constructs the status displayer
     MiniMap(int _x, int _y, int _width, int _height);
         

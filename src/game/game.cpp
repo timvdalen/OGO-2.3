@@ -384,7 +384,7 @@ void Fire()
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
 
 			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin));
-			pair<ObjectHandle, double> collision = game.world->findCollision(game.controller->target, lookVec);
+			pair<ObjectHandle, double> collision = game.world->checkCollision(game.controller->target, lookVec);
 
 			if (collision.first)
 			{
@@ -509,6 +509,16 @@ CMD(NetDebug, 0, arg)
 void NetDebug()
 {
 	NetCode::Debug();
+}
+
+//------------------------------------------------------------------------------
+
+CMD(PrintWorld, 0, arg)
+void PrintWorld()
+{
+	Object::iterator it;
+	for (it = game.world->begin(); it != game.world->end(); ++it)
+		puts((string(it.level(),'\t') + string(**it)).c_str());
 }
 
 //==============================================================================

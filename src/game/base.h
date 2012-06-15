@@ -97,7 +97,7 @@ struct Point
 	type x, y, z;
 
 	Point(const Point &P) : x(P.x), y(P.y), z(P.z) {}
-	Point(type X = 0, type Y = 0, type Z = 0) : x(X), y(Y), z(Z) {}
+	explicit Point(type X = 0, type Y = 0, type Z = 0) : x(X), y(Y), z(Z) {}
 
 	//! Vector addition
 	Point operator +(const Vector<type> &V) const { return Point(x+V.x, y+V.y, z+V.z); }
@@ -132,7 +132,7 @@ struct Vector : public Point<type>
 	using Point<type>::y;
 	using Point<type>::z;
 
-	Vector(type X = 0, type Y = 0, type Z = 0) : Point<type>(X,Y,Z) {}
+	explicit Vector(type X = 0, type Y = 0, type Z = 0) : Point<type>(X,Y,Z) {}
 	//! Flips the vector
 	Vector operator -() const { return Vector(-x,-y,-z); }
 	//! Scalar multiplication
@@ -166,7 +166,7 @@ struct Quaternion
 {
 	type a, b, c, d;
 
-	Quaternion(type A = 1, type B = 0, type C = 0, type D = 0) : a(A), b(B), c(C), d(D) {}
+	explicit Quaternion(type A = 1, type B = 0, type C = 0, type D = 0) : a(A), b(B), c(C), d(D) {}
 	Quaternion(type R, const Vector<type> &V) : a(R), b(V.x), c(V.y), d(V.z) {}
 	operator type() const { return a; }
 	operator Vector<type>() const { return Vector<type>(b,c,d); }
@@ -209,7 +209,7 @@ struct Rotation
 	type a;
 	Vector<type> v;
 
-	Rotation(type A = 0, const Vector<type> &V = Vector<type>(0,0,1)) : a(A), v(V) {}
+	explicit Rotation(type A = 0, const Vector<type> &V = Vector<type>(0,0,1)) : a(A), v(V) {}
 	Rotation(const Quaternion<type> &Q) : a(fmod(acos(Q.a) * 2.0f, Rad)) { v = Q; v = ~v; }
 	Rotation(const Vector<type> &U = Vector<type>(0,0,1),
 	         const Vector<type> &V = Vector<type>(1,0,0)) : a(acos(V^U)), v(~(V*U)) {}
@@ -235,7 +235,7 @@ struct Color
 		struct { type r, g, b, a; };
 	};
 
-	Color(type R = 0, type G = 0, type B = 0, type A = 1)
+	explicit Color(type R = 0, type G = 0, type B = 0, type A = 1)
 		: r(FCLAMP(R)), g(FCLAMP(G)), b(FCLAMP(B)), a(FCLAMP(A)) {}
 
 	Color operator *(const type &S) const { return Color(r*S,g*S,b*S,a*S); }
