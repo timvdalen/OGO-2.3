@@ -111,6 +111,8 @@ int main(int argc, char *argv[])
 
 		w->children.insert(cube);
 	}
+	
+	Game::game.players.insert(make_pair(p->id, player));
 
 	world->children.insert(player);
 	

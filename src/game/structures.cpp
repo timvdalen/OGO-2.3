@@ -190,18 +190,21 @@ void Terrain::draw()
 			double halfHeight = height/2;
 			material->unselect();
 			MaterialHandle gridMat;
+			float height;
 			if(canPlaceStructure(selected)){
-			       	gridMat = Assets::SelectedGrid;
+				gridMat = Assets::SelectedGrid;
+				height = 0;
 			}else{
 				gridMat = Assets::ErrorGrid;
+				height = 1;//For foundation
 			}
 			gridMat->select();
 			glBegin(GL_LINE_STRIP);
-			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
-			glVertex3f(((i+1) * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
-			glVertex3f(((i+1) * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
-			glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, 0);
-			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, 0);
+			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, height);
+			glVertex3f(((i+1) * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, height);
+			glVertex3f(((i+1) * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, height);
+			glVertex3f((i * GRID_SIZE) - halfWidth, ((j+1) * GRID_SIZE) - halfHeight, height);
+			glVertex3f((i * GRID_SIZE) - halfWidth, (j * GRID_SIZE) - halfHeight, height);
 			glEnd();
 			gridMat->unselect();
 			material->select();
