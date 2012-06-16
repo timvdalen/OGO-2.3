@@ -248,7 +248,10 @@ class DefenseTower: public Building
 class ResourceMine: public Building
 {
 	public: NAME(ResourceMine)
-	ResourceMine(BoundingBox B = BoundingBox(), Player::Id _owner = 0);
+	
+	ResourceMine(Player::Id _owner);
+	
+	ResourceMine(int buildTime);
 
 	virtual void draw();
 
