@@ -575,14 +575,18 @@ void Weapon(WeaponType weapon)
 	{
 		// Goto build mode
 		terrain->showGrid = true;
+		#ifndef AUTOBUILD
 		game.world->hud->buildselector->show = true;
+		#endif
 		//game.controller->setView(true);
 	}
 	else if (prevWeapon == weapWrench)
 	{
 		// Leave build mode
 		terrain->showGrid = false;
+		#ifndef AUTOBUILD
 		game.world->hud->buildselector->show = false;
+		#endif
 		game.world->terrain->setSelected(GridPoint(-1, -1));
 		//game.controller->restoreView();
 	}
