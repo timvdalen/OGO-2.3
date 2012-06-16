@@ -538,7 +538,13 @@ void Build()
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.objective);
 	if(clicked.isValid())
 	{
-		ObjectHandle tower = Objects::DefenseTower(game.player->id);
+		int structure = game.world->terrain->canPlaceStructure(clicked);
+		ObjectHandle tower;
+		switch(structure){
+		case 1: tower = Objects::DefenseTower(game.player->id); break;
+		case 2: tower = Objects::ResourceMine(game.player->id); break;
+		default: tower = ObjectHandle();
+		}
 		game.world->terrain->setSelected(GridPoint(-1, -1));
 		if (!game.world->terrain->placeStructure(clicked, tower))
 			Echo("There's already a tower there");

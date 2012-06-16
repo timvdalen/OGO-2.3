@@ -105,8 +105,12 @@ class Terrain: public Object
 	//! Sets the selected grid points
 	void setSelected(GridPoint p);
 
-	//! Returns whether or not a tower can be built on \ref GridPoint p
-	bool canPlaceStructure(GridPoint p);
+	//! Returns whether or not a structure can be built on \ref GridPoint p
+	
+	//! Returns 0 when placing a structure is not possible,
+	//! returns 1 when a DefenseTower can be built,
+	//!	returns 2 when a Mine can be built
+	int canPlaceStructure(GridPoint p);
 
 	//! Safe-places a Structure on the grid
 
@@ -193,6 +197,9 @@ class Building: public Structure
 
 	//! Sets up translations and rotations
 	virtual void preRender();
+	
+	//! Renders children and resets translations and rotations
+	virtual void postRender();
 
 	//! Draws the building
 	virtual void draw(){}
@@ -247,6 +254,8 @@ class DefenseTower: public Building
 //! Represents a mining tower built over a mine
 class ResourceMine: public Building
 {
+	ObjectHandle rock;
+
 	public: NAME(ResourceMine)
 	
 	ResourceMine(Player::Id _owner);
@@ -254,9 +263,11 @@ class ResourceMine: public Building
 	ResourceMine(int buildTime);
 
 	virtual void draw();
+	
+	virtual void postRender();
 
 	//! Model
-	struct { ObjectHandle rock, rig, drill; } model;
+	struct { ObjectHandle rig, drill; } model;
 };
 
 //------------------------------------------------------------------------------
