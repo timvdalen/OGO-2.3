@@ -220,21 +220,8 @@ void KeyDown(Button btn)
 
 	if (!controller) return;
 	if (!input) return;
-
-	if(btn >= btnMouseLeft){
-		if(input->grabbing){
-			if(btn == btnMouseRight){
-				input->releaseMouse();
-			}else{
-				binds.processDown(btn);
-			}
-		}else{
-			if(btn == btnMouseLeft)
-				input->grabMouse();
-		}
-	}else{
-		binds.processDown(btn);
-	}
+	
+	binds.processDown(btn);
 }
 
 //------------------------------------------------------------------------------
@@ -251,9 +238,7 @@ void updatePlayers(){
 	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
 	{
 		Player *p = TO(Player,it->second);
-		if(!p){
-			return;
-		}
+		if(!p || p == Game::game.player) return;
 		p->interpolate();
 	}
 }

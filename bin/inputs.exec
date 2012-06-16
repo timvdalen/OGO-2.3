@@ -26,8 +26,8 @@ bind Q :lookY 1.0           | lookY 0.0
 bind Z :lookY -1.0          | lookY 0.0
 
 # weapons & tools
-bind LeftClick :Fire
-bind RightClick :Jump
+bind LeftClick :Chain :Fire ; GrabMouse
+bind RightClick :ReleaseMouse
 
 bind B :Toggle :Weapon 2 ^ Weapon 1
 

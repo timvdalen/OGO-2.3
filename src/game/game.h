@@ -81,6 +81,9 @@ void Bind(string button, string line);
 
 void Exec(string filename); //!< Executes each line of a file
 
+void GrabMouse();        //!< Takes hold of the cursor and locks it in place
+void ReleaseMouse();     //!< Releases the cursor when grabbed
+
 // Commands not in header: Chain, Toggle
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -118,8 +121,8 @@ void Tool(ToolType tool);       //!< Sets the primary build tool
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Events
 
-void DisplayChatMsg(Player *, string line);
-void DisplayTeamMsg(Player *, string line);
+void DisplayChatMsg(Player *, string line); //!< Displays a chat message in the log
+void DisplayTeamMsg(Player *, string line); //!< Displays a team chat message in the log
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Diagnostics

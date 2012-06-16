@@ -1,9 +1,10 @@
 /*
  * Core module -- see header
  */
+#include <stdio.h>
 
 #include <string>
-#include <cstdio>
+
 #include "video.h"
 #include "core.h"
 
@@ -57,6 +58,22 @@ double ToFloat(const string &str) { double d = 0;
 
 long ToInteger(const string &str) { long l = 0;
 	sscanf(str.c_str(), "I%ld", &l); return l; }
+
+//------------------------------------------------------------------------------
+
+void Object::updateAbsolute()
+{
+	if (children.size() < 1) return;
+	
+	Pd pos = absoluteOrigin();
+	Qd rot = absoluteRotation();
+	set<ObjectHandle>::iterator it;
+	for (it = children.begin(); it != children.end(); ++it)
+	{
+		(*it)->parentOrigin = pos;
+		(*it)->parentRotation = rot;
+	}
+}
 
 //------------------------------------------------------------------------------
 

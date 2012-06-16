@@ -265,6 +265,22 @@ void Exec(string filename)
 
 //------------------------------------------------------------------------------
 
+CMD(GrabMouse, 0, arg)
+void GrabMouse()
+{
+	game.input->grabMouse();
+}
+
+//------------------------------------------------------------------------------
+
+CMD(ReleaseMouse, 0, arg)
+void ReleaseMouse()
+{
+	game.input->releaseMouse();
+}
+
+//------------------------------------------------------------------------------
+
 CMD(Connect, 1, arg, (string) arg[0])
 void Connect(string address)
 {
@@ -300,6 +316,8 @@ void Say(string msg)
 CMD(TeamSay, 1, arg, (string) arg[0])
 void TeamSay(string msg)
 {
+	NetCode::TeamChat(msg);
+	DisplayTeamMsg(game.player, msg);
 }
 
 //------------------------------------------------------------------------------
@@ -368,6 +386,7 @@ void Jump()
 CMD(Fire, 0, arg)
 void Fire()
 {
+	if (!game.input->grabbing) return; // Ignore when not selected
 	switch (game.player->weapon)
 	{
 		case weapWrench:
@@ -441,7 +460,6 @@ void Weapon(WeaponType weapon)
 		terrain->showGrid = true;
 		game.world->hud->buildselector->show = true;
 		//game.controller->setView(true);
-		// Todo: add controller
 	}
 	else if (prevWeapon == weapWrench)
 	{
@@ -531,7 +549,7 @@ void Test(string str)
 {
 	Object o;
 	if (o = str)
-		puts(string(o).c_str());
+		Echo(string(o).c_str());
 }
 
 //==============================================================================

@@ -59,6 +59,8 @@ class HUD: public Object{
 
 	//! Draws its children and switches back to 3D drawing mode
 	void postRender();
+	
+	virtual void updateAbsolute() {}
 };
 
 //! Object for display on the HUD
