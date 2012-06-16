@@ -128,6 +128,9 @@ void Initialize(int argc, char *argv[])
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
 	
+	game.teams.insert(make_pair('a', Team('a')));
+	game.teams.insert(make_pair('b', Team('b')));
+	
 	string name;
 	unsigned char team;
 	config->readInto(name, "playername", string("Unnamed"));

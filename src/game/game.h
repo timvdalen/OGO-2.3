@@ -59,6 +59,7 @@ struct GameState
 	string gameName;
 	
 	map<Player::Id,ObjectHandle> players;
+	map<unsigned char,Team> teams;
 	
 	GameState() : world(0), player(0) {}
 } extern game; //! Current game state
