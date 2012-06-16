@@ -9,7 +9,7 @@
 
 #ifndef _CORE_H
 #define _CORE_H
-
+#define AUTOBUILD
 #define TO(T,x) (dynamic_cast<T *>(&*(x)))
 
 //------------------------------------------------------------------------------

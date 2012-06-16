@@ -538,6 +538,7 @@ void Build()
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.objective);
 	if(clicked.isValid())
 	{
+		#ifdef AUTOBUILD
 		int structure = game.world->terrain->canPlaceStructure(clicked);
 		ObjectHandle tower;
 		switch(structure){
@@ -548,6 +549,7 @@ void Build()
 		game.world->terrain->setSelected(GridPoint(-1, -1));
 		if (!game.world->terrain->placeStructure(clicked, tower))
 			Echo("There's already a tower there");
+		#endif
 	}
 	else
 		Echo("Invalid place to build");
