@@ -135,6 +135,7 @@ void Initialize(int argc, char *argv[])
 	
 	ObjectHandle player = Player(1, team, name);
 	game.player = TO(Player,player);
+	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
 	game.players[1] = player;
 	
