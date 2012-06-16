@@ -6,15 +6,14 @@
 
 #include <limits>
 
+#include "game.h"
 #include "movement.h"
 
 namespace Movement {
 
-
-
 //------------------------------------------------------------------------------
 
-Controller::Controller(Camera &C, ObjectHandle P, ObjectHandle W) : camera(C), player(P), world(W)
+Controller::Controller(Camera &C, ObjectHandle P) : camera(C), player(P)
 {
 	firstPerson = false;
 	lastView = false;
@@ -217,9 +216,14 @@ void Controller::frame()
 	
 	if (move[dirY] != 0.0)
 	{
-		if ((move[dirX] < 0.0 && move[dirY] > 0.0) || (move[dirX] > 0.0 && move[dirY] < 0.0)) player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
-		else if ((move[dirX] > 0.0 && move[dirY] > 0.0) || (move[dirX] < 0.0 && move[dirY] < 0.0)) player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
-		else {
+		if ((move[dirX] < 0.0 && move[dirY] > 0.0)
+		||  (move[dirX] > 0.0 && move[dirY] < 0.0))
+			player->rotation = player->rotation * Rd(-0.05,Vd(0,0,1));
+		else if ((move[dirX] > 0.0 && move[dirY] > 0.0)
+		     ||  (move[dirX] < 0.0 && move[dirY] < 0.0))
+			player->rotation = player->rotation * Rd(0.05,Vd(0,0,1));
+		else
+		{
             Vd camv = camAngle*Vd(0,1,0);
             Vd plav = player->rotation*Vd(0,1,0);
             camv.z = 0; camv = ~camv;
@@ -229,9 +233,8 @@ void Controller::frame()
             double axis = angle2 >  0.5*Pi ^ angle > 0? 1 : -1;
             angle2 = angle2 > 0.5*Pi ? Pi - angle2 : angle2;
             angle2 = angle2 < 0.05? angle2 : 0.05;
-			if (axis != 0) {
+			if (axis != 0)
                 player->rotation = player->rotation * Rd(-angle2,Vd(0,0,axis));
-            }
 		}
 	}
 	Vector<double> vec = (-player->rotation * Vector<double>(0,1,0));
@@ -254,8 +257,9 @@ void Controller::frame()
 
 //------------------------------------------------------------------------------
 
-bool Controller::walkAble(Point<double> old, Point<double> updated){
-    World *w = TO(World, world);
+bool Controller::walkAble(Point<double> old, Point<double> updated)
+{
+    World *w = Game::game.world;
 	double extrabounding = 0.5;
     if(!((-(w->width)/2 +extrabounding) < updated.x && updated.x < ((w->width)/2 - extrabounding)//Inside x-interval
         && (-(w->height)/2 +extrabounding) < updated.y && updated.y < ((w->height)/2) - extrabounding))//Inside y-interval

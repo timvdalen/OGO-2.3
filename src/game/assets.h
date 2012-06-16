@@ -23,9 +23,7 @@ void Terminate();
 
 //------------------------------------------------------------------------------
 
-extern MaterialHandle Grid;
-extern MaterialHandle SelectedGrid;
-extern MaterialHandle ErrorGrid;
+extern MaterialHandle Grid, SelectedGrid, ErrorGrid;
 
 extern MaterialHandle WorldMaterial;
 extern MaterialHandle Star;
@@ -42,21 +40,11 @@ extern MaterialHandle CrossHair;
 
 namespace Icon{
 
-extern MaterialHandle Money;
-extern MaterialHandle Health;
-extern MaterialHandle Mine;
-extern MaterialHandle Robot_red;    
-extern MaterialHandle Robot_blue;
-extern MaterialHandle Robot_normal;
-extern MaterialHandle Pickaxe_normal;
-extern MaterialHandle Pickaxe_blue;    
-extern MaterialHandle Pickaxe_red;
-extern MaterialHandle Tower_normal;
-extern MaterialHandle Tower_red;
-extern MaterialHandle Tower_blue;
-extern MaterialHandle HQ_normal;
-extern MaterialHandle HQ_blue;
-extern MaterialHandle HQ_red;
+extern MaterialHandle Money, Health, Mine;
+extern MaterialHandle   Robot_normal,   Robot_red,   Robot_blue;
+extern MaterialHandle Pickaxe_normal, Pickaxe_red, Pickaxe_blue;  
+extern MaterialHandle   Tower_normal,   Tower_red,   Tower_blue;
+extern MaterialHandle      HQ_normal,      HQ_red,      HQ_blue;
 
 }
 

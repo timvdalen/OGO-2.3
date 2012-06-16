@@ -53,6 +53,7 @@ struct GameState
 	Input *input;
 	Controller *controller;
 	
+	ObjectHandle root;
 	World *world;
 	Player *player;
 	string gameName;
@@ -79,7 +80,9 @@ void RQuit(string msg);  //!< Rage quits with the supplied swear words
 //! \see Binding::bind
 void Bind(string button, string line);
 
-void Exec(string filename); //!< Executes each line of a file
+void Exec(string filename);         //!< Executes each line of a file
+void Get(string key);               //!< Gets a value from the config file
+void Set(string key, string value); //!< Sets a value in the config file
 
 void GrabMouse();        //!< Takes hold of the cursor and locks it in place
 void ReleaseMouse();     //!< Releases the cursor when grabbed

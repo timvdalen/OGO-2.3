@@ -13,6 +13,10 @@
 
 #define GAME_NAME "Grudge of the Oblivious"
 
+#ifndef CONFIG_FILE
+#define CONFIG_FILE "game.conf"
+#endif
+
 #ifndef LOBBY_BC_INTERVAL
 #define LOBBY_BC_INTERVAL 1
 #endif
