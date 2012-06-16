@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 	OnFrame = Frame;
 
 	Game::game.world->terrain->placeStructure(GridPoint(7,14), Mine());
-	Game::game.world->terrain->placeStructure(GridPoint(8,14), ResourceMine(BoundingBox(), player));
+	Game::game.world->terrain->placeStructure(GridPoint(8,14), ResourceMine(p->id));
 
 	Video::StartEventLoop();
 
