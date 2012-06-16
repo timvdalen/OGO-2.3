@@ -64,7 +64,7 @@ inline string operator |(const string &lhs, const string &rhs)
 
 #define NAME(x) virtual string type() const { return #x; }
 #define SERIAL(x) virtual operator string() const { return x; }
-#define UNSERIAL(arg,num,x) virtual bool operator =(const vector<string> &arg) \
+#define UNSERIAL(arg,num,x) virtual bool operator =(vector<string> &arg) \
 	{ if ((arg.size() < (num)+1) || (arg[0] != type())) return false;          \
 	arg.erase(arg.begin()); {x} return true; }
 

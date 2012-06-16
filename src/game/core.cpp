@@ -1,9 +1,10 @@
 /*
  * Core module -- see header
  */
+#include <stdio.h>
 
 #include <string>
-#include <cstdio>
+
 #include "video.h"
 #include "core.h"
 
