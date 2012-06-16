@@ -27,6 +27,7 @@ using namespace Protocol;
 
 static void getInput(string input);
 string to_lower_case(string str);
+bool file_exists(const char *filename);
 
 int windowWidth = 800;
 int windowHeight = 600;
@@ -106,31 +107,36 @@ void Initialize(int argc, char *argv[])
 	Assets::Initialize(argc, argv);
 	
 	// Process config file
-	string pname;
-	char team;
-	try
+	if (!file_exists(CONFIG_FILE))
 	{
-		config = new ConfigFile(CONFIG_FILE);
-		config->readInto(pname, "playername", string("Unnamed"));
-		team = config->read("team", 'a');
+		ConfigFile newconfig;
+		newconfig.add("playername", "Unnamed");
+		newconfig.add("team", 'a');
+		newconfig.save(CONFIG_FILE);
 	}
-	catch(ConfigFile::file_not_found e)
+	
+	try { config = new ConfigFile(CONFIG_FILE); }
+	catch (ConfigFile::file_not_found e)
 	{
 		delete config;
 		config = NULL;
-		Echo("No config file found. "
-		     "Please add 'game.conf' (in INI format) with values player and team.");
-		pname = string("Unnamed");
-		team = 'a';
+		puts("Unable to create config file: " CONFIG_FILE "!");
+		exit(EXIT_FAILURE);
 	}
 	
 	// Set up game world
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
 	
-	ObjectHandle player = Player();
+	string name;
+	unsigned char team;
+	config->readInto(name, "playername", string("Unnamed"));
+	team = config->read("team", 'a');
+	
+	ObjectHandle player = Player(1, team, name);
 	game.player = TO(Player,player);
 	game.root->children.insert(player);
+	game.players[1] = player;
 	
 	// Set up user interface
 	view->world = game.root;
@@ -228,6 +234,16 @@ static void getInput(string input)
 		else
 			++it;
 	}
+}
+
+//------------------------------------------------------------------------------
+
+bool file_exists(const char *filename)
+{
+	FILE *fp = fopen(filename, "rb");
+	if (!fp) return false;
+	fclose(fp);
+	return true;
 }
 
 //==============================================================================
@@ -346,10 +362,12 @@ void Get(string key)
 
 //------------------------------------------------------------------------------
 
+CMD(Set, 2, arg, (string) arg[0], (string) arg[1])
 void Set(string key, string value)
 {
 	if (!config) return;
 	config->add(key, value);
+	config->save(CONFIG_FILE);
 }
 
 //------------------------------------------------------------------------------

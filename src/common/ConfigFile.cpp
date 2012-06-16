@@ -24,6 +24,14 @@ ConfigFile::ConfigFile()
 	// Construct a ConfigFile without a file; empty
 }
 
+void ConfigFile::save( string filename )
+{
+	std::ofstream out( filename.c_str() );
+	
+	if( !out ) throw file_not_found( filename ); 
+	
+	out << (*this);
+}
 
 void ConfigFile::remove( const string& key )
 {
