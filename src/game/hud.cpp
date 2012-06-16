@@ -618,13 +618,13 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Tower_normal;
 		}
     }else if(TO(Mine, s)){
-		enlargeup = 0.5;
-		enlargedown = 0.5;
+		enlargeup = 0;
+		enlargedown = 0;
 		progress = 1;
 		mat = Assets::Icon::Mine;
 	}else if(TO(ResourceMine, s)){
-		enlargeup = 0.5;
-		enlargedown = 0.5;
+		enlargeup = 0;
+		enlargedown = 0;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){
