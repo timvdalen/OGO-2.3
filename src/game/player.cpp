@@ -25,6 +25,8 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBo
 	id = _id;
 	team = _team;
 	name = _name;
+	health = maxHealth = 100; // This needs to be defined somewhere
+	lastShot = time(NULL);
 
 	model.head = ModelObjectContainer();
 	model.body = ModelObjectContainer();

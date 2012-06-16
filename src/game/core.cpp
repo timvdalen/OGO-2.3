@@ -13,6 +13,52 @@ using namespace Base::Alias;
 
 //------------------------------------------------------------------------------
 
+string convert(const Point<double> &p) { char buffer[1024];
+	sprintf(buffer, "P%f,%f,%f", p.x, p.y, p.z); return string(buffer); }
+
+string convert(const Vector<double> &v) { char buffer[1024];
+	sprintf(buffer, "V%f,%f,%f", v.x, v.y, v.z); return string(buffer); }
+
+string convert(const Quaternion<double> &q) { char buffer[1024];
+	sprintf(buffer, "Q%f,%f,%f,%f", q.a, q.b, q.c, q.d); return string(buffer); }
+
+string convert(const Rotation<double> &r) { char buffer[1024];
+	sprintf(buffer, "R%f,%f,%f,%f", r.a, r.v.x, r.v.y, r.v.z); return string(buffer); }
+
+string convert(const Color<double> &c) { char buffer[1024];
+	sprintf(buffer, "C%f,%f,%f,%f", c.r, c.g, c.b, c.a); return string(buffer); }
+
+string convert(const double &d) { char buffer[64];
+	sprintf(buffer, "F%f", d); return string(buffer); }
+
+string convert(const long &l) { char buffer[32];
+	sprintf(buffer, "I%d", l); return string(buffer); }
+
+//------------------------------------------------------------------------------
+
+Point<double> ToPoint(const string &str) { Point<double> p;
+	sscanf(str.c_str(), "P%lf,%lf,%lf", &p.x, &p.y, &p.z); return p; }
+
+Vector<double> ToVector(const string &str) { Vector<double> v;
+	sscanf(str.c_str(), "V%lf,%lf,%lf", &v.x, &v.y, &v.z); return v; }
+
+Quaternion<double> ToQuaternion(const string &str) { Quaternion<double> q;
+	sscanf(str.c_str(), "Q%lf,%lf,%lf,%lf", &q.a, &q.b, &q.c, &q.d); return q; }
+
+Rotation<double> ToRotation(const string &str) { Rotation<double> r = Rd(0, Vd(0,0,1));
+	sscanf(str.c_str(), "R%lf,%lf,%lf,%lf", &r.a, &r.v.x, &r.v.y, &r.v.z); return r; }
+
+Color<float> ToColor(const string &str) { Color<float> c;
+	sscanf(str.c_str(), "C%lf,%lf,%lf,%lf", &c.r, &c.g, &c.b, &c.a); return c; }
+
+double ToFloat(const string &str) { double d = 0;
+	sscanf(str.c_str(), "F%lf", &d); return d; }
+
+long ToInteger(const string &str) { long l = 0;
+	sscanf(str.c_str(), "I%ld", &l); return l; }
+
+//------------------------------------------------------------------------------
+
 void Object::preRender()
 {
 	// Camera orientation and translation (quaternion to rotation matrix)
@@ -64,6 +110,22 @@ void Object::postRender()
 		(*it)->render();
 	
 	glPopMatrix();
+}
+
+//------------------------------------------------------------------------------
+
+bool Object::operator =(const string &str)
+{
+	vector<string> arg;
+	size_t left, right;
+	for (left = 0, right = str.find("|", 0); right != string::npos;
+	right = str.find("|", right))
+	{
+		arg.push_back(str.substr(left, right - left));
+		left = ++right;
+	}
+	arg.push_back(str.substr(left));
+	return operator =(arg);
 }
 
 //------------------------------------------------------------------------------

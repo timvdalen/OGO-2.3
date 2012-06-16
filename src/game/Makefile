@@ -78,7 +78,8 @@ run: default
 
 assets:
 	$(WGET) $(DLDIR)$(ASSETS) -O $(ASSETS)
-	$(UNZIP) $(ASSETS) -d $(BINDIR)
+	$(UNZIP) $(ASSETS) -d $(BINDIR) 
+	$(RM)r $(BINDIR)__MACOSX
 	$(RM) $(ASSETS)
 
 $(BIN): $(OBJ)

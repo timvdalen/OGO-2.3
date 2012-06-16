@@ -10,6 +10,8 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
+#include "time.h"
+
 #include <map>
 
 #include "objects.h"
@@ -49,7 +51,15 @@ class Player: public BoundedObject
 	//!Set relative position of seperate elements
 	void translateModel();
 
-	public:
+	public: NAME(Player) SERIAL(type() | convert(origin)   | convert(rotation)
+	                                   | convert((long)id) | convert((long)team)
+									   | name              | convert((long)health) )
+	UNSERIAL(arg, 6,
+		origin = ToPoint(arg[0]);   rotation = ToQuaternion(arg[1]);
+		id     = ToInteger(arg[2]); team     = ToInteger(arg[3]);
+		name   = arg[4];            health   = ToInteger(arg[5]);
+	)
+	
 	typedef unsigned int Id;
 
 	//! The ID of this player
@@ -84,7 +94,8 @@ class Player: public BoundedObject
 	struct { ObjectHandle head, body, weapon, tool, wheel; } model;
 
 	//! Constructs a player
-	Player(Id _id = (Id)0, unsigned char _team = 'a', string _name = "player", Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
+	Player(Id _id = (Id)0, unsigned char _team = 'a', string _name = "player",
+		Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
 
 	//! Destroys a player
 	virtual ~Player();

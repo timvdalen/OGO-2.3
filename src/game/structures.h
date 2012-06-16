@@ -10,6 +10,8 @@
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
 
+#include "player.h"
+
 #define GRID_SIZE 10
 
 namespace Objects {
@@ -52,7 +54,7 @@ class Terrain: public Object
 {
 
 	GLuint gridDL;
-	public:
+	public: NAME(Terrain)
 
 
 	//! Determines if the ground has been cached in a display list
@@ -126,7 +128,7 @@ class Terrain: public Object
 //! Represents a structure on the terrain
 class Structure: public BoundedObject
 {
-	public:
+	public: NAME(Structure)
 	Structure(BoundingBox B = BoundingBox())
 			: BoundedObject(Pd(), Qd(), B) {}
 };
@@ -136,7 +138,7 @@ class Structure: public BoundedObject
 //! Represents a mine structure on the terrain
 class Mine: public Structure
 {
-	public:
+	public: NAME(Mine)
 	//! The maxium income that can be generated from this mine
 	Resource maxIncome;
 
@@ -160,7 +162,7 @@ class Building: public Structure
 	//! If the building is built
 	bool built;
 
-	public:
+	public: NAME(Building)
 	//! The GridPoint this building is at
 	GridPoint loc;
 	//! Height of this building in local object coordinates
@@ -176,12 +178,12 @@ class Building: public Structure
 	//! The attack power of this building
 	Power attackPower;
 	//! Owner of the building (player)
-	ObjectHandle owner;
+	Player::Id owner;
 
 	//! Constructs a new building
 	Building(int _height, BoundingBox B = BoundingBox(),
 	         Resource _cost = 0, Resource _income = 0, int _buildTime = 0,
-			 int _buildDuration = 0, Power _attackPower = 0, ObjectHandle _owner = ObjectHandle())
+			 int _buildDuration = 0, Power _attackPower = 0, Player::Id _owner = 0)
 		: height(_height), Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
@@ -202,12 +204,12 @@ class Building: public Structure
 //! Represents a headquarters
 class HeadQuarters: public Building
 {
-	public:
+	public: NAME(HeadQuaters)
 	HeadQuarters(BoundingBox B = BoundingBox())
 		: Building(10, B,
 		  0, 0,
 		  0, 0,
-		  0) {}
+		  0, 0) {}
 
 	virtual void draw(){}
 };
@@ -220,9 +222,9 @@ class DefenseTower: public Building
 	//! The time (in milliseconds since the glut event loop was started) that the last shot was fired 
 	int lastshot;
 
-	public:
+	public: NAME(DefenceTower)
 	//! Constructs a DefenseTower
-	DefenseTower(ObjectHandle _owner = ObjectHandle());
+	DefenseTower(Player::Id _owner = 0);
 
 	//! Constructs a ghost DefenseTower
 	DefenseTower(int buildTime);
@@ -245,8 +247,8 @@ class DefenseTower: public Building
 //! Represents a mining tower built over a mine
 class ResourceMine: public Building
 {
-	public:
-	ResourceMine(BoundingBox B = BoundingBox(), ObjectHandle _owner = ObjectHandle());
+	public: NAME(ResourceMine)
+	ResourceMine(BoundingBox B = BoundingBox(), Player::Id _owner = 0);
 
 	virtual void draw();
 

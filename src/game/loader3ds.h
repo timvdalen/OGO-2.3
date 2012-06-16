@@ -23,7 +23,7 @@ class ModelObject : public Object {
 	void load(const char * path);
 	void displaylist(Lib3dsMesh * mesh);
 	void render(Lib3dsNode * n);
-public:
+public: NAME(Model)
 	ModelObject(Point<double> P = Point<double>(), Quaternion<double> R = Quaternion<double>(), string path = "");
 	virtual ~ModelObject();
 	virtual void draw();

@@ -46,6 +46,7 @@ bool Send(const Message &, bool reliable = false);
 //------------------------------------------------------------------------------
 
 void Chat(std::string line);
+void TeamChat(std::string line);
 void Move(Pd position, Vd velocity);
 void Look(Qd rotation);
 

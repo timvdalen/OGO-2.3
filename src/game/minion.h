@@ -20,7 +20,7 @@ class Minion: public BoundedObject{
 	//! Indicates the next target for this minion
 	virtual void setNewTarget();
 	
-	public:
+	public: NAME(Minion)
 	
 	//! Constructs a new minion
 	Minion(Pd origin, Qd rotation);
@@ -43,7 +43,7 @@ class ArenaGuard: public Minion{
 	//! Gets the new target
 	virtual void setNewTarget();
 	
-	public:
+	public: NAME(ArenaGuard)
 	
 	//! Constructs a new AreaGuard
 	ArenaGuard(ObjectHandle _world, Pd origin, Qd rotation);
@@ -65,7 +65,7 @@ class DefenseMinion: public Minion{
 	//! Gets the new target
 	virtual void setNewTarget();
 	
-	public:
+	public: NAME(DefenseMinion)
 	
 	//! Constructs a new AreaGuard
 	DefenseMinion(ObjectHandle _owner, ObjectHandle _world, Pd origin, Qd rotation);

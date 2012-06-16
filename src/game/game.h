@@ -129,6 +129,8 @@ void PrintCPS(); //!< Prints current net speed (cycles per second)
 void GameSpeed(double speed);
 
 void NetDebug();
+void PrintWorld();
+void Test(string str);
 
 //------------------------------------------------------------------------------
 

@@ -172,8 +172,23 @@ void Chat(string line)
 }
 RECEIVE(CHAT, id, msg, reliable)
 {
-	Echo(msg[1]);
 	DisplayChatMsg(PLAYER((Player::Id) id), msg[1]);
+}
+
+//------------------------------------------------------------------------------
+
+void TeamChat(string line)
+{
+	Message msg;
+	msg.push_back("TEAMCHAT");
+	msg.push_back(line);
+	SEND(msg, false);
+}
+RECEIVE(TEAMCHAT, id, msg, reliable)
+{
+	if (!game.players.count(id)) return;
+	if (TO(Player,game.players[id])->team == game.player->team)
+		DisplayChatMsg(PLAYER((Player::Id) id), msg[1]);
 }
 
 //------------------------------------------------------------------------------

@@ -361,7 +361,7 @@ void Mine::draw() {
 
 //------------------------------------------------------------------------------
 
-DefenseTower::DefenseTower(ObjectHandle _owner)
+DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
@@ -372,7 +372,8 @@ DefenseTower::DefenseTower(ObjectHandle _owner)
 	model.turret->children.insert(Assets::Model::TurretObj);
 	children.insert(model.turret);
 	int i = 2;
-	if (owner) i = TO(Player,owner)->team-'a';
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
 	model.turret->material = Assets::Model::TurretTex[i];
 	material = Assets::Grass;
 	lastshot = Video::ElapsedTime();
@@ -414,8 +415,8 @@ void DefenseTower::frame()
 	worldcoord.z = 0.0;
 
 	Player *own = NULL;
-	if(owner)
-		own = TO(Player, owner); 
+	if(Game::game.players.count(owner))
+		own = TO(Player, Game::game.players[owner]); 
 
 	//Find nearest player
 	if(own && built){
@@ -436,7 +437,9 @@ void DefenseTower::frame()
 					}
 				}
 			}else if(t){
-				Player *t_own = TO(Player, t->owner);
+				Player *t_own = NULL;
+				if (Game::game.players.count(t->owner))
+					TO(Player, Game::game.players[t->owner]);
 				if(t_own && t_own->team != own->team){
 					//Enemy tower found
 					double curr_dist =!(Vd(t->origin) + -Vd(worldcoord));
@@ -489,7 +492,7 @@ void DefenseTower::render()
 
 //------------------------------------------------------------------------------
 
-ResourceMine::ResourceMine(BoundingBox B, ObjectHandle _owner)
+ResourceMine::ResourceMine(BoundingBox B, Player::Id _owner)
 		: Building(15, B, _owner)
 {
 	model.rock = ModelObjectContainer();
@@ -508,7 +511,8 @@ ResourceMine::ResourceMine(BoundingBox B, ObjectHandle _owner)
 	model.rock->material = Assets::Model::RockTex;
 
 	int i = 1;
-	if (owner) i = TO(Player,owner)->team-'a';
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
 	model.rig->material = Assets::Model::MineTex[i];
 	model.drill->material = Assets::Model::DrillTex[i];
 

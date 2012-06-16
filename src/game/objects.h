@@ -57,7 +57,7 @@ class BoundedObject: public Object
     //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
     bool insideBox(Point<double> p, Point<double> a, Point<double> b);
 
-    public:
+    public: NAME(BoundedObject)
 	//! The boundingbox for this object
 	BoundingBox bb;
 
@@ -70,9 +70,10 @@ class BoundedObject: public Object
 	//! Checks if a line from origin to direction collides with this object or one of its children.
 	//! If there is a collision, this function returns a handle to the object the line collides with
 	//! if not, it returns null.
-	ObjectHandle checkCollision(Point<double> origin, Vector<double> direction);
+	pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	ObjectHandle checkCollision2(Pd origin, Vd direction);
 	
-	pair<ObjectHandle, double> findCollision(Point<double> origin, Vector<double> direction);
+	bool checkCollision(const ObjectHandle &target);
 	
 	//! Draws this object
 	virtual void draw() {}
@@ -81,7 +82,9 @@ class BoundedObject: public Object
 //------------------------------------------------------------------------------
 
 //! Represents an object that enables inheritance of materials
-class ModelObjectContainer: public Object {
+class ModelObjectContainer: public Object
+{
+	public: NAME(MOC)
 	//! Override the render function in Object to enable inheritance of materials
 	virtual void render();
 };
@@ -91,7 +94,9 @@ class ModelObjectContainer: public Object {
 //! Represents a team
 class Team: public Object
 {
-	public:
+	public: NAME(Team) SERIAL(type() | convert(resources))
+	UNSERIAL(arg, 1, resources = ToFloat(arg[0]); )
+	
 	//! The amount of resources this team has
 	Resource resources;
 
@@ -104,7 +109,7 @@ class Team: public Object
 //! Represents a laser beam
 class LaserBeam: public Object
 {
-	public:
+	public: NAME(LaserBeam) SERIAL("") // Not serialized
 	//! Wether or not the parent can remove this LaserBeam
 	bool done;
 
@@ -133,6 +138,7 @@ class LaserBeam: public Object
 //! Cube like object (it is in reality a parallelepiped) to test with
 struct Cuboid : public BoundedObject
 {
+	NAME(Cuboid)
 	Vector<double> u, v, w;
 
 	Cuboid(Pd origin = Pd(), double S = 1);

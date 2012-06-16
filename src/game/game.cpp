@@ -368,29 +368,31 @@ void Jump()
 CMD(Fire, 0, arg)
 void Fire()
 {
-	switch(game.player->weapon){
-	case weapWrench:{
+	switch (game.player->weapon)
+	{
+		case weapWrench:
 			Build();
 			return;
-		}
-		break;
-	case weapLaser:{
-            Camera &cam = game.controller->camera;
+		case weapLaser:
+		{
+	        Camera &cam = game.controller->camera;
 			Vd vec = ~(game.player->rotation * Vd(0,1,0));
 			double yaw = atan2(vec.x, vec.y);
 			Pd gunLoc = game.player->origin;// + game.player->model.weapon->origin;
-			gunLoc.x = gunLoc.x + game.player->model.weapon->origin.x * cos(yaw) + game.player->model.weapon->origin.y * sin(yaw);
-			gunLoc.y = gunLoc.y + game.player->model.weapon->origin.x * sin(yaw) + game.player->model.weapon->origin.y * cos(yaw);
+			gunLoc.x = gunLoc.x + game.player->model.weapon->origin.x * cos(yaw)
+			                    + game.player->model.weapon->origin.y * sin(yaw);
+			gunLoc.y = gunLoc.y + game.player->model.weapon->origin.x * sin(yaw)
+			                    + game.player->model.weapon->origin.y * cos(yaw);
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
-
+	
 			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin));
-			pair<ObjectHandle, double> collision = game.world->findCollision(game.controller->target, lookVec);
-
+			pair<ObjectHandle, double> collision = game.world->checkCollision(game.controller->target, lookVec);
+	
 			if (collision.first)
 			{
 				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
 				Qd beam = gunLoc.lookAt(collisionPoint);
-
+	
 				World *w = TO(World, game.controller->world);
 				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
 			}
@@ -412,14 +414,15 @@ void Build()
 {
 	Camera &cam = game.controller->camera;
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.objective);
-	if(clicked.isValid()){
-		ObjectHandle tower = Objects::DefenseTower(ObjectHandle(*game.player));
+	if(clicked.isValid())
+	{
+		ObjectHandle tower = Objects::DefenseTower(game.player->id);
 		game.world->terrain->setSelected(GridPoint(-1, -1));
-		bool done = game.world->terrain->placeStructure(clicked, tower);
-		if(!done) game.world->hud->messageDisplayer->addMessage(SystemMessage("There's already a tower there"));
-	}else{
-		game.world->hud->messageDisplayer->addMessage(SystemMessage("Invalid place to build"));
+		if (!game.world->terrain->placeStructure(clicked, tower))
+			Echo("There's already a tower there");
 	}
+	else
+		Echo("Invalid place to build");
 }
 
 //------------------------------------------------------------------------------
@@ -509,6 +512,26 @@ CMD(NetDebug, 0, arg)
 void NetDebug()
 {
 	NetCode::Debug();
+}
+
+//------------------------------------------------------------------------------
+
+CMD(PrintWorld, 0, arg)
+void PrintWorld()
+{
+	Object::iterator it;
+	for (it = game.world->begin(); it != game.world->end(); ++it)
+		puts((string(it.level(),'\t') + string(**it)).c_str());
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Test, 1, arg, arg[0])
+void Test(string str)
+{
+	Object o;
+	if (o = str)
+		puts(string(o).c_str());
 }
 
 //==============================================================================
