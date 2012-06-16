@@ -128,6 +128,9 @@ void Initialize(int argc, char *argv[])
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
 	
+	game.teams.insert(make_pair('a', Team('a')));
+	game.teams.insert(make_pair('b', Team('b')));
+	
 	string name;
 	unsigned char team;
 	config->readInto(name, "playername", string("Unnamed"));
@@ -135,9 +138,18 @@ void Initialize(int argc, char *argv[])
 	
 	ObjectHandle player = Player(1, team, name);
 	game.player = TO(Player,player);
+	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
 	game.players[1] = player;
 	
+	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
+	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
+	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
+	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
+
+	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters());
+	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
+
 	// Set up user interface
 	view->world = game.root;
 	game.controller = new Controller(view->camera, player);
@@ -538,6 +550,7 @@ void Build()
 	GridPoint clicked = game.world->terrain->getGridCoordinates(cam.origin, cam.objective);
 	if(clicked.isValid())
 	{
+		#ifdef AUTOBUILD
 		int structure = game.world->terrain->canPlaceStructure(clicked);
 		ObjectHandle tower;
 		switch(structure){
@@ -548,6 +561,7 @@ void Build()
 		game.world->terrain->setSelected(GridPoint(-1, -1));
 		if (!game.world->terrain->placeStructure(clicked, tower))
 			Echo("There's already a tower there");
+		#endif
 	}
 	else
 		Echo("Invalid place to build");
@@ -567,14 +581,18 @@ void Weapon(WeaponType weapon)
 	{
 		// Goto build mode
 		terrain->showGrid = true;
+		#ifndef AUTOBUILD
 		game.world->hud->buildselector->show = true;
+		#endif
 		//game.controller->setView(true);
 	}
 	else if (prevWeapon == weapWrench)
 	{
 		// Leave build mode
 		terrain->showGrid = false;
+		#ifndef AUTOBUILD
 		game.world->hud->buildselector->show = false;
+		#endif
 		game.world->terrain->setSelected(GridPoint(-1, -1));
 		//game.controller->restoreView();
 	}

@@ -43,11 +43,13 @@ HUD::HUD(int _width, int _height){
     statusDisplayer = TO(StatusDisplayer,sdHandle);
 	children.insert(sdHandle);	
     
+	#ifndef AUTOBUILD
     ObjectHandle bsHandle;
     bsHandle = BuildingSelection(0,100, _width, _height);
     buildselector = TO(BuildingSelection,bsHandle);
 	children.insert(bsHandle);	
-    
+    #endif
+	
 	ObjectHandle chHandle;
 	chHandle = CrossHair(0, 0, _width, _height);
 	crossHair = TO(CrossHair, chHandle);
@@ -616,13 +618,13 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Tower_normal;
 		}
     }else if(TO(Mine, s)){
-		enlargeup = 0.5;
-		enlargedown = 0.5;
+		enlargeup = 0;
+		enlargedown = 0;
 		progress = 1;
 		mat = Assets::Icon::Mine;
 	}else if(TO(ResourceMine, s)){
-		enlargeup = 0.5;
-		enlargedown = 0.5;
+		enlargeup = 0;
+		enlargedown = 0;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){

@@ -360,8 +360,9 @@ void Building::preRender(){
 
 	float animationHeight = ((float)height/(float)buildDuration)*(float)now
 		 - ((float)buildTime*((float)height/(float)buildDuration));
-	float randX = (((float)rand()/RAND_MAX)-0.5);
-	float randY = (((float)rand()/RAND_MAX)-0.5);
+	float percdone = 1-(animationHeight/height);
+	float randX = ((((float)rand()/RAND_MAX)-0.5)*percdone);
+	float randY = ((((float)rand()/RAND_MAX)-0.5)*percdone);
 	glTranslatef(randX, randY, -height + animationHeight);
 }
 
@@ -391,6 +392,35 @@ Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
 
 void Mine::draw() {
 	drawFoundation(1);
+}
+
+//------------------------------------------------------------------------------
+
+HeadQuarters::HeadQuarters(Player::Id _owner)
+		: Building(10, BoundingBox(),
+		  0, 0,
+		  0, 0,
+		  0, 0) 
+{
+	model.base = ModelObjectContainer();
+	model.socket = ModelObjectContainer();
+	model.core = ModelObjectContainer();
+	model.coreinv = ModelObjectContainer();
+	model.base->children.insert(Assets::Model::HQBaseObj);
+	model.socket->children.insert(Assets::Model::HQSocketObj);
+	model.core->children.insert(Assets::Model::HQCoreObj);
+	model.coreinv->children.insert(Assets::Model::HQCoreinvObj);
+	children.insert(model.base); 
+	children.insert(model.socket);
+	children.insert(model.core);
+	children.insert(model.coreinv);
+	int i = 2;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.base->material = Assets::Model::HQBaseTex[i];
+	model.socket->material = Assets::Model::HQSocketTex;
+	model.core->material = Assets::Model::HQCoreTex[i];
+	model.coreinv->material = Assets::Model::HQSocketTex;
 }
 
 //------------------------------------------------------------------------------

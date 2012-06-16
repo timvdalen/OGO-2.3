@@ -51,8 +51,8 @@ ObjectHandle HeadObj, BodyObj, GunObj, WrenchObj, WheelObj;
 MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 
 //structure objects
-ObjectHandle TurretObj, MineObj, DrillObj, RockObj;
-MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex;
+ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj, HQCoreinvObj;
+MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
 MaterialHandle GhostTurretTex;
 
 }
@@ -136,6 +136,10 @@ void Initialize(int argc, char *argv[])
 	Model::MineObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/mine.3DS");
 	Model::DrillObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/drill.3DS");
 	Model::RockObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/rock.3DS");
+	Model::HQBaseObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Base.3DS");
+	Model::HQSocketObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Socket.3DS");
+	Model::HQCoreObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Core.3DS");
+	Model::HQCoreinvObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Core_inv.3DS");
 
 	//Model textures
 	Model::HeadTex = TexturedMaterial(path + "assets/textures/models/headtext.png");
@@ -154,6 +158,13 @@ void Initialize(int argc, char *argv[])
 	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
 	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
 	Model::RockTex = TexturedMaterial(path + "assets/textures/models/rocktext.png");
+	Model::HQBaseTex[0] = TexturedMaterial(path + "assets/textures/models/HQBasetered.png");
+	Model::HQBaseTex[1] = TexturedMaterial(path + "assets/textures/models/HQBaseteblue.png");
+	Model::HQBaseTex[2] = TexturedMaterial(path + "assets/textures/models/HQBasetenormal.png");
+	Model::HQSocketTex = TexturedMaterial(path + "assets/textures/models/plain.png");
+	Model::HQCoreTex[0] = TexturedMaterial(path + "assets/textures/models/HQCoretered.png");
+	Model::HQCoreTex[1] = TexturedMaterial(path + "assets/textures/models/HQCoreteblue.png");
+	Model::HQCoreTex[2] = TexturedMaterial(path + "assets/textures/models/HQCoretenormal.png");
 
 	Model::GhostTurretTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
 
@@ -204,6 +215,10 @@ void Terminate()
 	Model::TurretObj.clear();
 	Model::MineObj.clear();
 	Model::DrillObj.clear();
+	Model::HQBaseObj.clear();
+	Model::HQSocketObj.clear();
+	Model::HQCoreObj.clear();
+	Model::HQCoreinvObj.clear();
 
 	//Model textures
 	Model::HeadTex.clear();
@@ -221,6 +236,13 @@ void Terminate()
 	Model::MineTex[1].clear();
 	Model::DrillTex[0].clear();
 	Model::DrillTex[1].clear();
+	Model::HQBaseTex[0].clear();
+	Model::HQBaseTex[1].clear();
+	Model::HQBaseTex[2].clear();
+	Model::HQSocketTex.clear();
+	Model::HQCoreTex[0].clear();
+	Model::HQCoreTex[1].clear();
+	Model::HQCoreTex[2].clear();
 }
 
 //------------------------------------------------------------------------------
