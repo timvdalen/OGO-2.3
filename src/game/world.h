@@ -84,17 +84,17 @@ class World: public BoundedObject
 //! Represents a droppable object
 class Droppable: public BoundedObject
 {
-	public: NAME(Droppable) SERIAL(type() | convert(worth) | convert(ttl))
+	public: NAME(Droppable) SERIAL(type() | convert(worth) | convert((long)ttl))
 	UNSERIAL(arg, 2, worth = ToFloat(arg[0]); dropped = ToInteger(arg[1]); )
 	
 	//! The worth of this droppable
 	Resource worth;
 
-	//! The time this object was dropped
-	time_t dropped;
+	//! The time in milliseconds since the start of the glut event loop this object was dropped
+	int dropped;
 
-	//! The time this object lives
-	time_t ttl;
+	//! The time in milliseconds this laser lives
+	int ttl;
 
 	//! The event fired when this droppable is picked up
 	void onPickup(World w){}
