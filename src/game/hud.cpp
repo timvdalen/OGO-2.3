@@ -43,11 +43,13 @@ HUD::HUD(int _width, int _height){
     statusDisplayer = TO(StatusDisplayer,sdHandle);
 	children.insert(sdHandle);	
     
+	#ifndef AUTOBUILD
     ObjectHandle bsHandle;
     bsHandle = BuildingSelection(0,100, _width, _height);
     buildselector = TO(BuildingSelection,bsHandle);
 	children.insert(bsHandle);	
-    
+    #endif
+	
 	ObjectHandle chHandle;
 	chHandle = CrossHair(0, 0, _width, _height);
 	crossHair = TO(CrossHair, chHandle);
