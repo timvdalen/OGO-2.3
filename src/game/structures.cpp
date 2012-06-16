@@ -191,12 +191,22 @@ void Terrain::draw()
 			material->unselect();
 			MaterialHandle gridMat;
 			float height;
-			if(canPlaceStructure(selected)){
+			int structure = canPlaceStructure(selected);
+			switch(structure){
+			case 1:{
 				gridMat = Assets::SelectedGrid;
 				height = 0;
-			}else{
+				}
+				break;
+			case 2:{
+				gridMat = Assets::SelectedGrid;
+				height = 1;//For foundation
+				}
+				break;
+			default:{
 				gridMat = Assets::ErrorGrid;
 				height = 1;//For foundation
+				}
 			}
 			gridMat->select();
 			glBegin(GL_LINE_STRIP);
@@ -265,10 +275,12 @@ GridPoint Terrain::getGridCoordinates(Pd camera, Qd rot)
 void Terrain::setSelected(GridPoint p){
 	if(selected.x != p.x || selected.y != p.y){
 		selected = p;
-		if(canPlaceStructure(p)){
-			ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0)));
-		}else{
-			ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle());
+		int structure = canPlaceStructure(p);
+		switch(structure){
+		case 1: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0))); break;
+		case 2: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0))); break;
+		default:
+			ghost = ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle()); break;
 		}
 	}else if(p.x == -1, p.y == -1){
 		ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle());
@@ -277,22 +289,30 @@ void Terrain::setSelected(GridPoint p){
 
 //------------------------------------------------------------------------------
 
-bool Terrain::canPlaceStructure(GridPoint p){
+int Terrain::canPlaceStructure(GridPoint p){
 	map<GridPoint, ObjectHandle>::iterator it;
 	it = structures.find(p);
 	if(it != structures.end()){
-		return false;
+		Structure *s = TO(Structure, it->second);
+		if(!s) return 0;
+		if(s->type() == "Mine"){
+			return 2;
+		}else{
+			return 0;
+		}
 	}else{
-		return true;
+		return 1;
 	}
 }
 
 //------------------------------------------------------------------------------
 
 bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
-	map<GridPoint, ObjectHandle>::iterator it;
-	it = structures.find(p);
-	if(it != structures.end()){
+	if(!s) return false;
+	Structure *struc = TO(Structure, s);
+
+	int structure = canPlaceStructure(p);
+	if(structure == 0 || !struc || (structure == 2 && struc->type() != "ResourceMine")){
 		return false;
 	}
 	Building *b = TO(Building, s);
@@ -300,6 +320,9 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 		b->loc = p;
 	}
 	const GridPoint ip = GridPoint(p);
+	if(structure == 2){
+		structures.erase(p);
+	}
 	structures.insert(make_pair(ip, s));
 	return true;
 }
@@ -324,6 +347,8 @@ Pd Terrain::ToPointD(GridPoint point){
 
 void Building::preRender(){
 	Object::preRender();
+	
+	glPushMatrix();
 
 	if(built) return;
 
@@ -339,6 +364,15 @@ void Building::preRender(){
 	float randY = (((float)rand()/RAND_MAX)-0.5);
 	glTranslatef(randX, randY, -height + animationHeight);
 }
+
+//------------------------------------------------------------------------------
+
+void Building::postRender(){
+	Object::postRender();
+	glPopMatrix();//This is the matrix that was pushed in Object::preRender()
+}
+
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 
@@ -493,39 +527,36 @@ void DefenseTower::render()
 //------------------------------------------------------------------------------
 
 ResourceMine::ResourceMine(Player::Id _owner)
-		: Building(15, BoundingBox(), 300, 30,
+		: Building(8, BoundingBox(), 300, 30,
 			Video::ElapsedTime(), 20000,
 			0, _owner)
 {
-	model.rock = ModelObjectContainer();
 	model.rig = ModelObjectContainer();
 	model.drill = ModelObjectContainer();
-	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
-	model.rock->children.insert(Assets::Model::RockObj);
 	model.rig->children.insert(Assets::Model::MineObj);
 	model.drill->children.insert(Assets::Model::DrillObj);
-	children.insert(model.rock);
 	children.insert(model.rig);
 	children.insert(model.drill);
-
-	model.rock->material = Assets::Model::RockTex;
+	
+	rock = ModelObjectContainer();
+	rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	rock->children.insert(Assets::Model::RockObj);
+	rock->material = Assets::Model::RockTex;
 
 	int i = 1;
 	if (Game::game.players.count(owner))
 		i = TO(Player,Game::game.players[owner])->team-'a';
 	model.rig->material = Assets::Model::MineTex[i];
 	model.drill->material = Assets::Model::DrillTex[i];
-
-	material = Assets::Grass;
 }
 
 //------------------------------------------------------------------------------
 
 //Ghost constructor
 ResourceMine::ResourceMine(int buildTime)
-		: Building(15, BoundingBox(), 0, 0,
+		: Building(8, BoundingBox(), 0, 0,
 			Video::ElapsedTime(), buildTime,
 			0, -1)
 {
@@ -548,11 +579,21 @@ ResourceMine::ResourceMine(int buildTime)
 void ResourceMine::draw() 
 {
 	model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
-	if(owner != -1)
-		drawFoundation(1);
 }
 
 //------------------------------------------------------------------------------
+
+void ResourceMine::postRender()
+{
+	Object::postRender();
+	if(rock) rock->render();
+	if(owner != -1){
+		Assets::Grass->select();
+		drawFoundation(1);
+		Assets::Grass->unselect();
+	}
+	glPopMatrix();//This is the matrix thas was pushed in Object::preRender()
+}
 
 void drawFoundation(int h) {
 	glBegin(GL_QUADS);
