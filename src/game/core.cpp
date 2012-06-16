@@ -3,6 +3,7 @@
  */
 
 #include <string>
+#include <cstdio>
 #include "video.h"
 #include "core.h"
 
