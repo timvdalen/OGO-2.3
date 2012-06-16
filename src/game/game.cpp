@@ -146,7 +146,10 @@ void Initialize(int argc, char *argv[])
 	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
-	
+
+	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters());
+	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
+
 	// Set up user interface
 	view->world = game.root;
 	game.controller = new Controller(view->camera, player);

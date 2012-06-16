@@ -396,6 +396,31 @@ void Mine::draw() {
 
 //------------------------------------------------------------------------------
 
+HeadQuarters::HeadQuarters(Player::Id _owner)
+		: Building(10, BoundingBox(),
+		  0, 0,
+		  0, 0,
+		  0, 0) 
+{
+	model.base = ModelObjectContainer();
+	model.socket = ModelObjectContainer();
+	model.core = ModelObjectContainer();
+	model.base->children.insert(Assets::Model::HQBaseObj);
+	model.socket->children.insert(Assets::Model::HQSocketObj);
+	model.core->children.insert(Assets::Model::HQCoreObj);
+	children.insert(model.base); 
+	children.insert(model.socket);
+	children.insert(model.core);
+	int i = 2;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.base->material = Assets::Model::HQBaseTex[i];
+	model.socket->material = Assets::Model::HQSocketTex;
+	model.core->material = Assets::Model::HQCoreTex[i];
+}
+
+//------------------------------------------------------------------------------
+
 DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
