@@ -138,6 +138,11 @@ void Initialize(int argc, char *argv[])
 	game.root->children.insert(player);
 	game.players[1] = player;
 	
+	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
+	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
+	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
+	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
+	
 	// Set up user interface
 	view->world = game.root;
 	game.controller = new Controller(view->camera, player);
