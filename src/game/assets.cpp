@@ -18,9 +18,7 @@ using namespace std;
 
 using namespace Materials;
 
-MaterialHandle Grid;
-MaterialHandle SelectedGrid;
-MaterialHandle ErrorGrid;
+MaterialHandle Grid, SelectedGrid, ErrorGrid;
 
 MaterialHandle WorldMaterial;
 MaterialHandle Star;
@@ -36,21 +34,11 @@ MaterialHandle CrossHair;
     
 namespace Icon{ 
    
-MaterialHandle Money;
-MaterialHandle Health;
-MaterialHandle Mine;
-MaterialHandle Robot_red;    
-MaterialHandle Robot_blue;
-MaterialHandle Robot_normal;
-MaterialHandle Pickaxe_normal;
-MaterialHandle Pickaxe_blue;    
-MaterialHandle Pickaxe_red;
-MaterialHandle Tower_normal;
-MaterialHandle Tower_red;
-MaterialHandle Tower_blue;
-MaterialHandle HQ_normal;
-MaterialHandle HQ_blue;
-MaterialHandle HQ_red;
+MaterialHandle Money, Health, Mine;
+MaterialHandle  Robot_normal,    Robot_red,   Robot_blue;
+MaterialHandle Pickaxe_normal, Pickaxe_red, Pickaxe_blue;
+MaterialHandle   Tower_normal,   Tower_red,   Tower_blue;
+MaterialHandle      HQ_normal,      HQ_red,      HQ_blue;
 
 }
 

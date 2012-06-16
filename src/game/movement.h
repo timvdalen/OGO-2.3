@@ -47,7 +47,6 @@ class Controller
 	public:
 	Camera &camera;             //!< Assigned camera
 	ObjectHandle player;        //!< Assigned player
-	ObjectHandle world;         //!< Needed to be able to check were we can walk
     
 	map<Direction,double> move; //!< Current comera movement
 	map<Direction,double> look; //!< Current camera target movement
@@ -57,7 +56,7 @@ class Controller
 	bool firstPerson;           //!< selects first person view instead of third person
 	
 	//! Construct controller by assigning a player and camera
-	Controller(Camera &C, ObjectHandle P, ObjectHandle W);
+	Controller(Camera &C, ObjectHandle P);
 	
 	void moveX(double speed); //!< Moves the player left and right
 	void moveY(double speed); //!< Moves the player forwards and backwards

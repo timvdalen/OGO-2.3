@@ -11,12 +11,14 @@
 #include <vector>
 #include <algorithm>
 
+#include "ConfigFile.h"
+
+#include "common.h"
 #include "video.h"
 #include "protocol.h"
 #include "game.h"
 #include "netcode.h"
-
-#include "input.h" // debug
+#include "input.h"
 
 namespace Game {
 
@@ -26,13 +28,15 @@ using namespace Protocol;
 static void getInput(string input);
 string to_lower_case(string str);
 
-int windowWidth = 640;
-int windowHeight = 480;
+int windowWidth = 800;
+int windowHeight = 600;
 bool fullscreen = false;
 
 double gameWidth = 100;
 double gameHeight = 100;
 string path = "./";
+
+ConfigFile *config = NULL;
 
 GameState game;
 
@@ -59,8 +63,13 @@ Command::List Command::list;
 
 //------------------------------------------------------------------------------
 
+void KeyUp(Button btn)   { binds.processUp(btn); }
+void KeyDown(Button btn) { binds.processDown(btn); }
+//void MouseMove(word x, word y) {}
+
 void Initialize(int argc, char *argv[])
 {
+	// Process command line arguments
 	for (int i = 0; i < argc - 1; ++i)
 	{
 		if      (!strcmp(argv[i], "-x") || !strcmp(argv[i], "--map-width"))
@@ -74,25 +83,86 @@ void Initialize(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--screen-height"))
 			windowHeight = atoi(argv[++i]);
 	}
-
+	
 	for (int i = 0; i < argc; ++i)
 	{
 		if (!strcmp(argv[i], "--fullscreen"))
 			fullscreen = true;
 	}
-
+	
+	// Global subsystem initializations
 	srand(time(NULL));
-
-	game.world = new World(gameWidth, gameHeight);
+	
+	// Create window and set up viewports
+	game.window = new Video::Window(windowWidth, windowHeight,
+	                                GAME_NAME, fullscreen);
+	Video::Viewport *view = new Video::Viewport(1,1);
+	game.window->viewports.push_back(view);
+	
+	// Show loading screen
+	// Problem: we can't use the hud prior to asset loading
+	
+	// Load game assets
+	Assets::Initialize(argc, argv);
+	
+	// Process config file
+	string pname;
+	char team;
+	try
+	{
+		config = new ConfigFile(CONFIG_FILE);
+		config->readInto(pname, "playername", string("Unnamed"));
+		team = config->read("team", 'a');
+	}
+	catch(ConfigFile::file_not_found e)
+	{
+		delete config;
+		config = NULL;
+		Echo("No config file found. "
+		     "Please add 'game.conf' (in INI format) with values player and team.");
+		pname = string("Unnamed");
+		team = 'a';
+	}
+	
+	// Set up game world
+	game.root = World(gameWidth, gameHeight);
+	game.world = TO(World,game.root);
+	
+	ObjectHandle player = Player();
+	game.player = TO(Player,player);
+	game.root->children.insert(player);
+	
+	// Set up user interface
+	view->world = game.root;
+	game.controller = new Controller(view->camera, player);
+	game.input = new Input(*game.window);
+	game.input->onKeyUp = KeyUp;
+	game.input->onKeyDown = KeyDown;
+	//input->onMouseMove = MouseMove;
+	
+	Echo("Everything loaded!");
+	Echo("Welcome to the game");
 }
 
 //------------------------------------------------------------------------------
 
+#define CLEAN(x) if (x) delete x; x = NULL;
+
 void Terminate()
 {
+	CLEAN(game.input);
+	CLEAN(game.controller);
+	
 	game.player = NULL;
-	if (game.world) delete game.world;
 	game.world = NULL;
+	game.root.clear();
+	CLEAN(config)
+
+	Video::Viewport *view = *game.window->viewports.begin();
+	CLEAN(game.window)
+	delete view;
+	
+	Assets::Terminate();
 }
 
 //------------------------------------------------------------------------------
@@ -265,6 +335,25 @@ void Exec(string filename)
 
 //------------------------------------------------------------------------------
 
+CMD(Get, 1, arg, (string) arg[0])
+void Get(string key)
+{
+	if (!config) return;
+	string value;
+	config->readInto(value, key, string("Null"));
+	Echo(key + string(" = ") + value);
+}
+
+//------------------------------------------------------------------------------
+
+void Set(string key, string value)
+{
+	if (!config) return;
+	config->add(key, value);
+}
+
+//------------------------------------------------------------------------------
+
 CMD(GrabMouse, 0, arg)
 void GrabMouse()
 {
@@ -411,15 +500,11 @@ void Fire()
 			{
 				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
 				Qd beam = gunLoc.lookAt(collisionPoint);
-	
-				World *w = TO(World, game.controller->world);
-				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
+				
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
 			}
 			else
-			{
-				World *w = TO(World, game.controller->world);
-				w->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
-			}
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
 			return;
 		}
 		break;
