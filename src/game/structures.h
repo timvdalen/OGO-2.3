@@ -212,13 +212,14 @@ class Building: public Structure
 class HeadQuarters: public Building
 {
 	public: NAME(HeadQuaters)
-	HeadQuarters(BoundingBox B = BoundingBox())
-		: Building(10, B,
-		  0, 0,
-		  0, 0,
-		  0, 0) {}
+
+	//! Constructs HeadQuarters
+	HeadQuarters(Player::Id _owner = 0);
 
 	virtual void draw(){}
+
+	//! Model
+	struct { ObjectHandle base, socket, core; } model;
 };
 
 //------------------------------------------------------------------------------
