@@ -360,8 +360,9 @@ void Building::preRender(){
 
 	float animationHeight = ((float)height/(float)buildDuration)*(float)now
 		 - ((float)buildTime*((float)height/(float)buildDuration));
-	float randX = (((float)rand()/RAND_MAX)-0.5);
-	float randY = (((float)rand()/RAND_MAX)-0.5);
+	float percdone = 1-(animationHeight/height);
+	float randX = ((((float)rand()/RAND_MAX)-0.5)*percdone);
+	float randY = ((((float)rand()/RAND_MAX)-0.5)*percdone);
 	glTranslatef(randX, randY, -height + animationHeight);
 }
 
