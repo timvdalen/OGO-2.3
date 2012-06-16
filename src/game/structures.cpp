@@ -383,9 +383,9 @@ DefenseTower::DefenseTower(Player::Id _owner)
 
 DefenseTower::DefenseTower(int buildTime)
 		: Building(4, BoundingBox(),
-			100, 0,
+			0, 0,
 			Video::ElapsedTime(), buildTime,
-			20, ObjectHandle())
+			0, -1)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -492,8 +492,10 @@ void DefenseTower::render()
 
 //------------------------------------------------------------------------------
 
-ResourceMine::ResourceMine(BoundingBox B, Player::Id _owner)
-		: Building(15, B, _owner)
+ResourceMine::ResourceMine(Player::Id _owner)
+		: Building(15, BoundingBox(), 300, 30,
+			Video::ElapsedTime(), 20000,
+			0, _owner)
 {
 	model.rock = ModelObjectContainer();
 	model.rig = ModelObjectContainer();
@@ -521,10 +523,33 @@ ResourceMine::ResourceMine(BoundingBox B, Player::Id _owner)
 
 //------------------------------------------------------------------------------
 
+//Ghost constructor
+ResourceMine::ResourceMine(int buildTime)
+		: Building(15, BoundingBox(), 0, 0,
+			Video::ElapsedTime(), buildTime,
+			0, -1)
+{
+	model.rig = ModelObjectContainer();
+	model.drill = ModelObjectContainer();
+	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rig->children.insert(Assets::Model::MineObj);
+	model.drill->children.insert(Assets::Model::DrillObj);
+	children.insert(model.rig);
+	children.insert(model.drill);
+	
+	model.rig->material = Assets::Model::GhostTurretTex;
+	model.drill->material = Assets::Model::GhostTurretTex;
+}
+
+
+//------------------------------------------------------------------------------
+
 void ResourceMine::draw() 
 {
 	model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
-	drawFoundation(1);
+	if(owner != -1)
+		drawFoundation(1);
 }
 
 //------------------------------------------------------------------------------
