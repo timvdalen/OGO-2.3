@@ -59,6 +59,22 @@ long ToInteger(const string &str) { long l = 0;
 
 //------------------------------------------------------------------------------
 
+void Object::updateAbsolute()
+{
+	if (children.size() < 1) return;
+	
+	Pd pos = absoluteOrigin();
+	Qd rot = absoluteRotation();
+	set<ObjectHandle>::iterator it;
+	for (it = children.begin(); it != children.end(); ++it)
+	{
+		(*it)->parentOrigin = pos;
+		(*it)->parentRotation = rot;
+	}
+}
+
+//------------------------------------------------------------------------------
+
 void Object::preRender()
 {
 	// Camera orientation and translation (quaternion to rotation matrix)

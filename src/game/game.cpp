@@ -531,7 +531,7 @@ void Test(string str)
 {
 	Object o;
 	if (o = str)
-		puts(string(o).c_str());
+		Echo(string(o).c_str());
 }
 
 //==============================================================================

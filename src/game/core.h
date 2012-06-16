@@ -65,7 +65,8 @@ inline string operator |(const string &lhs, const string &rhs)
 #define NAME(x) virtual string type() const { return #x; }
 #define SERIAL(x) virtual operator string() const { return x; }
 #define UNSERIAL(arg,num,x) virtual bool operator =(const vector<string> &arg) \
-	{ if (arg.size() < num) return false; {x} return true; }
+	{ if ((arg.size() < (num)+1) || (arg[0] != type())) return false;          \
+	arg.erase(arg.begin()); {x} return true; }
 
 //------------------------------------------------------------------------------
 //                                Handle
@@ -153,6 +154,13 @@ class Object
 	//! The rotation of this object
 	Quaternion<double> rotation;
 	
+	//! The origin of this object in world coordinates
+	Point<double> absoluteOrigin() { return parentOrigin + parentRotation * origin; }
+	//! The rotation of this object in world angle
+	Quaternion<double> absoluteRotation() { return parentRotation * rotation; }
+	//! Updates the absolute coordinates and rotation of the children
+	virtual void updateAbsolute();
+	
 	//! The \ref Material of this object
 	MaterialHandle material;
 	
@@ -212,6 +220,10 @@ class Object
 	
 	iterator begin() { return iterator(children.begin(), children.end()); }
 	iterator end() { return iterator(children.end(), children.end()); }
+	
+	private:
+	Point<double> parentOrigin;
+	Quaternion<double> parentRotation;
 };
 
 //------------------------------------------------------------------------------
