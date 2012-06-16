@@ -131,6 +131,14 @@ bool Connected()
 
 //------------------------------------------------------------------------------
 
+bool Reliable()
+{
+	if (!tokenring) return false;
+	return tokenring->tainted();
+}
+
+//------------------------------------------------------------------------------
+
 double CurrentCPS()
 {
 	return cps;

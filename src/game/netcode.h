@@ -23,25 +23,28 @@ using namespace Protocol;
 using namespace Base::Alias;
 
 //------------------------------------------------------------------------------
-
+//! Initializes the networking code
 void Initialize(int argc, char *argv[]);
 
+//! Cleans up the networking code
 void Terminate();
 
-void Frame();
+void Frame();   //!< Processes network messages
 
-bool TryLock();
-void Unlock();
+bool TryLock(); //!< Checks if reliable messages are allowed at this time
+void Unlock();  //!< Pass the abillity to do reliable messages
 
 //------------------------------------------------------------------------------
 
-bool Connected();
-double CurrentCPS();
+bool Connected();    //!< Returns whether wether networking is in use
+bool Reliable();     //!< Returns whether the network consistency is reliable
 
-void Disconnect();
-bool Connect(std::string host);
+double CurrentCPS(); //!< Returns the current cycle rate of the token ring
 
-bool Send(const Message &, bool reliable = false);
+void Disconnect();   //!< Resets the current connection
+bool Connect(std::string host); //!< Connects to an external host
+
+bool Send(const Message &, bool reliable = false); //!< Sends a raw message
 
 //------------------------------------------------------------------------------
 

@@ -108,6 +108,8 @@ class TokenRing
 	bool loss(NodeID &node);
 	//! Receives messages
 	bool recvfrom(NodeID &node, Message &msg, bool &reliable);
+	//! Returns wether a connection inconsistency was detected
+	bool tainted();
 	
 	//! Waits for incomming connections/messages and losses
 	//! \warning does not return on token gain

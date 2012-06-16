@@ -57,6 +57,9 @@ endif
 ifeq ($(build),netdebug)
 	CXXFLAGS += -g -DDEBUG -DNETDEBUG
 endif
+ifeq ($(build),tokendebug)
+	CXXFLAGS += -g -DTRDEBUG
+endif
 ifeq ($(build),release)
 	CXXFLAGS += -fexpensive-optimizations -O3
 endif
