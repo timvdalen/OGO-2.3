@@ -85,6 +85,8 @@ class World: public BoundedObject
 class Droppable: public BoundedObject
 {
 	public: NAME(Droppable) SERIAL(type() | convert(worth) | convert(ttl))
+	UNSERIAL(arg, 2, worth = ToFloat(arg[0]); dropped = ToInteger(arg[1]); )
+	
 	//! The worth of this droppable
 	Resource worth;
 

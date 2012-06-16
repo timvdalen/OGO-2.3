@@ -54,6 +54,12 @@ class Player: public BoundedObject
 	public: NAME(Player) SERIAL(type() | convert(origin)   | convert(rotation)
 	                                   | convert((long)id) | convert((long)team)
 									   | name              | convert((long)health) )
+	UNSERIAL(arg, 6,
+		origin = ToPoint(arg[0]);   rotation = ToQuaternion(arg[1]);
+		id     = ToInteger(arg[2]); team     = ToInteger(arg[3]);
+		name   = arg[4];            health   = ToInteger(arg[5]);
+	)
+	
 	typedef unsigned int Id;
 
 	//! The ID of this player

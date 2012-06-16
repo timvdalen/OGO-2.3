@@ -95,6 +95,8 @@ class ModelObjectContainer: public Object
 class Team: public Object
 {
 	public: NAME(Team) SERIAL(type() | convert(resources))
+	UNSERIAL(arg, 1, resources = ToFloat(arg[0]); )
+	
 	//! The amount of resources this team has
 	Resource resources;
 

@@ -596,8 +596,8 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
 void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 	Building *b = TO(Building, s);
 	Player* player = 0;
-	if(b && b->owner){
-		player = TO(Player, b->owner);
+	if(b && Game::game.players.count(b->owner)){
+		player = TO(Player, Game::game.players[b->owner]);
 	}
 	double enlargedown = 0;
 	double enlargeup = 0;

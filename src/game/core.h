@@ -18,6 +18,7 @@
 #include <stack>
 #include <map>
 #include <set>
+#include <vector>
 
 #include "base.h"
 
@@ -63,6 +64,8 @@ inline string operator |(const string &lhs, const string &rhs)
 
 #define NAME(x) virtual string type() const { return #x; }
 #define SERIAL(x) virtual operator string() const { return x; }
+#define UNSERIAL(arg,num,x) virtual bool operator =(const vector<string> &arg) \
+	{ if (arg.size() < num) return false; {x} return true; }
 
 //------------------------------------------------------------------------------
 //                                Handle
@@ -139,39 +142,46 @@ class Material
 class Object
 {
 	public: NAME(Object) SERIAL(type() | convert(origin) | convert(rotation))
+	UNSERIAL(arg, 2,
+		origin   = ToPoint(arg[0]);
+		rotation = ToQuaternion(arg[1]);
+	)
 	
 	//! The origin of this object
 	Point<double> origin;
-
+	
 	//! The rotation of this object
 	Quaternion<double> rotation;
-
+	
 	//! The \ref Material of this object
 	MaterialHandle material;
-
+	
 	//! A \ref set of other objects that belong to this object	
 	set<ObjectHandle> children;
-
+	
 	//! Creates a new object at \ref Point P with \ref Quaternion "rotation" R
 	Object(Point<double> P = Point<double>(),
 	       Quaternion<double> R = Quaternion<double>(),
 		   MaterialHandle M = Material())
 	: origin(P), rotation(R), material(M) {}
-
+	
 	//! Destroys all children and then terminates
 	virtual ~Object() {}
-
+	
 	//! Sets up translations and rotations
 	virtual void preRender();
-
+	
 	//! Draw the object
 	virtual void draw();
-
+	
 	//! Draws the objects children and pop the translations and rotations
 	virtual void postRender();
-
+	
 	//! Renders the object. This calls preRender(), draw() and postRender() in that order
 	virtual void render();
+	
+	//! Unserialize from a string
+	bool operator =(const string &str);
 	
 	class iterator : public std::iterator<input_iterator_tag,ObjectHandle>
 	{

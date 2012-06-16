@@ -130,6 +130,7 @@ void GameSpeed(double speed);
 
 void NetDebug();
 void PrintWorld();
+void Test(string str);
 
 //------------------------------------------------------------------------------
 

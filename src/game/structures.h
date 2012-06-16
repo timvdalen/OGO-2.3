@@ -10,6 +10,8 @@
 #ifndef _STRUCTURES_H
 #define _STRUCTURES_H
 
+#include "player.h"
+
 #define GRID_SIZE 10
 
 namespace Objects {
@@ -176,12 +178,12 @@ class Building: public Structure
 	//! The attack power of this building
 	Power attackPower;
 	//! Owner of the building (player)
-	ObjectHandle owner;
+	Player::Id owner;
 
 	//! Constructs a new building
 	Building(int _height, BoundingBox B = BoundingBox(),
 	         Resource _cost = 0, Resource _income = 0, int _buildTime = 0,
-			 int _buildDuration = 0, Power _attackPower = 0, ObjectHandle _owner = ObjectHandle())
+			 int _buildDuration = 0, Power _attackPower = 0, Player::Id _owner = 0)
 		: height(_height), Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
@@ -207,7 +209,7 @@ class HeadQuarters: public Building
 		: Building(10, B,
 		  0, 0,
 		  0, 0,
-		  0) {}
+		  0, 0) {}
 
 	virtual void draw(){}
 };
@@ -222,7 +224,7 @@ class DefenseTower: public Building
 
 	public: NAME(DefenceTower)
 	//! Constructs a DefenseTower
-	DefenseTower(ObjectHandle _owner = ObjectHandle());
+	DefenseTower(Player::Id _owner = 0);
 
 	//! Constructs a ghost DefenseTower
 	DefenseTower(int buildTime);
@@ -246,7 +248,7 @@ class DefenseTower: public Building
 class ResourceMine: public Building
 {
 	public: NAME(ResourceMine)
-	ResourceMine(BoundingBox B = BoundingBox(), ObjectHandle _owner = ObjectHandle());
+	ResourceMine(BoundingBox B = BoundingBox(), Player::Id _owner = 0);
 
 	virtual void draw();
 
