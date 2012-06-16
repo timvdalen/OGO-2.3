@@ -219,7 +219,7 @@ class HeadQuarters: public Building
 	virtual void draw(){}
 
 	//! Model
-	struct { ObjectHandle base, socket, core; } model;
+	struct { ObjectHandle base, socket, core, coreinv; } model;
 };
 
 //------------------------------------------------------------------------------
