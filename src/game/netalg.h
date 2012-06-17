@@ -96,6 +96,8 @@ class TokenRing
 	//! Returns ths id of the local node
 	NodeID id() const;
 	
+	//! Sends a messages to a certain node.
+	bool sendto(NodeID node, const Message &msg, bool reliable);
 	//! Send a message to all connected nodes
 	bool shout(const Message &msg, bool reliable);
 	//! Passes the token to the next node in line

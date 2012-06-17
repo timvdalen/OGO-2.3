@@ -124,6 +124,9 @@ void Initialize(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
+	config->readInto(NetCode::MessageOfTheDay, "motd",
+		string("No message of the day ;("));
+	
 	// Set up game world
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
@@ -136,11 +139,12 @@ void Initialize(int argc, char *argv[])
 	config->readInto(name, "playername", string("Unnamed"));
 	team = config->read("team", 'a');
 	
-	ObjectHandle player = Player(1, team, name);
+	Player::Id pid = game.topId++;
+	ObjectHandle player = Player(pid, team, name);
 	game.player = TO(Player,player);
 	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
-	game.players[1] = player;
+	game.players[pid] = player;
 	
 	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
@@ -160,6 +164,7 @@ void Initialize(int argc, char *argv[])
 	
 	Echo("Everything loaded!");
 	Echo("Welcome to the game");
+	Echo(NetCode::MessageOfTheDay);
 }
 
 //------------------------------------------------------------------------------
@@ -409,7 +414,9 @@ void Connect(string address)
 	else
 	{
 		Game::Notice(string("Connected to " + address + string("!")));
-
+		NetCode::Enter(game.player->team, game.player->name);
+		// WARNING: this is not deterministic!
+		// Enter needs to be called repeatedly until welcome message is received
 	}
 }
 
@@ -667,6 +674,20 @@ void PrintWorld()
 	Object::iterator it;
 	for (it = game.world->begin(); it != game.world->end(); ++it)
 		puts((string(it.level(),'\t') + string(**it)).c_str());
+}
+
+//------------------------------------------------------------------------------
+
+CMD(PrintPlayers, 0, arg)
+void PrintPlayers()
+{
+	Player *p;
+	map<Player::Id,ObjectHandle>::iterator it;
+	for (it = game.players.begin(); it != game.players.end(); ++it)
+	{
+		if (!(p = TO(Player,it->second))) continue;
+		printf("[%d] %c %s\n", p->id, p->team, p->name.c_str());
+	}
 }
 
 //------------------------------------------------------------------------------

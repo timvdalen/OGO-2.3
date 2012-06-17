@@ -9,7 +9,9 @@
 
 #ifndef _CORE_H
 #define _CORE_H
-#define AUTOBUILD
+
+#define AUTOBUILD // This has to be moved, or rather *removed*...
+
 #define TO(T,x) (dynamic_cast<T *>(&*(x)))
 
 //------------------------------------------------------------------------------

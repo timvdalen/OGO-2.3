@@ -14,6 +14,7 @@
 #include "net.h"
 #include "protocol.h"
 #include "game.h"
+#include "player.h"
 
 namespace NetCode {
 
@@ -21,6 +22,9 @@ using namespace Core;
 using namespace Net;
 using namespace Protocol;
 using namespace Base::Alias;
+using namespace Objects;
+
+extern string MessageOfTheDay;
 
 //------------------------------------------------------------------------------
 //! Initializes the networking code
@@ -47,6 +51,12 @@ bool Connect(std::string host); //!< Connects to an external host
 bool Send(const Message &, bool reliable = false); //!< Sends a raw message
 
 //------------------------------------------------------------------------------
+
+void Enter(unsigned char team, string name);
+void ReEnter(Player::Id pid);
+void Welcome(Player::Id pid);
+
+void Join(Player::Id pid, unsigned char team, string name);
 
 void Chat(std::string line);
 void TeamChat(std::string line);

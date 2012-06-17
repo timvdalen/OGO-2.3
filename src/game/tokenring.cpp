@@ -302,6 +302,27 @@ NodeID TokenRing::id() const
 
 //------------------------------------------------------------------------------
 
+bool TokenRing::sendto(NodeID node, const Message &msg, bool reliable)
+{
+	PRIV(TokenRingData, td)
+	bool success = false;
+	
+	Message msg2 = msg;
+	if (reliable)
+		msg2[0].str.insert(0, 1, '#');
+	
+	pthread_mutex_lock(&td->lock);
+	{
+		if (td->nodes.count(node) && (!reliable || AUTHORIZED))
+			success = clique->sendto(td->nodes[node].addr, msg2);
+	}
+	pthread_mutex_unlock(&td->lock);
+	
+	return (success);
+}
+
+//------------------------------------------------------------------------------
+
 bool TokenRing::shout(const Message &msg, bool reliable)
 {
 	PRIV(TokenRingData, td)

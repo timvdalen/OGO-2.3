@@ -101,6 +101,9 @@ void Frame()
 			NetCode::Look(game.player->rotation);
 			break;
 		
+		case 3:
+			break;
+		
 		case 5: loop = 0; break;
 	}
 	
