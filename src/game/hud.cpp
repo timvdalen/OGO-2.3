@@ -384,15 +384,22 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
         //Draw amount of money
         black->select();
         stringstream ss;
-        ss << 100 << "f";
-		string message = ss.str();
+		int resources;
+		map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);
+		if(it != Game::game.teams.end()){
+			resources = it->second.resources;
+		}else{
+			resources = 0;
+		}
+        ss << resources << "f";
+		string money = ss.str();
         glPushMatrix();
         glTranslatef(65,45,0);
         glScalef(0.25,-0.25,1);
 		glRasterPos2i(10, 15);
         glLineWidth(2);
-		for(int count=0; count < message.length(); count++){
-			glutStrokeCharacter(GLUT_STROKE_ROMAN, message[count]);
+		for(int count=0; count < money.length(); count++){
+			glutStrokeCharacter(GLUT_STROKE_ROMAN, money[count]);
 		}
         glPopMatrix();
         black->unselect();

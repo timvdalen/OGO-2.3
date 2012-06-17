@@ -109,7 +109,9 @@ class Terrain: public Object
 	
 	//! Returns 0 when placing a structure is not possible,
 	//! returns 1 when a DefenseTower can be built,
-	//!	returns 2 when a Mine can be built
+	//!	returns 2 when a Mine can be built,
+	//! returns 10+other when the place is valid but the players team
+	//! doesn't have enough resources.
 	int canPlaceStructure(GridPoint p);
 
 	//! Safe-places a Structure on the grid
@@ -165,6 +167,8 @@ class Building: public Structure
 	protected:
 	//! If the building is built
 	bool built;
+	//! Last time this building generated resources
+	int lastGenerated;
 
 	public: NAME(Building)
 	//! The GridPoint this building is at
@@ -193,6 +197,7 @@ class Building: public Structure
 		  buildTime(_buildTime), buildDuration(_buildDuration),
 		  attackPower(_attackPower), owner(_owner), loc(GridPoint(-1, -1)) {
 			  built = false;
+			  lastGenerated = Video::ElapsedTime();
 		  }
 
 	//! Sets up translations and rotations
@@ -201,8 +206,14 @@ class Building: public Structure
 	//! Renders children and resets translations and rotations
 	virtual void postRender();
 
+	//! Performs calculations
+	virtual void frame();
+	
 	//! Draws the building
 	virtual void draw(){}
+	
+	//! Renders the building
+	virtual void render();
 
 };
 
@@ -235,16 +246,13 @@ class DefenseTower: public Building
 	DefenseTower(Player::Id _owner = 0);
 
 	//! Constructs a ghost DefenseTower
-	DefenseTower(int buildTime);
+	DefenseTower(int buildTime, bool error = false);
 
 	//! Performs calculations
-	void frame();
+	virtual void frame();
 
 	//! Draws the DefenseTower
 	virtual void draw();
-
-	//! Renders the DefenseTower
-	virtual void render();
 
 	//! Model
 	struct { ObjectHandle turret; } model;
@@ -261,7 +269,7 @@ class ResourceMine: public Building
 	
 	ResourceMine(Player::Id _owner);
 	
-	ResourceMine(int buildTime);
+	ResourceMine(int buildTime, bool error = false);
 
 	virtual void draw();
 	

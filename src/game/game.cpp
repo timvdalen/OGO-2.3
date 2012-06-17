@@ -151,7 +151,7 @@ void Initialize(int argc, char *argv[])
 	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
 
-	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters());
+	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters(pid));
 	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
 
 	// Set up user interface
@@ -561,13 +561,28 @@ void Build()
 		int structure = game.world->terrain->canPlaceStructure(clicked);
 		ObjectHandle tower;
 		switch(structure){
-		case 1: tower = Objects::DefenseTower(game.player->id); break;
-		case 2: tower = Objects::ResourceMine(game.player->id); break;
+		case 1: case 11: tower = Objects::DefenseTower(game.player->id); break;
+		case 2: case 12: tower = Objects::ResourceMine(game.player->id); break;
 		default: tower = ObjectHandle();
 		}
-		game.world->terrain->setSelected(GridPoint(-1, -1));
-		if (!game.world->terrain->placeStructure(clicked, tower))
-			Echo("There's already a tower there");
+		Resource cost = 0;
+		if(tower){
+			Building *b = TO(Building, tower);
+			if(b) cost = b->cost;
+		}
+		map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);
+		if(it != Game::game.teams.end()){
+			if(it->second.resources >= cost){
+				game.world->terrain->setSelected(GridPoint(-1, -1));
+				if (!game.world->terrain->placeStructure(clicked, tower)){
+					Echo("There's already a tower there");
+				}else{
+					it->second.resources -= cost;
+				}
+			}else{
+				Echo("You don't have enough money");
+			}
+		}
 		#endif
 	}
 	else

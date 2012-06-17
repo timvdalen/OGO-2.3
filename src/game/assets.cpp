@@ -53,7 +53,7 @@ MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj, HQCoreinvObj;
 MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
-MaterialHandle GhostTurretTex;
+MaterialHandle GhostTex, GhostErrorTex;
 
 }
 
@@ -166,7 +166,8 @@ void Initialize(int argc, char *argv[])
 	Model::HQCoreTex[1] = TexturedMaterial(path + "assets/textures/models/HQCoreteblue.png");
 	Model::HQCoreTex[2] = TexturedMaterial(path + "assets/textures/models/HQCoretenormal.png");
 
-	Model::GhostTurretTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
+	Model::GhostTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
+	Model::GhostErrorTex = ShadedMaterial(Cf(1.0, 0.0, 0.0, 0.3));
 
 	//temp
 	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");

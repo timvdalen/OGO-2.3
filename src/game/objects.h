@@ -103,7 +103,7 @@ class Team
 	//! The amount of resources this team has
 	Resource resources;
 	
-	Team(unsigned char _id){ id = _id; }
+	Team(unsigned char _id){ id = _id; resources = 200; }
 };
 
 //------------------------------------------------------------------------------

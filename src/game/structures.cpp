@@ -198,9 +198,19 @@ void Terrain::draw()
 				height = 0;
 				}
 				break;
+			case 11:{
+				gridMat = Assets::ErrorGrid;
+				height = 0;
+				}
+				break;
 			case 2:{
 				gridMat = Assets::SelectedGrid;
 				height = 1;//For foundation
+				}
+				break;
+			case 22:{
+				gridMat = Assets::ErrorGrid;
+				height = 0;
 				}
 				break;
 			default:{
@@ -278,7 +288,9 @@ void Terrain::setSelected(GridPoint p){
 		int structure = canPlaceStructure(p);
 		switch(structure){
 		case 1: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0))); break;
+		case 11: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0, true))); break;
 		case 2: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0))); break;
+		case 12: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0, true))); break;
 		default:
 			ghost = ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle()); break;
 		}
@@ -292,16 +304,27 @@ void Terrain::setSelected(GridPoint p){
 int Terrain::canPlaceStructure(GridPoint p){
 	map<GridPoint, ObjectHandle>::iterator it;
 	it = structures.find(p);
+	Resource resources = 0;
+	map<unsigned char,Team>::iterator team_it = Game::game.teams.find(Game::game.player->team);
+	if(team_it != Game::game.teams.end()) resources = team_it->second.resources;
 	if(it != structures.end()){
 		Structure *s = TO(Structure, it->second);
 		if(!s) return 0;
 		if(s->type() == "Mine"){
-			return 2;
+			if(resources >= ResourceMine(Game::game.player->id).cost){
+				return 2;
+			}else{
+				return 12;
+			}
 		}else{
 			return 0;
 		}
 	}else{
-		return 1;
+		if(resources >= DefenseTower(Game::game.player->id).cost){
+			return 1;
+		}else{
+			return 11;
+		}
 	}
 }
 
@@ -382,6 +405,30 @@ void Building::postRender(){
 
 //------------------------------------------------------------------------------
 
+void Building::frame()
+{
+	if(owner && built && income > 0 && owner == Game::game.player->id){	
+		int now = Video::ElapsedTime();
+		if(now-lastGenerated > 5000){
+			map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);
+			if(it != Game::game.teams.end()){
+				//TODO: Send this over the network
+				it->second.resources += income;
+				lastGenerated = Video::ElapsedTime();
+			}
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void Building::render()
+{
+	frame();
+	Object::render();
+}
+
+
 //------------------------------------------------------------------------------
 
 Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
@@ -405,9 +452,9 @@ void Mine::draw() {
 
 HeadQuarters::HeadQuarters(Player::Id _owner)
 		: Building(10, BoundingBox(),
+		  0, 10,
 		  0, 0,
-		  0, 0,
-		  0, 0) 
+		  0, _owner) 
 {
 	model.base = ModelObjectContainer();
 	model.socket = ModelObjectContainer();
@@ -424,6 +471,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 	int i = 2;
 	if (Game::game.players.count(owner))
 		i = TO(Player,Game::game.players[owner])->team-'a';
+
 	model.base->material = Assets::Model::HQBaseTex[i];
 	model.socket->material = Assets::Model::HQSocketTex;
 	model.core->material = Assets::Model::HQCoreTex[i];
@@ -452,7 +500,7 @@ DefenseTower::DefenseTower(Player::Id _owner)
 
 //------------------------------------------------------------------------------
 
-DefenseTower::DefenseTower(int buildTime)
+DefenseTower::DefenseTower(int buildTime, bool error)
 		: Building(4, BoundingBox(),
 			0, 0,
 			Video::ElapsedTime(), buildTime,
@@ -462,8 +510,13 @@ DefenseTower::DefenseTower(int buildTime)
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.turret->children.insert(Assets::Model::TurretObj);
 	children.insert(model.turret);
-	model.turret->material = Assets::Model::GhostTurretTex;
-	material = Assets::Model::GhostTurretTex;
+	if(error){
+		material = Assets::Model::GhostErrorTex;
+		model.turret->material = Assets::Model::GhostErrorTex;
+	}else{
+		material = Assets::Model::GhostTex;
+		model.turret->material = Assets::Model::GhostTex;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -555,16 +608,8 @@ void DefenseTower::draw()
 
 //------------------------------------------------------------------------------
 
-void DefenseTower::render()
-{
-	frame();
-	Object::render();
-}
-
-//------------------------------------------------------------------------------
-
 ResourceMine::ResourceMine(Player::Id _owner)
-		: Building(8, BoundingBox(), 300, 30,
+		: Building(8, BoundingBox(), 220, 30,
 			Video::ElapsedTime(), 20000,
 			0, _owner)
 {
@@ -592,7 +637,7 @@ ResourceMine::ResourceMine(Player::Id _owner)
 //------------------------------------------------------------------------------
 
 //Ghost constructor
-ResourceMine::ResourceMine(int buildTime)
+ResourceMine::ResourceMine(int buildTime, bool error)
 		: Building(8, BoundingBox(), 0, 0,
 			Video::ElapsedTime(), buildTime,
 			0, -1)
@@ -606,8 +651,13 @@ ResourceMine::ResourceMine(int buildTime)
 	children.insert(model.rig);
 	children.insert(model.drill);
 	
-	model.rig->material = Assets::Model::GhostTurretTex;
-	model.drill->material = Assets::Model::GhostTurretTex;
+	if(error){
+		model.rig->material = Assets::Model::GhostErrorTex;
+		model.drill->material = Assets::Model::GhostErrorTex;
+	}else{
+		model.rig->material = Assets::Model::GhostTex;
+		model.drill->material = Assets::Model::GhostTex;
+	}
 }
 
 
