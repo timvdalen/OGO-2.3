@@ -457,7 +457,8 @@ void *Clique::process(void *obj)
 			{
 				if (it->second.second <= time(NULL))
 				{
-					qd->loose(it->first);
+					//qd->loose(it->first);
+					qd->lost.erase(it); // Instead we remove it
 					it = qd->lost.begin(); 
 				}
 				else
@@ -587,7 +588,7 @@ void *Clique::process(void *obj)
 							Address remote = Address(string(msg[1]).c_str());
 							if (qd->connected.count(remote))
 							{
-								if (cmd != "@!!")
+								/*if (cmd != "@!!") We ignore them
 								{
 									Message msg;
 									msg.push_back("@>");
@@ -596,7 +597,7 @@ void *Clique::process(void *obj)
 										if (&nit->second != node)
 											msg.push_back((string) nit->second);
 									node->sock->send(msg);
-								}
+								}*/
 							}
 							else if (!qd->lost.count(remote))
 							{

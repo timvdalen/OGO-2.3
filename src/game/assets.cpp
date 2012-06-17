@@ -51,7 +51,7 @@ ObjectHandle HeadObj, BodyObj, GunObj, WrenchObj, WheelObj;
 MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 
 //structure objects
-ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj;
+ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj, HQCoreinvObj;
 MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
 MaterialHandle GhostTurretTex;
 
@@ -139,6 +139,7 @@ void Initialize(int argc, char *argv[])
 	Model::HQBaseObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Base.3DS");
 	Model::HQSocketObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Socket.3DS");
 	Model::HQCoreObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Core.3DS");
+	Model::HQCoreinvObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Core_inv.3DS");
 
 	//Model textures
 	Model::HeadTex = TexturedMaterial(path + "assets/textures/models/headtext.png");
@@ -217,6 +218,7 @@ void Terminate()
 	Model::HQBaseObj.clear();
 	Model::HQSocketObj.clear();
 	Model::HQCoreObj.clear();
+	Model::HQCoreinvObj.clear();
 
 	//Model textures
 	Model::HeadTex.clear();

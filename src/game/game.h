@@ -61,7 +61,9 @@ struct GameState
 	map<Player::Id,ObjectHandle> players;
 	map<unsigned char,Team> teams;
 	
-	GameState() : world(0), player(0) {}
+	Player::Id topId;
+	
+	GameState() : window(0), input(0), controller(0), world(0), player(0), topId(1) {}
 } extern game; //! Current game state
 
 //------------------------------------------------------------------------------
@@ -137,6 +139,7 @@ void GameSpeed(double speed);
 
 void NetDebug();
 void PrintWorld();
+void PrintPlayers();
 void Test(string str);
 
 //------------------------------------------------------------------------------

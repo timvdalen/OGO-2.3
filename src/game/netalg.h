@@ -96,6 +96,8 @@ class TokenRing
 	//! Returns ths id of the local node
 	NodeID id() const;
 	
+	//! Sends a messages to a certain node.
+	bool sendto(NodeID node, const Message &msg, bool reliable);
 	//! Send a message to all connected nodes
 	bool shout(const Message &msg, bool reliable);
 	//! Passes the token to the next node in line
@@ -108,6 +110,8 @@ class TokenRing
 	bool loss(NodeID &node);
 	//! Receives messages
 	bool recvfrom(NodeID &node, Message &msg, bool &reliable);
+	//! Returns wether a connection inconsistency was detected
+	bool tainted();
 	
 	//! Waits for incomming connections/messages and losses
 	//! \warning does not return on token gain

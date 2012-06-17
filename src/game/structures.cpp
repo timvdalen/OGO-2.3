@@ -412,18 +412,22 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 	model.base = ModelObjectContainer();
 	model.socket = ModelObjectContainer();
 	model.core = ModelObjectContainer();
+	model.coreinv = ModelObjectContainer();
 	model.base->children.insert(Assets::Model::HQBaseObj);
 	model.socket->children.insert(Assets::Model::HQSocketObj);
 	model.core->children.insert(Assets::Model::HQCoreObj);
+	model.coreinv->children.insert(Assets::Model::HQCoreinvObj);
 	children.insert(model.base); 
 	children.insert(model.socket);
 	children.insert(model.core);
+	children.insert(model.coreinv);
 	int i = 2;
 	if (Game::game.players.count(owner))
 		i = TO(Player,Game::game.players[owner])->team-'a';
 	model.base->material = Assets::Model::HQBaseTex[i];
 	model.socket->material = Assets::Model::HQSocketTex;
 	model.core->material = Assets::Model::HQCoreTex[i];
+	model.coreinv->material = Assets::Model::HQSocketTex;
 }
 
 //------------------------------------------------------------------------------

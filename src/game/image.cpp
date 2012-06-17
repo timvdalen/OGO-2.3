@@ -45,7 +45,7 @@ PngImage::PngImage(const char *filename)
 	FILE *fp = fopen(filename, "rb");
 	if (!fp)
 	{
-		fputs("[PngImage] file not found\n", stderr);
+		//fputs("[PngImage] file not found\n", stderr);
 		return;
 	}
 	

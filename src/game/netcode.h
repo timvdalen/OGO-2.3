@@ -14,6 +14,7 @@
 #include "net.h"
 #include "protocol.h"
 #include "game.h"
+#include "player.h"
 
 namespace NetCode {
 
@@ -21,29 +22,41 @@ using namespace Core;
 using namespace Net;
 using namespace Protocol;
 using namespace Base::Alias;
+using namespace Objects;
+
+extern string MessageOfTheDay;
 
 //------------------------------------------------------------------------------
-
+//! Initializes the networking code
 void Initialize(int argc, char *argv[]);
 
+//! Cleans up the networking code
 void Terminate();
 
-void Frame();
+void Frame();   //!< Processes network messages
 
-bool TryLock();
-void Unlock();
+bool TryLock(); //!< Checks if reliable messages are allowed at this time
+void Unlock();  //!< Pass the abillity to do reliable messages
+
+//------------------------------------------------------------------------------
+
+bool Connected();    //!< Returns whether wether networking is in use
+bool Reliable();     //!< Returns whether the network consistency is reliable
+
+double CurrentCPS(); //!< Returns the current cycle rate of the token ring
+
+void Disconnect();   //!< Resets the current connection
+bool Connect(std::string host); //!< Connects to an external host
+
+bool Send(const Message &, bool reliable = false); //!< Sends a raw message
 
 //------------------------------------------------------------------------------
 
-bool Connected();
-double CurrentCPS();
+void Enter(unsigned char team, string name);
+void ReEnter(Player::Id pid);
+void Welcome(Player::Id pid);
 
-void Disconnect();
-bool Connect(std::string host);
-
-bool Send(const Message &, bool reliable = false);
-
-//------------------------------------------------------------------------------
+void Join(Player::Id pid, unsigned char team, string name);
 
 void Chat(std::string line);
 void TeamChat(std::string line);
