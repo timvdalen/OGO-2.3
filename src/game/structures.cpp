@@ -310,9 +310,10 @@ int Terrain::canPlaceStructure(GridPoint p){
 bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 	if(!s) return false;
 	Structure *struc = TO(Structure, s);
-
+	
 	int structure = canPlaceStructure(p);
-	if(structure == 0 || !struc || (structure == 2 && struc->type() != "ResourceMine")){
+	if(!struc) return false;
+	if(structure == 0 || (structure == 2 && struc->type() != "ResourceMine") || (struc->type() == "HeadQuarters" && !(canPlaceStructure(GridPoint(p.x-1, p.y)) && canPlaceStructure(GridPoint(p.x-1, p.y-1)) && canPlaceStructure(GridPoint(p.x, p.y-1))))){
 		return false;
 	}
 	Building *b = TO(Building, s);
@@ -324,6 +325,12 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 		structures.erase(p);
 	}
 	structures.insert(make_pair(ip, s));
+	if(struc->type() == "HeadQuarters"){
+		ObjectHandle block = Structure();
+		structures.insert(make_pair(GridPoint(p.x-1, p.y), block));
+		structures.insert(make_pair(GridPoint(p.x-1, p.y-1), block));
+		structures.insert(make_pair(GridPoint(p.x, p.y-1), block));
+	}
 	return true;
 }
 

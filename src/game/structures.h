@@ -211,7 +211,7 @@ class Building: public Structure
 //! Represents a headquarters
 class HeadQuarters: public Building
 {
-	public: NAME(HeadQuaters)
+	public: NAME(HeadQuarters)
 
 	//! Constructs HeadQuarters
 	HeadQuarters(Player::Id _owner = 0);
