@@ -375,6 +375,58 @@ Pd Terrain::ToPointD(GridPoint point){
 
 //------------------------------------------------------------------------------
 
+void Building::drawHealthbar(){
+	if(Game::game.players.count(owner)){
+		glDisable(GL_LIGHTING);//It might not be the best idea to switch lighting off and on so much
+		glPushMatrix();
+			//Draw health bar
+			if(type() == "HeadQuarters"){
+				glTranslated(0, 0, (double)height+1);
+			}else if(type() == "ResourceMine"){
+				glTranslated(GRID_SIZE/2, GRID_SIZE/2, (double)height+3);
+			}else{
+				glTranslated(GRID_SIZE/2, GRID_SIZE/2, (double)height+1);
+			}
+			glRotated(90,1,0,0);//Revert custom axis
+			applyBillboarding();
+			glScalef(0.1, 0.1, 0.1);    //Scale down
+			Assets::HealthBar::Border->select();
+			glBegin(GL_LINES);
+				glVertex3f(-16.01, -1.01, 0.0);
+				glVertex3f(16.01, -1.01, 0.0);
+				
+				glVertex3f(16.01, -1.01, 0.0);
+				glVertex3f(16.01, 1.01, 0.0);
+				
+				glVertex3f(16.01, 1.01, 0.0);
+				glVertex3f(-16.01, 1.01, 0.0);
+				
+				glVertex3f(-16.01, 1.01, 0.0);
+				glVertex3f(-16.01, -1.01, 0.0);
+			glEnd();
+			Assets::HealthBar::Border->unselect();
+			double barwidth = ((health/maxHealth)*32) - 16.0;
+			Assets::HealthBar::Green->select();
+			glBegin(GL_QUADS);
+				glVertex3f(-16.0, -1.0, 0.0);
+				glVertex3f(barwidth, -1.0, 0.0);
+				glVertex3f(barwidth, 1.0, 0.0);
+				glVertex3f(-16.0, 1.0, 0.0);
+			glEnd();
+			Assets::HealthBar::Green->unselect();
+			Assets::HealthBar::Red->select();
+			glBegin(GL_QUADS);
+				glVertex3f(barwidth, -1.0, 0.0);
+				glVertex3f(16.0, -1.0, 0.0);
+				glVertex3f(16.0, 1.0, 0.0);
+				glVertex3f(barwidth, 1.0, 0.0);
+			glEnd();
+			Assets::HealthBar::Red->unselect();
+		glPopMatrix();
+		glEnable(GL_LIGHTING);
+	}
+}
+
 void Building::preRender(){
 	Object::preRender();
 	
@@ -401,6 +453,7 @@ void Building::preRender(){
 void Building::postRender(){
 	Object::postRender();
 	glPopMatrix();//This is the matrix that was pushed in Object::preRender()
+	drawHealthbar();
 }
 
 //------------------------------------------------------------------------------
@@ -454,7 +507,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 		: Building(10, BoundingBox(),
 		  0, 10,
 		  0, 0,
-		  0, _owner) 
+		  0, _owner, 600.0) 
 {
 	model.base = ModelObjectContainer();
 	model.socket = ModelObjectContainer();
@@ -484,8 +537,7 @@ DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
-			20, _owner),
-			Destroyable(300.0)
+			20, _owner, 300.0)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -505,8 +557,7 @@ DefenseTower::DefenseTower(int buildTime, bool error)
 		: Building(4, BoundingBox(),
 			0, 0,
 			Video::ElapsedTime(), buildTime,
-			0, -1),
-			Destroyable()
+			0, -1, -1)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -613,7 +664,7 @@ void DefenseTower::draw()
 ResourceMine::ResourceMine(Player::Id _owner)
 		: Building(8, BoundingBox(), 220, 30,
 			Video::ElapsedTime(), 20000,
-			0, _owner)
+			0, _owner, 200.0)
 {
 	model.rig = ModelObjectContainer();
 	model.drill = ModelObjectContainer();
@@ -642,7 +693,7 @@ ResourceMine::ResourceMine(Player::Id _owner)
 ResourceMine::ResourceMine(int buildTime, bool error)
 		: Building(8, BoundingBox(), 0, 0,
 			Video::ElapsedTime(), buildTime,
-			0, -1)
+			0, -1, -1)
 {
 	model.rig = ModelObjectContainer();
 	model.drill = ModelObjectContainer();
@@ -676,12 +727,13 @@ void ResourceMine::postRender()
 {
 	Object::postRender();
 	if(rock) rock->render();
-	if(owner != -1){
+	if(Game::game.players.count(owner)){
 		Assets::Grass->select();
 		drawFoundation(1);
 		Assets::Grass->unselect();
 	}
 	glPopMatrix();//This is the matrix thas was pushed in Object::preRender()
+	Building::drawHealthbar();
 }
 
 void drawFoundation(int h) {

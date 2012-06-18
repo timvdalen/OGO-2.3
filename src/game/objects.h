@@ -31,6 +31,10 @@ class Player;
 
 //------------------------------------------------------------------------------
 
+void applyBillboarding();
+
+//------------------------------------------------------------------------------
+
 //! Represents a bounding box.
 
 //! Point variables follow xyz where x is l(left) or r(ight), y is t(op) or b(ottom) and z is l(ow) or h(igh).
