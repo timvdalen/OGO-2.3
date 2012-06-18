@@ -155,7 +155,7 @@ void Initialize(int argc, char *argv[])
 	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
 	
 	Player::Id pid2 = game.topId++;
-	ObjectHandle player2 = Player(pid2, 'b', "Robot");
+	ObjectHandle player2 = Player(pid2, 'a', "Robot");
 	game.root->children.insert(player2);
 	game.players[pid2] = player2;
 
@@ -544,6 +544,24 @@ void Fire()
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
 				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
+				Player *p = TO(Player, collision.first);
+				if(p){
+					if(p->team != game.player->team){//Precent teamkill
+						p->damage(10.0);
+						//TODO: Send over the network
+					}
+				}else{
+					DefenseTower *t = TO(DefenseTower, collision.first);
+					if(t){
+						Player *own = NULL;
+						if(Game::game.players.count(t->owner))
+							own = TO(Player, Game::game.players[t->owner]); 
+						if(own && own->team != game.player->team){
+							t->damage(10.0);
+							//TODO: Send over the network
+						}
+					}
+				}
 			}
 			else
 				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
