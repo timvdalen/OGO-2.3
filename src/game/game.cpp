@@ -534,7 +534,7 @@ void Fire()
 			pair<ObjectHandle, double> collision = game.world->checkCollision(game.controller->target, lookVec);
 	
 			if (collision.first)
-			{
+			{	
 				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
