@@ -153,11 +153,6 @@ void Initialize(int argc, char *argv[])
 
 	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters(pid));
 	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
-	
-	Player::Id pid2 = game.topId++;
-	ObjectHandle player2 = Player(pid2, 'a', "Robot");
-	game.root->children.insert(player2);
-	game.players[pid2] = player2;
 
 	// Set up user interface
 	view->world = game.root;
