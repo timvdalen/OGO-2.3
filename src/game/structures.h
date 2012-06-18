@@ -236,7 +236,7 @@ class HeadQuarters: public Building
 //------------------------------------------------------------------------------
 
 //! Represents a defense tower
-class DefenseTower: public Building
+class DefenseTower: public Building, public Destroyable
 {
 	//! The time (in milliseconds since the glut event loop was started) that the last shot was fired 
 	int lastshot;

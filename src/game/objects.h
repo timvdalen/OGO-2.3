@@ -11,7 +11,6 @@
 #define _OBJECTS_H
 
 #include <time.h>
-
 #include <map>
 #include <vector>
 
@@ -47,6 +46,36 @@ struct BoundingBox
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
+};
+
+//------------------------------------------------------------------------------
+
+//! Represents something that can be destroyed
+class Destroyable
+{
+	public:
+	//! The maximum health of this thing
+	double maxHealth;
+	
+	//! The current health of this thing
+	double health;
+	
+	//! Creates a new Destroyable thing
+	Destroyable(double _maxHealth)
+		:maxHealth(_maxHealth), health(_maxHealth){}
+		
+	//! Creates a new non-Destroyable thing
+	Destroyable()
+		:maxHealth(-1.0), health(-1.0){}
+		
+	//! Checks is the thing is destroyed
+	bool isDestroyed();
+	
+	//! Adds damage
+	void damage(double dmg);
+	
+	//! Heals the thing
+	void heal(double _health);
 };
 
 //------------------------------------------------------------------------------

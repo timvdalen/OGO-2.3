@@ -128,12 +128,12 @@ class EmptyMaterial : public Material {
 //------------------------------------------------------------------------------
 
 //! A material for the grid.
-class GridMaterial : public Material
+class LineMaterial : public Material
 {
 	uword size;
 	
 	public:
-	GridMaterial(uword S = 10) : size(S) {}
+	LineMaterial(uword S = 10) : size(S) {}
 	
 	virtual void select();
 	virtual void unselect();

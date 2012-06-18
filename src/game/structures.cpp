@@ -484,7 +484,8 @@ DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
-			20, _owner) 
+			20, _owner),
+			Destroyable(300.0)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -504,7 +505,8 @@ DefenseTower::DefenseTower(int buildTime, bool error)
 		: Building(4, BoundingBox(),
 			0, 0,
 			Video::ElapsedTime(), buildTime,
-			0, -1)
+			0, -1),
+			Destroyable()
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);

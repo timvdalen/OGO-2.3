@@ -38,6 +38,12 @@ extern MaterialHandle WidgetBG;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
 
+namespace HealthBar{
+	extern MaterialHandle Border;
+	extern MaterialHandle Green;
+	extern MaterialHandle Red;
+}
+
 namespace Icon{
 
 extern MaterialHandle Money, Health, Mine;
