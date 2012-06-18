@@ -50,7 +50,7 @@ struct GridPoint
 //------------------------------------------------------------------------------
 
 //! Represents the terrain of the game
-class Terrain: public Object
+class Terrain: public BoundedObject
 {
 
 	GLuint gridDL;
@@ -124,6 +124,10 @@ class Terrain: public Object
 
 	//! Converts a GridPoint to a Point<double>
 	Pd ToPointD(GridPoint p);
+
+
+	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	ObjectHandle checkCollision2(Pd origin, Vd direction);
 
 	//! Converts a Point<double> to a GridPoint
 	GridPoint ToGrid(Pd point);

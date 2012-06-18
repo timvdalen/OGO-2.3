@@ -87,12 +87,13 @@ class Destroyable
 //! Represents an object with a bounding box
 class BoundedObject: public Object
 {
-    //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
-    bool insideBox(Point<double> p, Point<double> a, Point<double> b);
 
     public: NAME(BoundedObject)
 	//! The boundingbox for this object
 	BoundingBox bb;
+
+    //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
+    bool insideBox(Point<double> p, Point<double> a, Point<double> b);
 
 	//! Constructs a new bounded object
 	BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(), MaterialHandle M = Material())
@@ -103,7 +104,7 @@ class BoundedObject: public Object
 	//! Checks if a line from origin to direction collides with this object or one of its children.
 	//! If there is a collision, this function returns a handle to the object the line collides with
 	//! if not, it returns null.
-	pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
 	ObjectHandle checkCollision2(Pd origin, Vd direction);
 	
 	bool checkCollision(const ObjectHandle &target);

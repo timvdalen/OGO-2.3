@@ -15,7 +15,7 @@
 #include "game.h"
 
 namespace Objects {
-
+#define HIGH 100
 
 void drawFoundation(int h);
 
@@ -80,7 +80,9 @@ bool GridPoint::isValid()
 //------------------------------------------------------------------------------
 
 Terrain::Terrain(double _width, double _height)
-	: Object(Pd(), Qd(), Assets::Grass)
+	: BoundedObject(Pd(), Qd(),
+	  BoundingBox(Pd(-_width/2, -_height/2, 0), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0), Pd(), Pd(), Pd(), Pd(_width/2, _height/2, HIGH)),
+	  Assets::Grass)
 {
 	width = _width;
 	height = _height;
@@ -91,6 +93,82 @@ Terrain::Terrain(double _width, double _height)
 }
 
 //------------------------------------------------------------------------------
+pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
+{
+    double collision = numeric_limits<double>::infinity();
+    //--- We only check lbl rbh, could be improved-----
+    Point<double> a = bb.lbl;
+    Point<double> b = bb.rth;
+    //--- Origin does not have to be rotated
+    Point<double> p = (-rotation)*(origin - this->origin);
+    //--- Vector only needs to be rotated
+    //--- We might need the inverse of rotation here
+    Vector<double> v = (-rotation)*direction;
+    //--- Now check if we have a collision in the x direction
+	
+	
+	
+    double lambda1, lambda2;
+    if(v.x != 0){
+        lambda1 = (a.x - p.x)/(v.x);
+        lambda2 = (b.x -p.x)/(v.x);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if (insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
+    }
+    //---- y direction
+    if(v.y != 0){
+        lambda1 = (a.y - p.y)/(v.y);
+        lambda2 = (b.y - p.y)/(v.y);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if(insideBox(p + v*lambda2,a,b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
+    }
+    //--- z direction
+    if(v.z != 0){
+        lambda1 = (a.z - p.z)/(v.z);//intersection with axis in lbl.z
+        lambda2 = (b.z - p.z)/(v.z);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if(insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
+    }
+    //find a collision with a child
+    if(collision < std::numeric_limits<double>::infinity()){
+        map<GridPoint, ObjectHandle>::iterator it;
+        ObjectHandle colobject = *this;
+        double collision2 = numeric_limits<double>::infinity();
+        for (it = structures.begin(); it != structures.end(); ++it){
+            BoundedObject* child = TO(BoundedObject, it->second);
+            if(child){
+                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
+                if(childcollision.second < collision2){ //We have a collision with a child
+                    colobject.clear();
+                    collision2 = childcollision.second;
+                    colobject = childcollision.first;
+                }else{
+                    childcollision.first.clear();
+                }
+            }
+        }
+        if(collision2 == numeric_limits<double>::infinity()){
+            collision2 = collision;
+        }
+        return make_pair(colobject,collision2);
+    }
+    return make_pair(ObjectHandle(),collision);
+}
+
+//------------------------------------------------------------------------------
+
 void Terrain::drawGround()
 {
 	glEnable(GL_POLYGON_OFFSET_FILL);
