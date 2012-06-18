@@ -312,6 +312,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
     {
     }
     
+//To scale the line thickness with the size of the satus displayer
+inline int scale(int linewidth, float scale){
+	int result = (int)round(scale*linewidth);
+	return result < 1 ? 1 : result;
+}
     
     //------------------------------------------------------------------------------
     //Should be splitted in subroutintes, to lazy atm
@@ -320,6 +325,9 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
     //Maybe also not use select, but that is a lot of work to revamp
     //and only results in more beautifull code
     void StatusDisplayer::draw(){
+        float scalar = min(width, height);
+        scalar = scalar/800.;
+		scalar = scalar > 1? 1 : scalar;
         glRasterPos2i(0,0);
         //Cache them somewere?
        // MaterialHandle bg = ColorMaterial(254.0/255.0, 251.0/255, 225.0/255.0,0.8f);
@@ -397,7 +405,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
         glTranslatef(65,45,0);
         glScalef(0.25,-0.25,1);
 		glRasterPos2i(10, 15);
-        glLineWidth(2);
+        glLineWidth(scale(2, scalar));
 		for(int count=0; count < money.length(); count++){
 			glutStrokeCharacter(GLUT_STROKE_ROMAN, money[count]);
 		}
@@ -405,7 +413,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
         black->unselect();
         //Draw Health-bar
         black->select();
-        glLineWidth(5);
+        glLineWidth(scale(5, scalar));
         glBegin(GL_LINE_STRIP);
         glVertex2i(70,65);
         glVertex2i(70,95);
@@ -414,7 +422,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
         glVertex2i(70,65);
         glEnd();
         //round corners
-        glLineWidth(2);
+        glLineWidth(scale(2, scalar));
         glBegin(GL_LINE_STRIP);
         glVertex2i(69,64);
         glVertex2i(69,96);
@@ -462,7 +470,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
         }
         //Draw line to distinct red part from green part
         if(3 < 96*factor && 96*factor < 93){//Dont overwrite the green part with a line
-            glLineWidth(2);
+            glLineWidth(scale(2, scalar));
             black->select();
             glBegin(GL_LINES);
             glVertex2i((int) (72 + 96*factor), 93);
@@ -474,7 +482,11 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
     }
     
     void StatusDisplayer::render(){
+        //Set to the right coordinates
+        float scale = min(width, height);
+        scale = scale/800.;
         glPushMatrix();
+		glScalef(scale, scale,1);
         //Set to the right coordinates
         //-10 because the draw() method has as upperright corner (10,10)
         //If one wants to subtract minus 10 from all the vertices
@@ -643,8 +655,8 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 			mat = Assets::Icon::Pickaxe_normal;
 		}
 	}else if(TO(HeadQuarters, s)){
-		enlargeup = 1;
-		enlargedown = 0;
+		enlargeup = 0;
+		enlargedown = 1;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
 			if(player->team == 'a'){
