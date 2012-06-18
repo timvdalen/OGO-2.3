@@ -718,7 +718,8 @@ ResourceMine::ResourceMine(int buildTime, bool error)
 
 void ResourceMine::draw() 
 {
-	model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
+	if(built)
+		model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
 }
 
 //------------------------------------------------------------------------------
