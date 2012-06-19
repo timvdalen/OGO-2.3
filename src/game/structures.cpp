@@ -324,6 +324,7 @@ void Terrain::postRender()
 			Building *b = TO(Building, s);
 			if(b && b->isDestroyed()){
 				structures.erase(it++);
+				glPopMatrix();
 				continue;
 			}
 			s->render();
