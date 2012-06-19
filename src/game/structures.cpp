@@ -272,12 +272,10 @@ void Terrain::postRender()
 					//Drop some coins
 					Resource toDrop = b->cost/2;
 					int noCoins = toDrop/20;
-					printf("Dropping %d coins\n", noCoins);
 					for(int i=0; i < noCoins; i++){
 						Pd droppoint = Game::game.world->terrain->ToPointD(b->loc);
-						droppoint.x += GRID_SIZE/2;
-						droppoint.y += GRID_SIZE/2;
-						printf("\tDropping (%f, %f, %f)\n", droppoint.x, droppoint.y, droppoint.z);
+						droppoint.x += (rand()%10);
+						droppoint.y += (rand()%10);
 						Game::game.world->temporary.push_back(Droppable(droppoint, 20));
 					}
 					//TODO: Send this over the network
