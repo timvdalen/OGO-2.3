@@ -20,8 +20,8 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
-Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBox B)
-	: BoundedObject(P, R, B), Destroyable(200.0)
+Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R)
+	: BoundedObject(P, R, BoundingBox(Pd(-1.2/2.0,-0.9,0),Pd(1.2/2.0,0.9,2.1149995))), Destroyable(200.0)
 {
 	id = _id;
 	team = _team;
@@ -133,7 +133,6 @@ void Player::draw() {
 	glVertex3f(t.x, t.y-0.04, t.z);
 	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
 	glEnd();
-	
 	if(id != Game::game.player->id){
 		glDisable(GL_LIGHTING);
 		MaterialHandle teamcolor;
@@ -143,7 +142,7 @@ void Player::draw() {
 			teamcolor = ColorMaterial(0.0f, 0.0f, 1.0f,1.0f);
 		}
 		glPushMatrix();
-			glTranslated(origin.x,origin.y,origin.z+2.5);
+			glTranslated(0,0,2.5);
 			glRotated(90,1,0,0);//Revert custom axis
 			applyBillboarding();
 			glScalef(0.003, 0.003, 0.003);    //Scale down
@@ -160,7 +159,7 @@ void Player::draw() {
 		glPopMatrix();
 		glPushMatrix();
 			//Draw health bar
-			glTranslated(origin.x,origin.y,origin.z+2.35);
+			glTranslated(0,0,2.35);
 			glRotated(90,1,0,0);//Revert custom axis
 			applyBillboarding();
 			glScalef(0.1, 0.1, 0.1);    //Scale down

@@ -114,22 +114,34 @@ void World::draw(){
 void World::postRender(){
 	//Check for the ttl of all active LaserBeams and render them
 	vector<ObjectHandle>::iterator it;
-	for(it = laserBeams.begin(); it != laserBeams.end(); ){
-		LaserBeam *curr = TO(LaserBeam, *it);
-		if(!curr){
+	for(it = temporary.begin(); it != temporary.end(); ){
+		LaserBeam *lcurr = TO(LaserBeam, *it);
+		
+		if(!lcurr){
 			//This situation can only happen when an ObjectHandle is manually
-			//added to laserBeams
-			it = laserBeams.erase(it);
-		}else{
-			if(curr->done){
-				it = laserBeams.erase(it);
+			//added to temporary
+			Droppable *dcurr = TO(Droppable, *it);
+			if(!dcurr){
+				it = temporary.erase(it);
 			}else{
-				curr->render();
+				if(dcurr->done){
+					it = temporary.erase(it);
+				}else{
+					dcurr->render();
+					it++;
+				}
+
+			}
+		}else{
+			if(lcurr->done){
+				it = temporary.erase(it);
+			}else{
+				lcurr->render();
 				it++;
 			}
 		}
 	}
-	
+
 	//Go on to render children and pop matrix
 	Object::postRender();
 }
@@ -262,18 +274,22 @@ Point<double> World::getCorrectedOrigin(Qd q, Pd p){
 
 //------------------------------------------------------------------------------
 
-ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
+ObjectHandle World::trace(Point<double> origin, Vector<double> &path, ObjectHandle ignore)
 {
 	pair<ObjectHandle, double> closest = make_pair(ObjectHandle(), !path);
-	
 	BoundedObject *bo;
 	pair<ObjectHandle, double> ret;
 	for (Object::iterator it = begin(); it != end(); ++it)
 	{
 		if (!(bo = TO(BoundedObject,*it))) continue;
-		ret = bo->checkCollision(origin, path);
-		if (ret.second < closest.second)
+		if((!TO(Player, *it) && !TO(Terrain, *it)) || *it == ignore) continue;
+		ret = bo->checkCollision(origin, ~path);
+		if (ret.second < closest.second){
 			closest = ret;
+			if(!TO(Terrain, *it)){
+				ret.first = *it;
+			}
+		}
 	}
 	path = ~path * closest.second;
 	return closest.first;
@@ -305,8 +321,36 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 	LaserBeam *lb = TO(LaserBeam, laserBeam);
 	//Check if the ObjectHandle passed actually points to a LaserBeam
 	if(lb){
-		laserBeams.push_back(laserBeam);
+		temporary.push_back(laserBeam);
 	}
+}
+
+//------------------------------------------------------------------------------
+
+Droppable::Droppable(Pd _origin, Resource _worth, int _dropped, int _ttl)
+	: BoundedObject(_origin, Qd(), BoundingBox(Pd(-0.105, -0.5, 0.0), Pd(0.105, 0.5, 1.0)))
+{
+	model.coin = ModelObjectContainer();
+	model.coin->children.insert(Assets::Model::CoinObj);
+	children.insert(model.coin);
+	model.coin->material = Assets::Model::CoinTex;
+
+	worth = _worth;
+	dropped = _dropped;
+	ttl = _ttl;
+	done = false;
+}
+
+//------------------------------------------------------------------------------
+
+void Droppable::preRender(){
+	Object::preRender();
+	int timelived = Video::ElapsedTime() - dropped;
+	if(timelived >= ttl){
+		done = true;
+		return;
+	}
+	rotation = rotation * Rd(0.02, Vd(0,0,1));
 }
 
 //------------------------------------------------------------------------------

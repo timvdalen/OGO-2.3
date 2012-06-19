@@ -67,6 +67,10 @@ extern ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketOb
 extern MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
 extern MaterialHandle GhostTex, GhostErrorTex;
 
+//other objects
+extern ObjectHandle CoinObj;
+extern MaterialHandle CoinTex;
+
 }
 
 //------------------------------------------------------------------------------
