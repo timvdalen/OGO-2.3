@@ -104,6 +104,9 @@ class Droppable: public BoundedObject
 
 	//! Creates a new Droppable
 	Droppable(Pd _origin, Resource _worth, int _dropped = Video::ElapsedTime(), int _ttl = 15000);
+
+	//! Called before draw()
+	void preRender();
 };
 
 //------------------------------------------------------------------------------

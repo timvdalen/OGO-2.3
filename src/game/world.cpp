@@ -326,7 +326,8 @@ Droppable::Droppable(Pd _origin, Resource _worth, int _dropped, int _ttl)
 
 //------------------------------------------------------------------------------
 
-Droppable::preRender(){
+void Droppable::preRender(){
+	Object::preRender();
 	int timelived = Video::ElapsedTime() - dropped;
 	if(timelived >= ttl){
 		done = true;
