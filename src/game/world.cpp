@@ -270,7 +270,7 @@ ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 	for (Object::iterator it = begin(); it != end(); ++it)
 	{
 		if (!(bo = TO(BoundedObject,*it))) continue;
-		if(TO(Player, *it) || TO(Terrain, *it)) continue;
+		if((!TO(Player, *it)) && (!TO(Terrain, *it))) continue;
 		ret = bo->checkCollision(origin, ~path);
 		if (ret.second < closest.second)
 			closest = ret;
