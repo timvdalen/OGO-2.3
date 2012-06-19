@@ -106,9 +106,9 @@ pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
     //--- We might need the inverse of rotation here
     Vector<double> v = (-rotation)*direction;
     //--- Now check if we have a collision in the x direction
-	
-	
-	
+
+
+
     double lambda1, lambda2;
     if(v.x != 0){
         lambda1 = (a.x - p.x)/(v.x);
@@ -419,7 +419,7 @@ int Terrain::canPlaceStructure(GridPoint p){
 bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 	if(!s) return false;
 	Structure *struc = TO(Structure, s);
-	
+
 	int structure = canPlaceStructure(p);
 	if(!struc) return false;
 	if(structure == 0 || (structure == 2 && struc->type() != "ResourceMine") || (struc->type() == "HeadQuarters" && !(canPlaceStructure(GridPoint(p.x-1, p.y)) && canPlaceStructure(GridPoint(p.x-1, p.y-1)) && canPlaceStructure(GridPoint(p.x, p.y-1))))){
@@ -480,13 +480,13 @@ void Building::drawHealthbar(){
 			glBegin(GL_LINES);
 				glVertex3f(-16.01, -1.01, 0.0);
 				glVertex3f(16.01, -1.01, 0.0);
-				
+
 				glVertex3f(16.01, -1.01, 0.0);
 				glVertex3f(16.01, 1.01, 0.0);
-				
+
 				glVertex3f(16.01, 1.01, 0.0);
 				glVertex3f(-16.01, 1.01, 0.0);
-				
+
 				glVertex3f(-16.01, 1.01, 0.0);
 				glVertex3f(-16.01, -1.01, 0.0);
 			glEnd();
@@ -515,14 +515,14 @@ void Building::drawHealthbar(){
 
 void Building::preRender(){
 	Object::preRender();
-	
+
 	glPushMatrix();
 
 	if(built) return;
 
 	int now = Video::ElapsedTime();
-	if((now-buildTime) > buildDuration){       
-		built = true; 
+	if((now-buildTime) > buildDuration){
+		built = true;
 		return;
 	}
 
@@ -546,7 +546,7 @@ void Building::postRender(){
 
 void Building::frame()
 {
-	if(owner && built && income > 0 && owner == Game::game.player->id){	
+	if(owner && built && income > 0 && owner == Game::game.player->id){
 		int now = Video::ElapsedTime();
 		if(now-lastGenerated > 5000){
 			map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);
@@ -593,7 +593,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 		: Building(10, BoundingBox(),
 		  0, 10,
 		  0, 0,
-		  0, _owner, 600.0) 
+		  0, _owner, 600.0)
 {
 	model.base = ModelObjectContainer();
 	model.socket = ModelObjectContainer();
@@ -603,7 +603,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 	model.socket->children.insert(Assets::Model::HQSocketObj);
 	model.core->children.insert(Assets::Model::HQCoreObj);
 	model.coreinv->children.insert(Assets::Model::HQCoreinvObj);
-	children.insert(model.base); 
+	children.insert(model.base);
 	children.insert(model.socket);
 	children.insert(model.core);
 	children.insert(model.coreinv);
@@ -675,11 +675,11 @@ void DefenseTower::frame()
 	Pd worldcoord = w->terrain->ToPointD(loc);
 	worldcoord.x += (int)GRID_SIZE/2;
 	worldcoord.y += (int)GRID_SIZE/2;
-	worldcoord.z = 0.0;
+	worldcoord.z = 2.68;
 
 	Player *own = NULL;
 	if(Game::game.players.count(owner))
-		own = TO(Player, Game::game.players[owner]); 
+		own = TO(Player, Game::game.players[owner]);
 
 	//Find nearest player
 	if(own && built){
@@ -698,7 +698,7 @@ void DefenseTower::frame()
 						closest = *it;
 						continue;
 					}
-				}	
+				}
 			}
 		}
 		map<GridPoint, ObjectHandle>::iterator mit;
@@ -722,33 +722,48 @@ void DefenseTower::frame()
 
 		if(closest){
 			Player *p = TO(Player, closest);
-			Building *b = TO(Building, closest); 
+			Building *b = TO(Building, closest);
 
-			Qd target;
+			Pd targetPoint;
 			if(b){
 				if(TO(HeadQuarters, b)){
-					target = worldcoord.lookAt(w->terrain->ToPointD(b->loc));
+					targetPoint = w->terrain->ToPointD(b->loc);
 				}else{
-					Pd targetPd = w->terrain->ToPointD(b->loc);
-					targetPd.x += GRID_SIZE/2;
-					targetPd.y += GRID_SIZE/2;
-					target = worldcoord.lookAt(targetPd);
+					targetPoint = w->terrain->ToPointD(b->loc);
+					targetPoint.x += GRID_SIZE/2;
+					targetPoint.y += GRID_SIZE/2;
 				}
 			}else{
-				target = worldcoord.lookAt(closest->origin);
+				targetPoint = closest->origin;
 			}
-			
-			Rd angleRot = (~model.turret->rotation) * -(~target);
 
-			double angle = fmod(angleRot.a, 2*Pi);
+			Qd target = worldcoord.lookAt(targetPoint);
 
-			if(angle < 0.07){
+            Rd angleRot = Rd((~model.turret->rotation));
+            double anglePlayer = atan2(targetPoint.x-worldcoord.x, targetPoint.y-worldcoord.y);
+
+			double rot = angleRot.a;
+
+			double z = angleRot.v.z;
+			double angleDiff = rot*z - anglePlayer;
+
+			double angle = fabs(fmod(angleDiff, 2*Pi));
+
+            double angP = fmod(anglePlayer + 2*Pi, 2*Pi);
+			double angR = fmod(rot*z + 2*Pi, 2*Pi);
+
+			if(angle < 0.03){
 				//Locked
 				int now = Video::ElapsedTime();
 				if(now - lastshot > ROF){
 					//Shoot animation
 					lastshot = now;
-					w->addLaserBeam(LaserBeam(worldcoord, target));
+					Pd startpoint = worldcoord+Vd(5*sin(rot*z)+0.5*cos(rot*z), 5*cos(rot*z)-0.5*sin(rot*z), 0);
+					Pd startpoint2 = worldcoord+Vd(5*sin(rot*z)-0.5*cos(rot*z), 5*cos(rot*z)+0.5*sin(rot*z), 0);
+					//Qd beam = gunLoc.lookAt(target);
+                    w->addLaserBeam(LaserBeam(startpoint, target));
+					w->addLaserBeam(LaserBeam(startpoint2, target));
+
 					//Actual damage
 					if(own->id == Game::game.player->id){
 						if(p){
@@ -760,8 +775,13 @@ void DefenseTower::frame()
 					}
 				}
 			}else{
-				if(angleRot.v.z == 1) movespeed *= -1;
-				model.turret->rotation = model.turret->rotation * Rd(movespeed, Vd(0, 0, 1));
+			    float phi = min(fabs(angP-angR), fabs(angR-angP));
+			    phi = !(phi >= 0 || phi <= 0) ? 100 : phi;
+			    float sign = ((angP - angR > 0 && angP - angR < Pi) || (angP-angR > -2*Pi && angP-angR < -Pi)) ? 1.0 : -1.0;
+			    float theta = min(phi, movespeed);
+			    printf("Phi = %f Movespeed = %f\n", phi, movespeed);
+			    theta *= sign;
+				model.turret->rotation = model.turret->rotation * Rd(theta, Vd(0, 0, 1));
 			}
 		}
 	}
@@ -790,7 +810,7 @@ ResourceMine::ResourceMine(Player::Id _owner)
 	model.drill->children.insert(Assets::Model::DrillObj);
 	children.insert(model.rig);
 	children.insert(model.drill);
-	
+
 	rock = ModelObjectContainer();
 	rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	rock->children.insert(Assets::Model::RockObj);
@@ -819,7 +839,7 @@ ResourceMine::ResourceMine(int buildTime, bool error)
 	model.drill->children.insert(Assets::Model::DrillObj);
 	children.insert(model.rig);
 	children.insert(model.drill);
-	
+
 	if(error){
 		model.rig->material = Assets::Model::GhostErrorTex;
 		model.drill->material = Assets::Model::GhostErrorTex;
@@ -832,7 +852,7 @@ ResourceMine::ResourceMine(int buildTime, bool error)
 
 //------------------------------------------------------------------------------
 
-void ResourceMine::draw() 
+void ResourceMine::draw()
 {
 	if(built)
 		model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
