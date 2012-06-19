@@ -74,7 +74,7 @@ pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
     double lambda1, lambda2;
     if(v.x != 0){
         lambda1 = (a.x - p.x)/(v.x);
-        lambda2 = (b.x -p.x)/(v.x);
+        lambda2 = (b.x - p.x)/(v.x);
         if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
             collision = lambda1;
         }
@@ -129,9 +129,9 @@ bool BoundedObject::checkCollision(const ObjectHandle &target)
 //------------------------------------------------------------------------------
 
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
-        return a.x <= p.x && p.x <= b.x//Inside x-interval
-            && a.y <= p.y && p.y <= b.y//Inside y-interval
-            && a.z <= p.z && p.z <= b.z;//Inside z-interval
+        return a.x - 0.01 <= p.x && p.x <= b.x + 0.01//Inside x-interval
+            && a.y - 0.01 <= p.y && p.y <= b.y + 0.01//Inside y-interval
+            && a.z - 0.01 <= p.z && p.z <= b.z + 0.01;//Inside z-interval
 }
 
 //------------------------------------------------------------------------------
