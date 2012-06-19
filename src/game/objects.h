@@ -11,7 +11,6 @@
 #define _OBJECTS_H
 
 #include <time.h>
-
 #include <map>
 #include <vector>
 
@@ -32,6 +31,10 @@ class Player;
 
 //------------------------------------------------------------------------------
 
+void applyBillboarding();
+
+//------------------------------------------------------------------------------
+
 //! Represents a bounding box.
 
 //! Point variables follow xyz where x is l(left) or r(ight), y is t(op) or b(ottom) and z is l(ow) or h(igh).
@@ -47,6 +50,43 @@ struct BoundingBox
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
+	
+	BoundingBox(Pd _lbl, Pd _rth)
+		: lbl(_lbl), rbl(0), ltl(0), rtl(0),
+		  lbh(0), rbh(0), lth(0), rth(_rth) {}
+};
+
+//------------------------------------------------------------------------------
+
+//! Represents something that can be destroyed
+class Destroyable
+{
+	public:
+	//! The maximum health of this thing
+	double maxHealth;
+	
+	//! The current health of this thing
+	double health;
+	
+	//! Creates a new Destroyable thing
+	Destroyable(double _maxHealth)
+		:maxHealth(_maxHealth), health(_maxHealth){}
+		
+	//! Creates a new non-Destroyable thing
+	Destroyable()
+		:maxHealth(-1.0), health(-1.0){}
+		
+	//! Checks is the thing is destroyed
+	bool isDestroyed();
+	
+	//! Adds damage
+	void damage(double dmg);
+	
+	//! Heals the thing
+	void heal(double _health);
+
+	//! Restores the thing to full health
+	void fullHeal();
 };
 
 //------------------------------------------------------------------------------
@@ -54,12 +94,13 @@ struct BoundingBox
 //! Represents an object with a bounding box
 class BoundedObject: public Object
 {
-    //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
-    bool insideBox(Point<double> p, Point<double> a, Point<double> b);
 
     public: NAME(BoundedObject)
 	//! The boundingbox for this object
 	BoundingBox bb;
+
+    //!Checks if the point p is inside the box defined by the lowerleft vertex a and the upperright vertex b
+    bool insideBox(Point<double> p, Point<double> a, Point<double> b);
 
 	//! Constructs a new bounded object
 	BoundedObject(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(), MaterialHandle M = Material())
@@ -70,7 +111,7 @@ class BoundedObject: public Object
 	//! Checks if a line from origin to direction collides with this object or one of its children.
 	//! If there is a collision, this function returns a handle to the object the line collides with
 	//! if not, it returns null.
-	pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
 	ObjectHandle checkCollision2(Pd origin, Vd direction);
 	
 	bool checkCollision(const ObjectHandle &target);
@@ -103,7 +144,7 @@ class Team
 	//! The amount of resources this team has
 	Resource resources;
 	
-	Team(unsigned char _id){ id = _id; }
+	Team(unsigned char _id){ id = _id; resources = 200; }
 };
 
 //------------------------------------------------------------------------------

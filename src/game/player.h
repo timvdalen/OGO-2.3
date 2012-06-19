@@ -46,7 +46,7 @@ enum WeaponType
 //------------------------------------------------------------------------------
 
 //! Represents a player
-class Player: public BoundedObject
+class Player: public BoundedObject, public Destroyable
 {
 	//!Set relative position of seperate elements
 	void translateModel();
@@ -70,12 +70,6 @@ class Player: public BoundedObject
 
 	//! The name of this player
 	string name;
-	
-	//! Maximum health for this player
-	int maxHealth;
-
-	//! Health of this player
-	int health;
 
 	//! The time of the last shot this player fired
 	time_t lastShot;
@@ -103,11 +97,14 @@ class Player: public BoundedObject
 	//! Update model transformations according to velocity and the camera direction
 	void update(const Qd &camobj);
     
-    //! Needed to draw the names. We need an un rotated object to face the camera
+    //! Renders the player
     virtual void render();
+	
+	//! Called every frame
+	virtual void frame();
 
-	//! Draw the joints between the tools and the body.
-	void draw();
+	//! Draw the joints between the tools and the body and the player name and health bar
+	virtual void draw();
 	
 	void interpolate();
 };

@@ -38,6 +38,12 @@ extern MaterialHandle WidgetBG;
 extern MaterialHandle Font;
 extern MaterialHandle CrossHair;
 
+namespace HealthBar{
+	extern MaterialHandle Border;
+	extern MaterialHandle Green;
+	extern MaterialHandle Red;
+}
+
 namespace Icon{
 
 extern MaterialHandle Money, Health, Mine;
@@ -59,7 +65,7 @@ extern MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 extern ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj, HQCoreinvObj;
 extern MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
-extern MaterialHandle GhostTurretTex;
+extern MaterialHandle GhostTex, GhostErrorTex;
 
 }
 

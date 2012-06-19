@@ -12,6 +12,7 @@
 
 #include "player.h"
 #include "movement.h"
+#include "game.h"
 
 namespace Objects {
 
@@ -20,12 +21,11 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R, BoundingBox B)
-	: BoundedObject(P, R, B)
+	: BoundedObject(P, R, B), Destroyable(200.0)
 {
 	id = _id;
 	team = _team;
 	name = _name;
-	health = maxHealth = 100; // This needs to be defined somewhere
 	lastShot = time(NULL);
 
 	model.head = ModelObjectContainer();
@@ -133,47 +133,87 @@ void Player::draw() {
 	glVertex3f(t.x, t.y-0.04, t.z);
 	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
 	glEnd();
+	
+	if(id != Game::game.player->id){
+		glDisable(GL_LIGHTING);
+		MaterialHandle teamcolor;
+		if(team == 'a'){
+			teamcolor = ColorMaterial(0.847f, 0.0f, 0.0f,1.0f);
+		}else{
+			teamcolor = ColorMaterial(0.0f, 0.0f, 1.0f,1.0f);
+		}
+		glPushMatrix();
+			glTranslated(origin.x,origin.y,origin.z+2.5);
+			glRotated(90,1,0,0);//Revert custom axis
+			applyBillboarding();
+			glScalef(0.003, 0.003, 0.003);    //Scale down
+			double width = glutStrokeLength(GLUT_STROKE_ROMAN, 
+										   reinterpret_cast<const unsigned char *> (name.c_str()));
+				//glColor4d(0,1,0,1);
+			teamcolor->select();
+				//Translate to center
+			glTranslated(-width/2,0,0);
+			for(int count=0; count < name.length(); count++){
+				 glutStrokeCharacter(GLUT_STROKE_ROMAN, name[count]);
+			}
+			teamcolor->unselect();
+		glPopMatrix();
+		glPushMatrix();
+			//Draw health bar
+			glTranslated(origin.x,origin.y,origin.z+2.35);
+			glRotated(90,1,0,0);//Revert custom axis
+			applyBillboarding();
+			glScalef(0.1, 0.1, 0.1);    //Scale down
+			Assets::HealthBar::Border->select();
+			glBegin(GL_LINES);
+				glVertex3f(-4.01, -0.51, 0.0);
+				glVertex3f(4.01, -0.51, 0.0);
+				
+				glVertex3f(4.01, -0.51, 0.0);
+				glVertex3f(4.01, 0.51, 0.0);
+				
+				glVertex3f(4.01, 0.51, 0.0);
+				glVertex3f(-4.01, 0.51, 0.0);
+				
+				glVertex3f(-4.01, 0.51, 0.0);
+				glVertex3f(-4.01, -0.51, 0.0);
+			glEnd();
+			Assets::HealthBar::Border->unselect();
+			double barwidth = ((health/maxHealth)*8) - 4.0;
+			Assets::HealthBar::Green->select();
+			glBegin(GL_QUADS);
+				glVertex3f(-4.0, -0.5, 0.0);
+				glVertex3f(barwidth, -0.5, 0.0);
+				glVertex3f(barwidth, 0.5, 0.0);
+				glVertex3f(-4.0, 0.5, 0.0);
+			glEnd();
+			Assets::HealthBar::Green->unselect();
+			Assets::HealthBar::Red->select();
+			glBegin(GL_QUADS);
+				glVertex3f(barwidth, -0.5, 0.0);
+				glVertex3f(4.0, -0.5, 0.0);
+				glVertex3f(4.0, 0.5, 0.0);
+				glVertex3f(barwidth, 0.5, 0.0);
+			glEnd();
+			Assets::HealthBar::Red->unselect();
+		glPopMatrix();
+		glEnable(GL_LIGHTING);
+	}
 }
 
 //------------------------------------------------------------------------------
-    
-void applyBillboarding(){
-    float m[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX , m);
-        //set look and up-vector to identity vertices
-    float billBoardedMatrix[16] = { 1   ,     0,     0,   m[3],
-                                    m[4]   ,  m[5], m[6],   m[7],
-                                       0,     0,     1,  m[11],
-                                   m[12], m[13], m[14],  m[15]};
-    glLoadMatrixf(billBoardedMatrix);     
-}
-    
-    //TODO: Color for teams, for ferry maybe use projection matrix
-void Player::render(){
-    glDisable(GL_LIGHTING);
-	MaterialHandle teamcolor;
-	if(team == 'a'){
-		teamcolor = ColorMaterial(0.847f, 0.0f, 0.0f,1.0f);
-	}else{
-		teamcolor = ColorMaterial(0.0f, 0.0f, 1.0f,1.0f);
+
+void Player::frame(){
+	if(isDestroyed()){
+		origin = Pd(-10.0, -10.0, 0.0);
+		fullHeal();
 	}
-    glPushMatrix();
-		glTranslated(origin.x,origin.y,origin.z+2.2);
-		glRotated(90,1,0,0);//Revert custom axis
-		applyBillboarding();
-		glScalef(0.003, 0.003, 0.003);    //Scale down
-		double w = glutStrokeLength(GLUT_STROKE_ROMAN, 
-									   reinterpret_cast<const unsigned char *> (name.c_str()));
-			//glColor4d(0,1,0,1);
-		teamcolor->select();
-			//Translate to center
-		glTranslated(-w/2,0,0);
-		for(int count=0; count < name.length(); count++){
-			 glutStrokeCharacter(GLUT_STROKE_ROMAN, name[count]);
-		}
-		teamcolor->unselect();
-	glPopMatrix();
-    glEnable(GL_LIGHTING);
+}
+
+//------------------------------------------------------------------------------
+
+void Player::render(){
+	frame();
     Object::render();
 }
 

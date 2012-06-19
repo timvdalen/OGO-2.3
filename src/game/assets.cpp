@@ -31,6 +31,12 @@ MaterialHandle Widget;
 MaterialHandle WidgetBG;
 MaterialHandle Font;
 MaterialHandle CrossHair;
+
+namespace HealthBar{
+	MaterialHandle Border;
+	MaterialHandle Green;
+	MaterialHandle Red;
+}
     
 namespace Icon{ 
    
@@ -53,7 +59,7 @@ MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 //structure objects
 ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj, HQCoreinvObj;
 MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
-MaterialHandle GhostTurretTex;
+MaterialHandle GhostTex, GhostErrorTex;
 
 }
 
@@ -75,21 +81,21 @@ void Initialize(int argc, char *argv[])
 		if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--path"))
 			path = argv[++i];
 	
-	Grid = TwinMaterial(GridMaterial(5),
+	Grid = TwinMaterial(LineMaterial(5),
 		ShadedMaterial(Cf(0.2,0.8,0.2,1), //Ambient
 	                   Cf(0.2,0.8,0.2,1), //Diffuse
 	                   Cf(0.2,0.8,0.2,1), //Specular
 	                   Cf(0.8,1,0,1),     //Emissive
 	                   100.0));           //Shininess
 	
-	SelectedGrid = TwinMaterial(GridMaterial(10),
+	SelectedGrid = TwinMaterial(LineMaterial(10),
 		ShadedMaterial(Cf(0.01,0.31,0.58,1), //Ambient
 	                   Cf(0.01,0.31,0.58,1), //Diffuse
 	                   Cf(0.01,0.31,0.58,1), //Specular
 	                   Cf(0.49,0.97,1,1),    //Emissive,
 	                   100.0));              //Shininess
 
-	ErrorGrid = TwinMaterial(GridMaterial(10),
+	ErrorGrid = TwinMaterial(LineMaterial(10),
 		ShadedMaterial(Cf(1, 0.14, 0),
 			Cf(1, 0.14, 0),
 			Cf(1, 0.14, 0),
@@ -175,7 +181,12 @@ void Initialize(int argc, char *argv[])
 	Model::HQCoreTex[1] = TexturedMaterial(path + "assets/textures/models/HQCoreteblue.png");
 	Model::HQCoreTex[2] = TexturedMaterial(path + "assets/textures/models/HQCoretenormal.png");
 
-	Model::GhostTurretTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
+	Model::GhostTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
+	Model::GhostErrorTex = ShadedMaterial(Cf(1.0, 0.0, 0.0, 0.3));
+	
+	HealthBar::Border = TwinMaterial(LineMaterial(3), ColorMaterial(0.0, 0.0, 0.0, 1.0));
+	HealthBar::Green = ColorMaterial(0.0, 1.0, 0.0, 1.0);
+	HealthBar::Red = ColorMaterial(1.0, 0.0, 0.0, 1.0);
 
 	//Effect textures
 	Effect::Laser[0] = TexturedMaterial(path + "assets/textures/effects/laserred.png");
@@ -251,6 +262,9 @@ void Terminate()
 	Model::HQCoreTex[0].clear();
 	Model::HQCoreTex[1].clear();
 	Model::HQCoreTex[2].clear();
+	
+	Model::GhostTex.clear();
+	Model::GhostErrorTex.clear();
 
 	//Effect textures
 	Effect::Laser[0].clear();

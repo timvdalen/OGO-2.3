@@ -98,21 +98,9 @@ void Controller::moveZ(double speed)
 {
 	speed *= JetpackSpeed;
 
-	Vector<double> vec = ~(-player->rotation * Vector<double>(0,-1,0));
-	double yaw = atan2(vec.x, vec.y);
 	player->origin.z += speed;
 	target.z = target.z + speed;
 	camera.origin.z = camera.origin.z + speed;
-	if (firstPerson)
-	{
-		camera.origin = player->origin + Pd(0,0,2.5) + vec;
-		camera.lookAt(camera.origin + (vec * 5.0));
-	}
-	else
-	{
-		camera.origin = target - (vec * zoom);
-		camera.lookAt(target);
-	}
 }
 
 //------------------------------------------------------------------------------

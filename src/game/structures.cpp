@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits>
 
 #include "video.h"
 #include "objects.h"
@@ -15,7 +16,7 @@
 #include "game.h"
 
 namespace Objects {
-
+#define HIGH 100
 
 void drawFoundation(int h);
 
@@ -80,7 +81,9 @@ bool GridPoint::isValid()
 //------------------------------------------------------------------------------
 
 Terrain::Terrain(double _width, double _height)
-	: Object(Pd(), Qd(), Assets::Grass)
+	: BoundedObject(Pd(), Qd(),
+	  BoundingBox(Pd(-_width/2, -_height/2, 0), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0), Pd(), Pd(), Pd(), Pd(_width/2, _height/2, HIGH)),
+	  Assets::Grass)
 {
 	width = _width;
 	height = _height;
@@ -91,6 +94,82 @@ Terrain::Terrain(double _width, double _height)
 }
 
 //------------------------------------------------------------------------------
+pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
+{
+    double collision = numeric_limits<double>::infinity();
+    //--- We only check lbl rbh, could be improved-----
+    Point<double> a = bb.lbl;
+    Point<double> b = bb.rth;
+    //--- Origin does not have to be rotated
+    Point<double> p = (-rotation)*(origin - this->origin);
+    //--- Vector only needs to be rotated
+    //--- We might need the inverse of rotation here
+    Vector<double> v = (-rotation)*direction;
+    //--- Now check if we have a collision in the x direction
+	
+	
+	
+    double lambda1, lambda2;
+    if(v.x != 0){
+        lambda1 = (a.x - p.x)/(v.x);
+        lambda2 = (b.x -p.x)/(v.x);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if (insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
+    }
+    //---- y direction
+    if(v.y != 0){
+        lambda1 = (a.y - p.y)/(v.y);
+        lambda2 = (b.y - p.y)/(v.y);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if(insideBox(p + v*lambda2,a,b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
+    }
+    //--- z direction
+    if(v.z != 0){
+        lambda1 = (a.z - p.z)/(v.z);//intersection with axis in lbl.z
+        lambda2 = (b.z - p.z)/(v.z);
+        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
+            collision = lambda1;
+        }
+        if(insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
+            collision = lambda2;
+        }
+    }
+    //find a collision with a child
+    if(collision < std::numeric_limits<double>::infinity()){
+        map<GridPoint, ObjectHandle>::iterator it;
+        ObjectHandle colobject = *this;
+        double collision2 = numeric_limits<double>::infinity();
+        for (it = structures.begin(); it != structures.end(); ++it){
+            BoundedObject* child = TO(BoundedObject, it->second);
+            if(child){
+                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
+                if(childcollision.second < collision2){ //We have a collision with a child
+                    colobject.clear();
+                    collision2 = childcollision.second;
+                    colobject = childcollision.first;
+                }else{
+                    childcollision.first.clear();
+                }
+            }
+        }
+        if(collision2 == numeric_limits<double>::infinity()){
+            collision2 = collision;
+        }
+        return make_pair(colobject,collision2);
+    }
+    return make_pair(ObjectHandle(),collision);
+}
+
+//------------------------------------------------------------------------------
+
 void Terrain::drawGround()
 {
 	glEnable(GL_POLYGON_OFFSET_FILL);
@@ -198,9 +277,19 @@ void Terrain::draw()
 				height = 0;
 				}
 				break;
+			case 11:{
+				gridMat = Assets::ErrorGrid;
+				height = 0;
+				}
+				break;
 			case 2:{
 				gridMat = Assets::SelectedGrid;
 				height = 1;//For foundation
+				}
+				break;
+			case 22:{
+				gridMat = Assets::ErrorGrid;
+				height = 0;
 				}
 				break;
 			default:{
@@ -227,13 +316,20 @@ void Terrain::draw()
 void Terrain::postRender()
 {
 	map<GridPoint, ObjectHandle>::iterator it;
-	for(it = structures.begin(); it != structures.end(); it++){
+	for(it = structures.begin(); it != structures.end();){
 		GridPoint p = it->first;
 		ObjectHandle s = it->second;
 		glPushMatrix();
 			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
+			Building *b = TO(Building, s);
+			if(b && b->isDestroyed()){
+				structures.erase(it++);
+				glPopMatrix();
+				continue;
+			}
 			s->render();
 		glPopMatrix();
+		it++;
 	}
 	if(ghost.second){
 		GridPoint p = ghost.first;
@@ -278,7 +374,9 @@ void Terrain::setSelected(GridPoint p){
 		int structure = canPlaceStructure(p);
 		switch(structure){
 		case 1: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0))); break;
+		case 11: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0, true))); break;
 		case 2: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0))); break;
+		case 12: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0, true))); break;
 		default:
 			ghost = ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle()); break;
 		}
@@ -292,16 +390,27 @@ void Terrain::setSelected(GridPoint p){
 int Terrain::canPlaceStructure(GridPoint p){
 	map<GridPoint, ObjectHandle>::iterator it;
 	it = structures.find(p);
+	Resource resources = 0;
+	map<unsigned char,Team>::iterator team_it = Game::game.teams.find(Game::game.player->team);
+	if(team_it != Game::game.teams.end()) resources = team_it->second.resources;
 	if(it != structures.end()){
 		Structure *s = TO(Structure, it->second);
 		if(!s) return 0;
 		if(s->type() == "Mine"){
-			return 2;
+			if(resources >= ResourceMine(Game::game.player->id).cost){
+				return 2;
+			}else{
+				return 12;
+			}
 		}else{
 			return 0;
 		}
 	}else{
-		return 1;
+		if(resources >= DefenseTower(Game::game.player->id).cost){
+			return 1;
+		}else{
+			return 11;
+		}
 	}
 }
 
@@ -310,9 +419,10 @@ int Terrain::canPlaceStructure(GridPoint p){
 bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 	if(!s) return false;
 	Structure *struc = TO(Structure, s);
-
+	
 	int structure = canPlaceStructure(p);
-	if(structure == 0 || !struc || (structure == 2 && struc->type() != "ResourceMine")){
+	if(!struc) return false;
+	if(structure == 0 || (structure == 2 && struc->type() != "ResourceMine") || (struc->type() == "HeadQuarters" && !(canPlaceStructure(GridPoint(p.x-1, p.y)) && canPlaceStructure(GridPoint(p.x-1, p.y-1)) && canPlaceStructure(GridPoint(p.x, p.y-1))))){
 		return false;
 	}
 	Building *b = TO(Building, s);
@@ -324,6 +434,12 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 		structures.erase(p);
 	}
 	structures.insert(make_pair(ip, s));
+	if(struc->type() == "HeadQuarters"){
+		ObjectHandle block = Structure();
+		structures.insert(make_pair(GridPoint(p.x-1, p.y), block));
+		structures.insert(make_pair(GridPoint(p.x-1, p.y-1), block));
+		structures.insert(make_pair(GridPoint(p.x, p.y-1), block));
+	}
 	return true;
 }
 
@@ -344,6 +460,58 @@ Pd Terrain::ToPointD(GridPoint point){
 }
 
 //------------------------------------------------------------------------------
+
+void Building::drawHealthbar(){
+	if(Game::game.players.count(owner)){
+		glDisable(GL_LIGHTING);//It might not be the best idea to switch lighting off and on so much
+		glPushMatrix();
+			//Draw health bar
+			if(type() == "HeadQuarters"){
+				glTranslated(0, 0, (double)height+1);
+			}else if(type() == "ResourceMine"){
+				glTranslated(GRID_SIZE/2, GRID_SIZE/2, (double)height+3);
+			}else{
+				glTranslated(GRID_SIZE/2, GRID_SIZE/2, (double)height+1);
+			}
+			glRotated(90,1,0,0);//Revert custom axis
+			applyBillboarding();
+			glScalef(0.1, 0.1, 0.1);    //Scale down
+			Assets::HealthBar::Border->select();
+			glBegin(GL_LINES);
+				glVertex3f(-16.01, -1.01, 0.0);
+				glVertex3f(16.01, -1.01, 0.0);
+				
+				glVertex3f(16.01, -1.01, 0.0);
+				glVertex3f(16.01, 1.01, 0.0);
+				
+				glVertex3f(16.01, 1.01, 0.0);
+				glVertex3f(-16.01, 1.01, 0.0);
+				
+				glVertex3f(-16.01, 1.01, 0.0);
+				glVertex3f(-16.01, -1.01, 0.0);
+			glEnd();
+			Assets::HealthBar::Border->unselect();
+			double barwidth = ((health/maxHealth)*32) - 16.0;
+			Assets::HealthBar::Green->select();
+			glBegin(GL_QUADS);
+				glVertex3f(-16.0, -1.0, 0.0);
+				glVertex3f(barwidth, -1.0, 0.0);
+				glVertex3f(barwidth, 1.0, 0.0);
+				glVertex3f(-16.0, 1.0, 0.0);
+			glEnd();
+			Assets::HealthBar::Green->unselect();
+			Assets::HealthBar::Red->select();
+			glBegin(GL_QUADS);
+				glVertex3f(barwidth, -1.0, 0.0);
+				glVertex3f(16.0, -1.0, 0.0);
+				glVertex3f(16.0, 1.0, 0.0);
+				glVertex3f(barwidth, 1.0, 0.0);
+			glEnd();
+			Assets::HealthBar::Red->unselect();
+		glPopMatrix();
+		glEnable(GL_LIGHTING);
+	}
+}
 
 void Building::preRender(){
 	Object::preRender();
@@ -371,9 +539,34 @@ void Building::preRender(){
 void Building::postRender(){
 	Object::postRender();
 	glPopMatrix();//This is the matrix that was pushed in Object::preRender()
+	drawHealthbar();
 }
 
 //------------------------------------------------------------------------------
+
+void Building::frame()
+{
+	if(owner && built && income > 0 && owner == Game::game.player->id){	
+		int now = Video::ElapsedTime();
+		if(now-lastGenerated > 5000){
+			map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);
+			if(it != Game::game.teams.end()){
+				//TODO: Send this over the network
+				it->second.resources += income;
+				lastGenerated = Video::ElapsedTime();
+			}
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void Building::render()
+{
+	frame();
+	Object::render();
+}
+
 
 //------------------------------------------------------------------------------
 
@@ -398,9 +591,9 @@ void Mine::draw() {
 
 HeadQuarters::HeadQuarters(Player::Id _owner)
 		: Building(10, BoundingBox(),
+		  0, 10,
 		  0, 0,
-		  0, 0,
-		  0, 0) 
+		  0, _owner, 600.0) 
 {
 	model.base = ModelObjectContainer();
 	model.socket = ModelObjectContainer();
@@ -417,6 +610,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 	int i = 2;
 	if (Game::game.players.count(owner))
 		i = TO(Player,Game::game.players[owner])->team-'a';
+
 	model.base->material = Assets::Model::HQBaseTex[i];
 	model.socket->material = Assets::Model::HQSocketTex;
 	model.core->material = Assets::Model::HQCoreTex[i];
@@ -429,7 +623,7 @@ DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(),
 			100, 0,
 			Video::ElapsedTime(), 10000,
-			20, _owner) 
+			20, _owner, 300.0)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -445,18 +639,23 @@ DefenseTower::DefenseTower(Player::Id _owner)
 
 //------------------------------------------------------------------------------
 
-DefenseTower::DefenseTower(int buildTime)
+DefenseTower::DefenseTower(int buildTime, bool error)
 		: Building(4, BoundingBox(),
 			0, 0,
 			Video::ElapsedTime(), buildTime,
-			0, -1)
+			0, -1, -1)
 {
 	model.turret = ModelObjectContainer();
 	model.turret->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.turret->children.insert(Assets::Model::TurretObj);
 	children.insert(model.turret);
-	model.turret->material = Assets::Model::GhostTurretTex;
-	material = Assets::Model::GhostTurretTex;
+	if(error){
+		material = Assets::Model::GhostErrorTex;
+		model.turret->material = Assets::Model::GhostErrorTex;
+	}else{
+		material = Assets::Model::GhostTex;
+		model.turret->material = Assets::Model::GhostTex;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -489,7 +688,7 @@ void DefenseTower::frame()
 		set<ObjectHandle>::iterator it;
 		for(it = w->children.begin(); it != w->children.end(); it++){
 			Player *p = TO(Player, *it);
-			DefenseTower *t = TO(DefenseTower, *it);
+			Building *b = TO(Building, *it);
 			if(p){
 				if(p->team != own->team){
 					//Enemy player found
@@ -499,24 +698,45 @@ void DefenseTower::frame()
 						closest = *it;
 						continue;
 					}
-				}
-			}else if(t){
-				Player *t_own = NULL;
-				if (Game::game.players.count(t->owner))
-					TO(Player, Game::game.players[t->owner]);
-				if(t_own && t_own->team != own->team){
+				}	
+			}
+		}
+		map<GridPoint, ObjectHandle>::iterator mit;
+		for(mit = w->terrain->structures.begin(); mit != w->terrain->structures.end(); mit++){
+			Building *b = TO(Building, mit->second);
+			if(b){
+				Player *b_own = NULL;
+				if (Game::game.players.count(b->owner))
+					b_own = TO(Player, Game::game.players[b->owner]);
+				if(b_own && b_own->team != own->team){
 					//Enemy tower found
-					double curr_dist =!(Vd(t->origin) + -Vd(worldcoord));
+					double curr_dist =!(Vd(w->terrain->ToPointD(mit->first)) + -Vd(worldcoord));
 					if(curr_dist < distance){
 						distance = curr_dist;
-						closest = *it;
+						closest = mit->second;
 						continue;
 					}
 				}
 			}
 		}
+
 		if(closest){
-			Qd target = worldcoord.lookAt(closest->origin);
+			Player *p = TO(Player, closest);
+			Building *b = TO(Building, closest); 
+
+			Qd target;
+			if(b){
+				if(TO(HeadQuarters, b)){
+					target = worldcoord.lookAt(w->terrain->ToPointD(b->loc));
+				}else{
+					Pd targetPd = w->terrain->ToPointD(b->loc);
+					targetPd.x += GRID_SIZE/2;
+					targetPd.y += GRID_SIZE/2;
+					target = worldcoord.lookAt(targetPd);
+				}
+			}else{
+				target = worldcoord.lookAt(closest->origin);
+			}
 			
 			Rd angleRot = (~model.turret->rotation) * -(~target);
 
@@ -526,9 +746,18 @@ void DefenseTower::frame()
 				//Locked
 				int now = Video::ElapsedTime();
 				if(now - lastshot > ROF){
-					//Shoot
+					//Shoot animation
 					lastshot = now;
 					w->addLaserBeam(LaserBeam(worldcoord, target));
+					//Actual damage
+					if(own->id == Game::game.player->id){
+						if(p){
+							p->damage(attackPower);
+						}else if(b){
+							b->damage(attackPower);
+						}
+						//TODO: Send over the network
+					}
 				}
 			}else{
 				if(angleRot.v.z == 1) movespeed *= -1;
@@ -548,18 +777,10 @@ void DefenseTower::draw()
 
 //------------------------------------------------------------------------------
 
-void DefenseTower::render()
-{
-	frame();
-	Object::render();
-}
-
-//------------------------------------------------------------------------------
-
 ResourceMine::ResourceMine(Player::Id _owner)
-		: Building(8, BoundingBox(), 300, 30,
+		: Building(8, BoundingBox(), 220, 30,
 			Video::ElapsedTime(), 20000,
-			0, _owner)
+			0, _owner, 200.0)
 {
 	model.rig = ModelObjectContainer();
 	model.drill = ModelObjectContainer();
@@ -585,10 +806,10 @@ ResourceMine::ResourceMine(Player::Id _owner)
 //------------------------------------------------------------------------------
 
 //Ghost constructor
-ResourceMine::ResourceMine(int buildTime)
+ResourceMine::ResourceMine(int buildTime, bool error)
 		: Building(8, BoundingBox(), 0, 0,
 			Video::ElapsedTime(), buildTime,
-			0, -1)
+			0, -1, -1)
 {
 	model.rig = ModelObjectContainer();
 	model.drill = ModelObjectContainer();
@@ -599,8 +820,13 @@ ResourceMine::ResourceMine(int buildTime)
 	children.insert(model.rig);
 	children.insert(model.drill);
 	
-	model.rig->material = Assets::Model::GhostTurretTex;
-	model.drill->material = Assets::Model::GhostTurretTex;
+	if(error){
+		model.rig->material = Assets::Model::GhostErrorTex;
+		model.drill->material = Assets::Model::GhostErrorTex;
+	}else{
+		model.rig->material = Assets::Model::GhostTex;
+		model.drill->material = Assets::Model::GhostTex;
+	}
 }
 
 
@@ -608,7 +834,8 @@ ResourceMine::ResourceMine(int buildTime)
 
 void ResourceMine::draw() 
 {
-	model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
+	if(built)
+		model.drill->rotation = model.drill->rotation * Rd(0.1,Vd(0,0,1));
 }
 
 //------------------------------------------------------------------------------
@@ -617,12 +844,13 @@ void ResourceMine::postRender()
 {
 	Object::postRender();
 	if(rock) rock->render();
-	if(owner != -1){
+	if(Game::game.players.count(owner)){
 		Assets::Grass->select();
 		drawFoundation(1);
 		Assets::Grass->unselect();
 	}
 	glPopMatrix();//This is the matrix thas was pushed in Object::preRender()
+	Building::drawHealthbar();
 }
 
 void drawFoundation(int h) {

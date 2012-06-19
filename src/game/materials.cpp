@@ -125,14 +125,14 @@ void EmptyMaterial::select()
 
 //==============================================================================
 
-void GridMaterial::select()
+void LineMaterial::select()
 {
 	glLineWidth(size);
 }
 
 //------------------------------------------------------------------------------
 
-void GridMaterial::unselect()
+void LineMaterial::unselect()
 {
 	glLineWidth(1);
 }

@@ -14,6 +14,43 @@ namespace Objects {
 
 //------------------------------------------------------------------------------
 
+void applyBillboarding(){
+    float m[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX , m);
+        //set look and up-vector to identity vertices
+    float billBoardedMatrix[16] = { 1   ,     0,     0,   m[3],
+                                    m[4]   ,  m[5], m[6],   m[7],
+                                       0,     0,     1,  m[11],
+                                   m[12], m[13], m[14],  m[15]};
+    glLoadMatrixf(billBoardedMatrix);     
+}
+
+//------------------------------------------------------------------------------
+
+bool Destroyable::isDestroyed(){
+	return !(maxHealth > 0 && health > 0);
+}
+
+//------------------------------------------------------------------------------
+
+void Destroyable::damage(double dmg){
+	health -= dmg;
+}
+
+//------------------------------------------------------------------------------
+
+void Destroyable::heal(double _health){
+	health += health;
+}
+
+//------------------------------------------------------------------------------
+
+void Destroyable::fullHeal(){
+	health = maxHealth;
+}
+
+//------------------------------------------------------------------------------
+
 pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
 {
     double collision = numeric_limits<double>::infinity();
@@ -149,14 +186,14 @@ void LaserBeam::preRender(){
 	if(timelived < 0.33*ttl){
 		//Fade in
 		float alpha = ((1.0/ttl)/0.33)*timelived;
-		lm = TwinMaterial(GridMaterial(1),
+		lm = TwinMaterial(LineMaterial(1),
 				ShadedMaterial(Cf(0.2,0.8,0.2,alpha), //Ambient
 							   Cf(0.2,0.8,0.2,alpha), //Diffuse
 							   Cf(0.2,0.8,0.2,alpha), //Specular
 							   Cf(0.8,1,0,alpha),     //Emissive
 							   100.0));           //Shininess
 	}else if(timelived < 0.66*ttl){
-		lm = TwinMaterial(GridMaterial(2),
+		lm = TwinMaterial(LineMaterial(2),
 				ShadedMaterial(Cf(0.2,0.8,0.2,1), //Ambient
 							   Cf(0.2,0.8,0.2,1), //Diffuse
 							   Cf(0.2,0.8,0.2,1), //Specular
@@ -165,7 +202,7 @@ void LaserBeam::preRender(){
 	}else{
 		//Fade out
 		float alpha = ((-1*(1.0/ttl)/0.33)*timelived + 3);
-		lm = TwinMaterial(GridMaterial(1),
+		lm = TwinMaterial(LineMaterial(1),
 				ShadedMaterial(Cf(0.2,0.8,0.2,alpha), //Ambient
 							   Cf(0.2,0.8,0.2,alpha), //Diffuse
 							   Cf(0.2,0.8,0.2,alpha), //Specular

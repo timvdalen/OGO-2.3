@@ -40,6 +40,21 @@
 #define PRO\
 BE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
 
+#ifdef TRDEBUG
+	#define DEBUG_SHOUT(msg) {printf("%c%d ->  @: %s\n",            \
+		td->token == td->id ? '#' : ' ', td->id, msg);}
+	#define DEBUG_SEND(dst,msg) {printf("%c%d -> %c%d: %s\n",       \
+		td->token == td->id ? '#' : ' ', td->id,                    \
+		td->token == dst    ? '#' : ' ', dst,  msg);}
+	#define DEBUG_RECV(src,msg) {printf("%c%d <- %c%d: %s\n",       \
+		td->token == td->id ? '#' : ' ', td->id,                    \
+		td->token == src    ? '#' : ' ', src, msg);}
+#else
+	#define DEBUG_SHOUT(msg)
+	#define DEBUG_SEND(dst,msg)
+	#define DEBUG_RECV(src,msg)
+#endif
+
 namespace Protocol {
 	
 #define DECIDED (!td->deciding)
@@ -70,6 +85,7 @@ struct TokenRingData
 	queue<Address> request;
 	
 	bool deciding;
+	bool tainted;
 	queue<NodeID> entry;
 	queue<NodeID> loss;
 	queue< pair<NodeID,TRMessage> > msgs;
@@ -82,9 +98,10 @@ struct TokenRingData
 	NodeID nextId() const;
 	void receive(Message &msg, Address &addr);
 	//! node nodeId passes token to node passId
-	void arrival(NodeID nodeId, NodeID passID);
+	void arrival(NodeID nodeId, NodeID passId);
 	void accept();
-	void unbuffer(NodeID nodeID);
+	void unbuffer(NodeID nodeId);
+	void remove(NodeID nodeId);
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -107,6 +124,11 @@ TokenRing::TokenRing(unsigned short port)
 	td->topId = 2;
 	td->token = 1;
 	td->deciding = false;
+	td->tainted = false;
+	
+	#ifdef TRDEBUG
+		printf("Listening to port %d...\n", port);
+	#endif
 	
 	clique = new Clique(port);
 	td->clique = clique;
@@ -152,11 +174,18 @@ TokenRing::~TokenRing()
 
 //------------------------------------------------------------------------------
 
-
 bool TokenRing::connect(const Address &remote, int timeout)
 {
 	PRIV(TokenRingData, td)
 	bool success = false;
+	
+	#ifdef TRDEBUG
+	{
+		char buffer[128];
+		remote.string(buffer);
+		printf("Connecting to %s...\n", buffer);
+	}
+	#endif
 	
 	Message msg;
 	msg.push_back("#>");
@@ -168,6 +197,7 @@ bool TokenRing::connect(const Address &remote, int timeout)
 		success = clique->connect(remote, timeout);
 		
 		// Build token ring
+		DEBUG_SEND(0, string(msg).c_str())
 		if (success) success = clique->sendto(remote, msg);
 		
 		// Wait for response
@@ -213,6 +243,7 @@ void TokenRing::close()
 		if AUTHORIZED
 		{
 			msg.push_back((long) td->nextId());
+			DEBUG_SHOUT(string(msg).c_str())
 			clique->shout(msg);
 		}
 		
@@ -271,6 +302,27 @@ NodeID TokenRing::id() const
 
 //------------------------------------------------------------------------------
 
+bool TokenRing::sendto(NodeID node, const Message &msg, bool reliable)
+{
+	PRIV(TokenRingData, td)
+	bool success = false;
+	
+	Message msg2 = msg;
+	if (reliable)
+		msg2[0].str.insert(0, 1, '#');
+	
+	pthread_mutex_lock(&td->lock);
+	{
+		if (td->nodes.count(node) && (!reliable || AUTHORIZED))
+			success = clique->sendto(td->nodes[node].addr, msg2);
+	}
+	pthread_mutex_unlock(&td->lock);
+	
+	return (success);
+}
+
+//------------------------------------------------------------------------------
+
 bool TokenRing::shout(const Message &msg, bool reliable)
 {
 	PRIV(TokenRingData, td)
@@ -295,7 +347,7 @@ bool TokenRing::shout(const Message &msg, bool reliable)
 bool TokenRing::pass()
 {
 	PRIV(TokenRingData, td)
-	bool success = false;
+	bool success = true;
 	
 	Message msg;
 	msg.push_back("##");
@@ -305,8 +357,24 @@ bool TokenRing::pass()
 		if ((td->token == td->id) && !td->nodes.empty())
 		{
 			NodeID nextId = td->nextId();
+			
+			// Remove unresponsive nodes
+			while (!clique->connected(td->nodes[nextId].addr) && success)
+			{
+				td->remove(nextId);
+				Message msg2;
+				msg2.push_back("#-");
+				msg2.push_back((long) nextId);
+				DEBUG_SHOUT(string(msg2).c_str())
+				success &= clique->shout(msg2);
+				
+				nextId = td->nextId();
+				if (td->nodes.empty()) break;
+			}
+			
 			msg.push_back((long) nextId);
-			if (success = clique->shout(msg))
+			DEBUG_SHOUT(string(msg).c_str())
+			if (success && (success = clique->shout(msg)))
 			{
 				// Pass token and process buffered reliable messages
 				td->token = nextId;
@@ -382,6 +450,23 @@ bool TokenRing::recvfrom(NodeID &node, Message &msg, bool &reliable)
 	pthread_mutex_unlock(&td->lock);
 	
 	return (success);
+}
+
+//------------------------------------------------------------------------------
+
+bool TokenRing::tainted()
+{
+	PRIV(TokenRingData, td)
+	bool tainted;
+	
+	pthread_mutex_lock(&td->lock);
+	{
+		tainted = td->tainted;
+		td->tainted = false;
+	}
+	pthread_mutex_unlock(&td->lock);
+	
+	return (tainted);
 }
 
 //------------------------------------------------------------------------------
@@ -472,15 +557,9 @@ void *TokenRing::process(void *obj)
 		{
 			if (!td->lookup.count(addr)) continue;
 			NodeID nodeId = td->lookup[addr];
-			if (nodeId == td->token) td->arrival(td->token, td->nextId());
-			
-			td->lookup.erase(td->nodes[nodeId].addr);
-			td->nodes.erase(nodeId);
-			{
-				bool cond = INCOMMING;
-				td->loss.push(nodeId);
-				if (!cond) pthread_cond_broadcast(&td->incomming);
-			}
+			if (nodeId == td->token)
+				td->arrival(td->token, td->nextId());
+			td->remove(nodeId);
 		}
 		
 		// Parse incomming connections
@@ -534,17 +613,18 @@ NodeID TokenRingData::nextId() const
 
 void TokenRingData::receive(Message &msg, Address & addr)
 {
-	//printf("%d> %s\n", (lookup.count(addr) ? lookup[addr] : 0), string(msg).c_str());
 	TokenRingData *td = this;
 	string cmd = msg[0].str;
 	size_t size = msg.size();
 	if ((cmd == "#>") && (size == 1))      // Connection request
 	{
+		DEBUG_RECV(0,string(msg).c_str())
 		request.push(addr);
 		if (nodes.empty()) accept();
 	}
 	else if ((cmd == "#>") && (size > 1))  // Connection affirmation
 	{
+		DEBUG_RECV(lookup[addr],string(msg).c_str())
 		id = (long) msg[1];
 		topId = id + 1;
 		token = lookup[addr];
@@ -562,6 +642,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 	else if ((cmd == "#+") && (size == 2)) // Connection notification (requestee)
 	{
 		NodeID nodeId = (long) msg[1];
+		DEBUG_RECV(nodeId,string(msg).c_str())
 		
 		TokenRingNode node;
 		node.addr = addr;
@@ -577,6 +658,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 	{
 		NodeID nodeId = (long) msg[1];
 		Address remote = Address(msg[2].str.c_str());
+		DEBUG_RECV(lookup[addr],string(msg).c_str())
 		
 		TokenRingNode node;
 		node.addr = remote;
@@ -592,9 +674,24 @@ void TokenRingData::receive(Message &msg, Address & addr)
 	else if (!lookup.count(addr))          // Sender not part of the tokenring
 	{
 		// Do nothing
+		
+		// Hack
+		if ((cmd == "##") && (size > 1))  // Token pass message
+		{
+			DEBUG_RECV(lookup[addr],string(msg).c_str())
+			token = (long) msg[1];
+		}
+	}
+	else if ((cmd == "#-") && (size > 1))  // Connection removal request
+	{
+		DEBUG_RECV(lookup[addr],string(msg).c_str())
+		NodeID nodeId = (long) msg[1];
+		if (nodes.count(nodeId))
+			remove(nodeId);
 	}
 	else if ((cmd == "##") && (size > 1))  // Token pass message
 	{
+		DEBUG_RECV(lookup[addr],string(msg).c_str())
 		NodeID nodeId = lookup[addr];
 		NodeID passId = (long) msg[1];
 		
@@ -605,6 +702,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 	}
 	else if ((cmd == "#!") && (size > 1))  // Token pass and leave message
 	{
+		DEBUG_RECV(lookup[addr],string(msg).c_str())
 		NodeID nodeId = lookup[addr];
 		NodeID passId = (long) msg[1];
 		
@@ -613,13 +711,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 		else
 		{
 			arrival(nodeId, passId);
-			lookup.erase(nodes[nodeId].addr);
-			nodes.erase(nodeId);
-			{
-				bool cond = INCOMMING;
-				loss.push(nodeId);
-				if (!cond) pthread_cond_broadcast(&incomming);
-			}
+			remove(nodeId);
 		}
 	}
 	else if (cmd[0] == '#')                // Reliable message
@@ -647,6 +739,7 @@ void TokenRingData::receive(Message &msg, Address & addr)
 
 void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 {
+	TokenRingData *td = this;
 	NodeID nextId = this->nextId();
 	
 	if ((nextId == id) && (passId == id))      // this node gets the token
@@ -660,7 +753,7 @@ void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 	else if ((nextId == id) && (passId != id)) // node token expected
 	{
 		// close connection
-		clique->close();
+		//clique->close(); Ignore for now
 		return;
 	}
 	else if ((nextId != id) && (passId == id)) // node token unexpected
@@ -669,6 +762,7 @@ void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 		Message msg;
 		msg.push_back("##");
 		msg.push_back((long) passId);
+		DEBUG_SHOUT(string(msg).c_str())
 		if (!clique->shout(msg))
 		{
 			clique->close();
@@ -689,7 +783,7 @@ void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 		TokenRingNode *node = &nodes[token];
 		if (!clique->connected(node->addr))
 		{
-			clique->close();
+			tainted = true;
 			return;
 		}
 	}
@@ -699,6 +793,7 @@ void TokenRingData::arrival(NodeID nodeId, NodeID passId)
 
 void TokenRingData::accept()
 {
+	TokenRingData *td = this;
 	if (request.empty()) return;
 	
 	Address remote = request.front();
@@ -715,22 +810,28 @@ void TokenRingData::accept()
 	remote.string(ip);
 	msg.push_back(ip);
 	for (it = nodes.begin(); it != nodes.end(); ++it)
+	{
+		DEBUG_SEND(it->first,string(msg).c_str());
 		clique->sendto(it->second.addr, msg);
+	}
 	
 	for (it = nodes.begin(); it != nodes.end(); ++it)
 	{
 		it->second.addr.string(ip);
 		msg[1] = (long) it->first;
 		msg[2] = ip;
+		DEBUG_SEND(0,string(msg).c_str());
 		clique->sendto(remote, msg);
 	}
 	
 	msg.pop_back();
 	msg[1] = (long) id;
+	DEBUG_SEND(0,string(msg).c_str());
 	clique->sendto(remote, msg);
 	
 	msg[0] = "#>";
 	msg[1] = (long) newId;
+	DEBUG_SEND(0,string(msg).c_str());
 	clique->sendto(remote, msg);
 	
 	TokenRingNode node;
@@ -750,11 +851,33 @@ void TokenRingData::accept()
 
 void TokenRingData::unbuffer(NodeID nodeId)
 {
+	#ifdef TRDEBUG
+		puts("[");
+	#endif
+	
 	TokenRingNode *node = &nodes[nodeId];
 	while (!node->buffer.empty())
 	{
 		receive(node->buffer.front(), node->addr);
 		node->buffer.pop();
+	}
+	
+	#ifdef TRDEBUG
+		puts("]");
+	#endif
+}
+
+//------------------------------------------------------------------------------
+
+void TokenRingData::remove(NodeID nodeId)
+{
+	TokenRingData *td = this;
+	lookup.erase(nodes[nodeId].addr);
+	nodes.erase(nodeId);
+	{
+		bool cond = INCOMMING;
+		loss.push(nodeId);
+		if (!cond) pthread_cond_broadcast(&incomming);
 	}
 }
 

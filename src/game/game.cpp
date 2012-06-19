@@ -124,6 +124,9 @@ void Initialize(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
+	config->readInto(NetCode::MessageOfTheDay, "motd",
+		string("No message of the day ;("));
+	
 	// Set up game world
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
@@ -136,18 +139,19 @@ void Initialize(int argc, char *argv[])
 	config->readInto(name, "playername", string("Unnamed"));
 	team = config->read("team", 'a');
 	
-	ObjectHandle player = Player(1, team, name);
+	Player::Id pid = game.topId++;
+	ObjectHandle player = Player(pid, team, name);
 	game.player = TO(Player,player);
 	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
-	game.players[1] = player;
+	game.players[pid] = player;
 	
 	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
 
-	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters());
+	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters(pid));
 	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
 
 	// Set up user interface
@@ -160,6 +164,7 @@ void Initialize(int argc, char *argv[])
 	
 	Echo("Everything loaded!");
 	Echo("Welcome to the game");
+	Echo(NetCode::MessageOfTheDay);
 }
 
 //------------------------------------------------------------------------------
@@ -409,7 +414,9 @@ void Connect(string address)
 	else
 	{
 		Game::Notice(string("Connected to " + address + string("!")));
-
+		NetCode::Enter(game.player->team, game.player->name);
+		// WARNING: this is not deterministic!
+		// Enter needs to be called repeatedly until welcome message is received
 	}
 }
 
@@ -527,11 +534,29 @@ void Fire()
 			pair<ObjectHandle, double> collision = game.world->checkCollision(game.controller->target, lookVec);
 	
 			if (collision.first)
-			{
+			{	
 				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
 				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
+				Player *p = TO(Player, collision.first);
+				if(p){
+					if(p->team != game.player->team){//Precent teamkill
+						p->damage(10.0);
+						//TODO: Send over the network
+					}
+				}else{
+					DefenseTower *t = TO(DefenseTower, collision.first);
+					if(t){
+						Player *own = NULL;
+						if(Game::game.players.count(t->owner))
+							own = TO(Player, Game::game.players[t->owner]); 
+						if(own && own->team != game.player->team){
+							t->damage(10.0);
+							//TODO: Send over the network
+						}
+					}
+				}
 			}
 			else
 				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
@@ -554,13 +579,28 @@ void Build()
 		int structure = game.world->terrain->canPlaceStructure(clicked);
 		ObjectHandle tower;
 		switch(structure){
-		case 1: tower = Objects::DefenseTower(game.player->id); break;
-		case 2: tower = Objects::ResourceMine(game.player->id); break;
+		case 1: case 11: tower = Objects::DefenseTower(game.player->id); break;
+		case 2: case 12: tower = Objects::ResourceMine(game.player->id); break;
 		default: tower = ObjectHandle();
 		}
-		game.world->terrain->setSelected(GridPoint(-1, -1));
-		if (!game.world->terrain->placeStructure(clicked, tower))
-			Echo("There's already a tower there");
+		Resource cost = 0;
+		if(tower){
+			Building *b = TO(Building, tower);
+			if(b) cost = b->cost;
+		}
+		map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);
+		if(it != Game::game.teams.end()){
+			if(it->second.resources >= cost){
+				game.world->terrain->setSelected(GridPoint(-1, -1));
+				if (!game.world->terrain->placeStructure(clicked, tower)){
+					Echo("There's already a tower there");
+				}else{
+					it->second.resources -= cost;
+				}
+			}else{
+				Echo("You don't have enough money");
+			}
+		}
 		#endif
 	}
 	else
@@ -667,6 +707,20 @@ void PrintWorld()
 	Object::iterator it;
 	for (it = game.world->begin(); it != game.world->end(); ++it)
 		puts((string(it.level(),'\t') + string(**it)).c_str());
+}
+
+//------------------------------------------------------------------------------
+
+CMD(PrintPlayers, 0, arg)
+void PrintPlayers()
+{
+	Player *p;
+	map<Player::Id,ObjectHandle>::iterator it;
+	for (it = game.players.begin(); it != game.players.end(); ++it)
+	{
+		if (!(p = TO(Player,it->second))) continue;
+		printf("[%d] %c %s\n", p->id, p->team, p->name.c_str());
+	}
 }
 
 //------------------------------------------------------------------------------
