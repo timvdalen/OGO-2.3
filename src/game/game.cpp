@@ -421,6 +421,13 @@ void Connect(string address)
 	}
 }
 
+// Debug
+void Enter()
+{
+	NetCode::Enter(game.player->team, game.player->name);
+}
+CMD(Enter, 0, arg)
+
 //------------------------------------------------------------------------------
 
 CMD(Disconnect, 0, arg)
