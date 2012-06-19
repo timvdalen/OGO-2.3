@@ -547,7 +547,7 @@ void Mine::draw() {
 //------------------------------------------------------------------------------
 
 HeadQuarters::HeadQuarters(Player::Id _owner)
-		: Building(10, BoundingBox(Pd(0,0,0),Pd(20.0,20.0,25.0)),
+		: Building(10, BoundingBox(Pd(-10,-10,0),Pd(10,10,25.0)),
 		  0, 10,
 		  0, 0,
 		  0, _owner, 600.0) 

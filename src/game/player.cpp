@@ -21,7 +21,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R)
-	: BoundedObject(P, R, BoundingBox(Pd(-1.268/2.0,-0.9,0),Pd(1.268/2.0,0.9,2.1149995))), Destroyable(200.0)
+	: BoundedObject(P, R, BoundingBox(Pd(-1.2/2.0,-0.9,0),Pd(1.2/2.0,0.9,2.1149995))), Destroyable(200.0)
 {
 	id = _id;
 	team = _team;

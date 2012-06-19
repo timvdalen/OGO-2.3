@@ -529,10 +529,10 @@ void Fire()
 			gunLoc.y = gunLoc.y + game.player->model.weapon->origin.x * sin(yaw)
 			                    + game.player->model.weapon->origin.y * cos(yaw);
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
-	
-			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin))* 38;
-			ObjectHandle collision = game.world->trace(game.controller->target, lookVec);
-	
+			
+			Vd lookVec = (~(Vd(game.controller->target)+ -Vd(cam.origin))) * 38;
+			Pd target = game.controller->target;
+			ObjectHandle collision = game.world->trace(game.controller->target, lookVec, game.players[game.player->id]);
 			if (collision)
 			{	
 				Pd collisionPoint = game.controller->target + (lookVec);
@@ -558,8 +558,9 @@ void Fire()
 					}
 				}
 			}
-			else
+			else{
 				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective, !lookVec)));
+			}
 			return;
 		}
 		break;

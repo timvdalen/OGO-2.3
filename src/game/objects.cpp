@@ -62,8 +62,6 @@ void Destroyable::fullHeal(){
 pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
 {
     double collision = numeric_limits<double>::infinity();
-	printf((this->type()).c_str());
-	printf("\n");
     //--- We only check lbl rbh, could be improved-----
     Point<double> a = bb.lbl;
     Point<double> b = bb.rth;

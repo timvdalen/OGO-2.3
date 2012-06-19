@@ -274,7 +274,7 @@ Point<double> World::getCorrectedOrigin(Qd q, Pd p){
 
 //------------------------------------------------------------------------------
 
-ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
+ObjectHandle World::trace(Point<double> origin, Vector<double> &path, ObjectHandle ignore)
 {
 	pair<ObjectHandle, double> closest = make_pair(ObjectHandle(), !path);
 	BoundedObject *bo;
@@ -282,10 +282,14 @@ ObjectHandle World::trace(Point<double> origin, Vector<double> &path)
 	for (Object::iterator it = begin(); it != end(); ++it)
 	{
 		if (!(bo = TO(BoundedObject,*it))) continue;
-		if((!TO(Player, *it)) && (!TO(Terrain, *it))) continue;
+		if((!TO(Player, *it) && !TO(Terrain, *it)) || *it == ignore) continue;
 		ret = bo->checkCollision(origin, ~path);
-		if (ret.second < closest.second)
+		if (ret.second < closest.second){
 			closest = ret;
+			if(!TO(Terrain, *it)){
+				ret.first = *it;
+			}
+		}
 	}
 	path = ~path * closest.second;
 	return closest.first;
