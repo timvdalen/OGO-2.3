@@ -1,6 +1,13 @@
 /*
  * Objects -- see header
  */
+#if defined _WIN32
+	#include <gl\freeglut.h>
+#elif defined __APPLE__
+	#include <GL/freeglut.h>
+#else
+	#include <GL/freeglut.h>
+#endif
 
 #include <stack>
 #include <limits>
@@ -145,8 +152,8 @@ void ModelObjectContainer::render()
 
 //------------------------------------------------------------------------------
 
-LaserBeam::LaserBeam(Pd _origin, Qd _direction, int _fireTime, int _ttl)
-	: Object(_origin), direction(_direction)
+LaserBeam::LaserBeam(Pd _origin, Qd _direction, double _collision, int _fireTime, int _ttl)
+	: Object(_origin), direction(_direction), collision(_collision)
 {
 	fireTime = _fireTime;
 	ttl = _ttl;
@@ -200,9 +207,25 @@ void LaserBeam::draw(){
 	glBegin(GL_LINES);
 		glVertex3f(0.0, 0.0, 0.0);
 		Vd dir = -direction*Vd(0, 1, 0);
-        Vd endpoint = ~dir*1000;
+		Vd endpoint;
+		if (collision < 38.0)
+		{
+			endpoint = ~dir*collision;
+		}
+		else
+		{
+			endpoint = ~dir*38;
+		}
 		glVertex3f(endpoint.x, endpoint.y, endpoint.z);
 	glEnd();
+
+	if (collision < 38.0)
+	{
+		glPushMatrix();
+		glTranslatef(endpoint.x, endpoint.y, endpoint.z);
+		glutSolidSphere(0.1, 15, 15);
+		glPopMatrix();
+	}
 }
 
 //------------------------------------------------------------------------------

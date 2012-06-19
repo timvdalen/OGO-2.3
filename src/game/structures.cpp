@@ -691,7 +691,7 @@ void DefenseTower::frame()
 				if(now - lastshot > ROF){
 					//Shoot animation
 					lastshot = now;
-					w->addLaserBeam(LaserBeam(worldcoord, target));
+					w->addLaserBeam(LaserBeam(worldcoord, target, 40.0));
 					//Actual damage
 					if(own->id == Game::game.player->id){
 						if(p){

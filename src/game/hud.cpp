@@ -314,7 +314,7 @@ StatusDisplayer::StatusDisplayer(int _x, int _y, int _width, int _height) : Widg
     
 //To scale the line thickness with the size of the satus displayer
 inline int scale(int linewidth, float scale){
-	int result = (int)round(scale*linewidth);
+	int result = (int)(scale*linewidth + 0.5);
 	return result < 1 ? 1 : result;
 }
     
