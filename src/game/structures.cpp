@@ -718,9 +718,20 @@ void DefenseTower::frame()
 				//Locked
 				int now = Video::ElapsedTime();
 				if(now - lastshot > ROF){
-					//Shoot
+					//Shoot animation
 					lastshot = now;
 					w->addLaserBeam(LaserBeam(worldcoord, target));
+					//Actual damage
+					if(own->id == Game::game.player->id){
+						Player *p = TO(Player, closest);
+						Building *b = TO(Building, closest); 
+						if(p){
+							p->damage(attackPower);
+						}else if(b){
+							b->damage(attackPower);
+						}
+						//TODO: Send over the network
+					}
 				}
 			}else{
 				if(angleRot.v.z == 1) movespeed *= -1;
