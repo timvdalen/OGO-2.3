@@ -11,6 +11,7 @@
 
 #include <stack>
 #include <limits>
+#include <stdio.h>
 
 #include "objects.h"
 #include "structures.h"

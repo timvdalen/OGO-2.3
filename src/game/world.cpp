@@ -114,22 +114,34 @@ void World::draw(){
 void World::postRender(){
 	//Check for the ttl of all active LaserBeams and render them
 	vector<ObjectHandle>::iterator it;
-	for(it = laserBeams.begin(); it != laserBeams.end(); ){
-		LaserBeam *curr = TO(LaserBeam, *it);
-		if(!curr){
+	for(it = temporary.begin(); it != temporary.end(); ){
+		LaserBeam *lcurr = TO(LaserBeam, *it);
+		
+		if(!lcurr){
 			//This situation can only happen when an ObjectHandle is manually
-			//added to laserBeams
-			it = laserBeams.erase(it);
-		}else{
-			if(curr->done){
-				it = laserBeams.erase(it);
+			//added to temporary
+			Droppable *dcurr = TO(Droppable, *it);
+			if(!dcurr){
+				it = temporary.erase(it);
 			}else{
-				curr->render();
+				if(dcurr->done){
+					it = temporary.erase(it);
+				}else{
+					dcurr->render();
+					it++;
+				}
+
+			}
+		}else{
+			if(lcurr->done){
+				it = temporary.erase(it);
+			}else{
+				lcurr->render();
 				it++;
 			}
 		}
 	}
-	
+
 	//Go on to render children and pop matrix
 	Object::postRender();
 }
@@ -305,7 +317,7 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 	LaserBeam *lb = TO(LaserBeam, laserBeam);
 	//Check if the ObjectHandle passed actually points to a LaserBeam
 	if(lb){
-		laserBeams.push_back(laserBeam);
+		temporary.push_back(laserBeam);
 	}
 }
 

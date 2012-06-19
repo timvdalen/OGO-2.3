@@ -268,15 +268,20 @@ void Terrain::postRender()
 			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 			Building *b = TO(Building, s);
 			if(b && b->isDestroyed()){
-				if(b->owner == Game::game.player->id){
+				//if(b->owner == Game::game.player->id){
 					//Drop some coins
 					Resource toDrop = b->cost/2;
 					int noCoins = toDrop/20;
+					printf("Dropping %d coins\n", noCoins);
 					for(int i=0; i < noCoins; i++){
-						Game::game.world->children.insert(Droppable(it->second->origin, 20));
+						Pd droppoint = Game::game.world->terrain->ToPointD(b->loc);
+						droppoint.x += GRID_SIZE/2;
+						droppoint.y += GRID_SIZE/2;
+						printf("\tDropping (%f, %f, %f)\n", droppoint.x, droppoint.y, droppoint.z);
+						Game::game.world->temporary.push_back(Droppable(droppoint, 20));
 					}
 					//TODO: Send this over the network
-				}
+				//}
 				structures.erase(it++);
 				glPopMatrix();
 				continue;

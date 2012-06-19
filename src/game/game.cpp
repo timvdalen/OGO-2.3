@@ -728,9 +728,19 @@ void PrintPlayers()
 CMD(Test, 1, arg, arg[0])
 void Test(string str)
 {
-	Object o;
-	if (o = str)
-		Echo(string(o).c_str());
+	if(str == "a"){
+		game.world->children.insert(Droppable(Pd(0.0, 0.0, 0.0), 30));
+	}else if(str == "b"){
+		game.world->temporary.push_back(Droppable(Pd(0.0, 0.0, 0.0), 30));
+	}else{
+		Player::Id pid2 = game.topId++;
+		ObjectHandle player2 = Player(pid2, 'a', "Carl");
+		game.root->children.insert(player2);
+		game.players[pid2] = player2;
+
+		game.world->terrain->placeStructure(GridPoint(1,1), DefenseTower(pid2));
+	}
+
 }
 
 //==============================================================================

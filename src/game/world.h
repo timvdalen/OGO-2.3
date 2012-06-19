@@ -46,8 +46,8 @@ class World: public BoundedObject
 	//! HUD associated with this World
 	HUD *hud;
 	
-	//! A vector of \ref LaserBeam "LaserBeams" in this World
-	vector<ObjectHandle> laserBeams;
+	//! A vector of temporary Objects in this World
+	vector<ObjectHandle> temporary;
 	
 	//! Constructs a new world
 	World(double _width, double _height);
