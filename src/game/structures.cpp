@@ -316,13 +316,19 @@ void Terrain::draw()
 void Terrain::postRender()
 {
 	map<GridPoint, ObjectHandle>::iterator it;
-	for(it = structures.begin(); it != structures.end(); it++){
+	for(it = structures.begin(); it != structures.end();){
 		GridPoint p = it->first;
 		ObjectHandle s = it->second;
 		glPushMatrix();
 			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
+			Building *b = TO(Building, s);
+			if(b && b->isDestroyed()){
+				structures.erase(it++);
+				continue;
+			}
 			s->render();
 		glPopMatrix();
+		it++;
 	}
 	if(ghost.second){
 		GridPoint p = ghost.first;
@@ -681,7 +687,7 @@ void DefenseTower::frame()
 		set<ObjectHandle>::iterator it;
 		for(it = w->children.begin(); it != w->children.end(); it++){
 			Player *p = TO(Player, *it);
-			DefenseTower *t = TO(DefenseTower, *it);
+			Building *b = TO(Building, *it);
 			if(p){
 				if(p->team != own->team){
 					//Enemy player found
@@ -691,24 +697,45 @@ void DefenseTower::frame()
 						closest = *it;
 						continue;
 					}
-				}
-			}else if(t){
-				Player *t_own = NULL;
-				if (Game::game.players.count(t->owner))
-					TO(Player, Game::game.players[t->owner]);
-				if(t_own && t_own->team != own->team){
+				}	
+			}
+		}
+		map<GridPoint, ObjectHandle>::iterator mit;
+		for(mit = w->terrain->structures.begin(); mit != w->terrain->structures.end(); mit++){
+			Building *b = TO(Building, mit->second);
+			if(b){
+				Player *b_own = NULL;
+				if (Game::game.players.count(b->owner))
+					b_own = TO(Player, Game::game.players[b->owner]);
+				if(b_own && b_own->team != own->team){
 					//Enemy tower found
-					double curr_dist =!(Vd(t->origin) + -Vd(worldcoord));
+					double curr_dist =!(Vd(w->terrain->ToPointD(mit->first)) + -Vd(worldcoord));
 					if(curr_dist < distance){
 						distance = curr_dist;
-						closest = *it;
+						closest = mit->second;
 						continue;
 					}
 				}
 			}
 		}
+
 		if(closest){
-			Qd target = worldcoord.lookAt(closest->origin);
+			Player *p = TO(Player, closest);
+			Building *b = TO(Building, closest); 
+
+			Qd target;
+			if(b){
+				if(TO(HeadQuarters, b)){
+					target = worldcoord.lookAt(w->terrain->ToPointD(b->loc));
+				}else{
+					Pd targetPd = w->terrain->ToPointD(b->loc);
+					targetPd.x += GRID_SIZE/2;
+					targetPd.y += GRID_SIZE/2;
+					target = worldcoord.lookAt(targetPd);
+				}
+			}else{
+				target = worldcoord.lookAt(closest->origin);
+			}
 			
 			Rd angleRot = (~model.turret->rotation) * -(~target);
 
@@ -723,8 +750,6 @@ void DefenseTower::frame()
 					w->addLaserBeam(LaserBeam(worldcoord, target));
 					//Actual damage
 					if(own->id == Game::game.player->id){
-						Player *p = TO(Player, closest);
-						Building *b = TO(Building, closest); 
 						if(p){
 							p->damage(attackPower);
 						}else if(b){
