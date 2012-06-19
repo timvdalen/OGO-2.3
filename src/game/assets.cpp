@@ -65,6 +65,15 @@ MaterialHandle GhostTex, GhostErrorTex;
 
 //------------------------------------------------------------------------------
 
+namespace Effect {
+
+//laser
+MaterialHandle Laser[2];
+
+}
+
+//------------------------------------------------------------------------------
+
 void Initialize(int argc, char *argv[])
 {
 	string path = "./";
@@ -179,10 +188,9 @@ void Initialize(int argc, char *argv[])
 	HealthBar::Green = ColorMaterial(0.0, 1.0, 0.0, 1.0);
 	HealthBar::Red = ColorMaterial(1.0, 0.0, 0.0, 1.0);
 
-	//temp
-	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
-	//Model::BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
-	//Model::GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+	//Effect textures
+	Effect::Laser[0] = TexturedMaterial(path + "assets/textures/effects/laserred.png");
+	Effect::Laser[1] = TexturedMaterial(path + "assets/textures/effects/laserblue.png");
 }
 
 //------------------------------------------------------------------------------
@@ -257,6 +265,10 @@ void Terminate()
 	
 	Model::GhostTex.clear();
 	Model::GhostErrorTex.clear();
+
+	//Effect textures
+	Effect::Laser[0].clear();
+	Effect::Laser[1].clear();
 }
 
 //------------------------------------------------------------------------------
