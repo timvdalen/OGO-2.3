@@ -414,19 +414,10 @@ void Connect(string address)
 		Game::Notice(string("Unable to connect to " + address + string("!")));
 	else
 	{
-		Game::Notice(string("Connected to " + address + string("!")));
-		NetCode::Enter(game.player->team, game.player->name);
-		// WARNING: this is not deterministic!
-		// Enter needs to be called repeatedly until welcome message is received
+		Game::Notice(string("Connected to " + address + string("!")));		
+		game.connecting = true;
 	}
 }
-
-// Debug
-void Enter()
-{
-	NetCode::Enter(game.player->team, game.player->name);
-}
-CMD(Enter, 0, arg)
 
 //------------------------------------------------------------------------------
 

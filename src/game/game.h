@@ -62,6 +62,7 @@ struct GameState
 	map<unsigned char,Team> teams;
 	
 	Player::Id topId;
+	bool connecting;
 	
 	GameState() : window(0), input(0), controller(0), world(0), player(0), topId(1) {}
 } extern game; //! Current game state
