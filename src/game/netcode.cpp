@@ -32,6 +32,7 @@ uword port = GAME_PORT;
 FPS cps;
 
 map<NodeID,Player::Id> nodes;
+NodeID lastNode = 0;
 NodeID findNode(Player::Id pid);
 void Join(NodeID nid, Player::Id pid, unsigned char team, string name);
 
@@ -127,6 +128,7 @@ void Frame()
 	
 	while (tokenring->entry(id))
 	{
+		lastNode = id;
 		// A potential player entered
 		// We do nothing and wait till he send an (Re)Enter request
 	}
@@ -204,7 +206,7 @@ void Enter(unsigned char team, string name)
 	msg.push_back("ENTER");
 	msg.push_back((long) team);
 	msg.push_back(name);
-	SEND(msg, false);
+	SENDTO(lastNode, msg, false);
 }
 RECEIVE(ENTER, id, msg, reliable)
 {
@@ -280,7 +282,7 @@ RECEIVE(WELCOME, id, msg, reliable)
 	if (!game.players.count(game.player->id)) return; // This would be bad
 	Echo(msg[4]);
 	Player::Id pid = (long) msg[1];
-	nodes[id] = pid;
+	nodes[tokenring->id()] = pid;
 	game.players[pid] = game.players[game.player->id];
 	game.players.erase(game.player->id);
 	game.player->id = pid;
@@ -314,7 +316,7 @@ RECEIVE(JOIN, id, msg, reliable)
 		ObjectHandle player = Player(pid, (long) msg[3], msg[4]);
 		game.root->children.insert(player);
 		game.players[pid] = player;
-		nodes[id] = (long) msg[1];
+		nodes[(long) msg[1]] = pid;
 	}
 }
 
