@@ -315,7 +315,9 @@ Droppable::Droppable(Pd _origin, Resource _worth, int _dropped, int _ttl)
 	: BoundedObject(_origin, Qd(), BoundingBox(Pd(-0.105, -0.5, 0.0), Pd(0.105, 0.5, 1.0)))
 {
 	model.coin = ModelObjectContainer();
+	model.coin->children.insert(Assets::Model::CoinObj);
 	children.insert(model.coin);
+	model.coin->material = Assets::Model::CoinTex;
 
 	worth = _worth;
 	dropped = _dropped;
@@ -332,6 +334,7 @@ void Droppable::preRender(){
 		done = true;
 		return;
 	}
+	rotation = rotation * Rd(0.02, Vd(0,0,1));
 }
 
 //------------------------------------------------------------------------------
