@@ -54,6 +54,8 @@ void Destroyable::fullHeal(){
 pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
 {
     double collision = numeric_limits<double>::infinity();
+	printf((this->type()).c_str());
+	printf("\n");
     //--- We only check lbl rbh, could be improved-----
     Point<double> a = bb.lbl;
     Point<double> b = bb.rth;
@@ -95,29 +97,6 @@ pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
         if(insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
             collision = lambda2;
         }
-    }
-    //find a collision with a child
-    if(collision < std::numeric_limits<double>::infinity()){
-        set<ObjectHandle>::iterator it;
-        ObjectHandle colobject = *this;
-        double collision2 = numeric_limits<double>::infinity();
-        for (it = children.begin(); it != children.end(); ++it){
-            BoundedObject* child = TO(BoundedObject, *it);
-            if(child){
-                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
-                if(childcollision.second < collision2){ //We have a collision with a child
-                    colobject.clear();
-                    collision2 = childcollision.second;
-                    colobject = childcollision.first;
-                }else{
-                    childcollision.first.clear();
-                }
-            }
-        }
-        if(collision2 == numeric_limits<double>::infinity()){
-            collision2 = collision;
-        }
-        return make_pair(colobject,collision2);
     }
     return make_pair(ObjectHandle(),collision);
 }
