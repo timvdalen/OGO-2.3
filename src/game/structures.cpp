@@ -716,8 +716,8 @@ void DefenseTower::frame()
 					Pd startpoint = worldcoord+Vd(5*sin(rot*z)+0.5*cos(rot*z), 5*cos(rot*z)-0.5*sin(rot*z), 0);
 					Pd startpoint2 = worldcoord+Vd(5*sin(rot*z)-0.5*cos(rot*z), 5*cos(rot*z)+0.5*sin(rot*z), 0);
 					//Qd beam = gunLoc.lookAt(target);
-                    w->addLaserBeam(LaserBeam(startpoint, target));
-					w->addLaserBeam(LaserBeam(startpoint2, target));
+                    w->addLaserBeam(LaserBeam(startpoint, target, 100));
+					w->addLaserBeam(LaserBeam(startpoint2, target, 100));
 
 					//Actual damage
 					if(own->id == Game::game.player->id){
