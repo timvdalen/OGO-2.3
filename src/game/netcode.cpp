@@ -104,6 +104,8 @@ void Terminate()
 
 //------------------------------------------------------------------------------
 
+int loop = 0;
+
 void Frame()
 {
 	if (!CONNECTED) return;
@@ -131,6 +133,17 @@ void Frame()
 		lastNode = id;
 		// A potential player entered
 		// We do nothing and wait till he send an (Re)Enter request
+	}
+	
+	if (game.connecting)
+	{
+		if (loop > 80)
+		{
+			NetCode::Enter(game.player->team, game.player->name);
+			loop = 0;
+		}
+		else
+			loop++;
 	}
 }
 
@@ -280,6 +293,7 @@ RECEIVE(WELCOME, id, msg, reliable)
 {
 	if (!reliable) return;
 	if (!game.players.count(game.player->id)) return; // This would be bad
+	game.connecting = false;
 	Echo(msg[4]);
 	Player::Id pid = (long) msg[1];
 	nodes[tokenring->id()] = pid;
