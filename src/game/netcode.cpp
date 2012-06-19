@@ -33,6 +33,7 @@ FPS cps;
 
 map<NodeID,Player::Id> nodes;
 NodeID findNode(Player::Id pid);
+void Join(NodeID nid, Player::Id pid, unsigned char team, string name);
 
 //------------------------------------------------------------------------------
 
@@ -82,10 +83,14 @@ void Initialize(int argc, char *argv[])
 	}
 	
 	tokenring = new TokenRing(port);
+	nodes[tokenring->id()] = 1;
 	
 	if (host.empty())   // Server
 		Game::Notice(string("Listening on port ") + Argument(port).str + string("..."));
 	else Connect(host); //Client
+	
+	// Debug:
+	Game::game.player->name += Argument(port).str;
 }
 
 //------------------------------------------------------------------------------
@@ -209,7 +214,6 @@ RECEIVE(ENTER, id, msg, reliable)
 	
 	Player::Id pid = game.topId++;
 	ObjectHandle player = Player(pid, team, name);
-	game.player = TO(Player,player);
 	game.root->children.insert(player);
 	game.players[pid] = player;
 	nodes[id] = pid;
@@ -227,13 +231,17 @@ RECEIVE(ENTER, id, msg, reliable)
 		
 		Message msg;
 		msg.push_back("JOIN");
+		if (p == game.player)
+			msg.push_back((long) tokenring->id());
+		else
+			msg.push_back((long) findNode(p->id));
 		msg.push_back((long) p->id);
 		msg.push_back((long) p->team);
 		msg.push_back(p->name);
 		SENDTO(id, msg, true);
 	}
 	
-	Join(pid, team, name);
+	Join(findNode(pid), pid, team, name);
 }
 
 //------------------------------------------------------------------------------
@@ -281,10 +289,11 @@ RECEIVE(WELCOME, id, msg, reliable)
 
 //------------------------------------------------------------------------------
 
-void Join(Player::Id pid, unsigned char team, string name)
+void Join(NodeID nid, Player::Id pid, unsigned char team, string name)
 {
 	Message msg;
 	msg.push_back("JOIN");
+	msg.push_back((long) nid);
 	msg.push_back((long) pid);
 	msg.push_back((long) team);
 	msg.push_back(name);
@@ -292,7 +301,7 @@ void Join(Player::Id pid, unsigned char team, string name)
 }
 RECEIVE(JOIN, id, msg, reliable)
 {
-	Player::Id pid = (long) msg[1];
+	Player::Id pid = (long) msg[2];
 	
 	if (pid == game.player->id)
 	{
@@ -302,11 +311,10 @@ RECEIVE(JOIN, id, msg, reliable)
 	{
 		// Other player joined
 		game.topId = MAX(game.topId,pid) + 1;
-		ObjectHandle player = Player(pid, (long) msg[2], msg[3]);
-		game.player = TO(Player,player);
+		ObjectHandle player = Player(pid, (long) msg[3], msg[4]);
 		game.root->children.insert(player);
 		game.players[pid] = player;
-		nodes[id] = pid;
+		nodes[id] = (long) msg[1];
 	}
 }
 

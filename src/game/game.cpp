@@ -130,6 +130,7 @@ void Initialize(int argc, char *argv[])
 	// Set up game world
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
+	game.topId = 1;
 	
 	game.teams.insert(make_pair('a', Team('a')));
 	game.teams.insert(make_pair('b', Team('b')));

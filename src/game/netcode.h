@@ -56,8 +56,6 @@ void Enter(unsigned char team, string name);
 void ReEnter(Player::Id pid);
 void Welcome(Player::Id pid);
 
-void Join(Player::Id pid, unsigned char team, string name);
-
 void Chat(std::string line);
 void TeamChat(std::string line);
 void Move(Pd position, Vd velocity);
