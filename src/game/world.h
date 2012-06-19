@@ -86,18 +86,24 @@ class Droppable: public BoundedObject
 {
 	public: NAME(Droppable) SERIAL(type() | convert(worth) | convert((long)ttl))
 	UNSERIAL(arg, 2, worth = ToFloat(arg[0]); dropped = ToInteger(arg[1]); )
-	
+
+	//! Whether or not the Droppable can be removed from the \ref World
+	bool done;
+
 	//! The worth of this droppable
 	Resource worth;
 
 	//! The time in milliseconds since the start of the glut event loop this object was dropped
 	int dropped;
 
-	//! The time in milliseconds this laser lives
+	//! The time in milliseconds this droppable lives
 	int ttl;
 
-	//! The event fired when this droppable is picked up
-	void onPickup(World w){}
+	//! Model
+	struct { ObjectHandle coin; } model;
+
+	//! Creates a new Droppable
+	Droppable(Pd _origin, Resource _worth, int _dropped = Video::ElapsedTime(), int _ttl = 15000);
 };
 
 //------------------------------------------------------------------------------

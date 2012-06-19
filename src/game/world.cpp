@@ -311,6 +311,30 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 
 //------------------------------------------------------------------------------
 
+Droppable::Droppable(Pd _origin, Resource _worth, int _dropped, int _ttl)
+	: BoundedObject(_origin, Qd(), BoundingBox(Pd(-0.105, -0.5, 0.0), Pd(0.105, 0.5, 1.0)))
+{
+	model.coin = ModelObjectContainer();
+	children.insert(model.coin);
+
+	worth = _worth;
+	dropped = _dropped;
+	ttl = _ttl;
+	done = false;
+}
+
+//------------------------------------------------------------------------------
+
+Droppable::preRender(){
+	int timelived = Video::ElapsedTime() - dropped;
+	if(timelived >= ttl){
+		done = true;
+		return;
+	}
+}
+
+//------------------------------------------------------------------------------
+
 Star::Star(Pd P)
 	: Object(P, Qd(), Assets::Star)
 {

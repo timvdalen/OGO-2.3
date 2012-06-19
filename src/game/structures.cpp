@@ -323,6 +323,15 @@ void Terrain::postRender()
 			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 			Building *b = TO(Building, s);
 			if(b && b->isDestroyed()){
+				if(b->owner == Game::game.player->id){
+					//Drop some coins
+					Resource toDrop = b->cost/2;
+					int noCoins = toDrop/20;
+					for(int i=0; i < noCoins; i++){
+						Game::game.world->children.insert(Droppable(it->second->origin, 20));
+					}
+					//TODO: Send this over the network
+				}
 				structures.erase(it++);
 				glPopMatrix();
 				continue;
