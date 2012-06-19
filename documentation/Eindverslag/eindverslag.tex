@@ -1,16 +1,20 @@
 \documentclass[a4paper,11pt, twoside]{article}
-\usepackage{graphicx,listings,float,epstopdf,geometry,amsmath,placeins,caption,subcaption,placeins,pdfpages}
 %\usepackage[firstpage]{draftwatermark}
 %\SetWatermarkLightness{0.5}
 %\SetWatermarkScale{4}
 \setcounter{tocdepth}{2}
 \usepackage[dutch]{babel}
 \usepackage{xspace, color, mdframed}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx,listings,float,epstopdf,geometry,amsmath,placeins,caption,subcaption,placeins,pdfpages}
 
 \geometry{
 	includeheadfoot,
 	margin=2.54cm
 }
+
+% Commando abstract
+\addto\captionsdutch{\renewcommand*\abstractname{Abstract}}
 
 % Commando's werkplan
 \newcommand{\BS}{BrnStrm}
@@ -33,12 +37,11 @@
 % Commando's ontwerp
 \newcommand{\protoref}{sectie \ref{sec:protocol}}
 
-% Box om bericht faalt om vreemde redenen
 \newcommand{\bericht}[1]{
     {\begin{center}
-        %\colorbox{YellowGreen!20}{\makebox[\textwidth][c]{{
+        \colorbox{YellowGreen!20}{\makebox[\textwidth][c]{{
             \textsc{#1}
-        %}}}
+        }}}
     \end{center}
 }}
 
@@ -46,6 +49,7 @@
 \newcommand{\tcp}{\textsc{tcp}\xspace}
 
 % Schieten veranderd
+% Bijgewerkte gebruikershandleiding nodig, eventueel extra appendix
 \begin{document}
 	\input{title}
 
@@ -54,13 +58,23 @@
 
 	\section{Lijst symbolen en afkortingen}
     % Verklaring van alle gebruikte symbolen
-    % Nog eventueel extra elementen aan lijst toevoegen
     \input{symbolen}	
     \newpage
 
     \section{Summary}
     % Engelstalige samenvatting
-    \emph{Grudge of the Oblivious} (\textsc{goto}) is a multiplayer 3D game. It combines elements of First-Person Shooters and RTS Real-Time Strategy. Two robot gangs 
+    \emph{Grudge of the Oblivious} (\textsc{goto}) is a multiplayer 3D game. It combines elements of First-Person Shooters and Real-Time Strategy. Two robot gangs fight for world domination. Every player has its own robot to fight for one of these gangs. The goal of the game is to destroy the headquarter of the opposing gang. Players can attack the headquarter by shooting with their powerful laser guns.
+
+    In order to defend their own headquarter, players can attack other players by shooting with their laser guns, which weakens their armor. When the armor of a player is fully destroyed, the player will return to the game with new armor at its headquarter after a small time period. Players can also defend their headquarter by building defense towers with gold. When a player of the opposing team is near such a defense tower, the defense tower will attack the player.
+
+    Gold can be earned in two ways. Firstly, gold can be earned by building mines over mining spots. Alternatively, gold can be earned by killing opposing players or destroying opposing buildings. When an opposing player is killed or an opposing building is destroyed, a coin will be dropped on the ground. This coin can be picked up by all other players.
+
+    The game was developed for the \textsc{ogo} 2.3 project. This document contains the documentation for the various steps taken in the development. We started our development of the game by studying the different challenges. We note that our game can be played over a \textsc{lan} or over the Internet. Mutual exclusion is thus required to keep the game in a consistent state. It is for example not desirable that two players can pick up the same coin. Therefore, a communication protocol needs to be developed that enforces mutual exclusion.
+
+    The three most difficult challenges were the networking, mutual exclusion and complexity in our opinion. With complexity we mean the challenges associated with large programs. After identifying the most critical challenges we were able to give a tight time schedule for the development. We were then able to give a specification of the game. Here we also considered various alternatives. We will explore these alternatives and explain our choices.
+
+    Having specified the game, we were then ready to do a thorough analysis of the game design. The different components were identified: the protocol, the \textsc{gui} and the scene model. We will describe these components and study the relationship between them. Next we turn our attention to the protocol. We formally define a message format and the different messages used for communication. We will also discuss the working of the protocol.
+    Mutual exclusion in the protocol was implemented using a token ring. Since the protocol is highly complex, several test programs have been developed. Special attention was paid in order to identify and validate the underlying assumptions in the protocol. We will motivate our choices during the implementation. We end by giving a conclusion and an evaluation.
     \newpage
 
     \section{Inleiding}
@@ -70,9 +84,8 @@
 
     \input{werkplan}
     \input{specificatie}
-    \input{alternatieven}
     \input{ontwerp}
-    
+
     % Aannamen verder uitwerken
     \input{../Aannamen/aannamen}
     \input{../Motivering/motivering}
@@ -80,32 +93,39 @@
     \section{Conclusie}
     % Met daarin reflectie over het verloop van het project en het groepsproces daarbij
     % Misschien ster weglaten/alles bereikt?
+    % Welke wijzigingen? Geweer?
+    % Script taal?
+    % Uitgebreider
     We zijn erin geslaagd om een interactief, gedistribueerd 3D-spel te ontwikkelen. Dit spel voldoet aan de door ons gegeven specificatie van het spel op een kleine wijziging na. We hebben besloten om de speler rechts van het vizier te plaatsen. Daardoor staat het lasergeweer van de speler aan dezelfde kant als het vizier. Dit maakt het schieten intuïtiever in onze mening.
 
     Verder zijn er nog een aantal extra's ge\"implementeerd. Zo wordt er een plattegrond van de wereld op het scherm getoond: dit was een van de mogelijke uitbreidingen van het spel genoemd in de specificatie. Tijdens het spel is het ook nog mogelijk om net als in de lobby met andere spelers te \emph{chatten}. Bovendien zijn er nog verscheidene aspecten van de ster ge\"implementeerd. Spelers kunnen tijdens het spel nog meedoen of het spel onverwachts verlaten.
 
     \section{Evaluatie}
-    % Welke wijzigingen? Geweer?
-    % Script taal?
-    Achteraf bezien was het netwerk aspect het grootste obstakel voor ons. Dit hadden wij van tevoren ook al verwacht. Dit is dan ook de reden dat we hier al zeer vroeg mee zijn begonnen: in de oriëntatiefase zijn we al bezig geweest met het maken van een \emph{chatprogramma}. Voor de implementatie van het protocol zijn verschillende testprogramma's gemaakt, die zeer nuttig zijn gebleken. Door deze testprogramma's konden we effici\"ent fouten opsporen in de implementatie van het protocol. Goede planning en testen zijn hier van groot belang geweest. 
-    
+    % Uitgebreider
+    Achteraf bezien was het netwerk aspect het grootste obstakel voor ons. Dit hadden wij van tevoren ook al verwacht. Dit is dan ook de reden dat we hier al zeer vroeg mee zijn begonnen: in de oriëntatiefase zijn we al bezig geweest met het maken van een \emph{chatprogramma}. Voor de implementatie van het protocol zijn verschillende testprogramma's gemaakt, die zeer nuttig zijn gebleken. Door deze testprogramma's konden we effici\"ent fouten opsporen in de implementatie van het protocol. Goede planning en testen zijn hier van groot belang geweest.
+
     Een ander obstakel voor ons was de complexiteit van het spel. We waren zelf enthousiast over ons spel. Hierdoor is onze specificatie vrij uitgebreid geworden. Een ander gevolg hiervan is dat er relatief veel tijd aan de implementatie is besteed, voor een groot deel ook buiten de OGO-tijden. Door hard werk en strakke planning hebben we uiteindelijk het door ons beoogde spel kunnen ontwikkelen.
-    
+
     De samenwerking in de groep is goed verlopen. Iedereen in deze groep had ongeveer evenveel ervaring met programmeren. Echter, C++ was nieuw voor een aantal groepsleden. Dit was echter nauwelijks een probleem. Bij het begin van de implementatie zijn er verschillende groepen gemaakt. Hierbij is ervoor gezorgd dat er minstens \'e\'en groepslid al ervaring had met C++. Al snel werd deze nieuwe programmeertaal opgepikt door de andere groepsleden. Later tijdens de implementatiefase was deze groepsindeling ook niet meer nodig.
+    \newpage
 
     \section{Literatuurlijst}
+    % Nog niet gedaan
+    Komt nog in uiteindelijke versie.
     \newpage
 
     \appendix
-    
-    % Nog geen verwijzing naar deze appendix
+
     \input{begrippen}
     \newpage
 
     \input{schieten}
     \newpage
-    
+
     \input{optioneel}
+    \newpage
+    
+    \input{alternatieven}
     \newpage
 
     \input{klassenbeschrijving}
@@ -113,7 +133,7 @@
 
     \section{Klassendiagrammen in UML}
     \label{app:klassendiagram}
-    
+
     \subsection{Interfaces}
     \begin{figure}[h]
     \centering
@@ -121,7 +141,7 @@
     	\caption{De verscheidene interfaces die ge\"implementeerd worden door klassen in het model van de sc\`ene.}
     \end{figure}\FloatBarrier    \label{app:Interfaces}
     \begin{samepage}
-    
+
     \subsection{Communicatie klassen} \begin{figure}[h]
         \centering  	\includegraphics[width=1.05\textwidth]{../Class-diagram/NetCommunication.pdf}
 	\caption{De globale klasse die methoden verschaft om te kunnen communiceren met de medespelers.}
@@ -130,27 +150,27 @@
     \end{samepage}
     \FloatBarrier
     \newpage
-    
+
     \subsection{Klassendiagram voor de sc\`ene}
     \begin{figure}[h]
         \centering
     	\includegraphics[height=0.72\textheight]{../Class-diagram/ClassDiagram1.pdf}
 	\caption{Het klassendiagram voor het model van de sc\`ene.}
     \end{figure}
-    
+
     \label{app:Scene}
     \FloatBarrier
     \newpage
      \ \\[5mm]
     \includegraphics[height=0.6\textheight]{../Class-diagram/ClassDiagram2.pdf}
     \newpage
-    
+
     \input{berichtsformaat}
     \newpage
-    
+
     \input{berichten}
     \newpage
-    
+
     \section{Voorbeeld van de interactie tussen de gebruikersomgeving en de protocolmodule}
     \label{sec:interactscenmodel}
     \begin{figure}[h]
@@ -159,7 +179,7 @@
 	\caption{Voorbeeld van een interactie van de gebruikersomgeving en de protocolmodule.}
     \end{figure}
     \label{app:MSCLobbyCon}
-       
+
 %    Andere appendices
 %    Invoegen gaat nog erg slecht
 %    \section{Verslag werkplan}
