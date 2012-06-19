@@ -165,8 +165,11 @@ class LaserBeam: public Object
 	//! The direction (in normalized object coordinates) that his laser was fired in
 	Qd direction;
 
+	//! The distance to the collision point of the laser, if there is one
+	double collision;
+
 	//! Constructs a new LaserBeam, the origin is the point from which this laser was fired
-	LaserBeam(Pd _origin, Qd _direction, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
+	LaserBeam(Pd _origin, Qd _direction, double _collision, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
 
 	//! Sets up the translations and material for the LaserBeam
 	virtual void preRender();
