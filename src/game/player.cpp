@@ -21,7 +21,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R)
-	: BoundedObject(P, R, BoundingBox(Pd(-1.2/2.0,-0.9,0),Pd(1.2/2.0,0.9,2.1149995))), Destroyable(200.0)
+	: BoundedObject(P, R, BoundingBox(Pd(-1.2/2.0,-0.9,0),Pd(1.2/2.0,0.9,2.7149995))), Destroyable(200.0)
 {
 	id = _id;
 	team = _team;
@@ -133,6 +133,12 @@ void Player::draw() {
 	glVertex3f(t.x, t.y-0.04, t.z);
 	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
 	glEnd();
+	
+	
+	
+	
+	
+	
 	if(id != Game::game.player->id){
 		glDisable(GL_LIGHTING);
 		MaterialHandle teamcolor;
