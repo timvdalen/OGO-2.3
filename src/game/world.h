@@ -46,8 +46,8 @@ class World: public BoundedObject
 	//! HUD associated with this World
 	HUD *hud;
 	
-	//! A vector of \ref LaserBeam "LaserBeams" in this World
-	vector<ObjectHandle> laserBeams;
+	//! A vector of temporary Objects in this World
+	vector<ObjectHandle> temporary;
 	
 	//! Constructs a new world
 	World(double _width, double _height);
@@ -65,7 +65,7 @@ class World: public BoundedObject
 	//!       When the function returns with an object the path value will be set
 	//!       to the vector pointing to collision spot
 	//! \returns the first colliding object or an empty handle when no object was found
-	ObjectHandle trace(Point<double> origin, Vector<double> &path);
+	ObjectHandle trace(Point<double> origin, Vector<double> &path, ObjectHandle ignore);
 	
 	//! Gets a set of objects that touch the given object
 	//! \note When the traget is not bounded it only check for the origin
@@ -86,18 +86,27 @@ class Droppable: public BoundedObject
 {
 	public: NAME(Droppable) SERIAL(type() | convert(worth) | convert((long)ttl))
 	UNSERIAL(arg, 2, worth = ToFloat(arg[0]); dropped = ToInteger(arg[1]); )
-	
+
+	//! Whether or not the Droppable can be removed from the \ref World
+	bool done;
+
 	//! The worth of this droppable
 	Resource worth;
 
 	//! The time in milliseconds since the start of the glut event loop this object was dropped
 	int dropped;
 
-	//! The time in milliseconds this laser lives
+	//! The time in milliseconds this droppable lives
 	int ttl;
 
-	//! The event fired when this droppable is picked up
-	void onPickup(World w){}
+	//! Model
+	struct { ObjectHandle coin; } model;
+
+	//! Creates a new Droppable
+	Droppable(Pd _origin, Resource _worth, int _dropped = Video::ElapsedTime(), int _ttl = 15000);
+
+	//! Called before draw()
+	void preRender();
 };
 
 //------------------------------------------------------------------------------

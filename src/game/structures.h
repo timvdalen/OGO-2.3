@@ -139,8 +139,12 @@ class Terrain: public BoundedObject
 class Structure: public BoundedObject
 {
 	public: NAME(Structure)
+	
+	//! The GridPoint this building is at
+	GridPoint loc;
+	
 	Structure(BoundingBox B = BoundingBox())
-			: BoundedObject(Pd(), Qd(), B) {}
+			: BoundedObject(Pd(), Qd(), B), loc(GridPoint(-1, -1)) {}
 };
 
 //------------------------------------------------------------------------------
@@ -149,12 +153,12 @@ class Structure: public BoundedObject
 class Mine: public Structure
 {
 	public: NAME(Mine)
+
 	//! The maxium income that can be generated from this mine
 	Resource maxIncome;
 
 	//! Constructs a new mine
-	Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-	     Resource _maxIncome = 0);
+	Mine(Pd P = Pd(), Qd R = Qd(), Resource _maxIncome = 0);
 
 	//! Draws the mine
 	virtual void draw();
@@ -177,8 +181,6 @@ class Building: public Structure, public Destroyable
 	void drawHealthbar();
 
 	public: NAME(Building)
-	//! The GridPoint this building is at
-	GridPoint loc;
 	//! Height of this building in local object coordinates
 	int height;
 	//! The cost of this building
@@ -201,7 +203,7 @@ class Building: public Structure, public Destroyable
 		: height(_height), Structure(B),
 		  cost(_cost), income(_income),
 		  buildTime(_buildTime), buildDuration(_buildDuration),
-		  attackPower(_attackPower), owner(_owner), loc(GridPoint(-1, -1)), Destroyable(_maxHealth){
+		  attackPower(_attackPower), owner(_owner), Destroyable(_maxHealth){
 			  built = false;
 			  lastGenerated = Video::ElapsedTime();
 		  }

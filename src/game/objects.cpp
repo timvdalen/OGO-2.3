@@ -1,9 +1,17 @@
 /*
  * Objects -- see header
  */
+#if defined _WIN32
+	#include <gl\freeglut.h>
+#elif defined __APPLE__
+	#include <GL/freeglut.h>
+#else
+	#include <GL/freeglut.h>
+#endif
 
 #include <stack>
 #include <limits>
+#include <stdio.h>
 
 #include "objects.h"
 #include "structures.h"
@@ -66,7 +74,7 @@ pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
     double lambda1, lambda2;
     if(v.x != 0){
         lambda1 = (a.x - p.x)/(v.x);
-        lambda2 = (b.x -p.x)/(v.x);
+        lambda2 = (b.x - p.x)/(v.x);
         if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
             collision = lambda1;
         }
@@ -96,29 +104,6 @@ pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
             collision = lambda2;
         }
     }
-    //find a collision with a child
-    if(collision < std::numeric_limits<double>::infinity()){
-        set<ObjectHandle>::iterator it;
-        ObjectHandle colobject = *this;
-        double collision2 = numeric_limits<double>::infinity();
-        for (it = children.begin(); it != children.end(); ++it){
-            BoundedObject* child = TO(BoundedObject, *it);
-            if(child){
-                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
-                if(childcollision.second < collision2){ //We have a collision with a child
-                    colobject.clear();
-                    collision2 = childcollision.second;
-                    colobject = childcollision.first;
-                }else{
-                    childcollision.first.clear();
-                }
-            }
-        }
-        if(collision2 == numeric_limits<double>::infinity()){
-            collision2 = collision;
-        }
-        return make_pair(colobject,collision2);
-    }
     return make_pair(ObjectHandle(),collision);
 }
 
@@ -144,9 +129,9 @@ bool BoundedObject::checkCollision(const ObjectHandle &target)
 //------------------------------------------------------------------------------
 
 bool BoundedObject::insideBox(Point<double> p, Point<double> a, Point<double> b){
-        return a.x <= p.x && p.x <= b.x//Inside x-interval
-            && a.y <= p.y && p.y <= b.y//Inside y-interval
-            && a.z <= p.z && p.z <= b.z;//Inside z-interval
+        return a.x - 0.01 <= p.x && p.x <= b.x + 0.01//Inside x-interval
+            && a.y - 0.01 <= p.y && p.y <= b.y + 0.01//Inside y-interval
+            && a.z - 0.01 <= p.z && p.z <= b.z + 0.01;//Inside z-interval
 }
 
 //------------------------------------------------------------------------------
@@ -166,8 +151,8 @@ void ModelObjectContainer::render()
 
 //------------------------------------------------------------------------------
 
-LaserBeam::LaserBeam(Pd _origin, Qd _direction, int _fireTime, int _ttl)
-	: Object(_origin), direction(_direction)
+LaserBeam::LaserBeam(Pd _origin, Qd _direction, double _collision, int _fireTime, int _ttl)
+	: Object(_origin), direction(_direction), collision(_collision)
 {
 	fireTime = _fireTime;
 	ttl = _ttl;
@@ -221,9 +206,25 @@ void LaserBeam::draw(){
 	glBegin(GL_LINES);
 		glVertex3f(0.0, 0.0, 0.0);
 		Vd dir = -direction*Vd(0, 1, 0);
-        Vd endpoint = ~dir*1000;
+		Vd endpoint;
+		if (collision < 38.0)
+		{
+			endpoint = ~dir*collision;
+		}
+		else
+		{
+			endpoint = ~dir*38;
+		}
 		glVertex3f(endpoint.x, endpoint.y, endpoint.z);
 	glEnd();
+
+	if (collision < 38.0)
+	{
+		glPushMatrix();
+		glTranslatef(endpoint.x, endpoint.y, endpoint.z);
+		glutSolidSphere(0.1, 15, 15);
+		glPopMatrix();
+	}
 }
 
 //------------------------------------------------------------------------------

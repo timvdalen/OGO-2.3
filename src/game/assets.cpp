@@ -61,6 +61,10 @@ ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCo
 MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
 MaterialHandle GhostTex, GhostErrorTex;
 
+//other objects
+ObjectHandle CoinObj;
+MaterialHandle CoinTex;
+
 }
 
 //------------------------------------------------------------------------------
@@ -156,6 +160,8 @@ void Initialize(int argc, char *argv[])
 	Model::HQCoreObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Core.3DS");
 	Model::HQCoreinvObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/HQ_Core_inv.3DS");
 
+	Model::CoinObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/coin.3DS");
+
 	//Model textures
 	Model::HeadTex = TexturedMaterial(path + "assets/textures/models/headtext.png");
 	Model::BodyTex[0] = TexturedMaterial(path + "assets/textures/models/robottexred.png");
@@ -180,6 +186,8 @@ void Initialize(int argc, char *argv[])
 	Model::HQCoreTex[0] = TexturedMaterial(path + "assets/textures/models/HQCoretered.png");
 	Model::HQCoreTex[1] = TexturedMaterial(path + "assets/textures/models/HQCoreteblue.png");
 	Model::HQCoreTex[2] = TexturedMaterial(path + "assets/textures/models/HQCoretenormal.png");
+
+	Model::CoinTex = TexturedMaterial(path + "assets/textures/models/coin.png");
 
 	Model::GhostTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
 	Model::GhostErrorTex = ShadedMaterial(Cf(1.0, 0.0, 0.0, 0.3));
@@ -239,6 +247,8 @@ void Terminate()
 	Model::HQCoreObj.clear();
 	Model::HQCoreinvObj.clear();
 
+	Model::CoinObj.clear();
+
 	//Model textures
 	Model::HeadTex.clear();
 	Model::BodyTex[0].clear();
@@ -262,6 +272,8 @@ void Terminate()
 	Model::HQCoreTex[0].clear();
 	Model::HQCoreTex[1].clear();
 	Model::HQCoreTex[2].clear();
+
+	Model::CoinTex.clear();
 	
 	Model::GhostTex.clear();
 	Model::GhostErrorTex.clear();

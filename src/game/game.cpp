@@ -130,6 +130,7 @@ void Initialize(int argc, char *argv[])
 	// Set up game world
 	game.root = World(gameWidth, gameHeight);
 	game.world = TO(World,game.root);
+	game.topId = 1;
 	
 	game.teams.insert(make_pair('a', Team('a')));
 	game.teams.insert(make_pair('b', Team('b')));
@@ -420,6 +421,13 @@ void Connect(string address)
 	}
 }
 
+// Debug
+void Enter()
+{
+	NetCode::Enter(game.player->team, game.player->name);
+}
+CMD(Enter, 0, arg)
+
 //------------------------------------------------------------------------------
 
 CMD(Disconnect, 0, arg)
@@ -529,24 +537,24 @@ void Fire()
 			gunLoc.y = gunLoc.y + game.player->model.weapon->origin.x * sin(yaw)
 			                    + game.player->model.weapon->origin.y * cos(yaw);
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
-	
-			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin));
-			pair<ObjectHandle, double> collision = game.world->checkCollision(game.controller->target, lookVec);
-	
-			if (collision.first)
+			
+			Vd lookVec = (~(Vd(game.controller->target)+ -Vd(cam.origin))) * 38;
+			Pd target = game.controller->target;
+			ObjectHandle collision = game.world->trace(game.controller->target, lookVec, game.players[game.player->id]);
+			if (collision)
 			{	
-				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
+				Pd collisionPoint = game.controller->target + (lookVec);
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
-				Player *p = TO(Player, collision.first);
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam, !lookVec)));
+				Player *p = TO(Player, collision);
 				if(p){
 					if(p->team != game.player->team){//Precent teamkill
 						p->damage(10.0);
 						//TODO: Send over the network
 					}
 				}else{
-					DefenseTower *t = TO(DefenseTower, collision.first);
+					DefenseTower *t = TO(DefenseTower, collision);
 					if(t){
 						Player *own = NULL;
 						if(Game::game.players.count(t->owner))
@@ -558,8 +566,9 @@ void Fire()
 					}
 				}
 			}
-			else
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
+			else{
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective, !lookVec)));
+			}
 			return;
 		}
 		break;
@@ -728,9 +737,19 @@ void PrintPlayers()
 CMD(Test, 1, arg, arg[0])
 void Test(string str)
 {
-	Object o;
-	if (o = str)
-		Echo(string(o).c_str());
+	if(str == "a"){
+		game.world->children.insert(Droppable(Pd(0.0, 0.0, 0.0), 30));
+	}else if(str == "b"){
+		game.world->temporary.push_back(Droppable(Pd(0.0, 0.0, 0.0), 30));
+	}else{
+		Player::Id pid2 = game.topId++;
+		ObjectHandle player2 = Player(pid2, 'a', "Carl");
+		game.root->children.insert(player2);
+		game.players[pid2] = player2;
+
+		game.world->terrain->placeStructure(GridPoint(1,1), DefenseTower(pid2));
+	}
+
 }
 
 //==============================================================================

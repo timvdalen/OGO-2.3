@@ -46,12 +46,12 @@ struct BoundingBox
 		: lbl(B.lbl), rbl(B.rbl), ltl(B.ltl), rtl(B.rtl),
 		  lbh(B.lbh), rbh(B.rbh), lth(B.lth), rth(B.rth) {}
 
-	BoundingBox(Pd _lbl = Pd(), Pd _rbl = Pd(), Pd _ltl = Pd(), Pd _rtl = Pd(),
+	BoundingBox(Pd _lbl, Pd _rbl, Pd _ltl, Pd _rtl = Pd(),
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
 	
-	BoundingBox(Pd _lbl, Pd _rth)
+	BoundingBox(Pd _lbl = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(0), ltl(0), rtl(0),
 		  lbh(0), rbh(0), lth(0), rth(_rth) {}
 };
@@ -165,8 +165,11 @@ class LaserBeam: public Object
 	//! The direction (in normalized object coordinates) that his laser was fired in
 	Qd direction;
 
+	//! The distance to the collision point of the laser, if there is one
+	double collision;
+
 	//! Constructs a new LaserBeam, the origin is the point from which this laser was fired
-	LaserBeam(Pd _origin, Qd _direction, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
+	LaserBeam(Pd _origin, Qd _direction, double _collision, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
 
 	//! Sets up the translations and material for the LaserBeam
 	virtual void preRender();
