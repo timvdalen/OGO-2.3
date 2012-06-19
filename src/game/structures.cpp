@@ -106,9 +106,6 @@ pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
     //--- We might need the inverse of rotation here
     Vector<double> v = (-rotation)*direction;
     //--- Now check if we have a collision in the x direction
-	
-	
-	
     double lambda1, lambda2;
     if(v.x != 0){
         lambda1 = (a.x - p.x)/(v.x);
@@ -148,9 +145,10 @@ pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
         ObjectHandle colobject = *this;
         double collision2 = numeric_limits<double>::infinity();
         for (it = structures.begin(); it != structures.end(); ++it){
-            BoundedObject* child = TO(BoundedObject, it->second);
+            Building* child = TO(Building, it->second);
             if(child){
-                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
+				Point<double> newp = (origin - ToPointD(child->loc));
+                pair<ObjectHandle, double> childcollision = child->checkCollision(newp, v);
                 if(childcollision.second < collision2){ //We have a collision with a child
                     colobject.clear();
                     collision2 = childcollision.second;
@@ -570,8 +568,8 @@ void Building::render()
 
 //------------------------------------------------------------------------------
 
-Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
-		: Structure(B), maxIncome(_maxIncome)
+Mine::Mine(Pd P, Qd R, Resource _maxIncome)
+		: Structure(BoundingBox(Pd(0,0,0),Pd(10.0,10.0,3.419255))), maxIncome(_maxIncome)
 {
 	model.rock = ModelObjectContainer();
 	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -590,7 +588,7 @@ void Mine::draw() {
 //------------------------------------------------------------------------------
 
 HeadQuarters::HeadQuarters(Player::Id _owner)
-		: Building(10, BoundingBox(),
+		: Building(10, BoundingBox(Pd(0,0,0),Pd(20.0,20.0,25.0)),
 		  0, 10,
 		  0, 0,
 		  0, _owner, 600.0) 
@@ -620,7 +618,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 //------------------------------------------------------------------------------
 
 DefenseTower::DefenseTower(Player::Id _owner)
-		: Building(4, BoundingBox(),
+		: Building(4, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,4.147209)),
 			100, 0,
 			Video::ElapsedTime(), 10000,
 			20, _owner, 300.0)
@@ -640,7 +638,7 @@ DefenseTower::DefenseTower(Player::Id _owner)
 //------------------------------------------------------------------------------
 
 DefenseTower::DefenseTower(int buildTime, bool error)
-		: Building(4, BoundingBox(),
+		: Building(4, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,4.147209)),
 			0, 0,
 			Video::ElapsedTime(), buildTime,
 			0, -1, -1)
@@ -778,7 +776,7 @@ void DefenseTower::draw()
 //------------------------------------------------------------------------------
 
 ResourceMine::ResourceMine(Player::Id _owner)
-		: Building(8, BoundingBox(), 220, 30,
+		: Building(8, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,10.6)), 220, 30,
 			Video::ElapsedTime(), 20000,
 			0, _owner, 200.0)
 {
@@ -807,7 +805,7 @@ ResourceMine::ResourceMine(Player::Id _owner)
 
 //Ghost constructor
 ResourceMine::ResourceMine(int buildTime, bool error)
-		: Building(8, BoundingBox(), 0, 0,
+		: Building(8, BoundingBox(Pd(0,0,0), Pd(10.0,10.0,10.6)), 0, 0,
 			Video::ElapsedTime(), buildTime,
 			0, -1, -1)
 {

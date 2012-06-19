@@ -46,12 +46,12 @@ struct BoundingBox
 		: lbl(B.lbl), rbl(B.rbl), ltl(B.ltl), rtl(B.rtl),
 		  lbh(B.lbh), rbh(B.rbh), lth(B.lth), rth(B.rth) {}
 
-	BoundingBox(Pd _lbl = Pd(), Pd _rbl = Pd(), Pd _ltl = Pd(), Pd _rtl = Pd(),
+	BoundingBox(Pd _lbl, Pd _rbl, Pd _ltl, Pd _rtl = Pd(),
 	            Pd _lbh = Pd(), Pd _rbh = Pd(), Pd _lth = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
 		  lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
 	
-	BoundingBox(Pd _lbl, Pd _rth)
+	BoundingBox(Pd _lbl = Pd(), Pd _rth = Pd())
 		: lbl(_lbl), rbl(0), ltl(0), rtl(0),
 		  lbh(0), rbh(0), lth(0), rth(_rth) {}
 };

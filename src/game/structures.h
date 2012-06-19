@@ -153,8 +153,7 @@ class Mine: public Structure
 	Resource maxIncome;
 
 	//! Constructs a new mine
-	Mine(Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox(),
-	     Resource _maxIncome = 0);
+	Mine(Pd P = Pd(), Qd R = Qd(), Resource _maxIncome = 0);
 
 	//! Draws the mine
 	virtual void draw();
