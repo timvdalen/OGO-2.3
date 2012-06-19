@@ -59,6 +59,15 @@ MaterialHandle GhostTurretTex;
 
 //------------------------------------------------------------------------------
 
+namespace Effect {
+
+//laser
+MaterialHandle Laser[2];
+
+}
+
+//------------------------------------------------------------------------------
+
 void Initialize(int argc, char *argv[])
 {
 	string path = "./";
@@ -168,10 +177,9 @@ void Initialize(int argc, char *argv[])
 
 	Model::GhostTurretTex = ShadedMaterial(Cf(0.196, 0.803, 0.196, 0.3));
 
-	//temp
-	//Model::HeadObj->material = TexturedMaterial(path + "assets/textures/models/headtext.png");
-	//Model::BodyObj->material = TexturedMaterial(path + "assets/textures/models/robottex.png");
-	//Model::GunObj->material = TexturedMaterial(path + "assets/textures/models/guntextu.png");
+	//Effect textures
+	Effect::Laser[0] = TexturedMaterial(path + "assets/textures/effects/laserred.png");
+	Effect::Laser[1] = TexturedMaterial(path + "assets/textures/effects/laserblue.png");
 }
 
 //------------------------------------------------------------------------------
@@ -243,6 +251,10 @@ void Terminate()
 	Model::HQCoreTex[0].clear();
 	Model::HQCoreTex[1].clear();
 	Model::HQCoreTex[2].clear();
+
+	//Effect textures
+	Effect::Laser[0].clear();
+	Effect::Laser[1].clear();
 }
 
 //------------------------------------------------------------------------------
