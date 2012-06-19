@@ -538,7 +538,7 @@ void Fire()
 				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam)));
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam, collision.second)));
 				Player *p = TO(Player, collision.first);
 				if(p){
 					if(p->team != game.player->team){//Precent teamkill
@@ -559,7 +559,7 @@ void Fire()
 				}
 			}
 			else
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective)));
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective, collision.second)));
 			return;
 		}
 		break;

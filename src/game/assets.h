@@ -71,6 +71,15 @@ extern MaterialHandle GhostTex, GhostErrorTex;
 
 //------------------------------------------------------------------------------
 
+namespace Effect {
+
+//laser
+extern MaterialHandle Laser[2];
+
+}
+
+//------------------------------------------------------------------------------
+
 } // namespace Assets
 
 #endif // _ASSETS_H

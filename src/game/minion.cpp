@@ -141,7 +141,7 @@ void ArenaGuard::setNewTarget(){
 				Pd difference = p->origin - origin;
 				if(abs(difference.x) < 10 && abs(difference.y) < 10){
 					//TODO: Calculate quaternion
-					w->addLaserBeam(ObjectHandle(LaserBeam(origin + Pd(0, 0, 1), Qd(1, 1, 1, 0))));
+					w->addLaserBeam(ObjectHandle(LaserBeam(origin + Pd(0, 0, 1), Qd(1, 1, 1, 0), 40.0)));
 				}
 			}
 		}
@@ -162,7 +162,7 @@ void DefenseMinion::setNewTarget(){
 					Pd difference = p->origin - origin;
 					if(abs(difference.x) < 10 && abs(difference.y) < 10 && p->team != o->team){
 						//TODO: Calculate quaternion
-						w->addLaserBeam(ObjectHandle(LaserBeam(origin + Pd(0, 0, 1), Qd(1, 1, 1, 0))));
+						w->addLaserBeam(ObjectHandle(LaserBeam(origin + Pd(0, 0, 1), Qd(1, 1, 1, 0), 40.0)));
 					}
 				}
 			}

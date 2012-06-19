@@ -96,76 +96,21 @@ Terrain::Terrain(double _width, double _height)
 //------------------------------------------------------------------------------
 pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
 {
+    map<GridPoint, ObjectHandle>::iterator it;
+	ObjectHandle colobject;
     double collision = numeric_limits<double>::infinity();
-    //--- We only check lbl rbh, could be improved-----
-    Point<double> a = bb.lbl;
-    Point<double> b = bb.rth;
-    //--- Origin does not have to be rotated
-    Point<double> p = (-rotation)*(origin - this->origin);
-    //--- Vector only needs to be rotated
-    //--- We might need the inverse of rotation here
-    Vector<double> v = (-rotation)*direction;
-    //--- Now check if we have a collision in the x direction
-	
-	
-	
-    double lambda1, lambda2;
-    if(v.x != 0){
-        lambda1 = (a.x - p.x)/(v.x);
-        lambda2 = (b.x -p.x)/(v.x);
-        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
-            collision = lambda1;
-        }
-        if (insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
-            collision = lambda2;
-        }
-    }
-    //---- y direction
-    if(v.y != 0){
-        lambda1 = (a.y - p.y)/(v.y);
-        lambda2 = (b.y - p.y)/(v.y);
-        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
-            collision = lambda1;
-        }
-        if(insideBox(p + v*lambda2,a,b) && 0 < lambda2 && lambda2 < collision){
-            collision = lambda2;
-        }
-    }
-    //--- z direction
-    if(v.z != 0){
-        lambda1 = (a.z - p.z)/(v.z);//intersection with axis in lbl.z
-        lambda2 = (b.z - p.z)/(v.z);
-        if(insideBox(p + v*lambda1, a, b) && 0 < lambda1 && lambda1 < collision){
-            collision = lambda1;
-        }
-        if(insideBox(p + v*lambda2, a, b) && 0 < lambda2 && lambda2 < collision){
-            collision = lambda2;
-        }
-    }
-    //find a collision with a child
-    if(collision < std::numeric_limits<double>::infinity()){
-        map<GridPoint, ObjectHandle>::iterator it;
-        ObjectHandle colobject = *this;
-        double collision2 = numeric_limits<double>::infinity();
-        for (it = structures.begin(); it != structures.end(); ++it){
-            BoundedObject* child = TO(BoundedObject, it->second);
-            if(child){
-                pair<ObjectHandle, double> childcollision = child->checkCollision(p, v);
-                if(childcollision.second < collision2){ //We have a collision with a child
-                    colobject.clear();
-                    collision2 = childcollision.second;
-                    colobject = childcollision.first;
-                }else{
-                    childcollision.first.clear();
-                }
-            }
-        }
-        if(collision2 == numeric_limits<double>::infinity()){
-            collision2 = collision;
-        }
-        return make_pair(colobject,collision2);
-    }
-    return make_pair(ObjectHandle(),collision);
+    for (it = structures.begin(); it != structures.end(); ++it){
+		Structure* child = TO(Structure, it->second);
+        if(child){
+			Point<double> newp = (origin - ToPointD(child->loc));
+            pair<ObjectHandle, double> childcollision = child->checkCollision(newp, direction);
+            if(childcollision.second < collision){ //We have a collision with a child
+            	collision = childcollision.second;
+                colobject = it->second;
+			}
+    	}
+	}
+	return make_pair(colobject,collision);
 }
 
 //------------------------------------------------------------------------------
@@ -434,10 +379,8 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 	if(structure == 0 || (structure == 2 && struc->type() != "ResourceMine") || (struc->type() == "HeadQuarters" && !(canPlaceStructure(GridPoint(p.x-1, p.y)) && canPlaceStructure(GridPoint(p.x-1, p.y-1)) && canPlaceStructure(GridPoint(p.x, p.y-1))))){
 		return false;
 	}
+	struc-> loc = p;
 	Building *b = TO(Building, s);
-	if(b){
-		b->loc = p;
-	}
 	const GridPoint ip = GridPoint(p);
 	if(structure == 2){
 		structures.erase(p);
@@ -579,8 +522,8 @@ void Building::render()
 
 //------------------------------------------------------------------------------
 
-Mine::Mine(Pd P, Qd R, BoundingBox B, Resource _maxIncome)
-		: Structure(B), maxIncome(_maxIncome)
+Mine::Mine(Pd P, Qd R, Resource _maxIncome)
+		: Structure(BoundingBox(Pd(0,0,0),Pd(10.0,10.0,3.419255))), maxIncome(_maxIncome)
 {
 	model.rock = ModelObjectContainer();
 	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
@@ -599,7 +542,7 @@ void Mine::draw() {
 //------------------------------------------------------------------------------
 
 HeadQuarters::HeadQuarters(Player::Id _owner)
-		: Building(10, BoundingBox(),
+		: Building(10, BoundingBox(Pd(0,0,0),Pd(20.0,20.0,25.0)),
 		  0, 10,
 		  0, 0,
 		  0, _owner, 600.0) 
@@ -629,7 +572,7 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 //------------------------------------------------------------------------------
 
 DefenseTower::DefenseTower(Player::Id _owner)
-		: Building(4, BoundingBox(),
+		: Building(4, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,4.147209)),
 			100, 0,
 			Video::ElapsedTime(), 10000,
 			20, _owner, 300.0)
@@ -649,7 +592,7 @@ DefenseTower::DefenseTower(Player::Id _owner)
 //------------------------------------------------------------------------------
 
 DefenseTower::DefenseTower(int buildTime, bool error)
-		: Building(4, BoundingBox(),
+		: Building(4, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,4.147209)),
 			0, 0,
 			Video::ElapsedTime(), buildTime,
 			0, -1, -1)
@@ -757,7 +700,7 @@ void DefenseTower::frame()
 				if(now - lastshot > ROF){
 					//Shoot animation
 					lastshot = now;
-					w->addLaserBeam(LaserBeam(worldcoord, target));
+					w->addLaserBeam(LaserBeam(worldcoord, target, 40.0));
 					//Actual damage
 					if(own->id == Game::game.player->id){
 						if(p){
@@ -787,7 +730,7 @@ void DefenseTower::draw()
 //------------------------------------------------------------------------------
 
 ResourceMine::ResourceMine(Player::Id _owner)
-		: Building(8, BoundingBox(), 220, 30,
+		: Building(8, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,10.6)), 220, 30,
 			Video::ElapsedTime(), 20000,
 			0, _owner, 200.0)
 {
@@ -816,7 +759,7 @@ ResourceMine::ResourceMine(Player::Id _owner)
 
 //Ghost constructor
 ResourceMine::ResourceMine(int buildTime, bool error)
-		: Building(8, BoundingBox(), 0, 0,
+		: Building(8, BoundingBox(Pd(0,0,0), Pd(10.0,10.0,10.6)), 0, 0,
 			Video::ElapsedTime(), buildTime,
 			0, -1, -1)
 {

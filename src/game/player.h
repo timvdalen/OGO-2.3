@@ -89,7 +89,7 @@ class Player: public BoundedObject, public Destroyable
 
 	//! Constructs a player
 	Player(Id _id = (Id)0, unsigned char _team = 'a', string _name = "player",
-		Pd P = Pd(), Qd R = Qd(), BoundingBox B = BoundingBox());
+		Pd P = Pd(), Qd R = Qd());
 
 	//! Destroys a player
 	virtual ~Player();
