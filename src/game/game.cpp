@@ -530,8 +530,8 @@ void Fire()
 			                    + game.player->model.weapon->origin.y * cos(yaw);
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
 	
-			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin));
-			ObjectHandle collision = game.world->trace(game.controller->target, lookVec * 38);
+			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin))* 38;
+			ObjectHandle collision = game.world->trace(game.controller->target, lookVec);
 	
 			if (collision)
 			{	
