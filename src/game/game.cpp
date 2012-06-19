@@ -531,22 +531,22 @@ void Fire()
 			gunLoc.z = gunLoc.z + game.player->model.weapon->origin.z;
 	
 			Vd lookVec = ~(Vd(game.controller->target)+ -Vd(cam.origin));
-			pair<ObjectHandle, double> collision = game.world->checkCollision(game.controller->target, lookVec);
+			ObjectHandle collision = game.world->trace(game.controller->target, lookVec * 38);
 	
-			if (collision.first)
+			if (collision)
 			{	
-				Pd collisionPoint = game.controller->target + (lookVec * collision.second);
+				Pd collisionPoint = game.controller->target + (lookVec);
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam, collision.second)));
-				Player *p = TO(Player, collision.first);
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam, !lookVec)));
+				Player *p = TO(Player, collision);
 				if(p){
 					if(p->team != game.player->team){//Precent teamkill
 						p->damage(10.0);
 						//TODO: Send over the network
 					}
 				}else{
-					DefenseTower *t = TO(DefenseTower, collision.first);
+					DefenseTower *t = TO(DefenseTower, collision);
 					if(t){
 						Player *own = NULL;
 						if(Game::game.players.count(t->owner))
@@ -559,7 +559,7 @@ void Fire()
 				}
 			}
 			else
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective, collision.second)));
+				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, cam.objective, !lookVec)));
 			return;
 		}
 		break;
