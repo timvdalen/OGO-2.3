@@ -84,6 +84,9 @@ class Destroyable
 	
 	//! Heals the thing
 	void heal(double _health);
+
+	//! Restores the thing to full health
+	void fullHeal();
 };
 
 //------------------------------------------------------------------------------

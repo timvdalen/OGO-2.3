@@ -205,8 +205,8 @@ void Player::draw() {
 
 void Player::frame(){
 	if(isDestroyed()){
-		origin = Pd(0.0, 0.0, 0.0);
-		heal(maxHealth);
+		origin = Pd(-10.0, -10.0, 0.0);
+		fullHeal();
 	}
 }
 

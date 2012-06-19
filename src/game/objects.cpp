@@ -45,6 +45,12 @@ void Destroyable::heal(double _health){
 
 //------------------------------------------------------------------------------
 
+void Destroyable::fullHeal(){
+	health = maxHealth;
+}
+
+//------------------------------------------------------------------------------
+
 pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
 {
     double collision = numeric_limits<double>::infinity();
