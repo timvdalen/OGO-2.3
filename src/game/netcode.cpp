@@ -246,25 +246,6 @@ RECEIVE(ENTER, id, msg, reliable)
 	StructInfo(id);
 	ItemInfo(id);
 	
-	// The following is a temporarily way to sync up the playerlist
-	/*Player *p;
-	map<Player::Id,ObjectHandle>::iterator it;
-	for (it = game.players.begin(); it != game.players.end(); ++it)
-	{
-		if (!(p = TO(Player,it->second)) || (it->first == pid)) continue;
-		
-		Message msg;
-		msg.push_back("JOIN");
-		if (p == game.player)
-			msg.push_back((long) tokenring->id());
-		else
-			msg.push_back((long) findNode(p->id));
-		msg.push_back((long) p->id);
-		msg.push_back((long) p->team);
-		msg.push_back(p->name);
-		SENDTO(id, msg, true);
-	}*/
-	
 	Join(findNode(pid), pid, team, name);
 }
 
@@ -580,6 +561,41 @@ RECEIVE(FIRE, id, msg, reliable)
 	ObjectHandle laser = LaserBeam();
 	laser->unserialize(msg[1]);
 	game.world->addLaserBeam(laser);
+}
+
+//------------------------------------------------------------------------------
+
+void Hit(Player::Id pid, double damage)
+{
+	Message msg;
+	msg.push_back("HIT");
+	msg.push_back((long) pid);
+	msg.push_back((double) damage);
+	SEND(msg, true);
+}
+RECEIVE(HIT, id, msg, reliable)
+{
+	Player::Id pid = (long) msg[1];
+	if (!game.players.count(pid)) return;
+	TO(Player,game.players[pid])->damage((double) msg[2]);
+}
+
+//------------------------------------------------------------------------------
+
+void Died(Player::Id pid)
+{
+	Message msg;
+	msg.push_back((long) pid);
+	SEND(msg, true);
+}
+RECEIVE(DIED, id, msg, reliable)
+{
+	Player::Id vid = nodes[id];
+	Player::Id pid = (long) msg[1];
+	if (!game.players.count(pid))
+		DisplayFragMsg(TO(Player,game.players[vid]), 0);
+	else
+		DisplayFragMsg(TO(Player,game.players[vid]), TO(Player,game.players[pid]));
 }
 
 //------------------------------------------------------------------------------

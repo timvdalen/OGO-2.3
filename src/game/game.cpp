@@ -775,6 +775,17 @@ void DisplayTeamMsg(Player *player, string line)
 
 //------------------------------------------------------------------------------
 
+void DisplayFragMsg(Player *player, Player *victim)
+{
+	if (!player) return;
+	if (!victim)
+		game.world->hud->messageDisplayer->addMessage(TowerFragMessage(*player));
+	else
+		game.world->hud->messageDisplayer->addMessage(PlayerFragMessage(*player, *victim));	
+}
+
+//------------------------------------------------------------------------------
+
 CMD(PrintFPS, 0, arg)
 void PrintFPS()
 {
