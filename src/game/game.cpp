@@ -630,7 +630,9 @@ void Fire()
 				}
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
-				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam, !lookVec)));
+				ObjectHandle laser = LaserBeam(gunLoc, beam, !lookVec);
+				game.world->addLaserBeam(laser);
+				NetCode::Fire(*TO(LaserBeam,laser));
 				Player *p = TO(Player, collision);
 				if(p){
 					if(p->team != game.player->team){//Precent teamkill

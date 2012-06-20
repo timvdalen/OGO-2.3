@@ -150,7 +150,14 @@ class Team
 //! Represents a laser beam
 class LaserBeam: public Object
 {
-	public: NAME(LaserBeam) SERIAL("") // Not serialized
+	public: NAME(LaserBeam)
+	SERIAL(type() | convert(origin) | convert(direction) | convert(collision))
+	UNSERIAL(arg, 3,
+		origin = ToPoint(arg[0]);
+		direction = ToQuaternion(arg[1]);
+		collision = ToFloat(arg[2]);
+	)
+	
 	//! Wether or not the parent can remove this LaserBeam
 	bool done;
 
@@ -167,7 +174,8 @@ class LaserBeam: public Object
 	double collision;
 
 	//! Constructs a new LaserBeam, the origin is the point from which this laser was fired
-	LaserBeam(Pd _origin, Qd _direction, double _collision, int _fireTime = Video::ElapsedTime(), int _ttl = 300);
+	LaserBeam(Pd _origin = Pd(), Qd _direction = Qd(), double _collision = 0.0,
+		int _fireTime = Video::ElapsedTime(), int _ttl = 300);
 
 	//! Sets up the translations and material for the LaserBeam
 	virtual void preRender();

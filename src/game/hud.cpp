@@ -636,9 +636,8 @@ inline int scale(int linewidth, float scale){
     MiniMap::MiniMap(int _x, int _y, int _width, int _height) : Widget(_x, _y, _width, _height)
     {
     }
-	
 
-void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
+void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, float angle, float centerx, float centery){
 	Building *b = TO(Building, s);
 	Player* player = 0;
 	if(b && Game::game.players.count(b->owner)){
@@ -693,24 +692,32 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
 		}
 	}
 	if(mat){
+		float xsize = (enlargeup + 1 + enlargedown)*xspacing;
+		float ysize = (enlargeup + 1 + enlargedown)*yspacing;
+		float buildingx = (p.x-enlargedown)*xspacing +0.5*xsize;
+		float buildingy = (p.y-enlargedown)*yspacing + 0.5*ysize;
 		mat->select();
 		glColor4f(1.0f,1.0f,1.0f,0.7f*progress+0.3f);
+		glTranslatef(buildingx,buildingy,0);
+		glRotatef(-angle, 0,0,1);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0,1);
-		glVertex2i((p.x-enlargedown)*xspacing,(p.y-enlargedown)*yspacing);
+		glVertex2i(-0.5*xsize,-0.5*ysize);
 		glTexCoord2f(0,0);
-		glVertex2i((p.x-enlargedown)*xspacing,(p.y+1+enlargeup)*yspacing);
+		glVertex2i(-0.5*xsize,(1+enlargeup+enlargedown)*yspacing-0.5*ysize);
 		glTexCoord2f(1,0);
-		glVertex2i((p.x+1+enlargeup)*xspacing, (p.y+1+enlargeup)*yspacing);
+		glVertex2i((1+enlargeup+enlargedown)*xspacing-0.5*xsize, (1+enlargeup+enlargedown)*yspacing-0.5*ysize);
 		glTexCoord2f(1,1);
-		glVertex2i((p.x+1+enlargeup)*xspacing, (p.y-enlargedown)*yspacing);
+		glVertex2i((1+enlargeup+enlargedown)*xspacing-0.5*xsize,-0.5*ysize);
 		glEnd();
+		glRotatef(angle, 0,0,1);
+		glTranslatef(-buildingx,-buildingy,0);
 		glColor4f(1.0f,1.0f,1.0f,1.0f);
 		mat->unselect();
 	}
 }
     //------------------------------------------------------------------------------
-    void drawPlayer(Player *p, int xspacing, int yspacing, World* w, bool marked){
+    void drawPlayer(Player *p, int xspacing, int yspacing, World* w, bool marked, float angle){
         float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
         float rely = ((w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/(w->height));
         if(marked){
@@ -720,16 +727,20 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing){
         }else{
             Assets::Icon::Robot_blue->select();
         }
+		glTranslatef((relx+0.5)*xspacing, (rely+0.5)*yspacing, 0);
+		glRotatef(-angle, 0,0,1);
         glBegin(GL_QUADS);
         glTexCoord2f(0,1);
-        glVertex2i((int)(relx*xspacing),(int)(rely*yspacing));
+        glVertex2i((int)-(0.5*xspacing),(int)-(0.5*yspacing));
         glTexCoord2f(0,0);
-        glVertex2i((int)(relx*xspacing),(int)((rely+1)*yspacing));
+        glVertex2i((int)-(0.5*xspacing),(int)((0.5)*yspacing));
         glTexCoord2f(1,0);
-        glVertex2i((int)((relx+1)*xspacing), (int)((rely+1)*yspacing));
+        glVertex2i((int)((0.5)*xspacing), (int)((0.5)*yspacing));
         glTexCoord2f(1,1);
-        glVertex2i((int)((relx+1)*xspacing), (int)((rely)*yspacing));
+        glVertex2i((int)((0.5)*xspacing), (int)(-(0.5)*yspacing));
         glEnd();
+		glRotatef(angle, 0,0,1);
+		glTranslatef(-(relx+0.5)*xspacing, -(rely+0.5)*yspacing, 0);
         if(marked){
             Assets::Icon::Robot_normal->unselect();
         }else if(p->team == 'a'){
@@ -749,11 +760,11 @@ void MiniMap::draw()
 	//MaterialHandle bg = ColorMaterial(156.0/255.0, 202.0/255.0, 135.0/255.0, 0.8f);
 	MaterialHandle bg = ColorMaterial(20.0/255.0, 20.0/255.0, 20.0/255.0, 0.8f);
     MaterialHandle black = ColorMaterial(1.0f,1.0f,1.0f,1.0f);
-    if(w->width > w->height){
+   /* if(w->width > w->height){
 		glScalef(1.0f, w->height/w->width,1.0f);
 	}else{
 		glScalef(w->width/w->height,1.0f,1.0f);
-	}
+	}*/
 	bg->select();
 	glBegin(GL_QUADS);
 	glVertex2i(0,0);
@@ -762,6 +773,47 @@ void MiniMap::draw()
 	glVertex2i(320,0);
 	glEnd();
 	bg->unselect();
+	glPushMatrix();
+	//translate around the origin
+	Vd direction;
+	Player* p = Game::game.player;
+	direction = Game::game.controller->camera.objective*Vd(0,1,0);
+	direction = ~direction;
+    float relx = ((w->width/GRID_SIZE)*(p->origin.x + w->width/2.0)/(w->width));
+	float rely = ((w->height/GRID_SIZE)*(p->origin.y + w->height/2.0)/(w->height));
+	int xspacingp = 20*(16.0/17.0);//(int) (320.0 / (w->width / GRID_SIZE + 1));
+	int yspacingp = 20*(16.0/17.0);//(int) (320.0 / (w->height / GRID_SIZE + 1));
+	glTranslatef(160,160, 0);
+//	printf("degree: %f , (%f, %f, %f)\n",Rad2Deg*atan2(direction.y, direction.x), direction.x, direction.y, direction.z);
+	float angle = Rad2Deg*atan2(direction.y, direction.x) + 90;
+	glRotatef(angle, 0,0,1);
+	glTranslatef(-(relx+0.5)*xspacingp, -(rely+0.5)*yspacingp, 0);
+	//The buildings
+	map<GridPoint, ObjectHandle> &structs = w->terrain->structures;
+	map<GridPoint, ObjectHandle>::iterator itt;
+	int xspacing = 20;//(int) (320.0 / (w->width / GRID_SIZE));
+	int yspacing = 20;//(int) (320.0 / (w->height / GRID_SIZE));
+	for(itt = structs.begin(); itt != structs.end(); itt++)
+	{
+		if (!itt->second) continue;
+		GridPoint p = itt->first;
+		ObjectHandle s = itt->second;
+		drawStructure(p, s, xspacing, yspacing, angle, (relx+0.5)*xspacingp, (rely+0.5)*yspacingp);
+	}
+	//The robots
+	map<Player::Id,ObjectHandle>::iterator it;
+	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
+	{
+		Player *p = TO(Player,it->second);
+		if(!p){
+			return;
+		}
+		drawPlayer(p,xspacingp,yspacingp,w,false, angle);
+	}        
+    drawPlayer(Game::game.player, xspacingp, yspacingp, w, true, angle);
+	glPopMatrix();
+	glLineWidth(1);
+	glColor4f(0.0f,0.0f,0.0f,1.0f);
 	black->select();
 	glBegin(GL_LINE_STRIP);
 	glVertex2i(0,0);
@@ -771,31 +823,7 @@ void MiniMap::draw()
 	glVertex2i(0,0);
 	glEnd();
 	black->unselect();
-	//The buildings
-	map<GridPoint, ObjectHandle> &structs = w->terrain->structures;
-	map<GridPoint, ObjectHandle>::iterator itt;
-	int xspacing = (int) (320.0 / (w->width / GRID_SIZE));
-	int yspacing = (int) (320.0 / (w->height / GRID_SIZE));
-	for(itt = structs.begin(); itt != structs.end(); itt++)
-	{
-		if (!itt->second) continue;
-		GridPoint p = itt->first;
-		ObjectHandle s = itt->second;
-		drawStructure(p, s, xspacing, yspacing);
-	}
-	xspacing = (int) (320.0 / (w->width / GRID_SIZE + 1));
-	yspacing = (int) (320.0 / (w->height / GRID_SIZE + 1));
-	//The robots
-	map<Player::Id,ObjectHandle>::iterator it;
-	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
-	{
-		Player *p = TO(Player,it->second);
-		if(!p){
-			return;
-		}
-		drawPlayer(p,xspacing,yspacing,w,false);
-	}        
-    drawPlayer(Game::game.player, xspacing, yspacing, w, true);
+	glLineWidth(1);
 }
     
     
@@ -805,10 +833,20 @@ void MiniMap::draw()
             //Set to the right coordinates
             float scale = min(width, height);
             scale = scale/1000.0;
+			glDisable(GL_CULL_FACE);
+			glEnable(GL_SCISSOR_TEST);
+			glScissor(width - (xOffset+320)*scale, height - (yOffset + 320)*scale,scale*320,scale*320); 
             glTranslatef(width,0,0);
             glScalef(scale,scale,0);
             glTranslatef(-320 - xOffset,yOffset,0);
+			glCullFace(GL_BACK);
+		  	glScalef(-1.0f, 1.0f, 1.0f);
+			glTranslatef(-320.0f, 0.0f, 0.0f);
             draw();
+			glColor4f(1.0f,1.0f,1.0f,1.0f);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+			glDisable(GL_SCISSOR_TEST);
             glPopMatrix();
     }
     

@@ -62,6 +62,15 @@ Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R)
 
 //------------------------------------------------------------------------------
 
+void Player::updateTextures() {
+	if (team - 'a' == 0) material = ShadedMaterial(Cf(0.847,0,0,1));
+	else material = ShadedMaterial(Cf(0,0,1,1));
+	model.body->material = Assets::Model::BodyTex[team-'a'];
+	model.wheel->material = Assets::Model::WheelTex[team-'a'];
+}
+
+//------------------------------------------------------------------------------
+
 Player::~Player()
 {
 }
@@ -133,12 +142,7 @@ void Player::draw() {
 	glVertex3f(t.x, t.y-0.04, t.z);
 	glVertex3f((h.x+t.x)/2, (h.y+t.y)/2, (h.z+t.z)/2);
 	glEnd();
-	
-	
-	
-	
-	
-	
+
 	if(id != Game::game.player->id){
 		glDisable(GL_LIGHTING);
 		MaterialHandle teamcolor;
