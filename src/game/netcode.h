@@ -63,6 +63,8 @@ void Move(Pd position, Vd velocity);
 void Look(Qd rotation);
 void Team(unsigned char team, Resource gold);
 
+void Fire(const LaserBeam &);
+
 void Debug();
 
 //------------------------------------------------------------------------------
