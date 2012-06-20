@@ -125,6 +125,8 @@ void Build(); //!< Builds with the primary tool at the seelcted grid unit
 void Weapon(WeaponType weapon); //!< Sets the primary weapon
 void Tool(ToolType tool);       //!< Sets the primary build tool
 
+void Goto(string cmd); //!< Cheat command
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Events
 

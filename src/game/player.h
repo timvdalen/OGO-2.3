@@ -91,6 +91,9 @@ class Player: public BoundedObject, public Destroyable
 	Player(Id _id = (Id)0, unsigned char _team = 'a', string _name = "player",
 		Pd P = Pd(), Qd R = Qd());
 
+	//! Updates team colours
+	void updateTextures();
+
 	//! Destroys a player
 	virtual ~Player();
 

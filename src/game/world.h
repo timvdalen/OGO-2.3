@@ -84,9 +84,16 @@ class World: public BoundedObject
 //! Represents a droppable object
 class Droppable: public BoundedObject
 {
-	public: NAME(Droppable) SERIAL(type() | convert((double) worth) | convert((long)ttl))
-	UNSERIAL(arg, 2, worth = ToFloat(arg[0]); dropped = ToInteger(arg[1]); )
-
+	public: NAME(Droppable)
+	SERIAL(type() | convert((double) worth) | convert((long)ttl) | convert(id))
+	UNSERIAL(arg, 2,
+		worth = ToFloat(arg[0]);
+		dropped = ToInteger(arg[1]); 
+		id = ToInteger(arg[2]);
+	)
+	
+	long id;
+	
 	//! Whether or not the Droppable can be removed from the \ref World
 	bool done;
 
@@ -103,7 +110,7 @@ class Droppable: public BoundedObject
 	struct { ObjectHandle coin; } model;
 
 	//! Creates a new Droppable
-	Droppable(Pd _origin, Resource _worth, long _dropped = Video::ElapsedTime(), long _ttl = 15000);
+	Droppable(Pd _origin = Pd(), Resource _worth = 0, long _dropped = Video::ElapsedTime(), long _ttl = 15000);
 
 	//! Called before draw()
 	void preRender();

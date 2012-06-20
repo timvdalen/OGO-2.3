@@ -85,7 +85,7 @@ string convert(const GridPoint &g) { char buffer[1024];
 
 //------------------------------------------------------------------------------
 
-GridPoint ToGridPoint(const string &str) { GridPoint g;
+GridPoint ToGridPoint(const string &str) { GridPoint g = GridPoint(-1,-1);
 	sscanf(str.c_str(), "G%ld,%ld", &g.x, &g.y); return g; }
 
 //------------------------------------------------------------------------------
@@ -237,14 +237,16 @@ void Terrain::draw()
 				height = 0;
 				}
 				break;
-			case 2:{
+			case 2:
+			case 3:	{
 				gridMat = Assets::SelectedGrid;
 				height = 1;//For foundation
 				}
 				break;
-			case 22:{
+			case 12:
+			case 13:{
 				gridMat = Assets::ErrorGrid;
-				height = 0;
+				height = 1;
 				}
 				break;
 			default:{
@@ -344,6 +346,8 @@ void Terrain::setSelected(GridPoint p){
 		case 11: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::DefenseTower(0, true))); break;
 		case 2: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0))); break;
 		case 12: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::ResourceMine(0, true))); break;
+		case 3: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::RichResourceMine(0))); break;
+		case 13: ghost = pair<GridPoint, ObjectHandle>(p, ObjectHandle(Objects::RichResourceMine(0, true))); break;
 		default:
 			ghost = ghost = pair<GridPoint, ObjectHandle>(GridPoint(-1, -1), ObjectHandle()); break;
 		}
@@ -369,6 +373,13 @@ int Terrain::canPlaceStructure(GridPoint p){
 			}else{
 				return 12;
 			}
+		}else if(s->type() == "RichMine"){
+			if(resources >= RichResourceMine(Game::game.player->id).cost){
+				return 3;
+			}else{
+				return 13;
+			}
+
 		}else{
 			return 0;
 		}
@@ -389,13 +400,14 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 
 	int structure = canPlaceStructure(p);
 	if(!struc) return false;
-	if(structure == 0 || (structure == 2 && struc->type() != "ResourceMine") || (struc->type() == "HeadQuarters" && !(canPlaceStructure(GridPoint(p.x-1, p.y)) && canPlaceStructure(GridPoint(p.x-1, p.y-1)) && canPlaceStructure(GridPoint(p.x, p.y-1))))){
+
+	if(structure == 0 || (structure == 2 && struc->type() != "ResourceMine") || (structure == 3 && struc->type() != "RichResourceMine")  || (struc->type() == "HeadQuarters" && !(canPlaceStructure(GridPoint(p.x-1, p.y)) && canPlaceStructure(GridPoint(p.x-1, p.y-1)) && canPlaceStructure(GridPoint(p.x, p.y-1))))){
 		return false;
 	}
 	struc-> loc = p;
 	Building *b = TO(Building, s);
 	const GridPoint ip = GridPoint(p);
-	if(structure == 2){
+	if(structure == 2 || structure == 3){
 		structures.erase(p);
 	}
 	structures.insert(make_pair(ip, s));
@@ -551,6 +563,26 @@ Mine::Mine(Pd P, Qd R, Resource _maxIncome)
 void Mine::draw() {
 	drawFoundation(1);
 }
+
+//------------------------------------------------------------------------------
+
+RichMine::RichMine(Pd P, Qd R, Resource _maxIncome)
+		: Structure(BoundingBox(Pd(0,0,0),Pd(10.0,10.0,3.419255))), maxIncome(_maxIncome)
+{
+	model.rock = ModelObjectContainer();
+	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rock->children.insert(Assets::Model::RockObj);
+	children.insert(model.rock);
+	model.rock->material = Assets::Model::RockTex;
+	material = Assets::Grass;
+}
+
+//------------------------------------------------------------------------------
+
+void RichMine::draw() {
+	drawFoundation(1);
+}
+
 
 //------------------------------------------------------------------------------
 
@@ -735,13 +767,16 @@ void DefenseTower::frame()
 			if(b){
 				if(TO(HeadQuarters, b)){
 					targetPoint = w->terrain->ToPointD(b->loc);
+					targetPoint.z += 2.4;
 				}else{
 					targetPoint = w->terrain->ToPointD(b->loc);
 					targetPoint.x += GRID_SIZE/2;
 					targetPoint.y += GRID_SIZE/2;
+					targetPoint.z += 2.4;
 				}
 			}else{
 				targetPoint = closest->origin;
+				targetPoint.z += 1.0;
 			}
 
 			Qd target = worldcoord.lookAt(targetPoint);
@@ -786,7 +821,6 @@ void DefenseTower::frame()
 			    phi = !(phi >= 0 || phi <= 0) ? 100 : phi;
 			    float sign = ((angP - angR > 0 && angP - angR < Pi) || (angP-angR > -2*Pi && angP-angR < -Pi)) ? 1.0 : -1.0;
 			    float theta = min(phi, movespeed);
-			    printf("Phi = %f Movespeed = %f\n", phi, movespeed);
 			    theta *= sign;
 				model.turret->rotation = model.turret->rotation * Rd(theta, Vd(0, 0, 1));
 			}
@@ -879,6 +913,95 @@ void ResourceMine::postRender()
 	glPopMatrix();//This is the matrix thas was pushed in Object::preRender()
 	Building::drawHealthbar();
 }
+
+//------------------------------------------------------------------------------
+
+RichResourceMine::RichResourceMine(Player::Id _owner)
+		: Building(8, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,10.6)), 320, 60,
+			Video::ElapsedTime(), 30000,
+			0, _owner, 300.0)
+{
+	model.rig = ModelObjectContainer();
+	model.drill = ModelObjectContainer();
+	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rig->children.insert(Assets::Model::MineObj);
+	model.drill->children.insert(Assets::Model::DrillObj);
+	children.insert(model.rig);
+	children.insert(model.drill);
+
+	rock = ModelObjectContainer();
+	rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	rock->children.insert(Assets::Model::RockObj);
+	rock->material = Assets::Model::RockTex;
+
+	int i = 1;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.rig->material = Assets::Model::MineTex[i];
+	model.drill->material = Assets::Model::DrillTex[i];
+}
+
+//------------------------------------------------------------------------------
+
+//Ghost constructor
+RichResourceMine::RichResourceMine(int buildTime, bool error)
+		: Building(8, BoundingBox(Pd(0,0,0), Pd(10.0,10.0,10.6)), 0, 0,
+			Video::ElapsedTime(), buildTime,
+			0, -1, -1)
+{
+	model.rig = ModelObjectContainer();
+	model.drill = ModelObjectContainer();
+	model.rig->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.drill->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
+	model.rig->children.insert(Assets::Model::MineObj);
+	model.drill->children.insert(Assets::Model::DrillObj);
+	children.insert(model.rig);
+	children.insert(model.drill);
+
+	animationUp = true;
+
+	if(error){
+		model.rig->material = Assets::Model::GhostErrorTex;
+		model.drill->material = Assets::Model::GhostErrorTex;
+	}else{
+		model.rig->material = Assets::Model::GhostTex;
+		model.drill->material = Assets::Model::GhostTex;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+
+void RichResourceMine::draw()
+{
+	if(built){
+		if(animationUp){
+			model.drill->origin.z += 0.05;
+			if(model.drill->origin.z > 2) animationUp = false;
+		}else{
+			model.drill->origin.z -= 0.15;
+			if(model.drill->origin.z < 0) animationUp = true;
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void RichResourceMine::postRender()
+{
+	Object::postRender();
+	if(rock) rock->render();
+	if(Game::game.players.count(owner)){
+		Assets::Grass->select();
+		drawFoundation(1);
+		Assets::Grass->unselect();
+	}
+	glPopMatrix();//This is the matrix thas was pushed in Object::preRender()
+	Building::drawHealthbar();
+}
+
+//------------------------------------------------------------------------------
 
 void drawFoundation(int h) {
 	glBegin(GL_QUADS);

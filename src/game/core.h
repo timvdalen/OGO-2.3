@@ -14,6 +14,9 @@
 
 #define TO(T,x) (dynamic_cast<T *>(&*(x)))
 
+#define PRO\
+BE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
+
 //------------------------------------------------------------------------------
 
 #include <string>
@@ -67,10 +70,11 @@ inline string operator |(const string &lhs, const string &rhs)
 #define NAME(x) virtual string type() const { return #x; }
 #define SERIAL(x) virtual operator string() const { return x; }
 #define UNSERIAL(arg,num,x)                                                    \
-bool operator =(const string &str) { return unserialize(str); }                \
-virtual bool operator =(vector<string> &arg)                                   \
+virtual bool unserialize(vector<string> &arg)                                  \
 	{ if ((arg.size() < (num)+1) || (arg[0] != type())) return false;          \
 	arg.erase(arg.begin()); {x} return true; }
+#define REGISTER(x,...) ObjectHandle _ ## x() { return x(__VA_ARGS__); }       \
+	Object::Constructor __ ## x(#x,_ ## x);
 
 //------------------------------------------------------------------------------
 //                                Handle
@@ -224,6 +228,18 @@ class Object
 	
 	iterator begin() { return iterator(children.begin(), children.end()); }
 	iterator end() { return iterator(children.end(), children.end()); }
+	
+	struct Constructor
+	{
+		typedef ObjectHandle (*Func)();
+		typedef map<string,Func> List;
+		
+		static List list;
+		
+		Constructor(string name, Func func) { list[name] = func; }
+	};
+	
+	static ObjectHandle construct(string);
 	
 	private:
 	Point<double> parentOrigin;

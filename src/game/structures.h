@@ -172,6 +172,27 @@ class Mine: public Structure
 
 //------------------------------------------------------------------------------
 
+//! Represents a mine structure on the terrain that awards more gold
+class RichMine: public Structure
+{
+	public: NAME(RichMine)
+
+	//! The maxium income that can be generated from this mine
+	Resource maxIncome;
+
+	//! Constructs a new mine
+	RichMine(Pd P = Pd(), Qd R = Qd(), Resource _maxIncome = 0);
+
+	//! Draws the mine
+	virtual void draw();
+
+	//! Model
+	struct { ObjectHandle rock; } model;
+};
+
+
+//------------------------------------------------------------------------------
+
 //! Represents a non-destructable wall on the terrain
 class Wall: public Structure
 {
@@ -214,7 +235,7 @@ class Building: public Structure, public Destroyable
 	Player::Id owner;
 
 	//! Constructs a new building
-	Building(int _height, BoundingBox B = BoundingBox(),
+	Building(int _height = 0, BoundingBox B = BoundingBox(),
 	         Resource _cost = 0, Resource _income = 0, int _buildTime = 0,
 			 int _buildDuration = 0, Power _attackPower = 0, Player::Id _owner = 0, double _maxHealth = 300.0)
 		: height(_height), Structure(B),
@@ -292,7 +313,7 @@ class ResourceMine: public Building
 
 	public: NAME(ResourceMine)
 	
-	ResourceMine(Player::Id _owner);
+	ResourceMine(Player::Id _owner = 0);
 	
 	ResourceMine(int buildTime, bool error = false);
 
@@ -305,6 +326,30 @@ class ResourceMine: public Building
 };
 
 //------------------------------------------------------------------------------
+
+//! Represents a mining tower built over a rich mine
+class RichResourceMine: public Building
+{
+	ObjectHandle rock;
+
+	bool animationUp;
+
+	public: NAME(RichResourceMine)
+	
+	RichResourceMine(Player::Id _owner = 0);
+	
+	RichResourceMine(int buildTime, bool error = false);
+
+	virtual void draw();
+	
+	virtual void postRender();
+
+	//! Model
+	struct { ObjectHandle rig, drill; } model;
+};
+
+//------------------------------------------------------------------------------
+
 
 } // namespace Objects
 
