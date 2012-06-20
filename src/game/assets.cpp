@@ -23,6 +23,7 @@ MaterialHandle Grid, SelectedGrid, ErrorGrid;
 MaterialHandle WorldMaterial;
 MaterialHandle Star;
 
+MaterialHandle Wall;
 MaterialHandle Test;
 MaterialHandle Cloud;
 MaterialHandle Grass;
@@ -110,6 +111,9 @@ void Initialize(int argc, char *argv[])
 		ShadedMaterial shade(Cf(1,0,0,1));
 		shade.emissive = Cf(1,1,0.8,1);
 		Test = TwinMaterial(shade, TexturedMaterial(path + "assets/textures/terrain/grass1.png"));
+
+		ShadedMaterial greenish(Cf(1,1,0.8,1));
+		Wall = TwinMaterial(greenish, TexturedMaterial(path + "assets/textures/terrain/grass1.png"));
 	}
 	
 	Cloud = TexturedMaterial(path + "assets/textures/world/cloud.png");

@@ -75,11 +75,13 @@ class Controller
 	
 	//! Restores the view to the previous state
 	void restoreView();
+	
+	
+	Qd camAngle;
 
 	private:
 	//! The last view (first person or third person) that was active before the current one
 	bool lastView;
-	Qd camAngle;
 	double zoom;
 	
     bool walkAble(Point<double> old, Point<double> p);
