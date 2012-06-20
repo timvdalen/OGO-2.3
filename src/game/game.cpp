@@ -146,7 +146,6 @@ void Initialize(int argc, char *argv[])
 	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
 	game.players[pid] = player;
-<<<<<<< HEAD
 	
 	game.world->terrain->placeStructure(GridPoint(2,2), Mine());
 	game.world->terrain->placeStructure(GridPoint(2,48), Mine());
@@ -237,29 +236,6 @@ void Initialize(int argc, char *argv[])
 	game.world->terrain->placeStructure(GridPoint(39,2), Wall());
 	game.world->terrain->placeStructure(GridPoint(39,49), Wall());
 	game.world->terrain->placeStructure(GridPoint(39,48), Wall());
-=======
-/*	
-	Player::Id pid2 = game.topId++;
-	ObjectHandle player2 = Player(pid2, 'b', name);
-	game.root->children.insert(player2);
-	game.players[pid2] = player2;
-*/	
-	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
-	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
-	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
-	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
-
-	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters(pid));
-	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
-
-	game.world->terrain->placeStructure(GridPoint(0,1), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,2), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,3), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,4), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,5), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,6), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,7), Wall());
->>>>>>> ce9b65760d119aebcf5000e8f45b88919fc5d5cc
 
 	// Set up user interface
 	view->world = game.root;
