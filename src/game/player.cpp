@@ -214,7 +214,6 @@ void Player::draw() {
 
 void Player::frame(){
 	if(isDestroyed()){
-		origin = Game::getSpawn(team);
 		int noPlayers = 0;
 		map<Player::Id, ObjectHandle>::iterator it;
 		for(it = Game::game.players.begin(); it != Game::game.players.end(); it++){
@@ -231,6 +230,7 @@ void Player::frame(){
 			Game::game.world->temporary.push_back(Droppable(droppoint, 20));
 		}
 		fullHeal();
+		origin = Game::getSpawn(team);
 	}
 }
 
