@@ -62,6 +62,7 @@ void Controller::moveX(double speed)
 void Controller::moveY(double speed)
 {
 	speed *= MoveSpeed;
+	speed *= FRATE;
 
     Point<double> posrollback = Point<double>(player->origin);
 	Point<double> tarrollback = Point<double>(target);
@@ -97,6 +98,7 @@ void Controller::moveY(double speed)
 void Controller::moveZ(double speed)
 {
 	speed *= JetpackSpeed;
+	speed *= FRATE;
 
 	player->origin.z += speed;
 	target.z = target.z + speed;
@@ -108,6 +110,7 @@ void Controller::moveZ(double speed)
 void Controller::lookX(double speed)
 {
 	speed *= -LookSpeed;
+	speed *= FRATE;
 
 	camAngle = Qd(Rd(speed, Vd(0,0,1))) * camAngle;
 
@@ -130,6 +133,7 @@ void Controller::lookX(double speed)
 void Controller::lookY(double speed)
 {
 	speed *= ZoomSpeed;
+	speed *= FRATE;
 
 	Vector<double> vec = ~(camAngle * Vector<double>(0,1,0));
 
@@ -166,6 +170,7 @@ void Controller::lookY(double speed)
 void Controller::lookZ(double speed)
 {
 	speed *= LookSpeed;
+	speed *= FRATE;
 
     Qd buffer = camAngle;//Used to rollback if out of bounds
 
