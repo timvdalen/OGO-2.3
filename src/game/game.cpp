@@ -601,7 +601,7 @@ void Fire()
 			return;
 		case weapLaser:
 		{
-	        Camera &cam = game.controller->camera;
+		        Camera &cam = game.controller->camera;
 			Vd vec = ~(game.player->rotation * Vd(0,1,0));
 			double yaw = atan2(vec.x, vec.y);
 			Pd gunLoc = game.player->origin;// + game.player->model.weapon->origin;
@@ -640,13 +640,14 @@ void Fire()
 				}else{
 					DefenseTower *t = TO(DefenseTower, collision);
 					if(t){
+						/* Enable team kill on towers to demolish
 						Player *own = NULL;
 						if(Game::game.players.count(t->owner))
 							own = TO(Player, Game::game.players[t->owner]); 
-						if(own && own->team != game.player->team){
+						if(own && own->team != game.player->team){*/
 							t->damage(10.0);
 							//TODO: Send over the network
-						}
+						//}
 					}
 				}
 			}
@@ -674,6 +675,7 @@ void Build()
 		switch(structure){
 		case 1: case 11: tower = Objects::DefenseTower(game.player->id); break;
 		case 2: case 12: tower = Objects::ResourceMine(game.player->id); break;
+		case 3: case 13: tower = Objects::RichResourceMine(game.player->id); break;
 		default: tower = ObjectHandle();
 		}
 		Resource cost = 0;
@@ -740,6 +742,15 @@ void Tool(ToolType tool)
 	if (prevTool == tool) return;
 
 	game.player->tool = tool;
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Goto, 1, arg, (string) arg[0])
+void Goto(string cmd)
+{
+	if (cmd == "gold")
+		game.teams[game.player->team].resources += 1000.0;
 }
 
 //------------------------------------------------------------------------------
