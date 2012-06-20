@@ -33,8 +33,8 @@ int windowWidth = 800;
 int windowHeight = 600;
 bool fullscreen = false;
 
-double gameWidth = 100;
-double gameHeight = 100;
+double gameWidth = 510;
+double gameHeight = 510;
 string path = "./";
 
 ConfigFile *config = NULL;
@@ -147,21 +147,95 @@ void Initialize(int argc, char *argv[])
 	game.root->children.insert(player);
 	game.players[pid] = player;
 	
-	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
-	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
-	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
-	game.world->terrain->placeStructure(GridPoint(9,9), Mine());
+	game.world->terrain->placeStructure(GridPoint(2,2), Mine());
+	game.world->terrain->placeStructure(GridPoint(2,48), Mine());
+	game.world->terrain->placeStructure(GridPoint(48,2), Mine());
+	game.world->terrain->placeStructure(GridPoint(48,48), Mine());
+	game.world->terrain->placeStructure(GridPoint(25,25), Mine());
+	game.world->terrain->placeStructure(GridPoint(15,25), Mine());
+	game.world->terrain->placeStructure(GridPoint(35,25), Mine());
+	game.world->terrain->placeStructure(GridPoint(25,5), Mine());
+	game.world->terrain->placeStructure(GridPoint(25,45), Mine());
+	game.world->terrain->placeStructure(GridPoint(6,9), Mine());
+	game.world->terrain->placeStructure(GridPoint(6,41), Mine());
+	game.world->terrain->placeStructure(GridPoint(44,9), Mine());
+	game.world->terrain->placeStructure(GridPoint(44,41), Mine());
+	game.world->terrain->placeStructure(GridPoint(10,17), Mine());
+	game.world->terrain->placeStructure(GridPoint(10,33), Mine());
+	game.world->terrain->placeStructure(GridPoint(40,17), Mine());
+	game.world->terrain->placeStructure(GridPoint(40,33), Mine());
 
-	game.world->terrain->placeStructure(GridPoint(1,5), HeadQuarters(pid));
-	game.world->terrain->placeStructure(GridPoint(9,5), HeadQuarters());
+	game.world->terrain->placeStructure(GridPoint(3,25), HeadQuarters(pid));
+	game.world->terrain->placeStructure(GridPoint(48,26), HeadQuarters());
 
-	game.world->terrain->placeStructure(GridPoint(0,1), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,2), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,3), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,4), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,5), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,6), Wall());
-	game.world->terrain->placeStructure(GridPoint(0,7), Wall());
+	game.world->terrain->placeStructure(GridPoint(4,26), DefenseTower(pid));
+	game.world->terrain->placeStructure(GridPoint(4,23), DefenseTower(pid));
+	game.world->terrain->placeStructure(GridPoint(46,27), DefenseTower());
+	game.world->terrain->placeStructure(GridPoint(46,24), DefenseTower());
+
+	for(int i = 0; i <= 50; i++) {
+		game.world->terrain->placeStructure(GridPoint(0,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(50,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(i,0), Wall());
+		game.world->terrain->placeStructure(GridPoint(i,50), Wall());
+	}
+
+	for(int i = 8; i <= 42; i++) {
+		if (i < 23 || i > 27) {
+			game.world->terrain->placeStructure(GridPoint(25,i), Wall());
+			game.world->terrain->placeStructure(GridPoint(i,5), Wall());
+			game.world->terrain->placeStructure(GridPoint(i,45), Wall());
+		}
+		if (i < 22 || i > 28) {
+			game.world->terrain->placeStructure(GridPoint(i,15), Wall());
+			game.world->terrain->placeStructure(GridPoint(i,35), Wall());
+		}
+		if (i < 13 || i > 37) {
+			game.world->terrain->placeStructure(GridPoint(i,25), Wall());
+		}
+	}
+
+	for (int i = 5; i <=11; i++) {
+		game.world->terrain->placeStructure(GridPoint(4,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(46,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(i,11), Wall());
+		game.world->terrain->placeStructure(GridPoint(i,39), Wall());
+	}
+
+	for (int i = 39; i <=45; i++) {
+		game.world->terrain->placeStructure(GridPoint(4,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(46,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(i,11), Wall());
+		game.world->terrain->placeStructure(GridPoint(i,39), Wall());
+	}
+
+	for (int i = 15; i <= 35; i++) {
+		game.world->terrain->placeStructure(GridPoint(8,i), Wall());
+		game.world->terrain->placeStructure(GridPoint(42,i), Wall());
+	}
+
+	for (int i = 3; i <= 47; i++) {
+		if (i < 12 || i > 38 || (i > 19 && i < 31)) {
+			game.world->terrain->placeStructure(GridPoint(18,i), Wall());
+			game.world->terrain->placeStructure(GridPoint(32,i), Wall());
+		}
+	}
+
+	for (int i = 13; i <= 37; i++) {
+		if (i < 18 || i > 32) {
+			game.world->terrain->placeStructure(GridPoint(i,20), Wall());
+			game.world->terrain->placeStructure(GridPoint(i,30), Wall());
+		}
+	}
+
+	game.world->terrain->placeStructure(GridPoint(11,1), Wall());
+	game.world->terrain->placeStructure(GridPoint(11,2), Wall());
+	game.world->terrain->placeStructure(GridPoint(11,49), Wall());
+	game.world->terrain->placeStructure(GridPoint(11,48), Wall());
+	game.world->terrain->placeStructure(GridPoint(39,1), Wall());
+	game.world->terrain->placeStructure(GridPoint(39,2), Wall());
+	game.world->terrain->placeStructure(GridPoint(39,49), Wall());
+	game.world->terrain->placeStructure(GridPoint(39,48), Wall());
 
 	// Set up user interface
 	view->world = game.root;

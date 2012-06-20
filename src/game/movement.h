@@ -24,7 +24,7 @@ using namespace Video;
 using namespace Objects;
 
 const double MoveSpeed = 0.3;
-const double JetpackSpeed = 0.2;
+const double JetpackSpeed = 1.2;
 const double LookSpeed = 0.0175;
 const double ZoomSpeed = 0.3;
 
