@@ -786,7 +786,6 @@ void DefenseTower::frame()
 			    phi = !(phi >= 0 || phi <= 0) ? 100 : phi;
 			    float sign = ((angP - angR > 0 && angP - angR < Pi) || (angP-angR > -2*Pi && angP-angR < -Pi)) ? 1.0 : -1.0;
 			    float theta = min(phi, movespeed);
-			    printf("Phi = %f Movespeed = %f\n", phi, movespeed);
 			    theta *= sign;
 				model.turret->rotation = model.turret->rotation * Rd(theta, Vd(0, 0, 1));
 			}
