@@ -20,9 +20,6 @@
 
 #define CONNECTED (tokenring && tokenring->connected())
 
-#define PRO\
-BE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
-
 namespace NetCode {
 
 using namespace std;
@@ -394,10 +391,11 @@ RECEIVE(STRUCTINFO, id, msg, reliable)
 	t->structures.clear();
 
 	for (size_t i = 1; i < msg.size(); i += 2)
-	{
+	{PROBE
 		GridPoint g = ToGridPoint(msg[i]);
 		if (!g.isValid()) continue;
-		ObjectHandle structure = Object::construct(msg[i+1]);
+		ObjectHandle structure = Object::construct((string) msg[i+1]);
+		if (!structure) continue;
 		structure->unserialize(msg[i+1]);
 		t->structures[g] = structure;
 	}

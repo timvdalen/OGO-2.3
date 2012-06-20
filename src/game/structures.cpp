@@ -20,13 +20,6 @@ namespace Objects {
 
 void drawFoundation(int h);
 
-REGISTER(Structure,)
-REGISTER(Mine,)
-REGISTER(Building,)
-REGISTER(HeadQuarters,)
-REGISTER(DefenseTower,)
-REGISTER(ResourceMine,)
-
 //------------------------------------------------------------------------------
 
 bool GridPoint::operator<(const GridPoint& p2) const

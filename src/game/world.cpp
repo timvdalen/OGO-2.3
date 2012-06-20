@@ -12,8 +12,6 @@
 
 namespace Objects {
 
-REGISTER(Droppable,)
-
 #define HIGH 100
 
 class Sky;

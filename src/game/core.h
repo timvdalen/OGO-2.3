@@ -14,6 +14,9 @@
 
 #define TO(T,x) (dynamic_cast<T *>(&*(x)))
 
+#define PRO\
+BE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
+
 //------------------------------------------------------------------------------
 
 #include <string>
@@ -70,7 +73,7 @@ inline string operator |(const string &lhs, const string &rhs)
 virtual bool unserialize(vector<string> &arg)                                  \
 	{ if ((arg.size() < (num)+1) || (arg[0] != type())) return false;          \
 	arg.erase(arg.begin()); {x} return true; }
-#define REGISTER(x,arg) ObjectHandle _ ## x() { return x(arg); }               \
+#define REGISTER(x,...) ObjectHandle _ ## x() { return x(__VA_ARGS__); }       \
 	Object::Constructor __ ## x(#x,_ ## x);
 
 //------------------------------------------------------------------------------
@@ -236,7 +239,7 @@ class Object
 		Constructor(string name, Func func) { list[name] = func; }
 	};
 	
-	static ObjectHandle construct(const string &);
+	static ObjectHandle construct(string);
 	
 	private:
 	Point<double> parentOrigin;

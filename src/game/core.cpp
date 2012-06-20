@@ -7,14 +7,29 @@
 
 #include "core.h"
 #include "video.h"
-
+#include "objects.h"
+#include "player.h"
+#include "structures.h"
+#include "world.h"
 
 namespace Core {
 
 using namespace std;
 using namespace Base::Alias;
+using namespace Objects;
 
-REGISTER(Object,)
+Object::Constructor::List Object::Constructor::list;
+
+REGISTER(Object)
+REGISTER(BoundedObject)
+REGISTER(Player)
+REGISTER(Structure)
+REGISTER(Mine)
+REGISTER(Building)
+REGISTER(HeadQuarters)
+REGISTER(DefenseTower)
+REGISTER(ResourceMine)
+REGISTER(Droppable)
 
 //------------------------------------------------------------------------------
 
@@ -151,9 +166,11 @@ bool Object::unserialize(const string &str)
 
 //------------------------------------------------------------------------------
 
-ObjectHandle Object::construct(const string &str)
+ObjectHandle Object::construct(string str)
 {
-	if (Constructor::list.count(str)) return Object();
+	size_t right = str.find("|", right);
+	if (right != string::npos) str.resize(right);
+	if (!Constructor::list.count(str)) return Object();
 	return Constructor::list[str]();
 }
 
