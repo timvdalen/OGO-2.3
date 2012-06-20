@@ -423,7 +423,7 @@ inline int scale(int linewidth, float scale){
 		}else{
 			resources = 0;
 		}
-        ss << resources << "f";
+        ss << resources;
 		string money = ss.str();
         glPushMatrix();
         glTranslatef(65,45,0);
