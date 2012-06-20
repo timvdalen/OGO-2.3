@@ -138,7 +138,7 @@ void UpdatePlayers()
 	for (it = Game::game.players.begin(); it != Game::game.players.end(); ++it)
 	{
 		Player *p = TO(Player,it->second);
-		if(!p || p == Game::game.player) return;
+		if(!p || p == Game::game.player) continue;
 		p->interpolate();
 	}
 }
