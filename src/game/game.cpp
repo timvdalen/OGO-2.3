@@ -146,7 +146,12 @@ void Initialize(int argc, char *argv[])
 	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
 	game.players[pid] = player;
-	
+/*	
+	Player::Id pid2 = game.topId++;
+	ObjectHandle player2 = Player(pid2, 'b', name);
+	game.root->children.insert(player2);
+	game.players[pid2] = player2;
+*/	
 	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
@@ -539,10 +544,21 @@ void Fire()
 			
 			Vd lookVec = (~(Vd(game.controller->target)+ -Vd(cam.origin))) * 38;
 			Pd target = game.controller->target;
-			ObjectHandle collision = game.world->trace(game.controller->target, lookVec, game.players[game.player->id]);
+			ObjectHandle collision;
+			if(game.controller->firstPerson){
+				lookVec = (~(game.controller->camAngle * Vd(0,1,0)))*38;
+				collision = game.world->trace(game.controller->camera.origin, lookVec, game.players[game.player->id]);
+			}else{
+				collision = game.world->trace(game.controller->target, lookVec, game.players[game.player->id]);
+			}
 			if (collision)
 			{	
-				Pd collisionPoint = game.controller->target + (lookVec);
+				Pd collisionPoint;
+				if(game.controller->firstPerson){
+					collisionPoint = game.controller->camera.origin + (lookVec);
+				}else{
+					collisionPoint = game.controller->target + (lookVec);
+				}
 				Qd beam = gunLoc.lookAt(collisionPoint);
 				
 				game.world->addLaserBeam(ObjectHandle(LaserBeam(gunLoc, beam, !lookVec)));

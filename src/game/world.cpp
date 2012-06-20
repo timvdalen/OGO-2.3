@@ -287,7 +287,7 @@ ObjectHandle World::trace(Point<double> origin, Vector<double> &path, ObjectHand
 		if (ret.second < closest.second){
 			closest = ret;
 			if(!TO(Terrain, *it)){
-				ret.first = *it;
+				closest.first = *it;
 			}
 		}
 	}
