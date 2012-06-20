@@ -817,7 +817,7 @@ void MiniMap::draw()
 //	printf("degree: %f , (%f, %f, %f)\n",Rad2Deg*atan2(direction.y, direction.x), direction.x, direction.y, direction.z);
 	float angle = Rad2Deg*atan2(direction.y, direction.x) + 90;
 	glRotatef(angle, 0,0,1);
-	glTranslatef(-(relx+0.5)*xspacingp, -(rely+0.5)*yspacingp, 0);
+	glTranslatef(-(relx)*xspacingp, -(rely)*yspacingp, 0);
 	//The buildings
 	map<GridPoint, ObjectHandle> &structs = w->terrain->structures;
 	map<GridPoint, ObjectHandle>::iterator itt;
