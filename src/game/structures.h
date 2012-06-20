@@ -172,6 +172,27 @@ class Mine: public Structure
 
 //------------------------------------------------------------------------------
 
+//! Represents a mine structure on the terrain that awards more gold
+class RichMine: public Structure
+{
+	public: NAME(RichMine)
+
+	//! The maxium income that can be generated from this mine
+	Resource maxIncome;
+
+	//! Constructs a new mine
+	RichMine(Pd P = Pd(), Qd R = Qd(), Resource _maxIncome = 0);
+
+	//! Draws the mine
+	virtual void draw();
+
+	//! Model
+	struct { ObjectHandle rock; } model;
+};
+
+
+//------------------------------------------------------------------------------
+
 //! Represents a non-destructable wall on the terrain
 class Wall: public Structure
 {
@@ -305,6 +326,30 @@ class ResourceMine: public Building
 };
 
 //------------------------------------------------------------------------------
+
+//! Represents a mining tower built over a rich mine
+class RichResourceMine: public Building
+{
+	ObjectHandle rock;
+
+	bool animationUp;
+
+	public: NAME(RichResourceMine)
+	
+	RichResourceMine(Player::Id _owner);
+	
+	RichResourceMine(int buildTime, bool error = false);
+
+	virtual void draw();
+	
+	virtual void postRender();
+
+	//! Model
+	struct { ObjectHandle rig, drill; } model;
+};
+
+//------------------------------------------------------------------------------
+
 
 } // namespace Objects
 
