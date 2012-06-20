@@ -336,7 +336,7 @@ class RichResourceMine: public Building
 
 	public: NAME(RichResourceMine)
 	
-	RichResourceMine(Player::Id _owner);
+	RichResourceMine(Player::Id _owner = 0);
 	
 	RichResourceMine(int buildTime, bool error = false);
 
