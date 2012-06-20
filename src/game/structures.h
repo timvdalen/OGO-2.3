@@ -172,6 +172,20 @@ class Mine: public Structure
 
 //------------------------------------------------------------------------------
 
+//! Represents a non-destructable wall on the terrain
+class Wall: public Structure
+{
+	public: NAME(Wall)
+
+	//! Constructs a new wall
+	Wall(Pd P = Pd());
+
+	//! Draws the wall
+	virtual void draw();
+};
+
+//------------------------------------------------------------------------------
+
 //! Represents a building on the terrain
 class Building: public Structure, public Destroyable
 {

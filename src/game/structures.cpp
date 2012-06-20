@@ -554,6 +554,48 @@ void Mine::draw() {
 
 //------------------------------------------------------------------------------
 
+Wall::Wall(Pd P)
+	: Structure(BoundingBox(Pd(0.0, 0.0, 0.0), Pd(10.0, 10.0, 10.0)))
+{
+	material = Assets::Wall;
+}
+
+//------------------------------------------------------------------------------
+
+void Wall::draw(){
+	#define Vert(v) { Pd vt = (v); glVertex3d(vt.x,vt.y,vt.z); }
+	#define Norm(u,v) { Vd n = ~((u)*(v)); glNormal3d(n.x,n.y,n.z); }
+	#define A { glTexCoord2d(0.0,0.0); }
+	#define B { glTexCoord2d(1.0,0.0); }
+	#define C { glTexCoord2d(1.0,1.0); }
+	#define D { glTexCoord2d(0.0,1.0); }
+
+	Vd u = Vd(10, 0, 0);
+	Vd v = Vd(0, 10, 0);
+	Vd w = Vd(0, 0, 10);
+
+	Pd o = Vd(0,0,0);
+	Pd a = o + u + v + w;
+
+	glBegin(GL_QUADS);
+		Norm(u,w); A Vert(o); B Vert(o+u); C Vert(o+u+w); D Vert(o+w);
+		Norm(v,u); A Vert(o); B Vert(o+v); C Vert(o+v+u); D Vert(o+u);
+		Norm(w,v); A Vert(o); B Vert(o+w); C Vert(o+w+v); D Vert(o+v);
+		Norm(u,v); A Vert(a); B Vert(a-u); C Vert(a-u-v); D Vert(a-v);
+		Norm(v,w); A Vert(a); B Vert(a-v); C Vert(a-v-w); D Vert(a-w);
+		Norm(w,u); A Vert(a); B Vert(a-w); C Vert(a-w-u); D Vert(a-u);
+	glEnd();
+
+	#undef Vert
+	#undef Norm
+	#undef A
+	#undef B
+	#undef C
+	#undef D
+}
+
+//------------------------------------------------------------------------------
+
 HeadQuarters::HeadQuarters(Player::Id _owner)
 		: Building(10, BoundingBox(Pd(-10,-10,0),Pd(10,10,25.0)),
 		  0, 10,
