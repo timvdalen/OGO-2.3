@@ -319,7 +319,7 @@ string to_lower_case(string str)
 
 Point<double> getSpawn(const char team){
 	switch(team){
-	case 'a':{
+	case 'b':{
 			Pd spawn1 = game.world->terrain->ToPointD(GridPoint(4, 24));
 			Pd spawn2 = game.world->terrain->ToPointD(GridPoint(4, 25));
 			int randval = rand() % 2;
@@ -330,7 +330,7 @@ Point<double> getSpawn(const char team){
 			}
 		 }
 		 break;
-	case 'b':{
+	case 'a':{
 			Pd spawn1 = game.world->terrain->ToPointD(GridPoint(46,25));
 		       	Pd spawn2 = game.world->terrain->ToPointD(GridPoint(46,26));
 			int randval = rand() % 2;
