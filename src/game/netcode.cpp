@@ -36,6 +36,11 @@ NodeID lastNode = 0;
 NodeID findNode(Player::Id pid);
 void Join(NodeID nid, Player::Id pid, unsigned char team, string name);
 
+void TeamInfo(NodeID nid);
+void PlayerInfo(NodeID nid);
+void StructInfo(NodeID nid);
+void ItemInfo(NodeID nid);
+
 //------------------------------------------------------------------------------
 
 struct Receive
@@ -104,6 +109,8 @@ void Terminate()
 
 //------------------------------------------------------------------------------
 
+int loop = 0;
+
 void Frame()
 {
 	if (!CONNECTED) return;
@@ -131,6 +138,17 @@ void Frame()
 		lastNode = id;
 		// A potential player entered
 		// We do nothing and wait till he send an (Re)Enter request
+	}
+	
+	if (game.connecting)
+	{
+		if (loop > 80)
+		{
+			NetCode::Enter(game.player->team, game.player->name);
+			loop = 0;
+		}
+		else
+			loop++;
 	}
 }
 
@@ -222,10 +240,14 @@ RECEIVE(ENTER, id, msg, reliable)
 	
 	Welcome(pid);
 	
-	// Todo: Send game state
+	// Send game state
+	TeamInfo(id);
+	//PlayerInfo(id);
+	//StructInfo(id);
+	//ItemInfo(id);
 	
 	// The following is a temporarily way to sync up the playerlist
-	Player *p;
+	/*Player *p;
 	map<Player::Id,ObjectHandle>::iterator it;
 	for (it = game.players.begin(); it != game.players.end(); ++it)
 	{
@@ -241,7 +263,7 @@ RECEIVE(ENTER, id, msg, reliable)
 		msg.push_back((long) p->team);
 		msg.push_back(p->name);
 		SENDTO(id, msg, true);
-	}
+	}*/
 	
 	Join(findNode(pid), pid, team, name);
 }
@@ -280,6 +302,7 @@ RECEIVE(WELCOME, id, msg, reliable)
 {
 	if (!reliable) return;
 	if (!game.players.count(game.player->id)) return; // This would be bad
+	game.connecting = false;
 	Echo(msg[4]);
 	Player::Id pid = (long) msg[1];
 	nodes[tokenring->id()] = pid;
@@ -287,6 +310,116 @@ RECEIVE(WELCOME, id, msg, reliable)
 	game.players.erase(game.player->id);
 	game.player->id = pid;
 	game.topId = MAX(game.topId,pid) + 1;
+}
+
+//------------------------------------------------------------------------------
+
+void TeamInfo(NodeID nid)
+{
+	Message msg;
+	msg.push_back("TEAMINFO");
+	map<unsigned char,Objects::Team>::iterator it;
+	for (it = game.teams.begin(); it != game.teams.end(); ++it)
+	{
+		msg.push_back((long) it->first);
+		msg.push_back((double) it->second.resources);
+	}
+	SENDTO(nid, msg, true);
+}
+RECEIVE(TEAMINFO, id, msg, reliable)
+{
+	if (!reliable) return;
+	for (size_t i = 1; i < msg.size(); i += 2)
+		game.teams[(long) msg[i]].resources = (double) msg[i+1];
+}
+
+//------------------------------------------------------------------------------
+
+void PlayerInfo(NodeID nid)
+{
+	Message msg;
+	msg.push_back("PLAYERINFO");
+	map<Player::Id,ObjectHandle>::iterator it;
+	for (it = game.players.begin(); it != game.players.end(); ++it)
+	{
+		if (it->first == nodes[nid]) continue; // Don't send player his own info
+		if (it->first == game.player->id)
+			msg.push_back((long) tokenring->id());
+		else
+			msg.push_back((long) findNode(it->first));
+		
+		msg.push_back((string) *it->second);
+	}
+	SENDTO(nid, msg, true);
+}
+RECEIVE(PLAYERINFO, id, msg, reliable)
+{
+	if (!reliable) return;
+	for (size_t i = 1; i < msg.size(); i += 2)
+	{
+		ObjectHandle player;
+		Player *p = TO(Player,player);
+		*p = (string) msg[i+1];
+		Player::Id pid = p->id;
+		game.topId = MAX(game.topId,pid) + 1;
+		game.root->children.insert(player);
+		game.players[pid] = player;
+		nodes[(long) msg[i]] = pid;
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void StructInfo(NodeID nid)
+{
+	Terrain *t = TO(Terrain,game.world->terrain);
+	Message msg;
+	msg.push_back("STRUCTINFO");
+	map<GridPoint,ObjectHandle>::iterator it;
+	for (it = t->structures.begin(); it != t->structures.end(); ++it)
+	{
+		msg.push_back(convert(it->first));
+		msg.push_back((string) *it->second);
+	}
+	SENDTO(nid, msg, true);
+}
+RECEIVE(STRUCTINFO, id, msg, reliable)
+{
+	if (!reliable) return;
+	for (size_t i = 1; i < msg.size(); i += 2)
+	{
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void ItemInfo(NodeID nid)
+{
+	Message msg;
+	msg.push_back("ITEMINFO");
+	/*for (it = begin(); it != end(); ++it)
+	{
+		// ...
+	}*/
+	SENDTO(nid, msg, true)
+}
+RECEIVE(ITEMINFO, id, msg, reliable)
+{
+	if (!reliable) return;
+	for (size_t i = 1; i < msg.size(); i += 2)
+	{
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void Sync(Player::Id pid)
+{
+	NodeID nid = nodes[pid];
+	TeamInfo(nid);
+	PlayerInfo(nid);
+	StructInfo(nid);
+	ItemInfo(nid);
 }
 
 //------------------------------------------------------------------------------
@@ -396,6 +529,23 @@ RECEIVE(LOOK, id, msg, reliable)
 	Player *player = PLAYER(nodes[id]);
 	if (!player) return;
 	player->rotation = rotation;
+}
+
+//------------------------------------------------------------------------------
+
+void Team(unsigned char team, Resource gold)
+{
+	Message msg;
+	msg.push_back("TEAM");
+	msg.push_back((long) team);
+	msg.push_back((double) gold);
+	SEND(msg, false);
+}
+RECEIVE(TEAM, id, msg, reliable)
+{
+	unsigned char team = (long) msg[1];
+	game.teams[team].resources += (double) msg[2];
+	game.teams[team].resources /= 2.0;
 }
 
 //------------------------------------------------------------------------------

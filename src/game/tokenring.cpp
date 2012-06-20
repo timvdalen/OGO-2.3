@@ -9,12 +9,15 @@
 #include <stdlib.h>
 #include <pthread.h>
 #if (defined WIN32 || defined _MSC_VER)
-#define WIN32_LEAN_AND_MEAN
+	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
 	#include <stdint.h>
+	#define sleep(x) Sleep((x)*1000)
 #elif (defined __MACH__)
 	#include <mach/clock.h>
 	#include <mach/mach.h> 
+#else
+	#include <unistd.h>
 #endif
 
 //#include <set>
@@ -835,6 +838,8 @@ void TokenRingData::accept()
 	msg[1] = (long) newId;
 	DEBUG_SEND(0,string(msg).c_str());
 	clique->sendto(remote, msg);
+	
+	sleep(1);
 	
 	TokenRingNode node;
 	node.addr = remote;

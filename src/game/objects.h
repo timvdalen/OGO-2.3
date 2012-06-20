@@ -135,16 +135,14 @@ class ModelObjectContainer: public Object
 //! Represents a team
 class Team
 {
-	public: NAME(Team) SERIAL(type() | convert(resources))
-	UNSERIAL(arg, 1, resources = ToFloat(arg[0]); )
-	
+	public:
 	//! The id of this team
 	unsigned char id;
 	
 	//! The amount of resources this team has
 	Resource resources;
 	
-	Team(unsigned char _id){ id = _id; resources = 200; }
+	Team(unsigned char _id = 0) : id(_id), resources(200) {}
 };
 
 //------------------------------------------------------------------------------

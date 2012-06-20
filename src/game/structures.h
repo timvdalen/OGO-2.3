@@ -47,6 +47,9 @@ struct GridPoint
     bool isValid();
 };
 
+string convert(const GridPoint &);
+GridPoint ToGridPoint(const string &);
+
 //------------------------------------------------------------------------------
 
 //! Represents the terrain of the game

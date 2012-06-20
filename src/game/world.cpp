@@ -327,7 +327,7 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 
 //------------------------------------------------------------------------------
 
-Droppable::Droppable(Pd _origin, Resource _worth, int _dropped, int _ttl)
+Droppable::Droppable(Pd _origin, Resource _worth, long _dropped, long _ttl)
 	: BoundedObject(_origin, Qd(), BoundingBox(Pd(-0.105, -0.5, 0.0), Pd(0.105, 0.5, 1.0)))
 {
 	model.coin = ModelObjectContainer();
