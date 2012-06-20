@@ -58,6 +58,23 @@ void Frame()
 	if (NetCode::TryLock())
 	{
 		// Critical section
+		vector<ObjectHandle>::iterator it;
+		for(it = game.world->temporary.begin(); it != game.world->temporary.end(); it++){
+			Droppable *d = TO(Droppable, *it);
+			if(d){
+				double tempX = game.player->origin.x - d->origin.x;
+				double tempY = game.player->origin.x - d->origin.x;
+				double dist = sqrt(tempX * tempX + tempY * tempY);
+				if (dist < 0.5)
+				{
+					if(game.teams.count(game.player->team)){
+						game.teams[game.player->team].resources += d->worth;
+						d->done = true;
+					}
+				}
+			}
+		}
+		
 
 		NetCode::Unlock();
 	}
