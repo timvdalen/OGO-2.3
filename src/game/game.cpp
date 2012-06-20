@@ -616,9 +616,9 @@ void Fire()
 			ObjectHandle collision;
 			if(game.controller->firstPerson){
 				lookVec = (~(game.controller->camAngle * Vd(0,1,0)))*38;
-				collision = game.world->trace(game.controller->camera.origin, lookVec, game.players[game.player->id]);
+				collision = game.world->trace(game.controller->camera.origin, lookVec, game.player);
 			}else{
-				collision = game.world->trace(game.controller->target, lookVec, game.players[game.player->id]);
+				collision = game.world->trace(game.controller->target, lookVec, game.player);
 			}
 			if (collision)
 			{	

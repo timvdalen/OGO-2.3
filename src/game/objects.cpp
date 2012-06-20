@@ -59,7 +59,7 @@ void Destroyable::fullHeal(){
 
 //------------------------------------------------------------------------------
 
-pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
+pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction, Object *ignore)
 {
     double collision = numeric_limits<double>::infinity();
     //--- We only check lbl rbh, could be improved-----
@@ -111,7 +111,7 @@ pair<ObjectHandle,double> BoundedObject::checkCollision(Pd origin, Vd direction)
 
 ObjectHandle BoundedObject::checkCollision2(Pd origin, Vd direction)
 {
-    return checkCollision(origin,direction).first;
+    return ObjectHandle();
 }
 
 //------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ void LaserBeam::draw(){
 		}
 		else
 		{
-			endpoint = ~dir*38;
+			endpoint = ~dir*39.5;
 		}
 		glVertex3f(endpoint.x, endpoint.y, endpoint.z);
 	glEnd();

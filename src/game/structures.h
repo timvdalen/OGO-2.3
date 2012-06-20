@@ -129,7 +129,7 @@ class Terrain: public BoundedObject
 	Pd ToPointD(GridPoint p);
 
 
-	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction, Object* ignore);
 	ObjectHandle checkCollision2(Pd origin, Vd direction);
 
 	//! Converts a Point<double> to a GridPoint

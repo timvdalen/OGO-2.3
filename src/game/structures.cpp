@@ -104,16 +104,16 @@ Terrain::Terrain(double _width, double _height)
 }
 
 //------------------------------------------------------------------------------
-pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction)
+pair<ObjectHandle,double> Terrain::checkCollision(Pd origin, Vd direction, Object *ignore)
 {
     map<GridPoint, ObjectHandle>::iterator it;
 	ObjectHandle colobject;
     double collision = numeric_limits<double>::infinity();
     for (it = structures.begin(); it != structures.end(); ++it){
 		Structure* child = TO(Structure, it->second);
-        if(child){
+        if(child && child != ignore){
 			Point<double> newp = (origin - ToPointD(child->loc));
-            pair<ObjectHandle, double> childcollision = child->checkCollision(newp, direction);
+            pair<ObjectHandle, double> childcollision = child->checkCollision(newp, direction, ignore);
             if(childcollision.second < collision){ //We have a collision with a child
             	collision = childcollision.second;
                 colobject = it->second;
@@ -767,12 +767,12 @@ void DefenseTower::frame()
 			if(b){
 				if(TO(HeadQuarters, b)){
 					targetPoint = w->terrain->ToPointD(b->loc);
-					targetPoint.z += 2.4;
+					targetPoint.z += 2.0;
 				}else{
 					targetPoint = w->terrain->ToPointD(b->loc);
 					targetPoint.x += GRID_SIZE/2;
 					targetPoint.y += GRID_SIZE/2;
-					targetPoint.z += 2.4;
+					targetPoint.z += 2.0;
 				}
 			}else{
 				targetPoint = closest->origin;
@@ -802,19 +802,13 @@ void DefenseTower::frame()
 					Pd startpoint2 = worldcoord+Vd(5*sin(rot*z)-0.5*cos(rot*z), 5*cos(rot*z)+0.5*sin(rot*z), 0);
 					Qd target = startpoint.lookAt(targetPoint);
 					Qd target2 = startpoint2.lookAt(targetPoint);
-					Vd lookVec = (~(Vd(startpoint)+ -Vd(targetPoint))) * RANGE;
-					Vd lookVec2 = (~(Vd(startpoint2)+ -Vd(targetPoint))) * RANGE;
-					ObjectHandle collision = w->trace(startpoint, lookVec, ObjectHandle());
-					ObjectHandle collision2 = w->trace(startpoint2, lookVec2, ObjectHandle());
+					//Vd lookVec = (~(Vd(startpoint)+ -Vd(targetPoint))) * RANGE;
+					//Vd lookVec2 = (~(Vd(startpoint2)+ -Vd(targetPoint))) * RANGE;
+					//ObjectHandle collision = w->trace(startpoint, lookVec, this);
+					//ObjectHandle collision2 = w->trace(startpoint2, lookVec2, this);
 					//Qd beam = gunLoc.lookAt(target);
-					BoundedObject *bo = TO(BoundedObject, collision);
-					if(bo){
-						printf("%s \n", (bo->type()).c_str());
-					}else{
-						printf("geen collision\n");
-					}
-                    w->addLaserBeam(LaserBeam(startpoint, target, !lookVec));
-					w->addLaserBeam(LaserBeam(startpoint2, target2, !lookVec2));
+                    w->addLaserBeam(LaserBeam(startpoint, target, 100));
+					w->addLaserBeam(LaserBeam(startpoint2, target2, 100));
 
 					//Actual damage
 					if(own->id == Game::game.player->id){
