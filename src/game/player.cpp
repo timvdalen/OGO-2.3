@@ -18,6 +18,10 @@ namespace Objects {
 
 using namespace std;
 
+Object::Constructor::List Object::Constructor::list; 
+
+REGISTER(Player,)
+
 //------------------------------------------------------------------------------
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R)

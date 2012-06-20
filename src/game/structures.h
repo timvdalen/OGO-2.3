@@ -235,7 +235,7 @@ class Building: public Structure, public Destroyable
 	Player::Id owner;
 
 	//! Constructs a new building
-	Building(int _height, BoundingBox B = BoundingBox(),
+	Building(int _height = 0, BoundingBox B = BoundingBox(),
 	         Resource _cost = 0, Resource _income = 0, int _buildTime = 0,
 			 int _buildDuration = 0, Power _attackPower = 0, Player::Id _owner = 0, double _maxHealth = 300.0)
 		: height(_height), Structure(B),
@@ -313,7 +313,7 @@ class ResourceMine: public Building
 
 	public: NAME(ResourceMine)
 	
-	ResourceMine(Player::Id _owner);
+	ResourceMine(Player::Id _owner = 0);
 	
 	ResourceMine(int buildTime, bool error = false);
 
