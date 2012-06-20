@@ -762,6 +762,9 @@ void Test(string str)
 		game.root->children.insert(player2);
 		game.players[pid2] = player2;
 
+		if(game.teams.count('a'))
+			game.teams['a'].resources = 1000;
+
 		game.world->terrain->placeStructure(GridPoint(1,1), DefenseTower(pid2));
 	}
 
