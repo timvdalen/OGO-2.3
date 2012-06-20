@@ -28,6 +28,7 @@ extern MaterialHandle Grid, SelectedGrid, ErrorGrid;
 extern MaterialHandle WorldMaterial;
 extern MaterialHandle Star;
 
+extern MaterialHandle Wall;
 extern MaterialHandle Test;
 
 extern MaterialHandle Cloud;
