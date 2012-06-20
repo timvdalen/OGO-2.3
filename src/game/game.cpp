@@ -25,6 +25,8 @@ namespace Game {
 using namespace std;
 using namespace Protocol;
 
+Point<double> getSpawn(const char team);
+
 static void getInput(string input);
 string to_lower_case(string str);
 bool file_exists(const char *filename);
@@ -311,6 +313,39 @@ string to_lower_case(string str)
 {
 	transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
+}
+
+//------------------------------------------------------------------------------
+
+Point<double> getSpawn(const char team){
+	switch(team){
+	case 'a':{
+			Pd spawn1 = game.world->terrain->ToPointD(GridPoint(4, 24));
+			Pd spawn2 = game.world->terrain->ToPointD(GridPoint(4, 25));
+			int randval = rand() % 2;
+			if(randval == 0){
+				return spawn1;
+			}else{
+				return spawn2;
+			}
+		 }
+		 break;
+	case 'b':{
+			Pd spawn1 = game.world->terrain->ToPointD(GridPoint(46,25));
+		       	Pd spawn2 = game.world->terrain->ToPointD(GridPoint(46,26));
+			int randval = rand() % 2;
+			if(randval == 0){
+				return spawn1;
+			}else{
+				return spawn2;
+			}
+	
+		 }
+		 break;
+	default:{
+			return Pd();
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
