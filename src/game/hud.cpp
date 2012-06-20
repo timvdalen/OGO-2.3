@@ -194,6 +194,30 @@ string SystemMessage::toString(){
 
 //------------------------------------------------------------------------------
 
+PlayerJoinMessage::PlayerJoinMessage(const Player &_joined)
+	: joined(_joined)
+{}
+
+//------------------------------------------------------------------------------
+
+string PlayerJoinMessage::toString(){
+	return string("<") + joined.name + string("> has joined the game");
+}
+
+//------------------------------------------------------------------------------
+
+PlayerLeaveMessage::PlayerLeaveMessage(const Player &_left)
+	: left(_left)
+{}
+
+//------------------------------------------------------------------------------
+
+string PlayerLeaveMessage::toString(){
+	return string("<") + left.name + string("> has left the game");
+}
+
+//------------------------------------------------------------------------------
+
 MessageDisplayer::MessageDisplayer(int _x, int _y, int _width, int _height)
 	: Widget(_x, _y, _width, _height)
 {
