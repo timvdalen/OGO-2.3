@@ -702,7 +702,7 @@ DefenseTower::DefenseTower(int buildTime, bool error)
 
 void DefenseTower::frame()
 {
-	#define RANGE 40.0
+	#define RANGE 45.0
 	#define ROF 1000
 
 	float movemulti = Video::CurrentFPS()/60;
@@ -776,10 +776,8 @@ void DefenseTower::frame()
 				}
 			}else{
 				targetPoint = closest->origin;
-				targetPoint.z += 1.0;
+				targetPoint.z += 1.5;
 			}
-
-			Qd target = worldcoord.lookAt(targetPoint);
 
             Rd angleRot = Rd((~model.turret->rotation));
             double anglePlayer = atan2(targetPoint.x-worldcoord.x, targetPoint.y-worldcoord.y);
@@ -802,9 +800,21 @@ void DefenseTower::frame()
 					lastshot = now;
 					Pd startpoint = worldcoord+Vd(5*sin(rot*z)+0.5*cos(rot*z), 5*cos(rot*z)-0.5*sin(rot*z), 0);
 					Pd startpoint2 = worldcoord+Vd(5*sin(rot*z)-0.5*cos(rot*z), 5*cos(rot*z)+0.5*sin(rot*z), 0);
+					Qd target = startpoint.lookAt(targetPoint);
+					Qd target2 = startpoint2.lookAt(targetPoint);
+					Vd lookVec = (~(Vd(startpoint)+ -Vd(targetPoint))) * RANGE;
+					Vd lookVec2 = (~(Vd(startpoint2)+ -Vd(targetPoint))) * RANGE;
+					ObjectHandle collision = w->trace(startpoint, lookVec, ObjectHandle());
+					ObjectHandle collision2 = w->trace(startpoint2, lookVec2, ObjectHandle());
 					//Qd beam = gunLoc.lookAt(target);
-                    w->addLaserBeam(LaserBeam(startpoint, target, 100));
-					w->addLaserBeam(LaserBeam(startpoint2, target, 100));
+					BoundedObject *bo = TO(BoundedObject, collision);
+					if(bo){
+						printf("%s \n", (bo->type()).c_str());
+					}else{
+						printf("geen collision\n");
+					}
+                    w->addLaserBeam(LaserBeam(startpoint, target, !lookVec));
+					w->addLaserBeam(LaserBeam(startpoint2, target2, !lookVec2));
 
 					//Actual damage
 					if(own->id == Game::game.player->id){

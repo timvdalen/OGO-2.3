@@ -845,7 +845,7 @@ void Test(string str)
 		if(game.teams.count('a'))
 			game.teams['a'].resources = 1000;
 
-		game.world->terrain->placeStructure(GridPoint(1,1), DefenseTower(pid2));
+		game.world->terrain->placeStructure(GridPoint(22,24), DefenseTower(pid2));
 	}
 
 }
