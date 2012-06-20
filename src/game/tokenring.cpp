@@ -2,8 +2,6 @@
  * Network algorithms -- see header file for more information
  */
 
-#define TRDEBUG
-
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
