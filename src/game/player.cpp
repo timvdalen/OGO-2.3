@@ -18,6 +18,10 @@ namespace Objects {
 
 using namespace std;
 
+Object::Constructor::List Object::Constructor::list; 
+
+REGISTER(Player,)
+
 //------------------------------------------------------------------------------
 
 Player::Player(Id _id, unsigned char _team, string _name, Pd P, Qd R)
@@ -211,6 +215,21 @@ void Player::draw() {
 void Player::frame(){
 	if(isDestroyed()){
 		origin = Pd(-10.0, -10.0, 0.0);
+		int noPlayers = 0;
+		map<Player::Id, ObjectHandle>::iterator it;
+		for(it = Game::game.players.begin(); it != Game::game.players.end(); it++){
+			Player *p = TO(Player, it->second);
+			if(p && p->team == team) noPlayers++;
+		}	
+		Resource drop = (Game::game.teams[team].resources)/(2.0*noPlayers);
+		int noCoins = drop/20;
+		Game::game.teams[team].resources -= noCoins*20;
+		for(int i = 0; i < noCoins; i++){
+			Pd droppoint = Pd(origin);
+			droppoint.x += (rand()%1000)/100;
+			droppoint.y += (rand()%1000)/100;
+			Game::game.world->temporary.push_back(Droppable(droppoint, 20));
+		}
 		fullHeal();
 	}
 }

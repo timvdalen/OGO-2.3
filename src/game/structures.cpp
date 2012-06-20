@@ -20,6 +20,13 @@ namespace Objects {
 
 void drawFoundation(int h);
 
+REGISTER(Structure,)
+REGISTER(Mine,)
+REGISTER(Building,)
+REGISTER(HeadQuarters,)
+REGISTER(DefenseTower,)
+REGISTER(ResourceMine,)
+
 //------------------------------------------------------------------------------
 
 bool GridPoint::operator<(const GridPoint& p2) const
@@ -85,7 +92,7 @@ string convert(const GridPoint &g) { char buffer[1024];
 
 //------------------------------------------------------------------------------
 
-GridPoint ToGridPoint(const string &str) { GridPoint g;
+GridPoint ToGridPoint(const string &str) { GridPoint g = GridPoint(-1,-1);
 	sscanf(str.c_str(), "G%ld,%ld", &g.x, &g.y); return g; }
 
 //------------------------------------------------------------------------------
@@ -786,7 +793,6 @@ void DefenseTower::frame()
 			    phi = !(phi >= 0 || phi <= 0) ? 100 : phi;
 			    float sign = ((angP - angR > 0 && angP - angR < Pi) || (angP-angR > -2*Pi && angP-angR < -Pi)) ? 1.0 : -1.0;
 			    float theta = min(phi, movespeed);
-			    printf("Phi = %f Movespeed = %f\n", phi, movespeed);
 			    theta *= sign;
 				model.turret->rotation = model.turret->rotation * Rd(theta, Vd(0, 0, 1));
 			}

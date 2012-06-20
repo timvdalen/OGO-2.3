@@ -5,13 +5,16 @@
 
 #include <string>
 
-#include "video.h"
 #include "core.h"
+#include "video.h"
+
 
 namespace Core {
 
 using namespace std;
 using namespace Base::Alias;
+
+REGISTER(Object,)
 
 //------------------------------------------------------------------------------
 
@@ -143,7 +146,15 @@ bool Object::unserialize(const string &str)
 		left = ++right;
 	}
 	arg.push_back(str.substr(left));
-	return operator =(arg);
+	return unserialize(arg);
+}
+
+//------------------------------------------------------------------------------
+
+ObjectHandle Object::construct(const string &str)
+{
+	if (Constructor::list.count(str)) return Object();
+	return Constructor::list[str]();
 }
 
 //------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ using namespace Video;
 using namespace Objects;
 
 const double MoveSpeed = 0.3;
-const double JetpackSpeed = 1.2;
+const double JetpackSpeed = 0.2;
 const double LookSpeed = 0.0175;
 const double ZoomSpeed = 0.3;
 
@@ -75,11 +75,13 @@ class Controller
 	
 	//! Restores the view to the previous state
 	void restoreView();
+	
+	
+	Qd camAngle;
 
 	private:
 	//! The last view (first person or third person) that was active before the current one
 	bool lastView;
-	Qd camAngle;
 	double zoom;
 	
     bool walkAble(Point<double> old, Point<double> p);

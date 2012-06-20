@@ -20,6 +20,8 @@
 
 namespace Objects {
 
+REGISTER(BoundedObject,)
+
 //------------------------------------------------------------------------------
 
 void applyBillboarding(){
