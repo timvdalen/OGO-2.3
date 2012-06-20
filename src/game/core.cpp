@@ -25,10 +25,13 @@ REGISTER(BoundedObject)
 REGISTER(Player)
 REGISTER(Structure)
 REGISTER(Mine)
+REGISTER(RichMine)
+REGISTER(Wall)
 REGISTER(Building)
 REGISTER(HeadQuarters)
 REGISTER(DefenseTower)
 REGISTER(ResourceMine)
+REGISTER(RichResourceMine)
 REGISTER(Droppable)
 
 //------------------------------------------------------------------------------
@@ -168,7 +171,7 @@ bool Object::unserialize(const string &str)
 
 ObjectHandle Object::construct(string str)
 {
-	size_t right = str.find("|", right);
+	size_t right = str.find("|");
 	if (right != string::npos) str.resize(right);
 	if (!Constructor::list.count(str)) return Object();
 	return Constructor::list[str]();

@@ -391,7 +391,7 @@ RECEIVE(STRUCTINFO, id, msg, reliable)
 	t->structures.clear();
 
 	for (size_t i = 1; i < msg.size(); i += 2)
-	{PROBE
+	{
 		GridPoint g = ToGridPoint(msg[i]);
 		if (!g.isValid()) continue;
 		ObjectHandle structure = Object::construct((string) msg[i+1]);

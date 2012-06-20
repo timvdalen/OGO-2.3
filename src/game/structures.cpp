@@ -767,13 +767,16 @@ void DefenseTower::frame()
 			if(b){
 				if(TO(HeadQuarters, b)){
 					targetPoint = w->terrain->ToPointD(b->loc);
+					targetPoint.z += 2.4;
 				}else{
 					targetPoint = w->terrain->ToPointD(b->loc);
 					targetPoint.x += GRID_SIZE/2;
 					targetPoint.y += GRID_SIZE/2;
+					targetPoint.z += 2.4;
 				}
 			}else{
 				targetPoint = closest->origin;
+				targetPoint.z += 1.0;
 			}
 
 			Qd target = worldcoord.lookAt(targetPoint);
