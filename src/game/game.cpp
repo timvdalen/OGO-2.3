@@ -151,11 +151,11 @@ void Initialize(int argc, char *argv[])
 	game.world->terrain->placeStructure(GridPoint(2,48), Mine());
 	game.world->terrain->placeStructure(GridPoint(48,2), Mine());
 	game.world->terrain->placeStructure(GridPoint(48,48), Mine());
-	game.world->terrain->placeStructure(GridPoint(25,25), Mine());
+	game.world->terrain->placeStructure(GridPoint(25,25), RichMine());
 	game.world->terrain->placeStructure(GridPoint(15,25), Mine());
 	game.world->terrain->placeStructure(GridPoint(35,25), Mine());
-	game.world->terrain->placeStructure(GridPoint(25,5), Mine());
-	game.world->terrain->placeStructure(GridPoint(25,45), Mine());
+	game.world->terrain->placeStructure(GridPoint(25,5), RichMine());
+	game.world->terrain->placeStructure(GridPoint(25,45), RichMine());
 	game.world->terrain->placeStructure(GridPoint(6,9), Mine());
 	game.world->terrain->placeStructure(GridPoint(6,41), Mine());
 	game.world->terrain->placeStructure(GridPoint(44,9), Mine());
