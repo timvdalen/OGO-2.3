@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "world.h"
+#include "game.h"
 
 namespace Objects {
 
@@ -339,6 +340,8 @@ Droppable::Droppable(Pd _origin, Resource _worth, long _dropped, long _ttl)
 	dropped = _dropped;
 	ttl = _ttl;
 	done = false;
+	long pid = (Game::game.player ? Game::game.player->id : 0);
+	id = ElapsedTime() | (pid << 16);
 }
 
 //------------------------------------------------------------------------------

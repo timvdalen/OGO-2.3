@@ -244,7 +244,7 @@ RECEIVE(ENTER, id, msg, reliable)
 	TeamInfo(id);
 	PlayerInfo(id);
 	StructInfo(id);
-	//ItemInfo(id);
+	ItemInfo(id);
 	
 	// The following is a temporarily way to sync up the playerlist
 	/*Player *p;
@@ -407,17 +407,25 @@ void ItemInfo(NodeID nid)
 {
 	Message msg;
 	msg.push_back("ITEMINFO");
-	/*for (it = begin(); it != end(); ++it)
+	vector<ObjectHandle>::iterator it;
+	for (it = game.world->temporary.begin(); it != game.world->temporary.end(); ++it)
 	{
-		// ...
-	}*/
+		Droppable *d = TO(Droppable, *it);
+		if (!d) continue;
+		msg.push_back((string) *d);
+	}
 	SENDTO(nid, msg, true)
 }
 RECEIVE(ITEMINFO, id, msg, reliable)
 {
 	if (!reliable) return;
-	for (size_t i = 1; i < msg.size(); i += 2)
+	game.world->temporary.clear();
+	for (size_t i = 1; i < msg.size(); ++i)
 	{
+		ObjectHandle item = Object::construct((string) msg[i]);
+		if (!item) continue;
+		item->unserialize(msg[i]);
+		game.world->temporary.push_back(item);
 	}
 }
 
@@ -556,6 +564,22 @@ RECEIVE(TEAM, id, msg, reliable)
 	unsigned char team = (long) msg[1];
 	game.teams[team].resources += (double) msg[2];
 	game.teams[team].resources /= 2.0;
+}
+
+//------------------------------------------------------------------------------
+
+void Fire(const LaserBeam &laser)
+{
+	Message msg;
+	msg.push_back("FIRE");
+	msg.push_back((string) laser);
+	SEND(msg, false);
+}
+RECEIVE(FIRE, id, msg, reliable)
+{
+	ObjectHandle laser = LaserBeam();
+	laser->unserialize(msg[1]);
+	game.world->addLaserBeam(laser);
 }
 
 //------------------------------------------------------------------------------
