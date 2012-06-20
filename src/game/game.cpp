@@ -146,6 +146,7 @@ void Initialize(int argc, char *argv[])
 	ObjectHandle player = Player(pid, team, name);
 	game.player = TO(Player,player);
 	game.player->weapon = weapLaser;
+	game.player->origin = getSpawn(team);
 	game.root->children.insert(player);
 	game.players[pid] = player;
 	
