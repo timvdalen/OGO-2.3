@@ -46,6 +46,7 @@ MaterialHandle  Robot_normal,    Robot_red,   Robot_blue;
 MaterialHandle Pickaxe_normal, Pickaxe_red, Pickaxe_blue;
 MaterialHandle   Tower_normal,   Tower_red,   Tower_blue;
 MaterialHandle      HQ_normal,      HQ_red,      HQ_blue;
+MaterialHandle Wall;
 
 }
 
@@ -147,6 +148,7 @@ void Initialize(int argc, char *argv[])
     Icon::HQ_normal = TexturedMaterial(path + "assets/textures/hud/headquarter_normal.png");
     Icon::HQ_blue = TexturedMaterial(path + "assets/textures/hud/headquarter_blue.png");
     Icon::HQ_red = TexturedMaterial(path + "assets/textures/hud/headquarter_red.png");
+	Icon::Wall = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
     
 	//Model objects
 	Model::HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
