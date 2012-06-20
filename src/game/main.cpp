@@ -102,6 +102,7 @@ void Frame()
 			break;
 		
 		case 3:
+			NetCode::Team(game.player->team, game.teams[game.player->team].resources);
 			break;
 		
 		case 5: loop = 0; break;

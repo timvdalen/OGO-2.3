@@ -20,6 +20,9 @@
 
 #define CONNECTED (tokenring && tokenring->connected())
 
+#define PRO\
+BE {printf(__FILE__ ":%d\n", __LINE__);fflush(stdout);}
+
 namespace NetCode {
 
 using namespace std;
@@ -242,8 +245,8 @@ RECEIVE(ENTER, id, msg, reliable)
 	
 	// Send game state
 	TeamInfo(id);
-	//PlayerInfo(id);
-	//StructInfo(id);
+	PlayerInfo(id);
+	StructInfo(id);
 	//ItemInfo(id);
 	
 	// The following is a temporarily way to sync up the playerlist
@@ -357,9 +360,9 @@ RECEIVE(PLAYERINFO, id, msg, reliable)
 	if (!reliable) return;
 	for (size_t i = 1; i < msg.size(); i += 2)
 	{
-		ObjectHandle player;
+		ObjectHandle player = Player();
+		player->unserialize((string) msg[i+1]);
 		Player *p = TO(Player,player);
-		*p = (string) msg[i+1];
 		Player::Id pid = p->id;
 		game.topId = MAX(game.topId,pid) + 1;
 		game.root->children.insert(player);
@@ -386,8 +389,17 @@ void StructInfo(NodeID nid)
 RECEIVE(STRUCTINFO, id, msg, reliable)
 {
 	if (!reliable) return;
+	
+	Terrain *t = TO(Terrain,game.world->terrain);
+	t->structures.clear();
+
 	for (size_t i = 1; i < msg.size(); i += 2)
 	{
+		GridPoint g = ToGridPoint(msg[i]);
+		if (!g.isValid()) continue;
+		ObjectHandle structure = Object::construct(msg[i+1]);
+		structure->unserialize(msg[i+1]);
+		t->structures[g] = structure;
 	}
 }
 

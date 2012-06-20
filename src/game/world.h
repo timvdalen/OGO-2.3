@@ -103,7 +103,7 @@ class Droppable: public BoundedObject
 	struct { ObjectHandle coin; } model;
 
 	//! Creates a new Droppable
-	Droppable(Pd _origin, Resource _worth, long _dropped = Video::ElapsedTime(), long _ttl = 15000);
+	Droppable(Pd _origin = Pd(), Resource _worth = 0, long _dropped = Video::ElapsedTime(), long _ttl = 15000);
 
 	//! Called before draw()
 	void preRender();

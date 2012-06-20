@@ -20,6 +20,13 @@ namespace Objects {
 
 void drawFoundation(int h);
 
+REGISTER(Structure,)
+REGISTER(Mine,)
+REGISTER(Building,)
+REGISTER(HeadQuarters,)
+REGISTER(DefenseTower,)
+REGISTER(ResourceMine,)
+
 //------------------------------------------------------------------------------
 
 bool GridPoint::operator<(const GridPoint& p2) const
@@ -85,7 +92,7 @@ string convert(const GridPoint &g) { char buffer[1024];
 
 //------------------------------------------------------------------------------
 
-GridPoint ToGridPoint(const string &str) { GridPoint g;
+GridPoint ToGridPoint(const string &str) { GridPoint g = GridPoint(-1,-1);
 	sscanf(str.c_str(), "G%ld,%ld", &g.x, &g.y); return g; }
 
 //------------------------------------------------------------------------------
