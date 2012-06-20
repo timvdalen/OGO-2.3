@@ -65,6 +65,7 @@ class Terrain: public BoundedObject
 	//! Determines if the gridlines has been cached in a display list
 	bool gridCached;
 
+	bool everythingCached;
 
 	//! Size of the world in the X direction.
 

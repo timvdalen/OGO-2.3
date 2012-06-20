@@ -52,6 +52,7 @@ extern MaterialHandle   Robot_normal,   Robot_red,   Robot_blue;
 extern MaterialHandle Pickaxe_normal, Pickaxe_red, Pickaxe_blue;  
 extern MaterialHandle   Tower_normal,   Tower_red,   Tower_blue;
 extern MaterialHandle      HQ_normal,      HQ_red,      HQ_blue;
+extern MaterialHandle Wall;
 
 }
 
