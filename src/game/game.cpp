@@ -674,6 +674,7 @@ void Build()
 		switch(structure){
 		case 1: case 11: tower = Objects::DefenseTower(game.player->id); break;
 		case 2: case 12: tower = Objects::ResourceMine(game.player->id); break;
+		case 3: case 13: tower = Objects::RichResourceMine(game.player->id); break;
 		default: tower = ObjectHandle();
 		}
 		Resource cost = 0;
