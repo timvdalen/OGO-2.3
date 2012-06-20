@@ -638,6 +638,11 @@ inline int scale(int linewidth, float scale){
     }
 
 void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, float angle, float centerx, float centery){
+	float buildingx = (p.x)*xspacing +0.5*xspacing;
+	float buildingy = (p.y)*yspacing + 0.5*yspacing;
+	if(fabs(buildingx - centerx) > 300 || fabs(buildingy - centery) > 300){
+		return;
+	}
 	Building *b = TO(Building, s);
 	Player* player = 0;
 	if(b && Game::game.players.count(b->owner)){
@@ -647,7 +652,6 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, floa
 	double enlargeup = 0;
 	MaterialHandle mat;
 	float progress;
-	//TODO team recognition.
 	if(TO(DefenseTower, s)){
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
 		if(player){
