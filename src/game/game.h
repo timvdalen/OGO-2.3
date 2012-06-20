@@ -132,6 +132,7 @@ void Goto(string cmd); //!< Cheat command
 
 void DisplayChatMsg(Player *, string line); //!< Displays a chat message in the log
 void DisplayTeamMsg(Player *, string line); //!< Displays a team chat message in the log
+void DisplayFragMsg(Player *, Player*);     //!< Displays a tower/player kill message
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Diagnostics

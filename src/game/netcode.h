@@ -64,6 +64,8 @@ void Look(Qd rotation);
 void Team(unsigned char team, Resource gold);
 
 void Fire(const LaserBeam &);
+void Hit(Player::Id, double damage);
+void Died(Player::Id); //!< \note id is zero for tower kill
 
 void Debug();
 
