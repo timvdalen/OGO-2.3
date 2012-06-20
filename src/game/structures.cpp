@@ -286,13 +286,26 @@ void Terrain::postRender()
 					int noCoins = toDrop/20;
 					for(int i=0; i < noCoins; i++){
 						Pd droppoint = Game::game.world->terrain->ToPointD(b->loc);
-						droppoint.x += (rand()%10);
-						droppoint.y += (rand()%10);
+						if(b->type() == "ResourceMine" || b->type() == "RichResourceMine"){
+							droppoint.x += (rand()%40)-(2.5*GRID_SIZE);
+							droppoint.y += (rand()%40)-(2.5*GRID_SIZE);
+						}else{
+							droppoint.x += (rand()%10);
+							droppoint.y += (rand()%10);
+						}
 						Game::game.world->temporary.push_back(Droppable(droppoint, 20));
 					}
+					
 					//TODO: Send this over the network
 				//}
 				structures.erase(it++);
+
+				if(b->type() == "ResourceMine"){
+					placeStructure(b->loc, Mine());
+				}else if(b->type() == "RichResourceMine"){
+					placeStructure(b->loc, RichMine());
+				}
+
 				glPopMatrix();
 				continue;
 			}
@@ -573,7 +586,7 @@ RichMine::RichMine(Pd P, Qd R, Resource _maxIncome)
 	model.rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	model.rock->children.insert(Assets::Model::RockObj);
 	children.insert(model.rock);
-	model.rock->material = Assets::Model::RockTex;
+	model.rock->material = Assets::Model::RichRockTex;
 	material = Assets::Grass;
 }
 
@@ -937,7 +950,7 @@ RichResourceMine::RichResourceMine(Player::Id _owner)
 	rock = ModelObjectContainer();
 	rock->origin = Pd(GRID_SIZE/2,GRID_SIZE/2,1);
 	rock->children.insert(Assets::Model::RockObj);
-	rock->material = Assets::Model::RockTex;
+	rock->material = Assets::Model::RichRockTex;
 
 	int i = 1;
 	if (Game::game.players.count(owner))

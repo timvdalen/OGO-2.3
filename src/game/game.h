@@ -44,6 +44,8 @@ void Call(std::string command);
 //! Returns whether given string contains a command
 bool Callable(std::string command);
 
+Point<double> getSpawn(const char team);
+
 //------------------------------------------------------------------------------
 
 //! Game state data set
@@ -132,6 +134,7 @@ void Goto(string cmd); //!< Cheat command
 
 void DisplayChatMsg(Player *, string line); //!< Displays a chat message in the log
 void DisplayTeamMsg(Player *, string line); //!< Displays a team chat message in the log
+void DisplayFragMsg(Player *, Player*);     //!< Displays a tower/player kill message
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Diagnostics

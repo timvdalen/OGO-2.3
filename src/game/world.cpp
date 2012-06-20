@@ -151,8 +151,8 @@ void World::postRender(){
 
 Point<double> World::getCorrectedOrigin(Qd q, Pd p){
     #define LOWERBOUND 0.25
-	#define ZLEVEL 1.2
-	#define ZLEVEL2 3.5
+	#define ZLEVEL 10
+	#define ZLEVEL2 10
 	#define INTRNBND GRID_SIZE/5.0
 	#define newp (p + (v*lambda))
 	Vd v = q*Vd(0,1,0);

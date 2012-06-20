@@ -46,6 +46,7 @@ MaterialHandle  Robot_normal,    Robot_red,   Robot_blue;
 MaterialHandle Pickaxe_normal, Pickaxe_red, Pickaxe_blue;
 MaterialHandle   Tower_normal,   Tower_red,   Tower_blue;
 MaterialHandle      HQ_normal,      HQ_red,      HQ_blue;
+MaterialHandle Wall;
 
 }
 
@@ -59,7 +60,7 @@ MaterialHandle HeadTex, BodyTex[2], GunTex, WrenchTex, WheelTex[2];
 
 //structure objects
 ObjectHandle TurretObj, MineObj, DrillObj, RockObj, HQBaseObj, HQSocketObj, HQCoreObj, HQCoreinvObj;
-MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
+MaterialHandle TurretTex[3], MineTex[2], DrillTex[2], RockTex, RichRockTex, HQBaseTex[3], HQSocketTex, HQCoreTex[3];
 MaterialHandle GhostTex, GhostErrorTex;
 
 //other objects
@@ -147,6 +148,7 @@ void Initialize(int argc, char *argv[])
     Icon::HQ_normal = TexturedMaterial(path + "assets/textures/hud/headquarter_normal.png");
     Icon::HQ_blue = TexturedMaterial(path + "assets/textures/hud/headquarter_blue.png");
     Icon::HQ_red = TexturedMaterial(path + "assets/textures/hud/headquarter_red.png");
+	Icon::Wall = ColorMaterial(1.0f, 1.0f, 1.0f, 1.0f);
     
 	//Model objects
 	Model::HeadObj = Loader::ModelObject(Pd(), Qd(), path + "assets/models/head.3DS");
@@ -183,6 +185,7 @@ void Initialize(int argc, char *argv[])
 	Model::DrillTex[0] = TexturedMaterial(path + "assets/textures/models/drilltexred.png");
 	Model::DrillTex[1] = TexturedMaterial(path + "assets/textures/models/drilltexblue.png");
 	Model::RockTex = TexturedMaterial(path + "assets/textures/models/rocktext.png");
+	Model::RichRockTex = TexturedMaterial(path + "assets/textures/models/rocktextrich.png");
 	Model::HQBaseTex[0] = TexturedMaterial(path + "assets/textures/models/HQBasetered.png");
 	Model::HQBaseTex[1] = TexturedMaterial(path + "assets/textures/models/HQBaseteblue.png");
 	Model::HQBaseTex[2] = TexturedMaterial(path + "assets/textures/models/HQBasetenormal.png");
@@ -246,6 +249,7 @@ void Terminate()
 	Model::TurretObj.clear();
 	Model::MineObj.clear();
 	Model::DrillObj.clear();
+	Model::RockObj.clear();
 	Model::HQBaseObj.clear();
 	Model::HQSocketObj.clear();
 	Model::HQCoreObj.clear();
@@ -269,6 +273,8 @@ void Terminate()
 	Model::MineTex[1].clear();
 	Model::DrillTex[0].clear();
 	Model::DrillTex[1].clear();
+	Model::RockTex.clear();
+	Model::RichRockTex.clear();
 	Model::HQBaseTex[0].clear();
 	Model::HQBaseTex[1].clear();
 	Model::HQBaseTex[2].clear();

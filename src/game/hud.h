@@ -159,6 +159,33 @@ class SystemMessage: public DisplayMessage{
 	virtual string toString();
 };
 
+//! Represents a player join message
+class PlayerJoinMessage: public DisplayMessage{
+	public:
+	//! The player that joined
+	const Player &joined;
+
+	//! Constructs a new PlayerJoinMessage
+	PlayerJoinMessage(const Player &_joined);
+
+	//! Formats this emssage as <[joined.name]> has joined the game
+	virtual string toString();
+};
+
+//! Represents a player leave message
+class PlayerLeaveMessage: public DisplayMessage{
+	public:
+	//! The player that left
+	const Player &left;
+
+	//! Constructs a new PlayerJoinMessage
+	PlayerLeaveMessage(const Player &_left);
+
+	//! Formats this emssage as <[left.name]> has left the game
+	virtual string toString();
+};
+
+
 //! Displays a variety of messages
 class MessageDisplayer: public Widget{
 	//! The last time a message was added
