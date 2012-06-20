@@ -812,7 +812,8 @@ static void lobbyOnStart(){
     ss << "./Game --connect " << serverAddr << " &";
     const char *command = ss.str().c_str();
 #endif
-#endif  
+#endif 
+   	sleep(2); 
 	system(command);
 	exit(EXIT_SUCCESS);
 }
