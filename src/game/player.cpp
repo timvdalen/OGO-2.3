@@ -242,7 +242,7 @@ void Player::render(){
 }
 
 void Player::interpolate(){
-	origin = origin + velocity * (Movement::MoveSpeed / FRATE);
+	origin = origin + velocity * (Movement::MoveSpeed * FRATE);
 }
 
 //------------------------------------------------------------------------------
