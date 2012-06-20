@@ -111,7 +111,7 @@ class BoundedObject: public Object
 	//! Checks if a line from origin to direction collides with this object or one of its children.
 	//! If there is a collision, this function returns a handle to the object the line collides with
 	//! if not, it returns null.
-	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction, Object* ignore);
 	ObjectHandle checkCollision2(Pd origin, Vd direction);
 	
 	bool checkCollision(const ObjectHandle &target);

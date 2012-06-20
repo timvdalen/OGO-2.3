@@ -65,7 +65,7 @@ class World: public BoundedObject
 	//!       When the function returns with an object the path value will be set
 	//!       to the vector pointing to collision spot
 	//! \returns the first colliding object or an empty handle when no object was found
-	ObjectHandle trace(Point<double> origin, Vector<double> &path, ObjectHandle ignore);
+	ObjectHandle trace(Point<double> origin, Vector<double> &path, Object* ignore);
 	
 	//! Gets a set of objects that touch the given object
 	//! \note When the traget is not bounded it only check for the origin

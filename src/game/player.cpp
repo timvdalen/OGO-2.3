@@ -214,7 +214,7 @@ void Player::draw() {
 
 void Player::frame(){
 	if(isDestroyed()){
-		origin = Pd(-10.0, -10.0, 0.0);
+		origin = Game::getSpawn(team);
 		int noPlayers = 0;
 		map<Player::Id, ObjectHandle>::iterator it;
 		for(it = Game::game.players.begin(); it != Game::game.players.end(); it++){

@@ -65,6 +65,7 @@ class Terrain: public BoundedObject
 	//! Determines if the gridlines has been cached in a display list
 	bool gridCached;
 
+	bool everythingCached;
 
 	//! Size of the world in the X direction.
 
@@ -129,7 +130,7 @@ class Terrain: public BoundedObject
 	Pd ToPointD(GridPoint p);
 
 
-	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction);
+	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction, Object* ignore);
 	ObjectHandle checkCollision2(Pd origin, Vd direction);
 
 	//! Converts a Point<double> to a GridPoint

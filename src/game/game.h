@@ -44,6 +44,8 @@ void Call(std::string command);
 //! Returns whether given string contains a command
 bool Callable(std::string command);
 
+Point<double> getSpawn(const char team);
+
 //------------------------------------------------------------------------------
 
 //! Game state data set

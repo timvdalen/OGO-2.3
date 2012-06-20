@@ -25,6 +25,8 @@ namespace Game {
 using namespace std;
 using namespace Protocol;
 
+Point<double> getSpawn(const char team);
+
 static void getInput(string input);
 string to_lower_case(string str);
 bool file_exists(const char *filename);
@@ -311,6 +313,39 @@ string to_lower_case(string str)
 {
 	transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
+}
+
+//------------------------------------------------------------------------------
+
+Point<double> getSpawn(const char team){
+	switch(team){
+	case 'a':{
+			Pd spawn1 = game.world->terrain->ToPointD(GridPoint(4, 24));
+			Pd spawn2 = game.world->terrain->ToPointD(GridPoint(4, 25));
+			int randval = rand() % 2;
+			if(randval == 0){
+				return spawn1;
+			}else{
+				return spawn2;
+			}
+		 }
+		 break;
+	case 'b':{
+			Pd spawn1 = game.world->terrain->ToPointD(GridPoint(46,25));
+		       	Pd spawn2 = game.world->terrain->ToPointD(GridPoint(46,26));
+			int randval = rand() % 2;
+			if(randval == 0){
+				return spawn1;
+			}else{
+				return spawn2;
+			}
+	
+		 }
+		 break;
+	default:{
+			return Pd();
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -616,9 +651,9 @@ void Fire()
 			ObjectHandle collision;
 			if(game.controller->firstPerson){
 				lookVec = (~(game.controller->camAngle * Vd(0,1,0)))*38;
-				collision = game.world->trace(game.controller->camera.origin, lookVec, game.players[game.player->id]);
+				collision = game.world->trace(game.controller->camera.origin, lookVec, game.player);
 			}else{
-				collision = game.world->trace(game.controller->target, lookVec, game.players[game.player->id]);
+				collision = game.world->trace(game.controller->target, lookVec, game.player);
 			}
 			if (collision)
 			{	
@@ -876,7 +911,7 @@ void Test(string str)
 		if(game.teams.count('a'))
 			game.teams['a'].resources = 1000;
 
-		game.world->terrain->placeStructure(GridPoint(1,1), DefenseTower(pid2));
+		game.world->terrain->placeStructure(GridPoint(22,24), DefenseTower(pid2));
 	}
 
 }

@@ -5,5 +5,6 @@ Voordat we de aannamen kunnen valideren, moeten we deze aannamen natuurlijk eers
 \item[(ii)] Verder hebben we aangenomen dat de RTT, oftewel de \emph{Round-Trip Time}, kleiner is dan 200 ms. Dit betekent dus dat het niet langer duurt dan 100 ms om een bericht van speler A naar speler B te sturen.
 \end{enumerate}
 
-% Token 21 keer rond over internet.
-We hebben deze aannamen uitgebreid getest. Hiertoe hebben we een apart programma geschreven. Testgegevens zijn helaas nog niet opgenomen in dit concept eindverslag, deze zullen nog komen in het uiteindelijke eindverslag.
+We hebben deze aannamen uitgebreid getest. Hiertoe hebben we een apart programma geschreven. In deze test stuurden twee computers om en om 10 berichten naar elkaar van 50 bytes. Deze test hebben we drie keer uitgevoerd over \textsc{lan}. We gebruikten hiervoor \textsc{Ethernet} van 100 Mbps. In de eerste test konden we 1568 berichten per seconde sturen, in de tweede test 1323 berichten per seconde en in de derde test 1459 berichten per seconde.
+
+Vervolgens hebben we de RTT onder dezelfde omstandigheden getest. Hierbij hebben we TCP gebruikt om de RTT te meten. In deze test stuurden we een totaal van 100 berichten van 10 bytes per stuk gelijkmatig verdeeld over 10 seconden. Ook deze test hebben we drie keer uitgevoerd. De gemiddelde RTT in de eerste test was 13.5 milliseconde, in de tweede test 12.8 milliseconde en in de laatste test 16.1 milliseconde.
