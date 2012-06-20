@@ -744,6 +744,15 @@ void Tool(ToolType tool)
 
 //------------------------------------------------------------------------------
 
+CMD(Goto, 1, arg, (string) arg[0])
+void Goto(string cmd)
+{
+	if (cmd == "gold")
+		game.teams[game.player->team].resources += 1000.0;
+}
+
+//------------------------------------------------------------------------------
+
 void DisplayChatMsg(Player *player, string line)
 {
 	if (!player) return;
