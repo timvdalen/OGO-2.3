@@ -640,14 +640,14 @@ void Fire()
 						//TODO: Send over the network
 					}
 				}else{
-					DefenseTower *t = TO(DefenseTower, collision);
-					if(t){
+					Building *b = TO(Building, collision);
+					if(b){
 						/* Enable team kill on towers to demolish
 						Player *own = NULL;
 						if(Game::game.players.count(t->owner))
 							own = TO(Player, Game::game.players[t->owner]); 
 						if(own && own->team != game.player->team){*/
-							t->damage(10.0);
+							b->damage(10.0);
 							//TODO: Send over the network
 						//}
 					}
