@@ -786,6 +786,24 @@ void DisplayFragMsg(Player *player, Player *victim)
 
 //------------------------------------------------------------------------------
 
+void DisplayJoinMsg(Player *player)
+{
+	if (!player) return;
+
+	game.world->hud->messageDisplayer->addMessage(PlayerJoinMessage(*player));
+}
+
+//------------------------------------------------------------------------------
+
+void DisplayPartMsg(Player *player)
+{
+	if (!player) return;
+
+	game.world->hud->messageDisplayer->addMessage(PlayerLeaveMessage(*player));
+}
+
+//------------------------------------------------------------------------------
+
 CMD(PrintFPS, 0, arg)
 void PrintFPS()
 {

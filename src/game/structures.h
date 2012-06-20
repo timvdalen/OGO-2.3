@@ -142,6 +142,10 @@ class Terrain: public BoundedObject
 class Structure: public BoundedObject
 {
 	public: NAME(Structure)
+	SERIAL(type() | convert(loc))
+	UNSERIAL(arg, 1,
+		loc = ToGridPoint(arg[0]);
+	)
 	
 	//! The GridPoint this building is at
 	GridPoint loc;
@@ -219,6 +223,13 @@ class Building: public Structure, public Destroyable
 	void drawHealthbar();
 
 	public: NAME(Building)
+	SERIAL(type() | convert(loc) | convert((long) owner) | convert((long) buildTime))
+	UNSERIAL(arg, 3,
+		loc = ToGridPoint(arg[0]);
+		owner = ToInteger(arg[1]);
+		buildTime = ToInteger(arg[2]);
+	)
+	
 	//! Height of this building in local object coordinates
 	int height;
 	//! The cost of this building

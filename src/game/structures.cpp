@@ -523,7 +523,7 @@ void Building::postRender(){
 
 void Building::frame()
 {
-	if(owner && built && income > 0 && owner == Game::game.player->id){
+	if(owner && built && income > 0 /*&& owner == Game::game.player->id*/){
 		int now = Video::ElapsedTime();
 		if(now-lastGenerated > 5000){
 			map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);

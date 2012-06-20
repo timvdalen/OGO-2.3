@@ -131,6 +131,11 @@ void Frame()
 		// A player disconnected:
 		// Assign all owned buildings to a different player
 		// Check win condition: no players left for one team
+		Player::Id pid = nodes[id];
+		if (!game.players.count(pid)) return;
+		ObjectHandle player = game.players[pid];
+		game.world->children.erase(player);
+		game.players.erase(pid);
 	}
 	
 	while (tokenring->entry(id))
@@ -346,6 +351,7 @@ RECEIVE(PLAYERINFO, id, msg, reliable)
 		game.root->children.insert(player);
 		game.players[pid] = player;
 		nodes[(long) msg[i]] = pid;
+		p->updateTextures();
 	}
 }
 
@@ -565,17 +571,19 @@ RECEIVE(FIRE, id, msg, reliable)
 
 //------------------------------------------------------------------------------
 
-void Hit(Player::Id pid, double damage)
+void Hit(Player::Id pid, double damage, bool self)
 {
 	Message msg;
 	msg.push_back("HIT");
 	msg.push_back((long) pid);
 	msg.push_back((double) damage);
+	msg.push_back((long) (self ? 1 : 0));
 	SEND(msg, true);
 }
 RECEIVE(HIT, id, msg, reliable)
 {
 	Player::Id pid = (long) msg[1];
+	bool self = (long) msg[3];
 	if (!game.players.count(pid)) return;
 	TO(Player,game.players[pid])->damage((double) msg[2]);
 }
@@ -585,6 +593,7 @@ RECEIVE(HIT, id, msg, reliable)
 void Died(Player::Id pid)
 {
 	Message msg;
+	msg.push_back("DIED");
 	msg.push_back((long) pid);
 	SEND(msg, true);
 }
@@ -596,6 +605,130 @@ RECEIVE(DIED, id, msg, reliable)
 		DisplayFragMsg(TO(Player,game.players[vid]), 0);
 	else
 		DisplayFragMsg(TO(Player,game.players[vid]), TO(Player,game.players[pid]));
+}
+
+//------------------------------------------------------------------------------
+
+void Build(GridPoint g, Structure *s)
+{
+	Message msg;
+	msg.push_back("BUILD");
+	msg.push_back(convert(g));
+	msg.push_back((string) *s);
+	SEND(msg, true);
+}
+RECEIVE(BUILD, id, msg, reliable)
+{
+	if (!reliable) return;
+	GridPoint g = ToGridPoint(msg[1]);
+	if (!g.isValid()) return;
+	ObjectHandle structure = Object::construct((string) msg[2]);
+	if (!structure) return;
+	structure->unserialize(msg[2]);
+	game.world->terrain->structures[g] = structure;
+}
+
+//------------------------------------------------------------------------------
+
+void Take(unsigned long id)
+{
+	Message msg;
+	msg.push_back("TAKE");
+	msg.push_back((long) id);
+	SEND(msg, true);
+}
+RECEIVE(TAKE, id, msg, reliable)
+{
+	if (!reliable) return;
+	unsigned long iid = (long) msg[1];
+	
+	vector<ObjectHandle>::iterator it;
+	for (it = game.world->temporary.begin(); it != game.world->temporary.end(); ++it)
+	{
+		Droppable *d = TO(Droppable, *it);
+		if (!d) continue;
+		if (d->id == iid)
+		{
+			if (!game.players.count(nodes[id])) continue;
+			Player *p = TO(Player,game.players[nodes[id]]);
+			if (!p) continue;
+			game.teams[p->team].resources += d->worth;
+			game.world->temporary.erase(it);
+			break;
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void Drop(Droppable *s)
+{
+	Message msg;
+	msg.push_back("DROP");
+	msg.push_back((string) *s);
+	SEND(msg, true);
+}
+RECEIVE(DROP, id, msg, reliable)
+{
+	ObjectHandle item = Object::construct((string) msg[1]);
+	if (!item) return;
+	item->unserialize(msg[1]);
+	game.world->temporary.push_back(item);
+}
+
+//------------------------------------------------------------------------------
+
+void Attack(GridPoint g, double damage, bool self)
+{
+	Message msg;
+	msg.push_back("ATTACK");
+	msg.push_back(convert(g));
+	msg.push_back((double) damage);
+	msg.push_back((long) (self ? 1 : 0));
+	SEND(msg, true);
+}
+RECEIVE(ATTACK, id, msg, reliable)
+{
+	GridPoint g = ToGridPoint(msg[1]);
+	if (!g.isValid()) return;
+	bool self = (long) msg[3];
+	Building *b = TO(Building,game.world->terrain->structures[g]);
+	if (!b) return;
+	b->damage((double) msg[2]);
+}
+
+//------------------------------------------------------------------------------
+
+void Destroy(GridPoint g, Player::Id pid)
+{
+	Message msg;
+	msg.push_back("DESTROY");
+	msg.push_back(convert(g));
+	msg.push_back((long) pid);
+	SEND(msg, true);
+}
+RECEIVE(DESTROY, id, msg, reliable)
+{
+	GridPoint g = ToGridPoint(msg[1]);
+	Player::Id pid = (long) msg[2];
+	// We get the notification a building was destroyed.
+	// What do we do here?
+}
+
+//------------------------------------------------------------------------------
+
+void End(unsigned char team)
+{
+	Message msg;
+	msg.push_back("END");
+	msg.push_back((long) team);
+	SEND(msg, true);
+}
+RECEIVE(END, id, msg, reliable)
+{
+	if (!reliable) return;
+	unsigned char team = (long) msg[1];
+	// Fireworks?
 }
 
 //------------------------------------------------------------------------------
