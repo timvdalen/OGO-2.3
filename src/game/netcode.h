@@ -55,11 +55,13 @@ bool Send(const Message &, bool reliable = false); //!< Sends a raw message
 void Enter(unsigned char team, string name);
 void ReEnter(Player::Id pid);
 void Welcome(Player::Id pid);
+void Sync(Player::Id pid);
 
 void Chat(std::string line);
 void TeamChat(std::string line);
 void Move(Pd position, Vd velocity);
 void Look(Qd rotation);
+void Team(unsigned char team, Resource gold);
 
 void Debug();
 

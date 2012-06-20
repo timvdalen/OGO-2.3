@@ -80,6 +80,16 @@ bool GridPoint::isValid()
 
 //------------------------------------------------------------------------------
 
+string convert(const GridPoint &g) { char buffer[1024];
+	sprintf(buffer, "G%d,%d", g.x, g.y); return string(buffer); }
+
+//------------------------------------------------------------------------------
+
+GridPoint ToGridPoint(const string &str) { GridPoint g;
+	sscanf(str.c_str(), "G%ld,%ld", &g.x, &g.y); return g; }
+
+//------------------------------------------------------------------------------
+
 Terrain::Terrain(double _width, double _height)
 	: BoundedObject(Pd(), Qd(),
 	  BoundingBox(Pd(-_width/2, -_height/2, 0), Pd(_width,0,0), Pd(0,_height,0), Pd(_width,_height,0), Pd(), Pd(), Pd(), Pd(_width/2, _height/2, HIGH)),

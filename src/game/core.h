@@ -66,7 +66,9 @@ inline string operator |(const string &lhs, const string &rhs)
 
 #define NAME(x) virtual string type() const { return #x; }
 #define SERIAL(x) virtual operator string() const { return x; }
-#define UNSERIAL(arg,num,x) virtual bool operator =(vector<string> &arg) \
+#define UNSERIAL(arg,num,x)                                                    \
+bool operator =(const string &str) { return unserialize(str); }                \
+virtual bool operator =(vector<string> &arg)                                   \
 	{ if ((arg.size() < (num)+1) || (arg[0] != type())) return false;          \
 	arg.erase(arg.begin()); {x} return true; }
 
@@ -191,7 +193,7 @@ class Object
 	virtual void render();
 	
 	//! Unserialize from a string
-	bool operator =(const string &str);
+	bool unserialize(const string &str);
 	
 	class iterator : public std::iterator<input_iterator_tag,ObjectHandle>
 	{

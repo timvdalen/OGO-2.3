@@ -132,7 +132,7 @@ void Object::postRender()
 
 //------------------------------------------------------------------------------
 
-bool Object::operator =(const string &str)
+bool Object::unserialize(const string &str)
 {
 	vector<string> arg;
 	size_t left, right;
