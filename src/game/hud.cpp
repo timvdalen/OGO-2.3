@@ -736,7 +736,7 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, floa
         }else{
             Assets::Icon::Robot_blue->select();
         }
-		glTranslatef((relx+0.5)*xspacing, (rely+0.5)*yspacing, 0);
+		glTranslatef((relx)*xspacing, (rely)*yspacing, 0);
 		glRotatef(-angle, 0,0,1);
         glBegin(GL_QUADS);
         glTexCoord2f(0,1);
@@ -749,7 +749,7 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, floa
         glVertex2i((int)((0.5)*xspacing), (int)(-(0.5)*yspacing));
         glEnd();
 		glRotatef(angle, 0,0,1);
-		glTranslatef(-(relx+0.5)*xspacing, -(rely+0.5)*yspacing, 0);
+		glTranslatef(-(relx)*xspacing, -(rely)*yspacing, 0);
         if(marked){
             Assets::Icon::Robot_normal->unselect();
         }else if(p->team == 'a'){
