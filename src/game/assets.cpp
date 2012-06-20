@@ -41,9 +41,10 @@ namespace HealthBar{
     
 namespace Icon{ 
    
-MaterialHandle Money, Health, Mine;
+MaterialHandle Money, Health, RichMine, Mine;
 MaterialHandle  Robot_normal,    Robot_red,   Robot_blue;
 MaterialHandle Pickaxe_normal, Pickaxe_red, Pickaxe_blue;
+MaterialHandle RichPickaxe_normal, RichPickaxe_red, RichPickaxe_blue;
 MaterialHandle   Tower_normal,   Tower_red,   Tower_blue;
 MaterialHandle      HQ_normal,      HQ_red,      HQ_blue;
 MaterialHandle Wall;
@@ -136,12 +137,16 @@ void Initialize(int argc, char *argv[])
     Icon::Money = TexturedMaterial(path + "assets/textures/hud/money.png");
     Icon::Health = TexturedMaterial(path+ "assets/textures/hud/health.png");
     Icon::Mine = TexturedMaterial(path + "assets/textures/hud/mine.png");
+	Icon::RichMine = TexturedMaterial(path + "assets/textures/hud/richmine.png");
     Icon::Robot_red = TexturedMaterial(path + "assets/textures/hud/robot_red.png");
     Icon::Robot_blue = TexturedMaterial(path + "assets/textures/hud/robot_blue.png");
     Icon::Robot_normal = TexturedMaterial(path + "assets/textures/hud/robot_normal.png");
     Icon::Pickaxe_normal = TexturedMaterial(path + "assets/textures/hud/pickaxe_normal.png");
     Icon::Pickaxe_blue = TexturedMaterial(path + "assets/textures/hud/pickaxe_blue.png");
     Icon::Pickaxe_red = TexturedMaterial(path + "assets/textures/hud/pickaxe_red.png");
+	Icon::RichPickaxe_normal = TexturedMaterial(path + "assets/textures/hud/richpickaxe_normal.png");
+    Icon::RichPickaxe_blue = TexturedMaterial(path + "assets/textures/hud/richpickaxe_blue.png");
+    Icon::RichPickaxe_red = TexturedMaterial(path + "assets/textures/hud/richpickaxe_red.png");
     Icon::Tower_blue = TexturedMaterial(path + "assets/textures/hud/tower_blue.png");
     Icon::Tower_normal = TexturedMaterial(path + "assets/textures/hud/tower_normal.png");
     Icon::Tower_red = TexturedMaterial(path + "assets/textures/hud/tower_red.png");
@@ -238,6 +243,8 @@ void Terminate()
     Icon::HQ_normal.clear();
     Icon::HQ_blue.clear();
     Icon::HQ_red.clear();
+	Icon::RichMine.clear();
+	Icon::Wall.clear();
 
 	//Model objects
 	Model::HeadObj.clear();

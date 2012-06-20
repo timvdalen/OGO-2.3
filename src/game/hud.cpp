@@ -659,12 +659,17 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, floa
 		}else{
 			mat = Assets::Icon::Tower_normal;
 		}
-    }else if(TO(Mine, s) || TO(RichMine, s)){
+    }else if(TO(Mine, s)){
 		enlargeup = 0;
 		enlargedown = 0;
 		progress = 1;
 		mat = Assets::Icon::Mine;
-	}else if(TO(ResourceMine, s) || TO(RichResourceMine, s)){
+	}else if(TO(RichMine, s)){
+		enlargeup = 0;
+		enlargedown = 0;
+		progress = 1;
+		mat = Assets::Icon::RichMine;
+	}else if(TO(ResourceMine, s)){
 		enlargeup = 0;
 		enlargedown = 0;
 		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
@@ -676,6 +681,19 @@ void drawStructure(GridPoint p, ObjectHandle s, int xspacing, int yspacing, floa
 			}
 		}else{
 			mat = Assets::Icon::Pickaxe_normal;
+		}
+	}else if(TO(RichResourceMine, s)){
+		enlargeup = 0;
+		enlargedown = 0;
+		progress = (float)(Video::ElapsedTime()-b->buildTime)/b->buildDuration;
+		if(player){
+			if(player->team == 'a'){
+				mat = Assets::Icon::RichPickaxe_red;
+			}else{
+				mat = Assets::Icon::RichPickaxe_blue;
+			}
+		}else{
+			mat = Assets::Icon::RichPickaxe_normal;
 		}
 	}else if(TO(HeadQuarters, s)){
 		enlargeup = 0;
