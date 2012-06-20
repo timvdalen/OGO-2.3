@@ -67,7 +67,8 @@ void Frame()
 				double dist = sqrt(tempX * tempX + tempY * tempY);
 				if (dist < 0.5)
 				{
-					if(game.teams.count(game.player->team)){
+					if(game.teams.count(game.player->team))
+					{
 						game.teams[game.player->team].resources += d->worth;
 						d->done = true;
 					}
