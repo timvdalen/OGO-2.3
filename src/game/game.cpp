@@ -33,8 +33,8 @@ int windowWidth = 800;
 int windowHeight = 600;
 bool fullscreen = false;
 
-double gameWidth = 100;
-double gameHeight = 100;
+double gameWidth = 1000;
+double gameHeight = 1000;
 string path = "./";
 
 ConfigFile *config = NULL;
@@ -146,12 +146,12 @@ void Initialize(int argc, char *argv[])
 	game.player->weapon = weapLaser;
 	game.root->children.insert(player);
 	game.players[pid] = player;
-/*	
+	
 	Player::Id pid2 = game.topId++;
 	ObjectHandle player2 = Player(pid2, 'b', name);
 	game.root->children.insert(player2);
 	game.players[pid2] = player2;
-*/	
+
 	game.world->terrain->placeStructure(GridPoint(0,0), Mine());
 	game.world->terrain->placeStructure(GridPoint(0,9), Mine());
 	game.world->terrain->placeStructure(GridPoint(9,0), Mine());
