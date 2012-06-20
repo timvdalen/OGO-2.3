@@ -797,21 +797,20 @@ static void lobbyOnStart(){
     char serverAddr[180];
 	server.string(serverAddr);
     //I would use exec_*, but Windows does not support that
+    //Ignore windows for now
 #if (defined WIN32 || defined _MSC_VER)
     char command[28] = "start Game ";
     strcat(command, serverAddr);
 #else
 #ifdef __APPLE__
     //ugly fix 
-    char command[180] = "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/' ";
-    strcat(command, serverAddr);
-    //arguments can be added here
-    strcat(command,   "\\\"\"");
-    printf(command);
+    stringstream ss;
+    ss << "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/ --connect ' " << serverAddr;
+    const char *command = ss.str().c_str();
 #else
-    char command[27] = "./Game ";
-    strcat(command, serverAddr);
-    strcat(command, " &");
+    stringstream ss;
+    ss << "./Game --connect " << serverAddr << " &";
+    const char *command = ss.str().c_str();
 #endif
 #endif  
 	system(command);
