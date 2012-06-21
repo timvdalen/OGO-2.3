@@ -795,6 +795,7 @@ static void lobbyOnStartCall(){
 
 static void lobbyOnStart(){
     char serverAddr[180];
+	server.port(9070);
 	server.string(serverAddr);
     //I would use exec_*, but Windows does not support that
     //Ignore windows for now
@@ -805,14 +806,14 @@ static void lobbyOnStart(){
 #ifdef __APPLE__
     //ugly fix 
     stringstream ss;
-    ss << "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/ --connect ' " << serverAddr;
+    ss << "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/' -c " << serverAddr << "\\\" \"";
     const char *command = ss.str().c_str();
 #else
     stringstream ss;
     ss << "./Game --connect " << serverAddr << " &";
     const char *command = ss.str().c_str();
 #endif
-#endif 
+#endif
    	sleep(2); 
 	system(command);
 	exit(EXIT_SUCCESS);
@@ -834,8 +835,7 @@ static void serverLobbyOnStart(){
 	#else
         #ifdef __APPLE__
         //awesome ugly code :D
-        system("echo \"`pwd`\"");
-            system("osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/'\\\"\"");
+		system("osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/' \\\"\"");
         #else
             system("./Game &");
         #endif
