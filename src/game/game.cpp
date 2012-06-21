@@ -866,6 +866,7 @@ void DisplayPartMsg(Player *player)
 
 void GameEnd(unsigned char team)
 {
+	ShowLog();
 	if (team == 'a')
 		Notice("The Alliance of Free Systems (Team Red) is victorious!");
 	else if (team == 'b')
