@@ -9,18 +9,10 @@
 
 #ifndef _BROADCASTER_H
 #define _BROADCASTER_H
-#include <pthread.h>
-#include "../common/net.h"
+#include "net.h"
 
 namespace Broadcaster {
 using namespace Net;
-	
-	struct Thread {
-		bool run;
-		pthread_t broadcastThread;
-		UDPSocket udp;
-	};
-	extern Thread t;
 	
 	void Initialize();
 	void Terminate();

@@ -31,6 +31,11 @@ using namespace Broadcaster;
 using namespace Net;
 using namespace Game;
 
+struct Thread {
+		bool run;
+		pthread_t broadcastThread;
+		UDPSocket udp;
+};
 Thread t;
 
 void* broadcaster(void* ignoreBitch)
