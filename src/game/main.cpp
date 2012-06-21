@@ -82,6 +82,14 @@ void Frame()
 		
 		game.world->terrain->frame();
 		
+		map<GridPoint,ObjectHandle>::iterator bit;
+		Terrain *t = game.world->terrain;
+		for (bit = t->structures.begin(); bit != t->structures.end(); ++bit)
+		{
+			Building *b = TO(Building, bit->second);
+			if (b) b->frame();
+		}
+		
 		NetCode::Unlock();
 	}
 

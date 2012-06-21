@@ -564,6 +564,13 @@ void Building::postRender(){
 
 void Building::frame()
 {
+	update(true);
+}
+
+//------------------------------------------------------------------------------
+
+void Building::update(bool critical)
+{
 	if(owner && built && income > 0 /*&& owner == Game::game.player->id*/){
 		int now = Video::ElapsedTime();
 		if(now-lastGenerated > 5000){
@@ -581,7 +588,7 @@ void Building::frame()
 
 void Building::render()
 {
-	frame();
+	update();
 	Object::render();
 }
 
@@ -740,14 +747,12 @@ DefenseTower::DefenseTower(int buildTime, bool error)
 
 //------------------------------------------------------------------------------
 
-
-void DefenseTower::frame()
+void DefenseTower::update(bool critical)
 {
 	#define RANGE 45.0
 	#define ROF 1000
 
-	float movemulti = Video::CurrentFPS()/60;
-	float movespeed = movemulti*0.2;
+	float movespeed = 0.2/FRATE;
 
 	World *w = TO(World, Game::game.world);
 	if(!w) return;
@@ -852,13 +857,18 @@ void DefenseTower::frame()
 					w->addLaserBeam(LaserBeam(startpoint2, target2, 100));
 
 					//Actual damage
-					if(own->id == Game::game.player->id){
-						if(p){
-							p->damage(attackPower);
-						}else if(b){
-							b->damage(attackPower);
+					if (critical)
+					{
+						if(own->id == Game::game.player->id){
+							if(p){
+								p->damage(attackPower);
+								NetCode::Hit(p->id, attackPower, false);
+							}else if(b){
+								b->damage(attackPower);
+								NetCode::Attack(b->loc, attackPower, false);
+							}
+							//TODO: Send over the network
 						}
-						//TODO: Send over the network
 					}
 				}
 			}else{

@@ -269,8 +269,11 @@ class Building: public Structure, public Destroyable
 	
 	//! Renders children and resets translations and rotations
 	virtual void postRender();
-
-	//! Performs calculations
+	
+	//! Performs movement calculations
+	virtual void update(bool critical = false);
+	
+	//! Performs hit calculations
 	virtual void frame();
 	
 	//! Draws the building
@@ -312,8 +315,11 @@ class DefenseTower: public Building
 	//! Constructs a ghost DefenseTower
 	DefenseTower(int buildTime, bool error = false);
 
-	//! Performs calculations
-	virtual void frame();
+	//! Performs hit calculations
+	//virtual void frame();
+	
+	//! Performs movement calculations
+	virtual void update(bool critical = false);
 
 	//! Draws the DefenseTower
 	virtual void draw();
