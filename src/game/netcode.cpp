@@ -121,7 +121,7 @@ void Frame()
 	
 	while (tokenring->recvfrom(id, msg, reliable))
 	{
-		printf("%d %s\n", id, string(msg).c_str());
+		//printf("%d %s\n", id, string(msg).c_str());
 		if (Receive::list.count(msg[0]))
 			Receive::list[msg[0]](id, msg, reliable);
 	}
