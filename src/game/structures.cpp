@@ -699,6 +699,16 @@ HeadQuarters::HeadQuarters(Player::Id _owner)
 
 //------------------------------------------------------------------------------
 
+void HeadQuarters::updateTextures() {
+	int i = 2;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.base->material = Assets::Model::HQBaseTex[i];
+	model.core->material = Assets::Model::HQCoreTex[i];
+}
+
+//------------------------------------------------------------------------------
+
 DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,4.147209)),
 			100, 0,
@@ -715,6 +725,15 @@ DefenseTower::DefenseTower(Player::Id _owner)
 	model.turret->material = Assets::Model::TurretTex[i];
 	material = Assets::Grass;
 	lastshot = Video::ElapsedTime();
+}
+
+//------------------------------------------------------------------------------
+
+void DefenseTower::updateTextures() {
+	int i = 2;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.turret->material = Assets::Model::TurretTex[i];
 }
 
 //------------------------------------------------------------------------------
@@ -739,7 +758,6 @@ DefenseTower::DefenseTower(int buildTime, bool error)
 }
 
 //------------------------------------------------------------------------------
-
 
 void DefenseTower::frame()
 {
@@ -873,7 +891,6 @@ void DefenseTower::frame()
 	}
 }
 
-
 //------------------------------------------------------------------------------
 
 void DefenseTower::draw()
@@ -902,6 +919,16 @@ ResourceMine::ResourceMine(Player::Id _owner)
 	rock->children.insert(Assets::Model::RockObj);
 	rock->material = Assets::Model::RockTex;
 
+	int i = 1;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.rig->material = Assets::Model::MineTex[i];
+	model.drill->material = Assets::Model::DrillTex[i];
+}
+
+//------------------------------------------------------------------------------
+
+void ResourceMine::updateTextures() {
 	int i = 1;
 	if (Game::game.players.count(owner))
 		i = TO(Player,Game::game.players[owner])->team-'a';
@@ -980,6 +1007,16 @@ RichResourceMine::RichResourceMine(Player::Id _owner)
 	rock->children.insert(Assets::Model::RockObj);
 	rock->material = Assets::Model::RichRockTex;
 
+	int i = 1;
+	if (Game::game.players.count(owner))
+		i = TO(Player,Game::game.players[owner])->team-'a';
+	model.rig->material = Assets::Model::MineTex[i];
+	model.drill->material = Assets::Model::DrillTex[i];
+}
+
+//------------------------------------------------------------------------------
+
+void RichResourceMine::updateTextures() {
 	int i = 1;
 	if (Game::game.players.count(owner))
 		i = TO(Player,Game::game.players[owner])->team-'a';

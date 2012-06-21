@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-#include <unistd.h>
+//#include <unistd.h>
+#include <Windows.h>
 #include <windows.h>
 
 #include <sstream>
