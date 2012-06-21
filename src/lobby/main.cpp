@@ -13,7 +13,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <unistd.h>
 
+#include <sstream>
 #include <string>
 #include <map>
 
@@ -29,6 +31,7 @@ string playerName, gameName;
 string queue = "";
 bool queueing = false;
 bool hosting = false, connecting = false;
+Net::Address server;
 
 //------------------------------------------------------------------------------
 
@@ -133,6 +136,8 @@ int main(int argc, char *argv[])
 		addr.string(buffer);
 		printf("Connecting to %s...\n", buffer);
 		
+		server = addr;
+
 		lobby = new ClientLobby(playerName, addr);
 		if (!lobby || !lobby->valid())
 		{
@@ -313,6 +318,26 @@ void lobby_close()
 
 void lobby_start()
 {
+	char serverAddr[180];
+	server.string(serverAddr);
+#if (defined WIN32 || defined _MSC_VER)
+	stringstream ss;
+	ss << "start Game --connect " << serverAddr;
+	const char* command = ss.str().c_str();
+#else
+#ifdef __APPLE__
+	stringstream ss;
+	ss << "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/ --connect ' " << serverAddr;
+	const char *command = ss.str().c_str();
+#else
+	stringstream ss;
+	ss << "./Game --connect " << serverAddr << " &";
+	const char *command = ss.str().c_str();
+#endif
+#endif 
+	sleep(2); 
+	system(command);
+	exit(EXIT_SUCCESS);
 }
 
 //------------------------------------------------------------------------------
