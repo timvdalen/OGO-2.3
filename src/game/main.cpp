@@ -15,6 +15,7 @@
 #include "game.h"
 #include "net.h"
 #include "netcode.h"
+#include "broadcaster.h"
 
 using namespace Core;
 using namespace Base::Alias;
@@ -30,7 +31,7 @@ void UpdatePlayers();
 int main(int argc, char *argv[])
 {
 	Video::Initialize(argc, argv);
-	
+	Broadcaster::Initialize();	
 	Game::Initialize(argc, argv);
 	Game::Exec("inputs.exec");
 	
@@ -43,8 +44,8 @@ int main(int argc, char *argv[])
 	NetCode::Terminate();
 	Game::Terminate();
 	Net::Terminate();
+	Broadcaster::Terminate();
 	Video::Terminate();
-	
 	return (EXIT_SUCCESS);
 }
 
