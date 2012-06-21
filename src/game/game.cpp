@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 
 #include <vector>
 #include <algorithm>
@@ -168,13 +169,20 @@ void Initialize(int argc, char *argv[])
 	game.world->terrain->placeStructure(GridPoint(40,17), Mine());
 	game.world->terrain->placeStructure(GridPoint(40,33), Mine());
 
-	game.world->terrain->placeStructure(GridPoint(3,25), HeadQuarters(pid));
-	game.world->terrain->placeStructure(GridPoint(48,26), HeadQuarters());
+	ObjectHandle RedBot = Player(INT_MAX - 'a', 'a', "RedBot", Pd(0,0,-5));
+	ObjectHandle BlueBot = Player(INT_MAX - 'b', 'b', "BlueBot", Pd(0,0,-5));
+	game.world->children.insert(RedBot);
+	game.world->children.insert(BlueBot);
+	game.players[TO(Player, RedBot)->id] = RedBot;
+	game.players[TO(Player, BlueBot)->id] = BlueBot;
 
-	game.world->terrain->placeStructure(GridPoint(4,26), DefenseTower(pid));
-	game.world->terrain->placeStructure(GridPoint(4,23), DefenseTower(pid));
-	game.world->terrain->placeStructure(GridPoint(46,27), DefenseTower());
-	game.world->terrain->placeStructure(GridPoint(46,24), DefenseTower());
+	game.world->terrain->placeStructure(GridPoint(3,25), HeadQuarters(TO(Player, BlueBot)->id));
+	game.world->terrain->placeStructure(GridPoint(48,26), HeadQuarters(TO(Player, RedBot)->id));
+
+	game.world->terrain->placeStructure(GridPoint(4,26), DefenseTower(TO(Player, BlueBot)->id));
+	game.world->terrain->placeStructure(GridPoint(4,23), DefenseTower(TO(Player, BlueBot)->id));
+	game.world->terrain->placeStructure(GridPoint(46,27), DefenseTower(TO(Player, RedBot)->id));
+	game.world->terrain->placeStructure(GridPoint(46,24), DefenseTower(TO(Player, RedBot)->id));
 
 	for(int i = 0; i <= 50; i++) {
 		game.world->terrain->placeStructure(GridPoint(0,i), Wall());
