@@ -137,9 +137,11 @@ void Frame()
 		
 		Player::Id succId = 0;
 		map<Player::Id,ObjectHandle>::iterator it;
+		if (game.players.count(pid))
 		for (it != game.players.begin(); it != game.players.end(); ++it)
 		{
 			if (it->first == pid) continue;
+			
 			if (TO(Player,it->second)->team != TO(Player,game.players[pid])->team)
 				continue;
 			succId = it->first;
