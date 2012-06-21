@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-#include <unistd.h>
+//#include <unistd.h>
+#include <Windows.h>
 
 #include <sstream>
 #include <string>
@@ -335,7 +336,7 @@ void lobby_start()
 	const char *command = ss.str().c_str();
 #endif
 #endif 
-	sleep(2); 
+	Sleep(2000); 
 	system(command);
 	exit(EXIT_SUCCESS);
 }
