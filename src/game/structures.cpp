@@ -479,6 +479,20 @@ Pd Terrain::ToPointD(GridPoint point){
 
 //------------------------------------------------------------------------------
 
+void Terrain::Reassign(Player::Id source, Player::Id dest)
+{
+	map<GridPoint,ObjectHandle>::iterator it;
+	
+	for (it = structures.begin(); it != structures.end(); ++it)
+	{
+		Building *b = TO(Building, it->second);
+		if (!b || b->owner != source) continue;
+		b->owner = dest;
+	}
+}
+
+//------------------------------------------------------------------------------
+
 void Building::drawHealthbar(){
 	if(Game::game.players.count(owner)){
 		glDisable(GL_LIGHTING);//It might not be the best idea to switch lighting off and on so much

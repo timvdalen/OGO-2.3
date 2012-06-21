@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#inlcude <limits.h>
 
 #include <map>
 
@@ -443,6 +444,7 @@ void Join(NodeID nid, Player::Id pid, unsigned char team, string name)
 RECEIVE(JOIN, id, msg, reliable)
 {
 	Player::Id pid = (long) msg[2];
+	unsigned char team = (long) msg[3];
 	
 	if (pid == game.player->id)
 	{
@@ -452,11 +454,20 @@ RECEIVE(JOIN, id, msg, reliable)
 	{
 		// Other player joined
 		game.topId = MAX(game.topId,pid) + 1;
-		ObjectHandle player = Player(pid, (long) msg[3], msg[4]);
+		ObjectHandle player = Player(pid, team, msg[4]);
 		game.root->children.insert(player);
 		game.players[pid] = player;
 		nodes[(long) msg[1]] = pid;
 	}
+	
+	long redID = INT_MAX - 'a';
+	long blueID = INT_MAX - 'b';
+	
+	if (game.players.count(redID) && (team == 'a'))
+		game.world->terrain->Reassign(redID, pid);
+	
+	if (game.players.count(blueID) && (team == 'b'))
+		game.world->terrain->Reassign(blueID, pid);
 }
 
 //------------------------------------------------------------------------------

@@ -134,7 +134,10 @@ class Terrain: public BoundedObject
 
 	//! Converts a GridPoint to a Point<double>
 	Pd ToPointD(GridPoint p);
-
+	
+	
+	//! Changes the owner of all buildings in the world.
+	void Reassign(Player::Id source, Player::Id dest);
 
 	virtual pair<ObjectHandle, double> checkCollision(Pd origin, Vd direction, Object* ignore);
 	ObjectHandle checkCollision2(Pd origin, Vd direction);
