@@ -63,7 +63,6 @@ void* broadcaster(void* ignoreBitch)
     while(t.run){
 		sleep(1);
 		Address receiver;
-		printf("hallo\n");
 		if(game.player){
 			int message_length = 15+(game.player->name.length());
 			char* buf = new char[message_length];
