@@ -121,7 +121,7 @@ void Frame()
 	
 	while (tokenring->recvfrom(id, msg, reliable))
 	{
-		//printf("%d %s\n", id, string(msg).c_str());
+		printf("%d %s\n", id, string(msg).c_str());
 		if (Receive::list.count(msg[0]))
 			Receive::list[msg[0]](id, msg, reliable);
 	}
@@ -585,7 +585,7 @@ RECEIVE(HIT, id, msg, reliable)
 	Player::Id pid = (long) msg[1];
 	bool self = (long) msg[3];
 	if (!game.players.count(pid)) return;
-	TO(Player,game.players[pid])->damage((double) msg[2]);
+	TO(Player,game.players[pid])->damage((double) msg[2], self ? nodes[id] : 0);
 }
 
 //------------------------------------------------------------------------------
@@ -595,7 +595,7 @@ void Died(Player::Id pid)
 	Message msg;
 	msg.push_back("DIED");
 	msg.push_back((long) pid);
-	SEND(msg, true);
+	SEND(msg, false);
 }
 RECEIVE(DIED, id, msg, reliable)
 {
@@ -694,7 +694,7 @@ RECEIVE(ATTACK, id, msg, reliable)
 	bool self = (long) msg[3];
 	Building *b = TO(Building,game.world->terrain->structures[g]);
 	if (!b) return;
-	b->damage((double) msg[2]);
+	b->damage((double) msg[2], self ? nodes[id] : 0);
 }
 
 //------------------------------------------------------------------------------
@@ -705,7 +705,7 @@ void Destroy(GridPoint g, Player::Id pid)
 	msg.push_back("DESTROY");
 	msg.push_back(convert(g));
 	msg.push_back((long) pid);
-	SEND(msg, true);
+	SEND(msg, false);
 }
 RECEIVE(DESTROY, id, msg, reliable)
 {

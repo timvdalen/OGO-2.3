@@ -41,20 +41,22 @@ bool Destroyable::isDestroyed(){
 
 //------------------------------------------------------------------------------
 
-void Destroyable::damage(double dmg){
+void Destroyable::damage(double dmg, int who){
 	health -= dmg;
+	lastHit = who;
 }
 
 //------------------------------------------------------------------------------
 
 void Destroyable::heal(double _health){
-	health += health;
+	health += _health;
 }
 
 //------------------------------------------------------------------------------
 
 void Destroyable::fullHeal(){
 	health = maxHealth;
+	lastHit = 0;
 }
 
 //------------------------------------------------------------------------------

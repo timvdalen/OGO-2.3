@@ -85,11 +85,14 @@ class World: public BoundedObject
 class Droppable: public BoundedObject
 {
 	public: NAME(Droppable)
-	SERIAL(type() | convert((double) worth) | convert((long)ttl) | convert(id))
-	UNSERIAL(arg, 2,
-		worth = ToFloat(arg[0]);
-		dropped = ToInteger(arg[1]); 
-		id = ToInteger(arg[2]);
+	SERIAL(type() | convert(origin)         | convert(rotation)
+	              | convert((double) worth) | convert((long)ttl) | convert(id))
+	UNSERIAL(arg, 5,
+		origin = ToPoint(arg[0]);
+		rotation = ToQuaternion(arg[1]);
+		worth = ToFloat(arg[2]);
+		dropped = ToInteger(arg[3]); 
+		id = ToInteger(arg[4]);
 	)
 	
 	long id;

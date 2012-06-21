@@ -68,6 +68,9 @@ class Destroyable
 	//! The current health of this thing
 	double health;
 	
+	//! The last player (or tower if zero) that inflicted damaga
+	int lastHit;
+	
 	//! Creates a new Destroyable thing
 	Destroyable(double _maxHealth)
 		:maxHealth(_maxHealth), health(_maxHealth){}
@@ -80,7 +83,7 @@ class Destroyable
 	bool isDestroyed();
 	
 	//! Adds damage
-	void damage(double dmg);
+	void damage(double dmg, int who = 0);
 	
 	//! Heals the thing
 	void heal(double _health);

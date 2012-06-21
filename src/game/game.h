@@ -65,8 +65,10 @@ struct GameState
 	
 	Player::Id topId;
 	bool connecting;
+	bool firing;
 	
-	GameState() : window(0), input(0), controller(0), world(0), player(0), topId(1) {}
+	GameState() : window(0), input(0), controller(0), world(0), player(0), topId(1),
+		connecting(false), firing(false) {}
 } extern game; //! Current game state
 
 //------------------------------------------------------------------------------

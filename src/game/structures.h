@@ -14,16 +14,7 @@
 
 #define GRID_SIZE 10
 
-namespace Objects {
-
-class Structure;
-class Building;
-class DefenseTower;
-class Mine;
-class HeadQuarters;
-class ResourceMine;
-
-//------------------------------------------------------------------------------
+namespace Core {
 
 //! Represents a point on a grid
 struct GridPoint
@@ -49,6 +40,19 @@ struct GridPoint
 
 string convert(const GridPoint &);
 GridPoint ToGridPoint(const string &);
+
+} // namespace Core
+
+//------------------------------------------------------------------------------
+
+namespace Objects {
+
+class Structure;
+class Building;
+class DefenseTower;
+class Mine;
+class HeadQuarters;
+class ResourceMine;
 
 //------------------------------------------------------------------------------
 
@@ -93,6 +97,8 @@ class Terrain: public BoundedObject
 
 	//! Constructs a new Terrain
 	Terrain(double _width, double _height);
+
+	void frame();
 
 	//! Draws the terrain
 	virtual void draw();

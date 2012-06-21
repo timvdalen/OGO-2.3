@@ -14,13 +14,9 @@
 #include "player.h"
 #include "world.h"
 #include "game.h"
+#include "netcode.h"
 
-namespace Objects {
-#define HIGH 100
-
-void drawFoundation(int h);
-
-//------------------------------------------------------------------------------
+namespace Core {
 
 bool GridPoint::operator<(const GridPoint& p2) const
 {
@@ -87,6 +83,15 @@ string convert(const GridPoint &g) { char buffer[1024];
 
 GridPoint ToGridPoint(const string &str) { GridPoint g = GridPoint(-1,-1);
 	sscanf(str.c_str(), "G%ld,%ld", &g.x, &g.y); return g; }
+
+} // namespace Core
+
+//------------------------------------------------------------------------------
+
+namespace Objects {
+#define HIGH 100
+
+void drawFoundation(int h);
 
 //------------------------------------------------------------------------------
 
@@ -270,17 +275,17 @@ void Terrain::draw()
 
 //------------------------------------------------------------------------------
 
-void Terrain::postRender()
+void Terrain::frame()
 {
 	map<GridPoint, ObjectHandle>::iterator it;
 	for(it = structures.begin(); it != structures.end();){
 		GridPoint p = it->first;
 		ObjectHandle s = it->second;
-		glPushMatrix();
-			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
+		//glPushMatrix();
+			//glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 			Building *b = TO(Building, s);
 			if(b && b->isDestroyed()){
-				//if(b->owner == Game::game.player->id){
+				if(b->owner == Game::game.player->id){
 					//Drop some coins
 					Resource toDrop = b->cost/2;
 					int noCoins = toDrop/20;
@@ -293,25 +298,48 @@ void Terrain::postRender()
 							droppoint.x += (rand()%10);
 							droppoint.y += (rand()%10);
 						}
-						Game::game.world->temporary.push_back(Droppable(droppoint, 20));
+						ObjectHandle drop = Droppable(droppoint, 20);
+						Game::game.world->temporary.push_back(drop);
+						NetCode::Drop(TO(Droppable,drop));
 					}
 					
-					//TODO: Send this over the network
-				//}
-				structures.erase(it++);
-
-				if(b->type() == "ResourceMine"){
-					placeStructure(b->loc, Mine());
-				}else if(b->type() == "RichResourceMine"){
-					placeStructure(b->loc, RichMine());
 				}
-
-				glPopMatrix();
+				structures.erase(it++);
+				
+				if (TO(ResourceMine,s))
+				{
+					ObjectHandle mine = Mine();
+					placeStructure(p, mine);
+					NetCode::Build(p, TO(Structure,mine));
+				}
+				else if (TO(RichResourceMine,s))
+				{
+					ObjectHandle mine = RichMine();
+					placeStructure(p, mine);
+					NetCode::Build(p, TO(Structure,mine));
+				}
+				
+				//glPopMatrix();
 				continue;
 			}
+			//s->render();
+		//glPopMatrix();
+		it++;
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void Terrain::postRender()
+{
+	map<GridPoint, ObjectHandle>::iterator it;
+	for(it = structures.begin(); it != structures.end(); ++it){
+		GridPoint p = it->first;
+		ObjectHandle s = it->second;
+		glPushMatrix();
+			glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 			s->render();
 		glPopMatrix();
-		it++;
 	}
 	if(ghost.second){
 		GridPoint p = ghost.first;

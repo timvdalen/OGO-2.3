@@ -70,13 +70,21 @@ void Frame()
 					if(game.teams.count(game.player->team))
 					{
 						game.teams[game.player->team].resources += d->worth;
+						NetCode::Take(d->id);
 						d->done = true;
 					}
 				}
 			}
 		}
 		
-
+		if (game.firing) Fire();
+		
+		map<Player::Id,ObjectHandle>::iterator pit;
+		for (pit = game.players.begin(); pit != game.players.end(); ++pit)
+			TO(Player,pit->second)->frame();
+		
+		game.world->terrain->frame();
+		
 		NetCode::Unlock();
 	}
 

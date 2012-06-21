@@ -13,6 +13,7 @@
 #include "player.h"
 #include "movement.h"
 #include "game.h"
+#include "netcode.h"
 
 namespace Objects {
 
@@ -212,14 +213,20 @@ void Player::draw() {
 
 //------------------------------------------------------------------------------
 
-void Player::frame(){
-	if(isDestroyed()){
+void Player::frame()
+{
+	if (!isDestroyed()) return;
+		
+	if (Game::game.player == this)
+	{
+		NetCode::Died(lastHit);
+		
 		int noPlayers = 0;
 		map<Player::Id, ObjectHandle>::iterator it;
 		for(it = Game::game.players.begin(); it != Game::game.players.end(); it++){
 			Player *p = TO(Player, it->second);
 			if(p && p->team == team) noPlayers++;
-		}	
+		}
 		Resource drop = (Game::game.teams[team].resources)/(2.0*noPlayers);
 		int noCoins = drop/20;
 		Game::game.teams[team].resources -= noCoins*20;
@@ -227,17 +234,19 @@ void Player::frame(){
 			Pd droppoint = Pd(origin);
 			droppoint.x += (rand()%1000)/100;
 			droppoint.y += (rand()%1000)/100;
-			Game::game.world->temporary.push_back(Droppable(droppoint, 20));
+			ObjectHandle droppable = Droppable(droppoint, 20);
+			NetCode::Drop(TO(Droppable,droppable));
+			Game::game.world->temporary.push_back(droppable);
 		}
-		fullHeal();
-		origin = Game::getSpawn(team);
 	}
+	fullHeal();
+	origin = Game::getSpawn(team);
 }
 
 //------------------------------------------------------------------------------
 
 void Player::render(){
-	frame();
+	//frame();
     Object::render();
 }
 

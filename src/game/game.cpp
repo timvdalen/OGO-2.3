@@ -630,6 +630,12 @@ CMD(Fire, 0, arg)
 void Fire()
 {
 	if (!game.input->grabbing) return; // Ignore when not selected
+	if (!NetCode::TryLock())
+	{
+		game.firing = true;
+		return;
+	}
+	game.firing = false;
 	switch (game.player->weapon)
 	{
 		case weapWrench:
@@ -671,10 +677,10 @@ void Fire()
 				NetCode::Fire(*TO(LaserBeam,laser));
 				Player *p = TO(Player, collision);
 				if(p){
-					if(p->team != game.player->team){//Precent teamkill
-						p->damage(10.0);
-						//TODO: Send over the network
-					}
+					//if(p->team != game.player->team){//Precent teamkill
+						p->damage(10.0, game.player->id);
+						NetCode::Hit(p->id, 10.0, true);
+					//}
 				}else{
 					Building *b = TO(Building, collision);
 					if(b){
@@ -683,8 +689,8 @@ void Fire()
 						if(Game::game.players.count(t->owner))
 							own = TO(Player, Game::game.players[t->owner]); 
 						if(own && own->team != game.player->team){*/
-							b->damage(10.0);
-							//TODO: Send over the network
+							b->damage(10.0, game.player->id);
+							NetCode::Attack(b->loc, 10.0, true);
 						//}
 					}
 				}
@@ -728,6 +734,7 @@ void Build()
 				if (!game.world->terrain->placeStructure(clicked, tower)){
 					Echo("There's already a tower there");
 				}else{
+					NetCode::Build(clicked,TO(Structure,tower));
 					it->second.resources -= cost;
 				}
 			}else{
