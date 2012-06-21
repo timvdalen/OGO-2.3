@@ -859,25 +859,26 @@ void DefenseTower::update(bool critical)
 
 			if(angle < 0.03){
 				//Locked
-				int now = Video::ElapsedTime();
-				if(now - lastshot > ROF){
-					//Shoot animation
-					lastshot = now;
-					Pd startpoint = worldcoord+Vd(5*sin(rot*z)+0.5*cos(rot*z), 5*cos(rot*z)-0.5*sin(rot*z), 0);
-					Pd startpoint2 = worldcoord+Vd(5*sin(rot*z)-0.5*cos(rot*z), 5*cos(rot*z)+0.5*sin(rot*z), 0);
-					Qd target = startpoint.lookAt(targetPoint);
-					Qd target2 = startpoint2.lookAt(targetPoint);
-					//Vd lookVec = (~(Vd(startpoint)+ -Vd(targetPoint))) * RANGE;
-					//Vd lookVec2 = (~(Vd(startpoint2)+ -Vd(targetPoint))) * RANGE;
-					//ObjectHandle collision = w->trace(startpoint, lookVec, this);
-					//ObjectHandle collision2 = w->trace(startpoint2, lookVec2, this);
-					//Qd beam = gunLoc.lookAt(target);
-                    w->addLaserBeam(LaserBeam(startpoint, target, 100));
-					w->addLaserBeam(LaserBeam(startpoint2, target2, 100));
-
-					//Actual damage
-					if (critical)
-					{
+				//Actual damage
+				if (critical)
+				{
+					int now = Video::ElapsedTime();
+					if(now - lastshot > ROF){
+						//Shoot animation
+						lastshot = now;
+						Pd startpoint = worldcoord+Vd(5*sin(rot*z)+0.5*cos(rot*z), 5*cos(rot*z)-0.5*sin(rot*z), 0);
+						Pd startpoint2 = worldcoord+Vd(5*sin(rot*z)-0.5*cos(rot*z), 5*cos(rot*z)+0.5*sin(rot*z), 0);
+						Qd target = startpoint.lookAt(targetPoint);
+						Qd target2 = startpoint2.lookAt(targetPoint);
+						//Vd lookVec = (~(Vd(startpoint)+ -Vd(targetPoint))) * RANGE;
+						//Vd lookVec2 = (~(Vd(startpoint2)+ -Vd(targetPoint))) * RANGE;
+						//ObjectHandle collision = w->trace(startpoint, lookVec, this);
+						//ObjectHandle collision2 = w->trace(startpoint2, lookVec2, this);
+						//Qd beam = gunLoc.lookAt(target);
+	                    w->addLaserBeam(LaserBeam(startpoint, target, 100));
+						w->addLaserBeam(LaserBeam(startpoint2, target2, 100));
+	
+						
 						if(own->id == Game::game.player->id){
 							if(p){
 								p->damage(attackPower);
@@ -886,7 +887,6 @@ void DefenseTower::update(bool critical)
 								b->damage(attackPower);
 								NetCode::Attack(b->loc, attackPower, false);
 							}
-							//TODO: Send over the network
 						}
 					}
 				}
