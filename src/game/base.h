@@ -49,7 +49,7 @@
 #define TYPE_ASSERT(type, assertion) \
 	typedef int TA_type_ ## type[(assertion)*2 - 1]
 
-typedef signed char byte;         //!< Signed integer of 1 byte
+//typedef signed char byte;         //!< Signed integer of 1 byte
 typedef signed short int word;    //!< Signed integer of 2 byte2
 typedef signed long int dword;    //!< Signed integer of at least 4 bytes
 typedef unsigned char ubyte;      //!< Unsigned integer of 1 byte
