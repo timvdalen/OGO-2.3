@@ -16,25 +16,6 @@
 	#endif
 #endif
 
-#ifdef WIN32
-	#define _WIN32_WINNT 0x0501
-	#include <winsock2.h>
-	#include <ws2tcpip.h>
-	#define ssize_t signed long int
-	#define socklen_t int
-#else
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <arpa/inet.h>
-	#include <unistd.h>
-	#include <errno.h>
-	#include <fcntl.h>
-	#include <netdb.h>
-	#define SOCKET_ERROR -1
-	#define SOCKET int
-#endif
-
 #if (defined WIN32 || defined _MSC_VER)
 	#include <windows.h>
 	#include <stdint.h>
@@ -49,6 +30,8 @@ namespace Broadcaster {
 using namespace Broadcaster;
 using namespace Net;
 using namespace Game;
+
+Thread t;
 
 void* broadcaster(void* ignoreBitch)
 {

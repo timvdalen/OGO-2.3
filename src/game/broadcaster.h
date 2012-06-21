@@ -14,11 +14,13 @@
 
 namespace Broadcaster {
 using namespace Net;
+	
 	struct Thread {
 		bool run;
 		pthread_t broadcastThread;
 		UDPSocket udp;
-	} t;
+	};
+	extern Thread t;
 	
 	void Initialize();
 	void Terminate();
