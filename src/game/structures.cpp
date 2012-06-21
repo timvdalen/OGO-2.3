@@ -718,7 +718,7 @@ void HeadQuarters::updateTextures() {
 
 DefenseTower::DefenseTower(Player::Id _owner)
 		: Building(4, BoundingBox(Pd(0,0,0),Pd(10.0,10.0,4.147209)),
-			100, 0,
+			200, 0,
 			Video::ElapsedTime(), 10000,
 			20, _owner, 300.0)
 {
