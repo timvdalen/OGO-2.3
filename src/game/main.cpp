@@ -56,7 +56,7 @@ int loop = 0;
 void Frame()
 {
 	NetCode::Frame();
-	if (NetCode::TryLock())
+	if (NetCode::TryLock() && game.playing)
 	{
 		// Critical section
 		vector<ObjectHandle>::iterator it;

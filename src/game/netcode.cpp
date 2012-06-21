@@ -141,13 +141,16 @@ void Frame()
 		for (it != game.players.begin(); it != game.players.end(); ++it)
 		{
 			if (it->first == pid) continue;
+			Player *p = TO(Player,it->second);
 			
-			if (TO(Player,it->second)->team != TO(Player,game.players[pid])->team)
+			if (p || (p->team != TO(Player,game.players[pid])->team))
 				continue;
 			succId = it->first;
 			break;
 		}
 		if (succId) game.world->terrain->Reassign(pid, succId);
+		else
+			Game::GameEnd(TO(Player,game.players[pid])->team == 'a' ? 'b' : 'a');
 		
 		ObjectHandle player = game.players[pid];
 		game.world->children.erase(player);

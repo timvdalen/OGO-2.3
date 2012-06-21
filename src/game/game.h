@@ -66,9 +66,10 @@ struct GameState
 	Player::Id topId;
 	bool connecting;
 	bool firing;
+	bool playing;
 	
 	GameState() : window(0), input(0), controller(0), world(0), player(0), topId(1),
-		connecting(false), firing(false) {}
+		connecting(false), firing(false), playing(true) {}
 } extern game; //! Current game state
 
 //------------------------------------------------------------------------------
@@ -139,6 +140,8 @@ void DisplayTeamMsg(Player *, string line); //!< Displays a team chat message in
 void DisplayFragMsg(Player *, Player*);     //!< Displays a tower/player kill message
 void DisplayJoinMsg(Player *);              //!< Displays a player join message
 void DisplayPartMsg(Player *);              //!< Displays a player leave message
+
+void GameEnd(unsigned char team);           //!< Displays a game in event
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Diagnostics

@@ -305,8 +305,12 @@ void Terrain::frame()
 
 				}
 				structures.erase(it++);
-
-				if (TO(ResourceMine,s))
+				
+				if (HeadQuarters *hq = TO(HeadQuarters,s))
+				{
+					Game::GameEnd(TO(Player,Game::game.players[hq->owner])->team == 'a' ? 'b' : 'a');
+				}
+				else if (TO(ResourceMine,s))
 				{
 					ObjectHandle mine = Mine();
 					placeStructure(p, mine);
@@ -585,7 +589,7 @@ void Building::frame()
 
 void Building::update(bool critical)
 {
-	if(owner && built && income > 0 /*&& owner == Game::game.player->id*/){
+	if(owner && built && income > 0 && TO(Player,Game::game.players[owner])->team == Game::game.player->team){
 		int now = Video::ElapsedTime();
 		if(now-lastGenerated > 5000){
 			map<unsigned char,Team>::iterator it = Game::game.teams.find(Game::game.player->team);

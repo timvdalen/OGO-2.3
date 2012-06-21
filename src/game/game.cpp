@@ -864,6 +864,18 @@ void DisplayPartMsg(Player *player)
 
 //------------------------------------------------------------------------------
 
+void GameEnd(unsigned char team)
+{
+	if (team == 'a')
+		Notice("The Alliance of Free Systems (Team Red) is victorious!");
+	else if (team == 'b')
+		Notice("The Galactic Empire (Team Blue) is victorious!");
+	
+	game.playing = false;
+}
+
+//------------------------------------------------------------------------------
+
 CMD(PrintFPS, 0, arg)
 void PrintFPS()
 {
