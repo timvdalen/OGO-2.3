@@ -2,7 +2,7 @@
  * Lobby main file
  *
  * Authors: Ogo 2.3 Group 3 2012
- * 
+ *
  * Date: 26-04-12 12:11
  *
  * Description: Player accumulation and social interaction prior to a game.
@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <windows.h>
 
 #include <sstream>
 #include <string>
@@ -65,23 +66,23 @@ int main(int argc, char *argv[])
 {
 	{
 	Net::Initialize();
-	
+
 	char buffer[1024];
 	string line, cmd;
 	Protocol::Message msg;
 	GameLobby *lobby;
-	
+
 	printf("Player name> ");
 	playerName = gets2(buffer, sizeof (buffer));
 	printf("Welcome %s!\nCommands:\n\t!list\t\tget active server list\n"
 	       "\t!host [name]\tstart a server\n\t!connect <addr>\tjoin a lobby\n> ");
-	
+
 	{
 		GameList games(LOBBY_PORT);
 		games.onJoin = gamelist_join;
 		games.onChange = gamelist_change;
 		games.onPart = gamelist_part;
-		
+
 		while (games.valid())
 		{
 			line = gets2(buffer, sizeof (buffer));
@@ -113,16 +114,16 @@ int main(int argc, char *argv[])
 			}
 			printf("> ");
 		}
-		
+
 		if (!games.valid())
 		{
 			puts("Game polling failed!");
 			return (EXIT_FAILURE);
 		}
 	}
-	
+
 	puts("Stopped polling for servers.");
-	
+
 	if (connecting)
 	{
 		string line = msg[1];
@@ -132,10 +133,10 @@ int main(int argc, char *argv[])
 			printf("Address '%s' is invalid!\n", line.c_str());
 			return (EXIT_FAILURE);
 		}
-		
+
 		addr.string(buffer);
 		printf("Connecting to %s...\n", buffer);
-		
+
 		server = addr;
 
 		lobby = new ClientLobby(playerName, addr);
@@ -150,7 +151,7 @@ int main(int argc, char *argv[])
 		string line = (msg.size() < 2) ? "" : msg[1];
 		if (line.empty())
 			line = playerName + "'s game";
-		
+
 		lobby = new ServerLobby(line, playerName, LOBBY_PORT);
 		if (!lobby || !lobby->valid())
 		{
@@ -158,7 +159,7 @@ int main(int argc, char *argv[])
 			return (EXIT_FAILURE);
 		}
 	}
-	
+
 	lobby->onConnect = lobby_connect;
 	lobby->onPlayer = lobby_player;
 	lobby->onJoin = lobby_join;
@@ -168,19 +169,19 @@ int main(int argc, char *argv[])
 	lobby->onChat = lobby_chat;
 	lobby->onClose = lobby_close;
 	lobby->onStart = lobby_start;
-	
+
 	while (lobby->valid())
 	{
 		ServerLobby *server = reinterpret_cast<ServerLobby *> (lobby);
 		ClientLobby *client = reinterpret_cast<ClientLobby *> (lobby);
 		line = gets2(buffer, sizeof (buffer));
-		
+
 		if (!queue.empty())
 		{
 			printf(queue.c_str());
 			queue.clear();
 		}
-		
+
 		if (line.empty())
 			queueing = !queueing;
 		else if (line[0] == '!')
@@ -189,18 +190,18 @@ int main(int argc, char *argv[])
 			cmd = (string) msg[0];
 			if ((cmd == "!close") || (cmd == "!exit"))
 				lobby->close();
-			
+
 			else if ((msg.size() > 1) && (cmd == "!team"))
 			{
 				     if (hosting)    server->team((int) msg[1]);
 				else if (connecting) client->team((int) msg[1]);
 			}
-			
+
 			else if (hosting)
 			{
 				if (cmd == "!start") server->start();
 			}
-			
+
 			else if (connecting)
 			{
 				     if (cmd == "!ready") client->state(true);
@@ -209,16 +210,16 @@ int main(int argc, char *argv[])
 		}
 		else if (hosting)    server->chat(line);
 		else if (connecting) client->chat(line);
-		
+
 		if (queueing)
 			printf("> ");
 	}
-	
+
 	delete lobby;
-	
+
 	Net::Terminate();
 	}
-	
+
 	puts("Press any key...");
 	getchar();
 	return (EXIT_SUCCESS);
@@ -296,7 +297,7 @@ void lobby_team(Player::Id pid, unsigned char team)
 
 void lobby_state(Player::Id pid, Player::State state)
 {
-	
+
 	printf2("*** %s is %s.\n", playerlist[pid].c_str(), state ? "ready" : "busy");
 }
 
@@ -334,8 +335,8 @@ void lobby_start()
 	ss << "./Game --connect " << serverAddr << " &";
 	const char *command = ss.str().c_str();
 #endif
-#endif 
-	sleep(2); 
+#endif
+	Sleep(2000);
 	system(command);
 	exit(EXIT_SUCCESS);
 }
@@ -358,11 +359,11 @@ void printf2(const char *fmt, ...)
 {
 	char buffer[1024];
 	va_list args;
-	
+
 	va_start(args, fmt);
 	vsprintf(buffer, fmt, args);
 	va_end(args);
-	
+
 	if (queueing)
 		queue += string(buffer);
 	else
