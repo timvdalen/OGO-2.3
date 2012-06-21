@@ -134,6 +134,24 @@ void Frame()
 		// Check win condition: no players left for one team
 		Player::Id pid = nodes[id];
 		if (!game.players.count(pid)) return;
+		
+		Player::Id succId = 0;
+		map<Player::Id,ObjectHandle>::iterator it;
+		if (game.players.count(pid))
+		for (it != game.players.begin(); it != game.players.end(); ++it)
+		{
+			if (it->first == pid) continue;
+			Player *p = TO(Player,it->second);
+			
+			if (p || (p->team != TO(Player,game.players[pid])->team))
+				continue;
+			succId = it->first;
+			break;
+		}
+		if (succId) game.world->terrain->Reassign(pid, succId);
+		else
+			Game::GameEnd(TO(Player,game.players[pid])->team == 'a' ? 'b' : 'a');
+		
 		ObjectHandle player = game.players[pid];
 		game.world->children.erase(player);
 		game.players.erase(pid);

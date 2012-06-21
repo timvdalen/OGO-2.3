@@ -236,11 +236,12 @@ class Building: public Structure, public Destroyable
 	void drawHealthbar();
 
 	public: NAME(Building)
-	SERIAL(type() | convert(loc) | convert((long) owner) | convert((long) buildTime))
+	SERIAL(type() | convert(loc) | convert((long) owner)
+	              | convert((long) buildTime - Video::ElapsedTime()))
 	UNSERIAL(arg, 3,
 		loc = ToGridPoint(arg[0]);
 		owner = ToInteger(arg[1]);
-		buildTime = ToInteger(arg[2]);
+		buildTime = ToInteger(arg[2]) + Video::ElapsedTime();
 	)
 	
 	//! Height of this building in local object coordinates

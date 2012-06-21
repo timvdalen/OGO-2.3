@@ -174,14 +174,14 @@ void Initialize(int argc, char *argv[])
 	
 	if (team == 'b')
 	{
-		RedBot = Player(INT_MAX - 'a', 'a', "RedBot", Pd(0,0,-5));
-		game.world->children.insert(RedBot);
+		RedBot = Player(INT_MAX - 'a', 'a', "RedBot", Pd(-1000,-1000,-1000));
+		//game.world->children.insert(RedBot);
 		game.players[TO(Player, RedBot)->id] = RedBot;
 	}
 	else if (team == 'a')
 	{
-		BlueBot = Player(INT_MAX - 'b', 'b', "BlueBot", Pd(0,0,-5));
-		game.world->children.insert(BlueBot);
+		BlueBot = Player(INT_MAX - 'b', 'b', "BlueBot", Pd(-1000,-1000,-1000));
+		//game.world->children.insert(BlueBot);
 		game.players[TO(Player, BlueBot)->id] = BlueBot;
 	}
 
@@ -860,6 +860,19 @@ void DisplayPartMsg(Player *player)
 	if (!player) return;
 
 	game.world->hud->messageDisplayer->addMessage(PlayerLeaveMessage(*player));
+}
+
+//------------------------------------------------------------------------------
+
+void GameEnd(unsigned char team)
+{
+	ShowLog();
+	if (team == 'a')
+		Notice("The Alliance of Free Systems (Team Red) is victorious!");
+	else if (team == 'b')
+		Notice("The Galactic Empire (Team Blue) is victorious!");
+	
+	game.playing = false;
 }
 
 //------------------------------------------------------------------------------
