@@ -91,9 +91,11 @@ class Droppable: public BoundedObject
 		origin = ToPoint(arg[0]);
 		rotation = ToQuaternion(arg[1]);
 		worth = ToFloat(arg[2]);
-		dropped = ToInteger(arg[3]); 
+		ttl = ToInteger(arg[3]); 
 		id = ToInteger(arg[4]);
 	)
+	
+	static long topId;
 	
 	long id;
 	

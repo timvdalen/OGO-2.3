@@ -328,6 +328,8 @@ void World::addLaserBeam(ObjectHandle laserBeam){
 
 //------------------------------------------------------------------------------
 
+long Droppable::topId = 1;
+
 Droppable::Droppable(Pd _origin, Resource _worth, long _dropped, long _ttl)
 	: BoundedObject(_origin, Qd(), BoundingBox(Pd(-0.105, -0.5, 0.0), Pd(0.105, 0.5, 1.0)))
 {
@@ -341,7 +343,7 @@ Droppable::Droppable(Pd _origin, Resource _worth, long _dropped, long _ttl)
 	ttl = _ttl;
 	done = false;
 	long pid = (Game::game.player ? Game::game.player->id : 0);
-	id = ElapsedTime() | (pid << 16);
+	id = topId++ | (pid << 16);
 }
 
 //------------------------------------------------------------------------------
