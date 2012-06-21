@@ -159,6 +159,9 @@ class Structure: public BoundedObject
 	
 	Structure(BoundingBox B = BoundingBox())
 			: BoundedObject(Pd(), Qd(), B), loc(GridPoint(-1, -1)) {}
+
+	//! Update the textures after team changes
+	virtual void updateTextures() {}
 };
 
 //------------------------------------------------------------------------------
@@ -282,6 +285,8 @@ class Building: public Structure, public Destroyable
 	//! Renders the building
 	virtual void render();
 
+	//! Update the textures after team changes
+	virtual void updateTextures() {}
 };
 
 //------------------------------------------------------------------------------
@@ -298,6 +303,9 @@ class HeadQuarters: public Building
 
 	//! Model
 	struct { ObjectHandle base, socket, core, coreinv; } model;
+
+	//! Update the textures after team changes
+	virtual void updateTextures();
 };
 
 //------------------------------------------------------------------------------
@@ -326,6 +334,9 @@ class DefenseTower: public Building
 
 	//! Model
 	struct { ObjectHandle turret; } model;
+
+	//! Update the textures after team changes
+	virtual void updateTextures();
 };
 
 //------------------------------------------------------------------------------
@@ -347,6 +358,9 @@ class ResourceMine: public Building
 
 	//! Model
 	struct { ObjectHandle rig, drill; } model;
+
+	//! Update the textures after team changes
+	virtual void updateTextures();
 };
 
 //------------------------------------------------------------------------------
@@ -370,6 +384,9 @@ class RichResourceMine: public Building
 
 	//! Model
 	struct { ObjectHandle rig, drill; } model;
+
+	//! Update the textures after team changes
+	virtual void updateTextures();
 };
 
 //------------------------------------------------------------------------------

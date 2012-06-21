@@ -602,9 +602,9 @@ RECEIVE(DIED, id, msg, reliable)
 	Player::Id vid = nodes[id];
 	Player::Id pid = (long) msg[1];
 	if (!game.players.count(pid))
-		DisplayFragMsg(TO(Player,game.players[vid]), 0);
+		DisplayFragMsg(TO(Player,game.players[pid]), 0);
 	else
-		DisplayFragMsg(TO(Player,game.players[vid]), TO(Player,game.players[pid]));
+		DisplayFragMsg(TO(Player,game.players[pid]), TO(Player,game.players[vid]));
 }
 
 //------------------------------------------------------------------------------
