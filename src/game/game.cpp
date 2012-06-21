@@ -174,13 +174,13 @@ void Initialize(int argc, char *argv[])
 	
 	if (team == 'b')
 	{
-		RedBot = Player(INT_MAX - 'a', 'a', "RedBot", Pd(0,0,-5));
+		RedBot = Player(INT_MAX - 'a', 'a', "RedBot", Pd(0,0,-100));
 		game.world->children.insert(RedBot);
 		game.players[TO(Player, RedBot)->id] = RedBot;
 	}
 	else if (team == 'a')
 	{
-		BlueBot = Player(INT_MAX - 'b', 'b', "BlueBot", Pd(0,0,-5));
+		BlueBot = Player(INT_MAX - 'b', 'b', "BlueBot", Pd(0,0,-100));
 		game.world->children.insert(BlueBot);
 		game.players[TO(Player, BlueBot)->id] = BlueBot;
 	}

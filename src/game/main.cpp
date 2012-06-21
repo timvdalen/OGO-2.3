@@ -63,7 +63,7 @@ void Frame()
 		for(it = game.world->temporary.begin(); it != game.world->temporary.end(); it++){
 			Droppable *d = TO(Droppable, *it);
 			if(d){
-				if (!Vd(game.player->origin - d->origin) < 1.0)
+				if (!Vd(game.player->origin - d->origin) < 1.5)
 				{
 					if(game.teams.count(game.player->team))
 					{
