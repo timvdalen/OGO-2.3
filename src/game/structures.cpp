@@ -302,10 +302,10 @@ void Terrain::frame()
 						Game::game.world->temporary.push_back(drop);
 						NetCode::Drop(TO(Droppable,drop));
 					}
-					
+
 				}
 				structures.erase(it++);
-				
+
 				if (TO(ResourceMine,s))
 				{
 					ObjectHandle mine = Mine();
@@ -318,7 +318,7 @@ void Terrain::frame()
 					placeStructure(p, mine);
 					NetCode::Build(p, TO(Structure,mine));
 				}
-				
+
 				//glPopMatrix();
 				continue;
 			}
@@ -368,8 +368,8 @@ GridPoint Terrain::getGridCoordinates(Pd camera, Qd rot)
 
     int noX = (int) width / GRID_SIZE;
     int noY = (int) height / GRID_SIZE;
-    int x = (int) (floor(intersecx / (double) GRID_SIZE) + width/(2*GRID_SIZE));
-    int y = (int) (floor(intersecy / (double) GRID_SIZE) + height/(2*GRID_SIZE));
+    int x = (int) (floor((intersecx + 0.5*GRID_SIZE)/ (double) GRID_SIZE) + width/(2*GRID_SIZE));
+    int y = (int) (floor((intersecy + 0.5*GRID_SIZE)/ (double) GRID_SIZE) + height/(2*GRID_SIZE));
     if(x < 0 || y < 0 || x >= noX || y >= noY){
         return GridPoint(-1,-1);
     }
