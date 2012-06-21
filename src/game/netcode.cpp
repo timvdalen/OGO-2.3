@@ -385,6 +385,7 @@ RECEIVE(STRUCTINFO, id, msg, reliable)
 		if (!structure) continue;
 		structure->unserialize(msg[i+1]);
 		t->structures[g] = structure;
+		TO(Structure,structure)->updateTextures();
 	}
 }
 
@@ -626,6 +627,7 @@ RECEIVE(BUILD, id, msg, reliable)
 	if (!structure) return;
 	structure->unserialize(msg[2]);
 	game.world->terrain->structures[g] = structure;
+	TO(Structure,structure)->updateTextures();
 }
 
 //------------------------------------------------------------------------------
