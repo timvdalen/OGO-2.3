@@ -9,10 +9,8 @@
 
 #ifndef _BROADCASTER_H
 #define _BROADCASTER_H
-#include "net.h"
 
 namespace Broadcaster {
-using namespace Net;
 	
 	void Initialize();
 	void Terminate();

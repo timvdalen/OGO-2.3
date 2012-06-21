@@ -2,14 +2,14 @@
  * World object -- see header file for more info
  */
 
-#include "broadcaster.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
-#include "../common/net.h"
+
 #include <sstream>
-#include "game.h"
+
 #ifdef _MSC_VER
 	#ifndef WIN32
 		#define WIN32 1
@@ -17,11 +17,11 @@
 #endif
 
 #if (defined WIN32 || defined _MSC_VER)
-	#ifndef WIN32_LEAN_AND_MEAN
-	#define WIN32_LEAN_AND_MEAN
-	#endif
-	#include <windows.h>
-	#include <stdint.h>
+	//#ifndef WIN32_LEAN_AND_MEAN
+	//#define WIN32_LEAN_AND_MEAN
+	//#endif
+	//#include <windows.h>
+	//#include <stdint.h>
 	#define sleep(x) Sleep((x)*1000)
 #elif (defined __MACH__)
 	#include <mach/clock.h>
@@ -29,6 +29,11 @@
 #else
 	#include <unistd.h>
 #endif
+
+#include "net.h"
+#include "game.h"
+#include "broadcaster.h"
+
 namespace Broadcaster {
 using namespace Broadcaster;
 using namespace Net;
