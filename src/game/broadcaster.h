@@ -10,11 +10,15 @@
 #ifndef _BROADCASTER_H
 #define _BROADCASTER_H
 
+#include <string>
+
+
 namespace Broadcaster {
-	
+using namespace std;
 	void Initialize();
 	void Terminate();
-	
+	string getIP(int index);
+	string getNeighbours();
 	void* broadcaster(void* ignoreBitch);
 
 }

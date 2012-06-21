@@ -6,6 +6,8 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
+#include <sstream>
 #include <time.h>
 #include <limits.h>
 
@@ -20,6 +22,7 @@
 #include "game.h"
 #include "netcode.h"
 #include "input.h"
+#include "broadcaster.h"
 
 namespace Game {
 
@@ -813,6 +816,31 @@ void Goto(string cmd)
 {
 	if (cmd == "gold")
 		game.teams[game.player->team].resources += 1000.0;
+}
+//------------------------------------------------------------------------------
+
+CMD(Join, 1, arg, (int) arg[0])
+void Join(int id)
+{
+	if(id){
+		string ip = Broadcaster::getIP(id - 1);
+		if(ip.length()){
+			Connect(ip);
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+CMD(Discover, 0, arg)
+void Discover()
+{
+	stringstream result(Broadcaster::getNeighbours());
+	string line;
+	Echo("The following players are located in your subnet:");
+	while(getline(result, line)){
+		Echo(line);
+	}
 }
 
 //------------------------------------------------------------------------------

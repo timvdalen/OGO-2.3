@@ -107,6 +107,8 @@ void Disconnect();            //!< Disconnects and starts listening for clients
 void Say(string msg);         //!< Sends a chat message to all
 void TeamSay(string msg);     //!< Sends a chat message to all team members
 
+void Discover();
+void Join(int id);
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Movement
 //! \invariant (0.0 <= speed <= 1.0)
