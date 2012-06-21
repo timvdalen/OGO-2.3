@@ -326,18 +326,20 @@ void lobby_start()
 	stringstream ss;
 	ss << "start Game --connect " << serverAddr;
 	const char* command = ss.str().c_str();
+    Sleep(2000);
 #else
 #ifdef __APPLE__
 	stringstream ss;
 	ss << "osascript -e \"tell application \\\"Terminal\\\" to do script \\\"'`pwd`/Game' -p '`pwd`/ --connect ' " << serverAddr;
 	const char *command = ss.str().c_str();
+    Sleep(2);
 #else
 	stringstream ss;
 	ss << "./Game --connect " << serverAddr << " &";
 	const char *command = ss.str().c_str();
+    Sleep(2);
 #endif
 #endif
-	Sleep(2000);
 	system(command);
 	exit(EXIT_SUCCESS);
 }
