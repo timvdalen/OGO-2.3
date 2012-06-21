@@ -190,6 +190,7 @@ void* broadcaster(void* ignoreBitch)
 					if(request_for_ip){
 						message_length = 64;
 						buf = new char[message_length];
+						size_t buf_length = sizeof(char)*message_length;
 						strcpy(buf, "IP-RESPONSE ");
 						strcat(buf, buffer);
 						t.udp->sendto(receiver, buf, buf_length);
