@@ -161,7 +161,7 @@ class Structure: public BoundedObject
 			: BoundedObject(Pd(), Qd(), B), loc(GridPoint(-1, -1)) {}
 
 	//! Update the textures after team changes
-	virtual void updateTextures() {};
+	virtual void updateTextures() {}
 };
 
 //------------------------------------------------------------------------------
@@ -283,7 +283,7 @@ class Building: public Structure, public Destroyable
 	virtual void render();
 
 	//! Update the textures after team changes
-	virtual void updateTextures();
+	virtual void updateTextures() {}
 };
 
 //------------------------------------------------------------------------------
