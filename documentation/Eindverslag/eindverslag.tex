@@ -48,10 +48,8 @@
 \newcommand{\udp}{\textsc{udp}\xspace}
 \newcommand{\tcp}{\textsc{tcp}\xspace}
 
-% Schieten veranderd, nu andere kant: aanpassen in plaatjes
-% Extra appendices: invoegen faalt nog
-% Doxygen / andere documenten: vraag Tim
-% Verder: conclusie, evaluatie, literatuurlijst en kaart in gebruikershandleiding
+% Server
+% Lobby
 \begin{document}
 	\input{title}
 
@@ -93,26 +91,29 @@
 
     \section{Conclusie}
     % Met daarin reflectie over het verloop van het project en het groepsproces daarbij
-    % Misschien ster weglaten/alles bereikt?
-    % Welke wijzigingen? Geweer?
-    % Script taal?
-    % Uitgebreider
-    We zijn erin geslaagd om een interactief, gedistribueerd 3D-spel te ontwikkelen. Dit spel voldoet aan de door ons gegeven specificatie van het spel op een kleine wijziging na. We hebben besloten om de speler rechts van het vizier te plaatsen. Daardoor staat het lasergeweer van de speler aan dezelfde kant als het vizier. Dit maakt het schieten intu\"itiever in onze mening.
+    We zijn erin geslaagd om een interactief, gedistribueerd 3D-spel te ontwikkelen. Dit spel voldoet aan de oorspronkelijke specificatie van het spel op een kleine wijziging na. We hebben besloten om de speler rechts van het vizier te plaatsen. Daardoor staat het lasergeweer van de speler aan dezelfde kant als het vizier. Dit maakt het schieten intu\"itiever in onze mening.
 
-    Verder zijn er nog een aantal extra's ge\"implementeerd. Zo wordt er een plattegrond van de wereld op het scherm getoond: dit was een van de mogelijke uitbreidingen van het spel genoemd in de specificatie. Tijdens het spel is het ook nog mogelijk om net als in de lobby met andere spelers te \emph{chatten}. Bovendien zijn er nog verscheidene aspecten van de ster ge\"implementeerd. Spelers kunnen tijdens het spel nog meedoen of het spel onverwachts verlaten.
+    Na de specificatie hebben we een gedetailleerd ontwerp gegeven. De verschillende componenten van het programma en hun onderlinge samenhang zijn grondig bestudeerd. Dit is verder uitgewerkt tot een gedetailleerd klassediagram. Vervolgens hebben we een formele definitie van het protocol gegeven, waarbij we gebruik hebben gemaakt van BNF om het berichtsformaat en de berichten te specificeren. We hebben de onderliggende aannamen in dit protocol onderzocht en gevalideerd.
+
+    Verder hebben we nog een aantal extra's ge\"implementeerd. Zo wordt er een plattegrond van de wereld op het scherm getoond: dit was een van de mogelijke uitbreidingen van het spel genoemd in de specificatie. Tijdens het spel is het ook nog mogelijk om net als in de lobby met andere spelers te \emph{chatten}. Bovendien is er een script taal ontwikkeld. Deze taal kan onder andere worden gebruikt om tests uit te voeren, maar ook om allerlei instellingen van het programma te veranderen. Zo kan iedere speler de besturing naar gelieve aanpassen.
 
     \section{Evaluatie}
-    % Uitgebreider
-    Achteraf bezien was het netwerk aspect het grootste obstakel voor ons. Dit hadden wij van tevoren ook al verwacht. Dit is dan ook de reden dat we hier al zeer vroeg mee zijn begonnen: in de oriëntatiefase zijn we al bezig geweest met het maken van een \emph{chatprogramma}. Voor de implementatie van het protocol zijn verschillende testprogramma's gemaakt, die zeer nuttig zijn gebleken. Door deze testprogramma's konden we effici\"ent fouten opsporen in de implementatie van het protocol. Goede planning en testen zijn hier van groot belang geweest.
+    Achteraf bezien was het netwerk aspect het grootste obstakel voor ons. Dit hadden wij van tevoren ook al verwacht. Dit is dan ook de reden dat we hier al zeer vroeg mee zijn begonnen: in de ori\"entatiefase zijn we al bezig geweest met het maken van een \emph{chatprogramma}. Voor de implementatie van het protocol zijn verschillende testprogramma's gemaakt, die zeer nuttig zijn gebleken. Door deze testprogramma's konden we effici\"ent fouten opsporen in de implementatie van het protocol. Goede planning en testen zijn hier van groot belang geweest.
 
-    Een ander obstakel voor ons was de complexiteit van het spel. We waren zelf enthousiast over ons spel. Hierdoor is onze specificatie vrij uitgebreid geworden. Een ander gevolg hiervan is dat er relatief veel tijd aan de implementatie is besteed, voor een groot deel ook buiten de OGO-tijden. Door hard werk en strakke planning hebben we uiteindelijk het door ons beoogde spel kunnen ontwikkelen.
+    Een ander obstakel voor ons was de complexiteit van het spel. We waren zelf enthousiast over ons spel. Hierdoor is onze specificatie vrij uitgebreid geworden. Een ander gevolg hiervan is dat er relatief veel tijd aan de implementatie is besteed, voor een groot deel ook buiten de OGO-tijden. Door hard werk en strakke planning hebben we uiteindelijk het door ons beoogde spel kunnen ontwikkelen. We zijn van plan om het spel later nog verder te ontwikkelen.
+
+    De combinatie van verschillende vakgebieden maakte deze OGO een goede uitdaging. Het was zeer interessant om de theorie uit verschillende vakken, zoals Computer Networks, Distributed Algorithms en Computergrafiek, toe te kunnen passen in de praktijk. De theorie van Distributed Algorithms hebben we bijvoorbeeld kunnen toepassen bij het ontwerp van het protocol. Dit ontwerp was oorspronkelijk zeer uitgebreid: spelers konden in dit ontwerp later nog meedoen aan een spel. Ook kon een spel verdergaan als een speler het spel onverwachts verliet. De implementatie hiervan is helaas nog niet volledig.
 
     De samenwerking in de groep is goed verlopen. Iedereen in deze groep had ongeveer evenveel ervaring met programmeren. Echter, C++ was nieuw voor een aantal groepsleden. Dit was echter nauwelijks een probleem. Bij het begin van de implementatie zijn er verschillende groepen gemaakt. Hierbij is ervoor gezorgd dat er minstens \'e\'en groepslid al ervaring had met C++. Al snel werd deze nieuwe programmeertaal opgepikt door de andere groepsleden. Later tijdens de implementatiefase was deze groepsindeling ook niet meer nodig.
     \newpage
 
     \section{Literatuurlijst}
-    % Nog niet gedaan
-    Komt nog in uiteindelijke versie.
+    De meeste concepten in dit verslag zijn bekend. We hebben deze concepten verder uitgewerkt voor ons spel. Hier noemen we nog de belangrijkste inspiratiebronnen:
+    \begin{itemize}
+    \item James F. Kurose and Keith W. Ross, Computer Networking: A top-down approach, Fifth Edition, International Edition
+    \item Ajay D. Kshemkalyani and Mukesh Singhal, Distributed Computing: Principles, Algorithms, and Systems, Paperback Edition
+    \item Donald D. Hearn, M. Pauline Baker, Warren Carithers, Computer Graphics with OpenGL, Fourth Edition
+    \end{itemize}
     \newpage
 
     \appendix
@@ -182,23 +183,5 @@
     \label{app:MSCLobbyCon}
     \newpage
 
-    % Kaart
     \input{gebruikershandleiding}
-
-%    \section{Verslag werkplan}
-%    \input{../../werkplan/werkplan.pdf}
-%    \includepdf[pages={-}]{../../werkplan/werkplan.pdf}
-%    \newpage
-%
-%    \section{Verslag specificatie}
-%    \includepdf[pages={-}]{../documentation.pdf}
-%    \newpage
-%
-%    \section{Verslag alternatieven}
-%    \includepdf[pages={-}]{../../keuze/documentation.pdf}
-%    \newpage
-%
-%    \section{Verslag ontwerp}
-%    \includepdf[pages={-}]{../Design/report.pdf}
-%    \newpage
 \end{document} 

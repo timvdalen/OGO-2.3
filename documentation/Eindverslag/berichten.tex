@@ -2,46 +2,38 @@
     \label{app:berichten}
     We zullen nu alle gebruikte berichten afgaan met een korte toelichting. De berichten zullen natuurlijk voldoen aan het berichtsformaat zoals gespecificeerd in appendix \ref{app:berichtsformaat}. We zullen vooral kijken naar het nut voor de ontvanger. Om de berichten te beschrijven gebruiken we een aantal conventies. We zullen voor de leesbaarheid komma's plaatsen tussen de verschillende argumenten. Deze zijn dus niet deel van het bericht. Ook zullen we de commando's laten eindigen met een punt, dit moet dan worden gelezen als \textsc{cr lf}.
 
-    \subsection{Server detectie}
-    Het \emph{Broadcast} bericht wordt gebruikt voor het detecteren van servers tijdens de initialisatie. Dit bericht word periodiek door servers verstuurd met behulp van broadcast over \udp. We hebben ervoor gekozen om dit bericht elke vijf seconden te sturen. De wachttijd voor de gebruikers is dan nog steeds verwaarloosbaar, terwijl het netwerk nauwelijks wordt belast.
+    \subsection{Speler detectie}
+    Het \emph{Broadcast} bericht wordt gebruikt voor het detecteren van spelers tijdens de initialisatie. Dit bericht word periodiek door spelers verstuurd met behulp van broadcast over \udp. We hebben ervoor gekozen om dit bericht elke vijf seconden te sturen. De wachttijd voor de gebruikers is dan nog steeds verwaarloosbaar, terwijl het netwerk nauwelijks wordt belast.
 
-    Spelers moeten continu voor deze Broadcast berichten scannen. De gevonden servers worden dan in een lijst gezet. De speler kan dan uit deze lijst van servers kiezen. Hierdoor kunnen processen in hetzelfde subnet een server vinden. We geven ook de mogelijkheid om direct het ip van de server op te geven. Dit heeft het grote voordeel dat het mogelijk wordt om ook te spelen met spelers buiten het lokale netwerk. Merk op dat de server natuurlijk alleen wordt gebruikt voor het opzetten van het spel.
+    Spelers moeten continu voor deze Broadcast berichten scannen. De gevonden spelers worden dan in een lijst gezet. De speler kan dan uit deze lijst van spelers kiezen. Op deze manier zijn spelers op hetzelfde subnet in staat om met andere spelers te verbinden. We geven ook de mogelijkheid om direct het ip van een bepaalde speler op te geven. Dit heeft het grote voordeel dat het mogelijk wordt om ook te spelen met spelers buiten het lokale netwerk.
 
     Het bericht bevat de versie van het spel en het huidige aantal spelers. Bovendien bevat het de naam van het spel. Het bericht heeft de volgende syntax:
     \bericht{GOTO, version, numPlayers :gameName.}
 
     \subsection{De lobby}
-    Het \emph{Name} bericht wordt gebruikt na de server detectie. Als een speler de lobby van een bepaald spel wil binnengaan, wordt dit gedaan door een Name bericht te sturen. In dit bericht aan de server stuurt de speler zijn gewenste naam mee:
+    Het \emph{Name} bericht wordt gebruikt na de speler detectie. Als een speler de lobby van een bepaald spel wil binnengaan, wordt dit gedaan door een Name bericht te sturen. In dit bericht aan de gekozen speler uit de lijst stuurt de speler zijn gewenste naam mee:
     \bericht{NAME :playername.}
-    Indien de speler wordt toegelaten, zal de server een \emph{Hello} bericht terugsturen als reactie op het Name bericht (en wordt dus alleen gestuurd aan de speler die het Name bericht heeft gestuurd aan de server). Hierin staat het toegewezen ID van de speler, de versie, het aantal spelers en de naam van het spel. Dit geeft het volgende bericht:
+    Indien de speler wordt toegelaten, zal de gekozen speler een \emph{Hello} bericht terugsturen als reactie op het Name bericht (en wordt dus alleen gestuurd aan de speler die het Name bericht heeft verstuurd). Hierin staat het toegewezen ID van de speler, de versie, het aantal spelers en de naam van het spel. Dit geeft het volgende bericht:
     \bericht{HELLO, pid, version, numPlayers :gameName.}
-    Na het versturen van het Hello bericht, zal de server ook meteen een aantal \emph{Player} berichten sturen. Dit bericht wordt aan de nieuwe speler gestuurd om het team en status van elke medespeler kenbaar te maken. De status kan B zijn voor niet ready, R zijn voor ready of H zijn voor host. Alle spelers zitten standaard in hetzelfde team. Bovendien hebben alle spelers standaard de status niet ready. Het spel kan pas beginnen als alle spelers ready zijn. Dan kan de speler, die de server draait, op start drukken om het spel te starten. Het bericht heeft de volgende syntax:
+    Na het versturen van het Hello bericht, zal de gekozen speler ook meteen een aantal \emph{Player} berichten sturen. Dit bericht wordt aan de nieuwe speler gestuurd om het team en status van elke medespeler kenbaar te maken. De status kan B zijn voor niet ready, R zijn voor ready of H zijn voor host. Alle spelers zitten standaard in hetzelfde team. Bovendien hebben alle spelers standaard de status niet ready. Het spel kan pas beginnen als alle spelers ready zijn. Het bericht heeft de volgende syntax:
     \bericht{PLAYER, pid, tid, state :playerName.}
-    Na het versturen van de Hello en Player bericht, zal de server aan alle spelers een \emph{Join} bericht sturen. Hierdoor weten alle spelers dat er een nieuwe medespeler is bijgekomen. Dit bericht wordt ook aan de nieuwe speler zelf gestuurd. Hierdoor kan de nieuwe speler concluderen dat de Player berichten zijn afgelopen. Dit bericht bevat de ID van de speler en de naam van de speler:
+    Na het versturen van de Hello en Player bericht, zal de uitgekozen speler aan alle spelers een \emph{Join} bericht sturen. Hierdoor weten alle spelers dat er een nieuwe medespeler is bijgekomen. Dit bericht wordt ook aan de nieuwe speler zelf gestuurd. Hierdoor kan de nieuwe speler concluderen dat de Player berichten zijn afgelopen. Dit bericht bevat de ID van de speler en de naam van de speler:
     \bericht{JOIN, pid :playerName.}
-    Het \emph{Part} bericht wordt gestuurd als de verbinding van een speler met de server, al dan niet vrijwillig, wordt verbroken. Dit bericht wordt aan iedereen gestuurd om mede te delen dat een van de medespelers is vertrokken. We sturen alleen de ID van de vertrokken speler mee:
+    Het \emph{Part} bericht wordt gestuurd als de verbinding van een speler, al dan niet vrijwillig, wordt verbroken. Een andere speler zal het vertrek natuurlijk moeten opmerken. Dit bericht wordt dan aan iedereen gestuurd om mede te delen dat een van de medespelers is vertrokken. We sturen alleen de ID van de vertrokken speler mee:
     \bericht{PART, pid.}
-    Met een \emph{Team request} bericht kan de speler een verzoek naar de server sturen om van team te wisselen. Dit bericht bevat dan het nieuwe gewenste team van de speler:
+    Met een \emph{Team request} bericht kan de speler een verzoek sturen om van team te wisselen. Dit bericht bevat dan het nieuwe gewenste team van de speler:
     \bericht{TEAM, tid.}
-    Als een speler van team is gewisseld, wordt dit kenbaar gemaakt door de server met het \emph{Team} bericht. De server stuurt dan aan de andere spelers het volgende bericht om dit kenbaar te maken:
-    \bericht{TEAM, pid, tid.}
-    Verder zijn er nog \emph{Ready request} en \emph{Busy request} berichten. Een speler kan de ready en busy berichten gebruiken om zijn status te veranderen. Ready betekent dat de status ready moet worden, terwijl Busy betekent dat de status niet ready moet worden. Impliciet wordt er een afbeelding bijgehouden tussen het IP-adres, de speler ID en de naam van de speler. Dit geeft de volgende twee berichten:
-	\bericht{READY.}
-    \bericht{BUSY.}
-    Nadat een speler van team is gewisseld, maakt de server dit kenbaar aan de andere spelers. Dit wordt gedaan door de ID van de speler mee te sturen:
+    Verder zijn er nog \emph{Ready request} en \emph{Busy request} berichten. Een speler kan de ready en busy berichten gebruiken om zijn status te veranderen. Ready betekent dat de status ready moet worden, terwijl Busy betekent dat de status niet ready moet worden. Impliciet wordt er een afbeelding bijgehouden tussen het IP-adres, de speler ID en de naam van de speler. Dit geeft de volgende twee berichten, waarin we de ID van de speler meesturen:
     \bericht{READY, pid.}
     \bericht{BUSY, pid.}
-    Een speler kan chatten met de andere spelers. Dit wordt gedaan door een \emph{Chat request} bericht te sturen naar de server. Dit bericht bevat dan het chatbericht:
+    Een speler kan chatten met de andere spelers. Dit wordt gedaan door een \emph{Chat request} bericht te sturen naar alle andere spelers. Dit bericht bevat dan het chatbericht:
     \bericht{CHAT :msg.}
-    Zodra de server een Chat request bericht ontvangt, stuurt de server een \emph{Chat} bericht naar alle andere spelers. Dit bericht bevat de ID van de speler en het chatbericht:
-    \bericht{CHAT, pid :msg.}
-    Merk op dat er soms twee commando's zijn met dezelfde naam. Deze zijn echter zeer eenvoudig van elkaar te onderscheiden. In dit geval is er namelijk voor gezorgd dat \'e\'en commando alleen door de clients wordt verzonden en het andere commando alleen door de server. Hierdoor ontvangt elke speler nooit meer dan \'e\'en van de twee type commando's.
 
 \subsection{Berichten om het spel op te zetten}
-Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Met behulp van deze berichten proberen we een volledige graaf en een token ring op te bouwen. Met een \emph{Good-day} bericht maakt de speler contact met de server. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
+Om het spel op te kunnen zetten hebben we ook speciale berichten nodig. Met behulp van deze berichten proberen we een volledige graaf en een token ring op te bouwen. Met een \emph{Good-day} bericht maakt de speler contact met de uitgekozen speler. Zo kan de speler toegevoegd worden aan de graaf. \textsc{tid} identificeert het team en \textsc{name} geeft de speler een naam.
 \bericht{GOODDAY, tid :name.}
 
-Nadat de server een \emph{Good-day} bericht heeft ontvangen, stuurt de server een \emph{Welcome} bericht als antwoord. \textsc{pid} wijst de speler een uniek ID toe. Version is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een string van alle IP-adressen in de standaard \textsc{cidr} notatie (dat wil zeggen dat een adres gerepresenteerd wordt in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elk IP-adres wordt het karakter \emph{e} gebruikt om IP-adressen te onderscheiden.
+Nadat de uitgekozen speler een \emph{Good-day} bericht heeft ontvangen, stuurt de uitgekozen speler een \emph{Welcome} bericht als antwoord. \textsc{pid} wijst de speler een uniek ID toe. Version is een parameter om af te dwingen dat alle spelers de zelfde versie hebben. \textsc{iplist} is een string van alle IP-adressen in de standaard \textsc{cidr} notatie (dat wil zeggen dat een adres gerepresenteerd wordt in de vorm: \textsc{xxx.xxx.xxx.xxx}). Tussen elk IP-adres wordt het karakter \emph{e} gebruikt om IP-adressen te onderscheiden.
 \bericht{WELCOME, pid , version :iplist.}
 
 Het \emph{Sup} bericht wordt gestuurd door een speler zodra hij een verbinding met een andere speler aanmaakt. \textsc{pid} geeft de speler ID van de speler die het bericht verstuurt aan en \textsc{version} zorgt er weer voor dat de versies overeenkomen. \textsc{name} geeft de naam van de speler aan.

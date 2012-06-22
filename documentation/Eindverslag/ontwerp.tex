@@ -12,7 +12,7 @@
     \subsection{Protocol module}
     De protocol module is het onderdeel die het mogelijk maakt om:
 	\begin{itemize}
-    \item Een nieuw spel op te starten. Het spel komt dan in de zogenaamde opstart fase. Andere spelers kunnen dan aan dit spel meedoen, ze komen dan in de lobby van dat spel;
+    \item Een nieuw spel op te starten. Het spel komt dan in de zogenaamde opstart fase. Andere spelers kunnen dan aan dit spel meedoen, ze komen dan in de lobby van dat spel. We hebben ervoor gekozen om de lobby te integreren in het spel;
 	\item De lijst van alle spellen, die nog in de opstart fase zijn, in het subnet van de computer weer te geven;
 	\item Mee te doen met een bestaand spel dat nog in de opstart fase zit;
 	\item Het spel te beginnen;
@@ -27,7 +27,7 @@
     De gebruikersomgeving moet zowel het grafische model van het spel afbeelden op het scherm als de interactie van de speler via het toetsenbord en muis afhandelen. Ook moet de gebruikersomgeving het mogelijk maken voor de gebruiker om een spel op te starten of mee te doen aan een spel in de opstart fase.
 
     \subsubsection{De opzet van het spel}
-    Tijdens de opzet van het spel zal de gebruikersomgeving een venster weer moeten geven met alle spellen in het subnet van de computer. De gebruiker kan dan kiezen om mee te doen aan een van deze spellen of zijn eigen spel te openen. Als de gebruiker zelf een spel opent, kunnen andere gebruikers in hetzelfde subnet ook meedoen aan dit spel. Deze spelers kunnen dan met elkaar communiceren in een lobby. Hierin kunnen zij ook aangeven of zij klaar zijn om het spel te starten. Zodra alle gebruikers hebben aangegeven dat zij klaar zijn, kan het spel worden gestart. De keuze om het spel te starten is dan aan de gebruiker, die ook het spel heeft geopend.
+    Tijdens de opzet van het spel zal de gebruikersomgeving een venster weer moeten geven met alle spelers in het subnet van de computer. De gebruiker kan dan kiezen om zich bij een andere speler aan te sluiten: de gebruiker komt dan in hetzelfde spel als die speler. Deze spelers kunnen dan met elkaar communiceren in een lobby. Hierin kunnen zij ook aangeven of zij klaar zijn om het spel te starten. Zodra alle gebruikers hebben aangegeven dat zij klaar zijn, wordt het spel gestart
 
     \subsubsection{Tijdens het spel}
     De gebruikersomgeving zal tijdens het spel via \textsc{openGL} de lokale staat van het spel afbeelden op het scherm. Dit wordt gedaan door de \emph{render} methode van het object \emph{World} aan te roepen, die is beschreven in sectie \ref{sec:model}. De gebruikersomgeving zal daarna alleen nog menu's, mogelijke kaarten en informatie als de sterkte van het harnas en de hoeveelheid geld op het scherm moeten aangeven (zoals beschreven in het document Informele Beschrijving). Door de 2D-modus van openGL te gebruiken kan dit gemakkelijk getekend worden boven op de grafische representatie van de wereld.
@@ -53,9 +53,11 @@
     We hebben nu de verschillende componenten en hun onderlinge communicatie uitgediept. Een volledige beschrijving van de klassen wordt gegeven in appendix \ref{app:klassenbeschrijving}. Er is ook een bijbehorend klassediagram gemaakt. Het klassediagram is te vinden in appendix \ref{app:klassendiagram}. We zullen nu verder gaan met de beschrijving van het protocol.
 
     \section{De opbouw van de graaf}
-    Het protocol zal een volledige graaf proberen op te bouwen. Het berichtsformaat wordt formeel gedefinieerd in appendix \ref{app:berichtsformaat}. De bijbehorende berichten zijn beschreven in appendix \ref{app:berichten}. Dit wordt gedaan tijdens de lobby fase van het spel. We weten dat er tijdens de lobby fase een server is. Elk proces probeert nu een \tcp-connectie te maken met deze server. Zodra deze \tcp-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle adressen van processen, waarmee de server nu is verbonden. Verbindingen uit de lobby fase tellen hierbij dus niet mee. Het proces is dan zelf verantwoordelijk om een \tcp-connectie aan te gaan met elk proces in deze lijst.
-
-    Dit betekent dat op elk willekeurig moment een aanvraag voor een \tcp-connectie kan binnenkomen bij processen, die al een \tcp-connectie met de server hebben. Kortom, elk proces zal regelmatig moeten controleren op aanvragen voor een \tcp-connectie. Als de volledige graaf is opgebouwd, staan alle processen op gelijke voet. Op dat moment kan het spel beginnen.
+    Het protocol zal een volledige graaf proberen op te bouwen. Het berichtsformaat wordt formeel gedefinieerd in appendix \ref{app:berichtsformaat}. De bijbehorende berichten zijn beschreven in appendix \ref{app:berichten}. Het opbouwen van de volledige graaf wordt gedaan tijdens de lobby fase van het spel. We hebben besloten om ook tijdens de lobby fase geen server te gebruiken: we zoeken andere spelers door gebruik te maken van \udp broadcast. Dit geeft een lijst van spelers, waaruit \'e\'en specifieke speler kan worden gekozen. Hier tonen we natuurlijk alleen de namen van de spelers en niet de ip-adressen.
+    
+    Het proces probeert nu een \tcp-connectie te maken met de gekozen speler. Zodra deze \tcp-connectie is geslaagd, zal het proces een lijst teruggestuurd krijgen. Deze lijst bevat alle ip-adressen van de al verbonden processen. Het proces is dan zelf verantwoordelijk om een \tcp-connectie aan te gaan met elk proces in deze lijst. Op deze manier bouwen we een volledige graaf op. 
+    
+    Tegelijkertijd bouwen we hierbij ook een token ring op, waarover later meer volgt. Voor nu is het belangrijk dat precies \'e\'en proces het token heeft. Alleen het proces met het token mag een ander proces toelaten in het spel. Merk op dat op elk willekeurig moment een aanvraag voor een \tcp-connectie kan binnenkomen bij processen. Kortom, elk proces zal regelmatig moeten controleren op aanvragen voor een \tcp-connectie.
 
     \section{Het protocol tijdens het spel}
     \label{sec:tijdensspel}
@@ -67,7 +69,7 @@
     We pakken dit probleem aan door de notie van autoriteit te introduceren. Op elk moment heeft precies \'e\'en proces autoriteit. Als het proces autoriteit heeft, dan mag het proces reliable variabelen veranderen. Hiervoor wordt een bericht naar elk ander proces gestuurd. Het proces wacht dan totdat iedereen heeft teruggestuurd dat dit bericht is ontvangen. Als het proces alle wijzigingen van reliable variabelen heeft doorgegeven, krijgt een ander proces autoriteit.
 
     \subsection{De token ring}
-    De volgende vraag is nu hoe we deze notie van autoriteit gaan verwerken in het protocol. Dit doen we door gebruik te maken van een \emph{token ring}. We bouwen tijdens de lobby fase (opstart fase) ook een ring op tussen alle processen. Dit doen we pas nadat de volledige graaf al is opgebouwd. Een mogelijke aanpak om dan een ring op te bouwen is om aan ieder proces een verschillend element uit een totaal geordend domein toe te kennen.
+    De volgende vraag is nu hoe we deze notie van autoriteit gaan verwerken in het protocol. Dit doen we door gebruik te maken van een \emph{token ring}. We bouwen tijdens de lobby fase (opstart fase) ook een ring op tussen alle processen. Dit doen we tegelijkertijd met het opbouwen van de volledige graaf. Een mogelijke aanpak om een ring op te bouwen is om aan ieder proces een verschillend element uit een totaal geordend domein toe te kennen.
 
     We kunnen dit beschouwen als een injectieve functie $f$ van de verzameling processen $P$ naar een totaal geordende domein. Aangezien er sprake is van een totaal geordend domein, kunnen we deze waarden sorteren. Stel nu dat $P = \{ p_1, \ldots p_n\}$. Dit geeft ons een permutatie $\sigma$ zodanig dat:
     \[
@@ -83,12 +85,12 @@
     Een proces zal de positie van alle andere spelers simuleren. Dit wordt gedaan met behulp van de locatie en de looprichting. De actuele locatie en looprichting van de desbetreffende speler zal periodiek over de volledige graaf worden verstuurd. Om eventuele problemen te voorkomen zou deze periode redelijk klein moeten zijn. In de tussentijd zal het proces de huidige locatie en looprichting van de speler benaderen door de speler simpelweg `verder' te laten lopen. Merk op dat op deze manier de speler ten alle tijden de baas blijft over zijn eigen locatie.
 
     \section{Aannamen}
-    We hebben al eerder genoemd dat het \emph{Broadcast} bericht over \udp wordt gestuurd. Hier gebruiken we de broadcast functionaliteit van \udp voor. Het is dus noodzakelijk dat alle spelers zich op hetzelfde subnet bevinden. We weten dat \udp-berichten niet noodzakelijk aan hoeven te komen. We nemen echter aan dat een \udp-bericht uiteindelijk wordt ontvangen binnen een eindige hoeveelheid tijd, als de server periodiek \udp-berichten blijft versturen.
+    We hebben al eerder genoemd dat het \emph{Broadcast} bericht over \udp wordt gestuurd. Hier gebruiken we de broadcast functionaliteit van \udp voor. Het is dus noodzakelijk dat alle spelers zich op hetzelfde subnet bevinden (een alternatief voor spelers buiten dit subnet is handmatig het ip-adres in te vullen). We weten dat \udp-berichten niet noodzakelijk aan hoeven te komen. We nemen echter aan dat een \udp-bericht uiteindelijk wordt ontvangen binnen een eindige hoeveelheid tijd, als er periodiek \udp-berichten worden verstuurd.
 
-    Een speler kan dan een keuze maken tussen alle servers, waarvan een \emph{Broadcast} bericht is ontvangen. De speler gaat dan een \tcp-connectie aan met de uitgekozen server. We nemen aan dat deze \tcp-connectie succesvol wordt aangemaakt. Bovendien nemen we aan dat \tcp inderdaad voldoet aan de FIFO-eigenschap. Verder nemen we aan dat berichten over \tcp ook aankomen, eventueel nadat dit bericht een aantal keer opnieuw is verstuurd.
+    Een speler kan dan een keuze maken tussen alle spelers, waarvan een \emph{Broadcast} bericht is ontvangen. De speler gaat dan een \tcp-connectie aan met de uitgekozen speler. We nemen aan dat deze \tcp-connectie succesvol wordt aangemaakt. Bovendien nemen we aan dat \tcp inderdaad voldoet aan de FIFO-eigenschap. Verder nemen we aan dat berichten over \tcp ook aankomen, eventueel nadat dit bericht een aantal keer opnieuw is verstuurd.
 
     Verder maken we nog een aantal simpele aannamen over de snelheid van het netwerk en de computers. De gebruikte berichten zijn allemaal zeer klein. We verwachten daarom dat er elke seconde zonder problemen 300 berichten over het netwerk kunnen worden verstuurd. Dit zou ruim voldoende moeten zijn om de replica's goede benaderingen van de werkelijke staat te laten zijn. Hiermee bedoelen we met een goede benadering dat het verschil met de werkelijke staat niet zou moeten opvallen voor de spelers.
 
     De helft van de RTT, oftewel de \emph{Round-Trip Time}, is een goede benadering voor hoe lang het duurt om een bericht te versturen. We gaan ervan uit dat de RTT kleiner is dan 200 ms. Deze aanname is zeker realistisch, aangezien de spelers in principe op hetzelfde subnet zitten. Vanwege deze aanname krijgen we ook een harde grens op de maximale afwijking van de replica's.
-    
+
     Als laatste raden wij nog een \emph{frame rate} aan van 60: in dit geval is de beleving van het spel ideaal. De frame rate kan worden gezien door \textsc{f} te drukken in het spel. 
