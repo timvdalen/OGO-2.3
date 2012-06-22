@@ -30,7 +30,7 @@ OBJ      = $(OBJDIR)base.o $(OBJDIR)core.o $(OBJDIR)main.o $(OBJDIR)video.o    \
            $(OBJDIR)input.o $(OBJDIR)image.o $(OBJDIR)assets.o                 \
            $(OBJDIR)netcode.o $(OBJDIR)game.o  $(OBJDIR)hud.o                  \
            $(OBJDIR)loader3ds.o $(OBJDIR)structures.o $(OBJDIR)world.o         \
-		   $(OBJDIR)player.o $(OBJDIR)minion.o $(OBJDIR)broadcaster.o
+           $(OBJDIR)player.o $(OBJDIR)minion.o $(OBJDIR)broadcaster.o
 BIN      = $(BINDIR)Game
 CXXFLAGS = $(CXXINCS)
 LIBS     = -lpthread -lpng -lz -l3ds
@@ -40,7 +40,7 @@ ASSETS   = assets.zip
 
 ifeq ($(platform),win32)
 	CXXFLAGS += -DFREEGLUT_STATIC
-	LIBS     += -lws2_32 -lfreeglut_static -lglu32 -lopengl32 -lgdi32 -lwinmm
+	LIBS     += -lws2_32 -lfreeglut_static -lglu32 -lopengl32 -lgdi32 -lwinmm -static 
 	BIN      := $(BIN).exe
 else
 	LIBS     += -lGL -lGLU
@@ -62,6 +62,7 @@ ifeq ($(build),tokendebug)
 endif
 ifeq ($(build),release)
 	CXXFLAGS += -fexpensive-optimizations -O3
+	LIBS += -s 
 endif
 
 .PHONY: all clean run assets
