@@ -5,7 +5,9 @@
 #if defined _WIN32
 	#include <gl\freeglut.h>
 #elif defined __APPLE__
-	#include <GL/freeglut.h>
+	#include <GLUT/glut.h>
+	#include <ApplicationServices/ApplicationServices.h>
+	#define glutLeaveMainLoop(); exit(0);
 #else
 	#include <GL/freeglut.h>
 #endif
@@ -35,9 +37,9 @@ FPS fps;
 
 //------------------------------------------------------------------------------
 
-void Initialize(int argc, char *argv[])
+void Initialize(int* argc, char *argv[])
 {
-	glutInit(&argc, argv);
+	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
 }
 
@@ -106,19 +108,15 @@ Window::Window(uword width, uword height, const char *title,bool fullscreen,
 	wd->width = width;
 	wd->height = height;
 	wd->aspect = (double) width / (double) height;
-    wd->fullscreen = fullscreen; 
-    glutInitWindowPosition(xpos, ypos);
-    glutInitWindowSize(width, height);
-    glutCreateWindow(title);
+    wd->fullscreen = fullscreen;
     if(fullscreen){
-        glutHideWindow();
-        glutDestroyWindow(glutGetWindow());
-        char gameModeString [50];
-        sprintf (gameModeString, "%dx%d",width,height);
-        glutGameModeString(gameModeString);
-        glutSetWindow(glutEnterGameMode());
-    }
-	wd->wid = glutGetWindow();
+	//	glutGameModeString("800x600");
+	    wd->wid = glutEnterGameMode();
+	}else{
+		glutInitWindowPosition(xpos, ypos);
+		glutInitWindowSize(width, height);
+	    wd->wid = glutCreateWindow(title);
+	}
 
 	glClearColor(0, 0, 0, 0);
 	glEnable(GL_DEPTH_TEST);

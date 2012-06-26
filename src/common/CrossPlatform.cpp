@@ -2,9 +2,7 @@
  * Lobby module -- see header file
  */
 #ifdef __APPLE__
-#ifdef __i386__
-    #include "CoreFoundation/CoreFoundation.h"
-#endif
+#include <ApplicationServices/ApplicationServices.h>
 #endif
 #include <stdio.h>
 namespace CrossPlatform {
@@ -14,24 +12,7 @@ void init(){
 
 #else
     #ifdef __APPLE__
-    #ifdef __i386__
-    // ----------------------------------------------------------------------------
-    // This makes relative paths work in C++ on MAC OSX by changing directory to the Resources folder inside the .app bundle  
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-    char path[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX)) // Error: expected unqualified-id before 'if'
-    	{
-        	// error!
-		printf("Error: expected unqualified-id");
-	}
-    	CFRelease(resourcesURL); // error: expected constructor, destructor or type conversion before '(' token
-    	chdir(path); // error: expected constructor, destructor or type conversion before '(' token
-    	#ifdef DEBUG
-		std::cout << "Current Path: " << path << std::endl; // error: expected constructor, destructor or type conversion before '<<' token
-        #endif
-    return;
-        #endif
+		CGSetLocalEventsSuppressionInterval(0.0);
 	#else
 		#ifdef __linux__ 
 		//LINUX

@@ -5,11 +5,12 @@
 #if defined _WIN32
 	#include <gl\freeglut.h>
 #elif defined __APPLE__
-	#include <GL/freeglut.h>
+	#include <GLUT/glut.h>
 #else
 	#include <GL/freeglut.h>
 #endif
 
+#include "CrossPlatform.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -189,10 +190,8 @@ void Input::mouseEvents()
 	window.size(width = 0, height = 0);
 	width /= 2;
 	height /= 2;
-	
 	word dx = mouseX - width;
 	word dy = mouseY - height;
-
 	if (dx < 0)
 	{
 		CALL(onKeyDown, btnMouseMoveLeft);
@@ -214,7 +213,6 @@ void Input::mouseEvents()
 		CALL(onKeyDown, btnMouseMoveDown);
 		CALL(onKeyUp,   btnMouseMoveDown);
 	}
-	
 	if (dx || dy)
 		glutWarpPointer(width, height);
 }
@@ -268,7 +266,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 	Input *input = *inputs.begin();
 	
 	if (input->textMode)
-	{
+	{	
 		if (key == ESC) //Aborted
 		{
 			input->text = "";
@@ -283,7 +281,7 @@ void keyboard_down_event(unsigned char key, int x, int y)
 			input->textMode = false;
 			glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 		}
-		else if (key == '\b')
+		else if (key == BACKSPACE)
 		{
 			if(!input->text.empty())
 				input->text.erase(input->text.end() - 1, input->text.end());
@@ -385,7 +383,6 @@ void motion_event(int x, int y)
 {
 	if (inputs.empty()) return;
 	Input *input = *inputs.begin();
-	
 	CALL(input->onMouseMove, (word) x, (word) y)
 	
 	input->mouseX = x;

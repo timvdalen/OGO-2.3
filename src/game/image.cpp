@@ -4,9 +4,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <png.h>
-
+#ifdef __APPLE__
+	#include <UnixImageIO/png.h>
+#else
+	#include <png.h>
+#endif
 #include "image.h"
 
 namespace Loader {

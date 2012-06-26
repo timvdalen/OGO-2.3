@@ -137,7 +137,7 @@ void printNeighbours(){
 	pthread_mutex_lock(&t.mutex);
 	for(int i = 0; i < t.neighbours.size(); i++){
 		Neighbour* n = t.neighbours[i];
-		printf("Neighbour %d: name = %s, ip = %s, timesincelastmessage = %d ms \n",
+		printf("Neighbour %d: name = %s, ip = %s, timesincelastmessage = %ld ms \n",
 		i, (n->name).c_str(), (n->ip).c_str(), (Video::ElapsedTime() -  n->lastMessage));
 	}
 	pthread_mutex_unlock(&t.mutex);
@@ -225,6 +225,7 @@ void* broadcaster(void* ignoreBitch)
 	t.udp->close();
 	delete t.udp;
 	delete buffer;
+	return NULL;
 }
 	
 void Initialize(){

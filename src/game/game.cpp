@@ -11,6 +11,7 @@
 #include <time.h>
 #include <limits.h>
 
+
 #include <vector>
 #include <algorithm>
 
@@ -91,27 +92,6 @@ void Initialize(int argc, char *argv[])
 			windowHeight = atoi(argv[++i]);
 	}
 	
-	for (int i = 0; i < argc; ++i)
-	{
-		if (!strcmp(argv[i], "--fullscreen"))
-			fullscreen = true;
-	}
-	
-	// Global subsystem initializations
-	srand(time(NULL));
-	
-	// Create window and set up viewports
-	game.window = new Video::Window(windowWidth, windowHeight,
-	                                GAME_NAME, fullscreen);
-	Video::Viewport *view = new Video::Viewport(1,1);
-	game.window->viewports.push_back(view);
-	
-	// Show loading screen
-	// Problem: we can't use the hud prior to asset loading
-	
-	// Load game assets
-	Assets::Initialize(argc, argv);
-	
 	// Process config file
 	if (!file_exists(CONFIG_FILE))
 	{
@@ -129,6 +109,27 @@ void Initialize(int argc, char *argv[])
 		puts("Unable to create config file: " CONFIG_FILE "!");
 		exit(EXIT_FAILURE);
 	}
+	
+	fullscreen = (config->read("fullscreen", '0')) == '1'? true : false;
+	/* deprecated: for (int i = 0; i < argc; ++i)
+	{
+		if (!strcmp(argv[i], "--fullscreen"))
+			fullscreen = true;
+	}*/
+	// Global subsystem initializations
+	srand(time(NULL));
+	
+	// Create window and set up viewports
+	game.window = new Video::Window(windowWidth, windowHeight,
+	                                GAME_NAME, fullscreen);
+	Video::Viewport *view = new Video::Viewport(1,1);
+	game.window->viewports.push_back(view);
+	
+	// Show loading screen
+	// Problem: we can't use the hud prior to asset loading
+	
+	// Load game assets
+	Assets::Initialize(argc, argv);
 	
 	config->readInto(NetCode::MessageOfTheDay, "motd",
 		string("No message of the day ;("));

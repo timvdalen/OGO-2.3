@@ -46,7 +46,7 @@ extern double GameSpeed;
 //------------------------------------------------------------------------------
 
 //! Initializes the video subsystem
-void Initialize(int argc, char *argv[]);
+void Initialize(int* argc, char *argv[]);
 //! Terminates the video subsystem
 void Terminate();
 
@@ -85,7 +85,7 @@ class Window
 	//! Renders the assigned viewports
 	void render();
 	
-	friend void Initialize(int argc, char *argv[]);
+	friend void Initialize(int *argc, char *argv[]);
 	friend void StartEventLoop();
 	friend void StopEventLoop();
 	friend void Terminate();
