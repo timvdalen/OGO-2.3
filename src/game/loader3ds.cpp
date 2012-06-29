@@ -99,9 +99,9 @@ void ModelObject::render(Lib3dsNode * n) {
 			
 			if (!mesh) continue;
 
-			if (!mesh->user_id) {
+			if (!mesh->user_id || !glIsList(mesh->user_id)) {
 				mesh->user_id = glGenLists(1);
-				glNewList(mesh->user_id, GL_COMPILE);
+				glNewList(mesh->user_id, GL_COMPILE_AND_EXECUTE);
 
 				glPushMatrix();
 				//glMultMatrixf(&n->matrix[0][0]);
