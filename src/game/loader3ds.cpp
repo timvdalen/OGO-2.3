@@ -101,7 +101,7 @@ void ModelObject::render(Lib3dsNode * n) {
 
 			if (!mesh->user_id || !glIsList(mesh->user_id)) {
 				mesh->user_id = glGenLists(1);
-				glNewList(mesh->user_id, GL_COMPILE_AND_EXECUTE);
+				glNewList(mesh->user_id, GL_COMPILE);
 
 				glPushMatrix();
 				//glMultMatrixf(&n->matrix[0][0]);
@@ -116,9 +116,8 @@ void ModelObject::render(Lib3dsNode * n) {
 				glPopMatrix();
 
 				glEndList();
-			} else {
-				glCallList(mesh->user_id);
 			}
+			glCallList(mesh->user_id);
 		}
 	}
 }
