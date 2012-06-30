@@ -188,6 +188,7 @@ void* broadcaster(void* ignoreBitch)
 					receiver.string(buffer);
 					//----- FOR detecting your own ip
 					if(request_for_ip){
+						delete buf;
 						message_length = 64;
 						buf = new char[message_length];
 						size_t buf_length = sizeof(char)*message_length;
