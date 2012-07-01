@@ -308,6 +308,15 @@ void Terrain::frame()
 				
 				if (HeadQuarters *hq = TO(HeadQuarters,s))
 				{
+					//The Objects surrounding the HeadQuarters should be removed too
+					//This way, they might not be removed this loop, but it's safe
+					Building *left = TO(Building, structures[hq->loc + GridPoint(-1, 0)]);
+					if(left) left->destroy();
+					Building *downleft = TO(Building, structures[hq->loc + GridPoint(-1, -1)]);
+					if(downleft) downleft->destroy();
+					Building *down = TO(Building, structures[hq->loc + GridPoint(0, -1)]);
+					if(down) down->destroy();
+					
 					Game::GameEnd(TO(Player,Game::game.players[hq->owner])->team == 'a' ? 'b' : 'a');
 				}
 				else if (TO(ResourceMine,s))
@@ -457,10 +466,16 @@ bool Terrain::placeStructure(GridPoint p, ObjectHandle s){
 	}
 	structures.insert(make_pair(ip, s));
 	if(struc->type() == "HeadQuarters"){
-		ObjectHandle block = Structure();
-		structures.insert(make_pair(GridPoint(p.x-1, p.y), block));
-		structures.insert(make_pair(GridPoint(p.x-1, p.y-1), block));
-		structures.insert(make_pair(GridPoint(p.x, p.y-1), block));
+		Building block_left = Building();
+		block_left.loc = GridPoint(p.x-1, p.y);
+		Building block_leftdown = Building();
+		block_leftdown.loc = GridPoint(p.x-1, p.y-1);
+		Building block_down = Building();
+		block_down.loc = GridPoint(p.x, p.y-1);
+		
+		structures.insert(make_pair(GridPoint(p.x-1, p.y), ObjectHandle(block_left)));
+		structures.insert(make_pair(GridPoint(p.x-1, p.y-1), ObjectHandle(block_leftdown)));
+		structures.insert(make_pair(GridPoint(p.x, p.y-1), ObjectHandle(block_down)));
 	}
 	return true;
 }

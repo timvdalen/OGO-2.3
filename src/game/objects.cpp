@@ -48,6 +48,12 @@ void Destroyable::damage(double dmg, int who){
 
 //------------------------------------------------------------------------------
 
+void Destroyable::destroy(){
+	health = 0.0;
+}
+
+//------------------------------------------------------------------------------
+
 void Destroyable::heal(double _health){
 	health += _health;
 }
