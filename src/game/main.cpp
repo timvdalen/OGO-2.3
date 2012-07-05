@@ -84,6 +84,8 @@ void Frame()
 			TO(Player,pit->second)->frame();
 		
 		game.world->terrain->frame();
+		//One last frame if the game is over to clean up some stuff
+		if(!game.playing) game.world->terrain->frame();
 		
 		map<GridPoint,ObjectHandle>::iterator bit;
 		Terrain *t = game.world->terrain;

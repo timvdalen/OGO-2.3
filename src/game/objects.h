@@ -85,6 +85,9 @@ class Destroyable
 	//! Adds damage
 	void damage(double dmg, int who = 0);
 	
+	//! Completely destroys the thing
+	void destroy();
+	
 	//! Heals the thing
 	void heal(double _health);
 
