@@ -245,8 +245,32 @@ class Object
 	Point<double> parentOrigin;
 	Quaternion<double> parentRotation;
 };
-
 //------------------------------------------------------------------------------
+    
+//! Represents a bounding box.
+    
+//! Point variables follow xyz where x is l(left) or r(ight), y is t(op) or b(ottom) and z is l(ow) or h(igh).
+struct BoundingBox
+{
+    Point<double> lbl, rbl, ltl, rtl, lbh, rbh, lth, rth;
+        
+    BoundingBox(const BoundingBox &B)
+    : lbl(B.lbl), rbl(B.rbl), ltl(B.ltl), rtl(B.rtl),
+    lbh(B.lbh), rbh(B.rbh), lth(B.lth), rth(B.rth) {}
+        
+    BoundingBox(Point<double> _lbl, Point<double> _rbl, Point<double> _ltl, Point<double> _rtl = Point<double>(),
+                Point<double> _lbh = Point<double>(), Point<double> _rbh = Point<double>(), Point<double> _lth = Point<double>(), Point<double> _rth = Point<double>())
+                : lbl(_lbl), rbl(_rbl), ltl(_ltl), rtl(_rtl),
+                    lbh(_lbh), rbh(_rbh), lth(_lth), rth(_rth) {}
+        
+    BoundingBox(Point<double> _lbl = Point<double>(), Point<double> _rth = Point<double>())
+		: lbl(_lbl), rbl(0), ltl(0), rtl(0),
+        lbh(0), rbh(0), lth(0), rth(_rth) {}
+};
+    
+//------------------------------------------------------------------------------
+    
+
 
 } // namespace Core
 

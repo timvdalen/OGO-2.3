@@ -64,6 +64,31 @@ dword ElapsedTime();
 //! Gets the current number of frames per second
 double CurrentFPS();
 
+    
+//------------------------------------------------------------------------------
+//Culling methods
+    
+//! loads a viewing volume
+void loadViewVolume(Point<double> *p);
+    
+//! loads an orthogonal viewing volume
+void loadOrthogonalVolume(double left, double right, double depth, double overSizing = 0.1);
+
+//! loads a perspective viewing volume
+void loadPerspectiveVolume(double fovy, double aspect, double depth, double overSizing = 0.1);
+
+//! clears the viewing volume
+void clearViewVolume();
+
+/*! Tries to determine if the boundingbox is inside the viewing volume
+ * - The boundingbox is transformed using the modelviewmatrix
+ * - The function is not exact:
+ *   - a true-value implies the boundingbox is outside the viewing-volume;
+ *   - a false-value does not imply the boundingbox is not outside the viewing-volume
+ *     \note This is due to performance reasons.
+ */
+bool outsideViewingVolume(BoundingBox b);
+
 //------------------------------------------------------------------------------
 
 //! A window instance
