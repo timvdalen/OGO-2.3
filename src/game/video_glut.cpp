@@ -140,7 +140,11 @@ void loadPerspectiveVolume(double fovy, double aspect, double depth, double over
     // ov = viewing origin, nv = viewing nearplane
     // oc = camera origin, nc = camera nearplane
     // angles are given by fovy
-    double o            = -depth*overSizing;
+    if(overSizing){
+        double o            = -depth*overSizing;
+    }else{
+        double o            = -depth/100000.0;
+    }
     double near_z       = -depth*overSizing*0.5;
     double far_z        = depth*overSizing*0.5;
     //TODO

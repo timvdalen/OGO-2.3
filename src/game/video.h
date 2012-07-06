@@ -92,7 +92,6 @@ void loadOrthogonalVolume(double left, double right, double bottom, double top, 
  *  - oversizing scales the viewing volume in all directions, this is in particular
  *    useful when using the model objects to apply effects like shadows, in
  *    which objects outside the viewingvolume can still produces shadows
- *  - oversizing must always be greater then zero, otherwise singularities can occur in this function
  */
 void loadPerspectiveVolume(double fovy, double aspect, double depth, double overSizing = 0.1);
 
