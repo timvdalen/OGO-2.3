@@ -68,13 +68,32 @@ double CurrentFPS();
 //------------------------------------------------------------------------------
 //Culling methods
     
-//! loads a viewing volume
+/*! Loads a viewing volume from an array, the array should contain 8 points
+ *  The array is interpreted as follows:
+ *  {left_bottom_near, right_bottom_near, right_upper_near, left_upper_near,
+ *       left_bottom_far, right_bottom_far, right_upper_far, left_upper_far}
+ *  In other words, we start at the leftbottom near point and continue counterclockwise
+ *  and go to the far plane as soon as we reacht the left_bottom point again.
+ *  The pointer p should not be deleted or changed, it will be deleted when clearViewVolume() is used.
+ */
 void loadViewVolume(Point<double> *p);
     
-//! loads an orthogonal viewing volume
-void loadOrthogonalVolume(double left, double right, double depth, double overSizing = 0.1);
+/*! loads an orthogonal viewing volume
+ *  - left, right, bottom, top and depth are defined similar to glOrtho and intuitively defined
+ *  - oversizing scales the viewing volume in all directions, this is in particular
+ *    useful when using the model objects to apply effects like shadows, in
+ *    which objects outside the viewingvolume can still produces shadows
+ */
+void loadOrthogonalVolume(double left, double right, double bottom, double top, double depth, double overSizing = 0.1);
 
-//! loads a perspective viewing volume
+/*! loads an orthogonal viewing volume
+ *  - fovy, aspect, depth are defined as in gluPerspective:
+ *      Therefore, fovy is the viewing angle in the vertical direction!
+ *  - oversizing scales the viewing volume in all directions, this is in particular
+ *    useful when using the model objects to apply effects like shadows, in
+ *    which objects outside the viewingvolume can still produces shadows
+ *  - oversizing must always be greater then zero, otherwise singularities can occur in this function
+ */
 void loadPerspectiveVolume(double fovy, double aspect, double depth, double overSizing = 0.1);
 
 //! clears the viewing volume
