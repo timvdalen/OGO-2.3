@@ -90,10 +90,6 @@ double CurrentFPS()
 struct Plane{
 	Vd normal;//Pointing to the outside of the plane
 	Pd origin;
-	bool outsidePlane(Pd p){
-		Vd v = p - origin;
-		return 0 <= (v^normal);
-	}
 };
 
 struct ViewVolume{
@@ -228,36 +224,20 @@ bool outsideViewingVolume(BoundingBox b){
 	double dz			= b.rth.z - b.lbl.z;
 	Vd vdz				= Vd(dz*mv_m[0][2],dz*mv_m[1][2],dz*mv_m[2][2]);
 	Pd	p_org			= Pd(	b.lbl.x * mv_m[0][0] + b.lbl.y*mv_m[0][1]	+ b.lbl.z*mv_m[0][2] + mv_m[0][3],
-						b.lbl.x * mv_m[1][0] + b.lbl.y*mv_m[1][1]	+ b.lbl.z*mv_m[1][2] + mv_m[1][3],
-						b.lbl.x * mv_m[2][0] + b.lbl.y*mv_m[2][1]	+ b.lbl.z*mv_m[2][2] + mv_m[2][3]);
-	//Now construct the points (only 3 addition per point needed):
-	Point<double> p[8];
-	//Lower
-	p[0]				= p_org;
-	p[1]				= p[0] + vdx;
-	p[2]				= p[1] + vdy;
-	p[3]				= p[0] + vdy;
-	//Upper
-	p[4]				= p[0] + vdz;
-	p[5]				= p[4] + vdx;
-	p[6]				= p[5] + vdy;
-	p[7]				= p[4] + vdy;
+								b.lbl.x * mv_m[1][0] + b.lbl.y*mv_m[1][1]	+ b.lbl.z*mv_m[1][2] + mv_m[1][3],
+								b.lbl.x * mv_m[2][0] + b.lbl.y*mv_m[2][1]	+ b.lbl.z*mv_m[2][2] + mv_m[2][3]);
 	for(int i = 0; i < 6; i++){
-		int j;
-		for(j = 0; j < 8; j++){
-			if(!vv.p[i].outsidePlane(p[j])){
-				break;
-			}
-		}
-		if(j==8){//Could be done faster with GOTO :)
+		//use the addition properties of the dot-product to construct 
+		//	a point which has the most chance to be inside the plane
+		Vd v 				= p_org - vv.p[i].origin;
+		double extreme_dot	= (v^vv.p[i].normal)			+ 
+								fmin(0.0,vdx^vv.p[i].normal)+
+								fmin(0.0,vdy^vv.p[i].normal)+
+								fmin(0.0,vdz^vv.p[i].normal);
+		if(0 < extreme_dot){
 			return true;
 		}
 	}
-	//consider all planes
-	//for planes \in planes
-	//check if all points of the bounding box are on this side of the plane
-	//yes => return true;
-	//no => continue
 	return false;
 }
 
