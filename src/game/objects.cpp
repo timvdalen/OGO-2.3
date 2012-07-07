@@ -151,7 +151,9 @@ void ModelObjectContainer::render()
 	if (material) material->select();
 
 	draw();
-
+	
+	drawChildren();
+	
 	postRender();
 
 	if (material) material->unselect();

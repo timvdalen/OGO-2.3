@@ -130,6 +130,8 @@ void Object::render()
 	
 	if (material) material->unselect();
 	
+	drawChildren();
+	
 	postRender();
 }
 
@@ -144,11 +146,16 @@ void Object::draw()
 
 void Object::postRender()
 {
+	glPopMatrix();
+}
+
+//------------------------------------------------------------------------------
+
+void Object::drawChildren()
+{
 	set<ObjectHandle>::iterator it;
 	for (it = children.begin(); it != children.end(); ++it)
 		(*it)->render();
-	
-	glPopMatrix();
 }
 
 //------------------------------------------------------------------------------

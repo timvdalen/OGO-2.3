@@ -190,6 +190,9 @@ class Object
 	//! Draw the object
 	virtual void draw();
 	
+	//! Draws the children of the object
+	virtual void drawChildren();
+	
 	//! Draws the objects children and pop the translations and rotations
 	virtual void postRender();
 	

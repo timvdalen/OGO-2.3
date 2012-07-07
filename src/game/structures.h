@@ -102,9 +102,9 @@ class Terrain: public BoundedObject
 
 	//! Draws the terrain
 	virtual void draw();
-
+	
 	//! Draw the terrains chidlren
-	virtual void postRender();
+	virtual void drawChildren();
 
 	//!Draws the grid
 	void drawGround();

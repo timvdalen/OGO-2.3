@@ -342,8 +342,8 @@ void Terrain::frame()
 }
 
 //------------------------------------------------------------------------------
-
-void Terrain::postRender()
+//TODO bugfix?
+void Terrain::drawChildren()
 {
 	map<GridPoint, ObjectHandle>::iterator it;
 	for(it = structures.begin(); it != structures.end(); ++it){
@@ -359,8 +359,6 @@ void Terrain::postRender()
 		glTranslated((-(width/2)) + (p.x*GRID_SIZE), (-(height/2)) + (p.y*GRID_SIZE), 0);
 		(ghost.second)->render();
 	}
-
-	Object::postRender();
 }
 
 //------------------------------------------------------------------------------
@@ -590,6 +588,7 @@ void Building::preRender(){
 void Building::postRender(){
 	Object::postRender();
 	glPopMatrix();//This is the matrix that was pushed in Object::preRender()
+	//TODO move to drawchildren
 	drawHealthbar();
 }
 
@@ -1018,7 +1017,8 @@ void ResourceMine::draw()
 //------------------------------------------------------------------------------
 
 void ResourceMine::postRender()
-{
+{	
+	//Move to drawchildren
 	Object::postRender();
 	if(rock) rock->render();
 	if(Game::game.players.count(owner)){
@@ -1115,7 +1115,8 @@ void RichResourceMine::draw()
 //------------------------------------------------------------------------------
 
 void RichResourceMine::postRender()
-{
+{	
+	//Move to drawchildren
 	Object::postRender();
 	if(rock) rock->render();
 	if(Game::game.players.count(owner)){
