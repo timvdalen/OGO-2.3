@@ -88,100 +88,102 @@ double CurrentFPS()
 //==============================================================================
 
 struct ViewVolume{
-    Point<double>* p;
-    ViewVolume() : p(NULL){}
-    
+	Point<double>* p;
+	ViewVolume() : p(NULL){}
+	
 };
 ViewVolume vv;
-    
+
 //------------------------------------------------------------------------------
 
 void loadViewVolume(Point<double>* p){
-    vv.p = p;
+	clearViewVolume();
+	vv.p = p;
 }
 
 //------------------------------------------------------------------------------
 
 void loadOrthogonalVolume(double left, double right, double bottom, double top, double depth, double overSizing){    
-    double left_x       = left + 0.5*(right -left)*overSizing;
-    double right_x      = right + 0.5*(right - left)*overSizing;
-    double bottom_y     = bottom + 0.5*(top - bottom)*overSizing;
-    double top_y        = top + 0.5*(top - bottom)*overSizing;
-    double near_z       = depth*(1+overSizing*0.5);
-    double far_z        = depth*(1+overSizing*0.5);
-    Point<double>* p    = new Point<double>[8];
-    p[0]                = Point<double>(left_x, bottom_y, near_z);
-    p[1]                = Point<double>(right_x, bottom_y, near_z);
-    p[2]                = Point<double>(right_x, top_y, near_z);
-    p[3]                = Point<double>(left_x, top_y, near_z);
-    p[4]                = Point<double>(left_x, bottom_y, far_z);
-    p[5]                = Point<double>(right_x, bottom_y, far_z);
-    p[6]                = Point<double>(right_x, top_y, far_z);
-    p[7]                = Point<double>(left_x, top_y, far_z);
-    loadViewVolume(p);
+	double left_x		= left + 0.5*(right -left)*overSizing;
+	double right_x		= right + 0.5*(right - left)*overSizing;
+	double bottom_y		= bottom + 0.5*(top - bottom)*overSizing;
+	double top_y		= top + 0.5*(top - bottom)*overSizing;
+	double near_z		= depth*(1+overSizing*0.5);
+	double far_z		= depth*(1+overSizing*0.5);
+	Point<double>* p	= new Point<double>[8];
+	p[0]				= Point<double>(left_x, bottom_y, near_z);
+	p[1]				= Point<double>(right_x, bottom_y, near_z);
+	p[2]				= Point<double>(right_x, top_y, near_z);
+	p[3]				= Point<double>(left_x, top_y, near_z);
+	p[4]				= Point<double>(left_x, bottom_y, far_z);
+	p[5]				= Point<double>(right_x, bottom_y, far_z);
+	p[6]				= Point<double>(right_x, top_y, far_z);
+	p[7]				= Point<double>(left_x, top_y, far_z);
+	loadViewVolume(p);
 }
 
 //------------------------------------------------------------------------------
 
 void loadPerspectiveVolume(double fovy, double aspect, double depth, double overSizing){
-    //Bounding volume:
-    //         _________/ |
-    // y       /       __/|
-    /// \     /      /    |
-    // |   /|    /|       |
-    // | ov |  oc |       |
-    // |   \|    \|       |
-    // |     \      \     |
-    // |       \      \ __|
-    // |         \ _____ \|
-    // |                 \|
-    //  --------------------> z
-    //     |nv    |nc    |farplane
-    // ov = viewing origin, nv = viewing nearplane
-    // oc = camera origin, nc = camera nearplane
-    // angles are given by fovy
-    if(overSizing){
-        double o            = -depth*overSizing;
-    }else{
-        double o            = -depth/100000.0;
-    }
-    double near_z       = -depth*overSizing*0.5;
-    double far_z        = depth*overSizing*0.5;
-    //TODO
-    double x,y,z;
-    Point<double>* p    = new Point<double>[8];
-    p[0]                = Point<double>(x,y,z);//left, bottom, near
-    p[1]                = Point<double>(x,y,z);//right, bottom, near
-    p[2]                = Point<double>(x,y,z);//right, top, near
-    p[3]                = Point<double>(x,y,z);//left, top, near
-    p[4]                = Point<double>(x,y,z);//left, bottom, far
-    p[5]                = Point<double>(x,y,z);//right, bottom, far
-    p[6]                = Point<double>(x,y,z);//right , top, far
-    p[7]                = Point<double>(x,y,z);//left, top, far
-    loadViewVolume(p);
+	//Bounding volume:
+	//         _________/ |
+	// y       /       __/|
+	/// \     /      /    |
+	// |   /|    /|       |
+	// | ov |  oc |       |
+	// |   \|    \|       |
+	// |     \      \     |
+	// |       \      \ __|
+	// |         \ _____ \|
+	// |                 \|
+	//  --------------------> z
+	//     |nv    |nc    |farplane
+	// ov = viewing origin, nv = viewing nearplane
+	// oc = camera origin, nc = camera nearplane
+	// angles are given by fovy
+	double o;
+	if(overSizing < 1.0/100000.0){
+		o				= -depth*overSizing;
+	}else{
+		o				= -depth/100000.0;
+	}
+	double near_z		= -depth*overSizing*0.5;
+	double far_z		= depth*overSizing*0.5;
+	//TODO
+	double x,y,z;
+	Point<double>* p	= new Point<double>[8];
+	p[0]				= Point<double>(x,y,z);//left, bottom, near
+	p[1]				= Point<double>(x,y,z);//right, bottom, near
+	p[2]				= Point<double>(x,y,z);//right, top, near
+	p[3]				= Point<double>(x,y,z);//left, top, near
+	p[4]				= Point<double>(x,y,z);//left, bottom, far
+	p[5]				= Point<double>(x,y,z);//right, bottom, far
+	p[6]				= Point<double>(x,y,z);//right , top, far
+	p[7]				= Point<double>(x,y,z);//left, top, far
+	loadViewVolume(p);
 }
-    
+
 //------------------------------------------------------------------------------
 
 void clearViewVolume(){
-    delete[] vv.p;
-    vv.p = NULL;
+	delete[] vv.p;
+	vv.p = NULL;
 }
 //------------------------------------------------------------------------------
-    
+
 bool outsideViewingVolume(BoundingBox b){
-    if(!vv.p){
-        return false;
-    }
-    //transform boundingbox from object-space to world space
-    //don't just transform all 8 points, transform the vectors between the vertices
-    //gives faster performance
-    //consider all planes
-    //for planes \in planes
-        //check if all points of the bounding box are on this side of the plane
-        //yes => return true;
-        //no => continue
-    return false;
+	if(!vv.p){
+		return false;
+	}
+	//transform boundingbox from object-space to world space
+	//don't just transform all 8 points, transform the vectors between the vertices
+	//gives faster performance
+	//consider all planes
+	//for planes \in planes
+	//check if all points of the bounding box are on this side of the plane
+	//yes => return true;
+	//no => continue
+	return false;
 }
 
 //==============================================================================
