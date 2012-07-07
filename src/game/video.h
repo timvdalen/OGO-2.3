@@ -74,7 +74,6 @@ double CurrentFPS();
  *       left_bottom_far, right_bottom_far, right_upper_far, left_upper_far}
  *  In other words, we start at the leftbottom near point and continue counterclockwise
  *  and go to the far plane as soon as we reacht the left_bottom point again.
- *  The pointer p should not be deleted or changed, it will be deleted when clearViewVolume() is used.
  */
 void loadViewVolume(Point<double> *p);
     
